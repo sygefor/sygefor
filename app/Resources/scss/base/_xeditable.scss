@@ -1,0 +1,106 @@
+.editable-click,
+a.editable-click,
+a.editable-click:hover {
+  border-bottom: 0;
+  cursor:copy;
+}
+
+.editable-empty,
+.editable-empty:hover {
+  font-style: normal;
+  a {
+    /*border:1px solid $gray-lighter !important;
+    color:$gray-light;
+    background: #FFF;
+    .fa {
+      color: $custom-input-icon-color;
+    }*/
+  }
+}
+
+// during the editable editing
+/*form.editable-shown {
+  .editable {
+    opacity: .3;
+  }
+}*/
+
+// button
+.editable-buttons {
+  background: #FFF;
+}
+
+/**
+* INLINE
+*/
+
+/**
+ * Default
+ */
+.editable-container.editable-inline {
+  position: absolute !important;
+  margin-top: -5px;
+  background: #FFF;
+  z-index: 10;
+
+  /**
+   * select2
+   */
+  &.editable-select2 {
+    .select2-container-multi {
+      min-width: 200px;
+    }
+  }
+
+  /**
+   * textarea
+   */
+  &.editable-textarea {
+    display: block;
+    position: relative !important;
+    .editable-buttons {
+      margin:5px 0 0 0;
+    }
+    .control-group,
+    .editable-input {
+      display: block;
+      textarea {
+        width: 100%;
+      }
+    }
+  }
+
+  /**
+   * text
+   * The xeditable inline container must take all the available width
+   */
+  &.editable-text {
+    display: block;
+    position: relative !important;
+    .form-group {
+      width: auto;
+      display: block;
+      .editable-input {
+        display: block;
+        margin-right: 75px;
+        .form-control {
+          float: left;
+          display: block;
+          width: 100%;
+        }
+        .editable-clear-x {
+          margin-top: 8px;
+        }
+      }
+    }
+    // force inline block
+    .inline-block + & {
+      display: inline-block;
+      position: absolute !important;
+    }
+    // force inline block
+    .pull-right + & {
+      right:0;
+    }
+  }
+}

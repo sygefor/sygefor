@@ -1,0 +1,34 @@
+<table class="table">
+    <caption>{{ caption }}</caption>
+   <thead>
+       <tr>
+           <th></th>
+           <th></th>
+           <th ng-repeat="col in data.cols" class="text-right">{{ col.label }}</th>
+           <th></th>
+       </tr>
+   </thead>
+   <tbody ng-repeat="row in data.rows">
+        <tr ng-repeat="subrow in row.data">
+            <td ng-if="$index == 0" rowspan="{{ row.data.length + 1 }}">{{ row.label }}</td>
+            <td>{{ subrow.label }}</td>
+            <td ng-repeat="value in subrow.data" class="text-right">{{ value.value }}</td>
+            <td class="active text-right">{{ subrow.value }}</td>
+        </tr>
+        <tr>
+            <td class="active"></td>
+            <td class="active text-right" ng-repeat="col in data.cols">{{ sum(row, col.key) }}</td>
+            <td class="active text-right"><strong>{{ row.value }}</strong></td>
+        </tr>
+    </tbody>
+    <tbody>
+        <tr>
+            <td class="active"></td>
+            <td class="active"></td>
+            <td ng-repeat="col in data.cols" class="text-right active">{{ col.value }}</td>
+            <td class="text-right active"><strong>{{ data.value }}</strong></td>
+        </tr>
+    </tbody>
+</table>
+
+

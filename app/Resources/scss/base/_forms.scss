@@ -1,0 +1,175 @@
+
+
+
+
+.SB-search {
+
+  .SB-search-box-wrapper {
+    box-sizing: border-box;
+    border: none;
+    border-radius: 6px;
+    border: 1px solid #d9d9d9;
+    display: flex;
+  }
+  
+  .search_parameter div.key, .input-facet input, .search_parameter .value *, .SB-placeholder, .SB-placeholder span {
+    font-size: $custom-input-font-size;
+    line-height: $custom-input-line-height;
+    padding-top: ($custom-input-padding-vertical - 1);
+    padding-bottom: ($custom-input-padding-vertical - 1);
+    height: auto;
+    border-radius: 0;
+
+    &:focus {
+      box-shadow:none;
+    }
+  }
+
+  .SB-icon-cancel { 
+    color: $custom-input-icon-color;
+    right: $custom-input-padding-horizontal*1.5;
+    top: $custom-input-padding-vertical*1.5;
+  }
+
+ .SB-icon-search { 
+    top: $custom-input-padding-vertical*1.5;
+    font-size: $custom-input-font-size;
+ }
+  
+  .search_parameter .value { 
+    min-width: inherit;
+  }
+
+  .search_parameter div.key, .search_parameter .value * { 
+    color: rgba(0, 0, 0, 0.75);
+  }
+
+  .SB-placeholder {
+    padding-left: $custom-input-padding-horizontal*2.5;
+    top: 1px;
+  }
+  
+  .search_parameter {
+    display: inline-block;
+    height: auto;
+    margin: 0;
+    padding: 0;
+    padding-left: $custom-input-padding-horizontal*2;
+    padding-right: $custom-input-padding-horizontal/2;
+
+    &.selected {
+      border-radius: 1px;
+      border-color: #e1f0f7;
+      background-image: -webkit-gradient(linear, left top, left bottom, from(#eaf5fa), to(#e1f0f7));
+    }
+
+    .search_parameter_remove {
+      top: $custom-input-padding-vertical - 1;
+
+      &:hover ::before {
+        color: red;
+      }
+    }
+
+
+  }
+
+  .SB-search-inner {
+    position: relative;
+    z-index: 100;
+    margin: 0;
+    margin-left: $custom-input-padding-horizontal*2.5;
+    margin-right: 0;
+    overflow: hidden;
+    float: left;
+
+    flex-grow: 0;
+
+  }
+  
+  .input-facet {
+    margin: 0;
+    padding: 0;
+    //width: 100%;
+    
+    flex-grow: 1;
+
+
+    input {
+      height: auto;
+      border: none;
+      
+      //min-width: 150px;
+    }
+  }
+}
+
+
+
+
+
+.form-control {
+  @include box-shadow(inset 0 0 0 rgba(0,0,0,0));
+}
+
+/**
+* Select2
+*/
+.select2-container-multi .select2-choices {
+  @include box-shadow(inset 0 0 0 rgba(0,0,0,0));
+  background: #FFF;
+  border: 1px solid $input-border;
+  border-radius: $input-border-radius;
+  .select2-search-field input {
+    padding: 3px 5px;
+  }
+  .select2-search-choice {
+    background:#FFF;
+    border-color:$input-border-focus;
+    .select2-search-choice-close {
+      background:none;
+      font-family: FontAwesome;
+      font-style: normal;
+      font-weight: normal;
+      line-height: 1;
+      -webkit-font-smoothing: antialiased;
+      font-size:12px;
+      color:$input-border-focus;
+      text-decoration: none;
+      &:hover {
+        color:#666;
+      }
+      &:before {
+        content: "\f00d";
+      }
+    }
+  }
+}
+
+
+/**
+* Date picker
+*/
+.datepicker-dropdown {
+  z-index: 1051 !important;
+}
+
+.input-daterange {
+  input {
+    text-align: left;
+    &:first-child {
+      -webkit-border-radius: 3px;
+      -moz-border-radius: 3px;
+      border-radius: 3px;
+    }
+    &:last-child {
+      -webkit-border-radius: 3px;
+      -moz-border-radius: 3px;
+      border-radius: 3px;
+    }
+  }
+}
+
+input.input-datepicker {
+  width:120px !important;
+}

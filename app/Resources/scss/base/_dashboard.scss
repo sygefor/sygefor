@@ -1,0 +1,65 @@
+.widget {
+  margin-bottom: 30px;
+  .pagination {
+    margin: 10px 0 0 0;
+  }
+}
+
+.widget-title {
+  font-size: 1.2em;
+}
+
+.widget-body-container {
+  position: relative;
+}
+
+.widget-body {
+  background:white;
+  padding:10px;
+  border-radius: 5px;
+  min-height: 42px;
+
+  .table.table-search {
+    margin-bottom: 0px;
+    thead th {
+      padding:5px;
+      padding-top: 0px;
+    }
+  }
+}
+
+.widget-empty-msg {
+  color:$gray-light;
+}
+
+.widget-loading {
+  position: absolute;
+  background: rgba(255,255,255,.8);
+  height: 100%;
+  width: 100%;
+  z-index: 999;
+  font-size: 30px;
+  color: #dddddd;
+  .fa {
+    position: absolute;
+    top: 50%;
+    margin-top: -15px;
+    left: 50%;
+    margin-left: -15px;
+  }
+}
+
+.widget-actions {
+  float: right;
+  list-style: none;
+  li {
+    display: inline-block;
+    margin-left:5px;
+    a {
+      color:$gray-light;
+      &:hover {
+        color: $gray;
+      }
+    }
+  }
+}

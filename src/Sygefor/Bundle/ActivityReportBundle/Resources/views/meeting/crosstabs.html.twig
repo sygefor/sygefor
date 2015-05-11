@@ -1,0 +1,7 @@
+{% import "SygeforActivityReportBundle::macros.html.twig" as macros %}
+
+<section>
+    <h2>Croisements</h2>
+    {{ macros.crosstab('Nombre de rencontres locales par type et par nature', report.crosstabs.eventType_eventKind.local) }}
+    {{ macros.crosstab('Nombre de rencontres nationales par type et par nature', report.crosstabs.eventType_eventKind.national) }}
+</section>

@@ -1,0 +1,30 @@
+<div class="block block-sessions">
+
+    <div class="block-title">
+        <div class="full-width">
+            <a ui-sref="session.table({training: training.id})" class="btn btn-link h4"><span class="fa fa-calendar-o"></span>Sessions</a>
+            <div class="pull-right">
+                <a ng-if="training._accessRights.edit" class="btn btn-fa btn-sm" href="" tooltip="Créer une session" ng-click="addSession()"><span class="fa fa-plus"></span></a><!--
+                --><span class="badge">{{ training.sessions.length}}</span>
+            </div>
+        </div>
+    </div>
+    <div class="block-body">
+        <div class="well well-empty well-sm" ng-if="!training.sessions.length">
+            Il n'y a aucune session passée ou à venir.
+        </div>
+        <ul class="list-unstyled list-padded">
+            <li ng-repeat="session in training.sessions | orderBy:'dateBegin':true" ng-class="{past: $moment(session.dateBegin) < $moment()}">
+                <a ui-sref="session.detail.view({training: training.id, id: session.id})">{{ session.dateBegin | date:'EEEE d MMMM y' }}</a>
+
+                <!-- stats -->
+                &nbsp;&nbsp;
+                <span registration-label="session"></span>
+
+                <div class="pull-right">
+                    <a registration-stats-label="session" class="label-lg" tooltip-placement="left"></a>
+                </div>
+            </li>
+        </ul>
+    </div>
+</div>

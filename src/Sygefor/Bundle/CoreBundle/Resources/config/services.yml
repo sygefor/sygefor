@@ -1,0 +1,49 @@
+parameters:
+    jms_serializer.cache_naming_strategy.class: JMS\Serializer\Naming\IdenticalPropertyNamingStrategy
+
+services:
+    sygefor_core.menu_builder:
+        class: Sygefor\Bundle\CoreBundle\Menu\MenuBuilder
+        arguments: ["@knp_menu.factory"]
+        calls:
+            - [ setContainer, [ @service_container ] ]
+
+    sygefor_core.menu.main:
+        class: Knp\Menu\MenuItem
+        factory_service: sygefor_core.menu_builder
+        factory_method: createMainMenu
+        arguments: ["@request"]
+        scope: request # needed as we have the request as a dependency here
+        tags:
+            - { name: knp_menu.menu, alias: main } # The alias is what is used to retrieve the menu
+
+    sygefor_core.search:
+        class: Sygefor\Bundle\CoreBundle\Search\SearchService
+        arguments: [@fos_elastica.index]
+
+    sygefor.search:
+        alias: sygefor_core.search
+
+    sygefor_core.serializer.handler.form_view:
+        class: Sygefor\Bundle\CoreBundle\Serializer\Handler\FormViewHandler
+        tags:
+            - { name: jms_serializer.subscribing_handler }
+
+    #form type
+    sygefor_core.form.type.entity_hidden:
+        class:      Sygefor\Bundle\CoreBundle\Form\Type\EntityHiddenType
+        arguments:
+            - @Doctrine.orm.entity_manager
+        tags:
+            - { name: form.type, alias: entity_hidden }
+
+    # taxonomy
+    sygefor_core.vocabulary_publictype:
+        class:        Sygefor\Bundle\CoreBundle\Entity\Term\PublicType
+        tags:
+            - { name: sygefor_taxonomy.vocabulary_provider, group: "Général" }
+
+    sygefor_core.vocabulary_disciplinary:
+        class:        Sygefor\Bundle\CoreBundle\Entity\Term\Disciplinary
+        tags:
+            - { name: sygefor_taxonomy.vocabulary_provider, group: "Général" }

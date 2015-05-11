@@ -1,0 +1,34 @@
+{% extends "SygeforCoreBundle::layout.html.twig" %}
+
+{% block breadcrumbs %}
+    <ol class="breadcrumb full-height-item">
+        <li><a href="{{ path('core.index') }}">Accueil</a></li>
+        <li><a href="#">Administration</a></li>
+        <li><a href="{{ path('user.index') }}">Utilisateurs</a></li>
+        {% if not user.id %}
+            <li class="active"><a href="{{ path('user.add') }}">Ajouter un utilisateur</a></li>
+        {% endif %}
+        {% if user.id %}
+            <li><a href="{{ path('user.edit', {id: user.id}) }}">{{ user.username }}</a></li>
+            {% if breadcrumb_item %}
+                <li class="active"><a href="{{ path(app.request.attributes.get('_route'), {id: user.id}) }}">{{ breadcrumb_item }}</a></li>
+            {% endif %}
+        {% endif %}
+    </ol>
+{% endblock %}
+
+{% block content %}
+    {% if user.id and user.id != app.user.id  %}
+    <ul class="nav nav-tabs">
+        <li{% if app.request.attributes.get('_route') == 'user.edit' %} class="active"{% endif %}><a href="{{ path('user.edit', {id: user.id}) }}">Profil</a></li>
+        <li{% if app.request.attributes.get('_route') == 'user.access_rights' %} class="active"{% endif %}><a href="{{ path('user.access_rights', {id: user.id}) }}">Droits d'accès</a></li>
+    </ul>
+    {% endif %}
+    <div class="list-view full-height-item is-grow">
+        <div class="full-height-container is-absolute is-full-width">
+            <div class="col-xs-12" ui-view>
+                {{ block('subcontent') }}
+            </div>
+        </div>
+    </div>
+{% endblock %}

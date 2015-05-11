@@ -1,0 +1,110 @@
+
+/*-------------------------------
+            LOGIN STYLES
+-------------------------------*/
+
+BODY.login {
+  background: #333333 no-repeat fixed;
+  background-size: cover;
+  width: 100%;
+  height: 100%;
+}
+
+.form-login {
+  max-width: 350px;
+  margin: 100px auto;
+  background: #fff;
+  border-radius: 5px;
+  -webkit-border-radius: 5px;
+}
+
+.form-login .form-login-heading {
+  margin: 0;
+  /* padding: 25px 15px; */
+  text-align: center;
+  color: #fff;
+  position: relative;
+}
+
+.sign-title {
+  font-size: 24px;
+  color: #fff;
+  position: absolute;
+  top: -60px;
+  left: 0;
+  text-align: center;
+  width: 100%;
+  text-transform: uppercase;
+}
+
+.form-login .checkbox {
+  font-size: 13px;
+  font-weight: normal;
+  color: #fff;
+  font-weight: normal;
+  font-family: 'Open Sans', sans-serif;
+  position: absolute;
+  bottom: -50px;
+  width: 100%;
+  left: 0;
+}
+
+.form-login .checkbox a, .form-login .checkbox a:hover {
+  color: #fff;
+}
+
+.form-login .form-control {
+  position: relative;
+  font-size: 16px;
+  height: auto;
+  padding: 10px;
+  -webkit-box-sizing: border-box;
+  -moz-box-sizing: border-box;
+  box-sizing: border-box;
+}
+
+.form-login .form-control:focus {
+  z-index: 2;
+}
+
+.form-login input[type="text"], .form-login input[type="password"] {
+  margin-bottom: 15px;
+  border-radius: 5px;
+  -webkit-border-radius: 5px;
+  border: 1px solid #eaeaec;
+  background: #eaeaec;
+  box-shadow: none;
+  font-size: 12px;
+}
+
+.form-login .btn-login {
+  text-transform: uppercase;
+  font-weight: normal;
+  padding: 5px;
+}
+
+.form-login .btn-login:hover {
+  -webkit-transition: all 0.3s;
+  -moz-transition: all 0.3s;
+  transition: all 0.3s;
+}
+
+.form-login p {
+  text-align: left;
+  color: #b6b6b6;
+  font-size: 16px;
+  font-weight: normal;
+}
+
+.form-login a, .form-login a:hover {
+  color: #6bc5a4;
+}
+
+.form-login a:hover {
+  text-decoration: underline;
+}
+
+.login-wrap {
+  padding: 20px;
+  position: relative;
+}

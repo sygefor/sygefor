@@ -1,0 +1,18 @@
+<div class="modal-header">
+    <button type="button" class="close" ng-click="dialog.dismiss()">×</button>
+    <h4 class="modal-title"><i class="fa fa-file-pdf-o"></i> Exporter en PDF</h4>
+</div>
+<div class="modal-body">
+    <form novalidate class="form-horizontal" role="form">
+        <div class="form-group">
+            <label class="col-sm-4 control-label">Nombre d'éléments</label>
+            <div class="col-sm-8">
+                <span class="form-control">{{ items.length }}</span>
+            </div>
+        </div>
+    </form>
+</div>
+<div class="modal-footer">
+    <a class="btn btn-default" ng-click="dialog.dismiss()">Annuler</a>
+    <a class="btn btn-primary" ng-click="download()">Télécharger</a>
+</div>

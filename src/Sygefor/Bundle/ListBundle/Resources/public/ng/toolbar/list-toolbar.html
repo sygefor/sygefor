@@ -1,0 +1,77 @@
+<div class="list-toolbar">
+    <div class="left-group">
+        <div class="left-group-container">
+            <!-- Select button -->
+            <div class="btn-group">
+                <button ng-if="!selected.length" ng-click="selectAll()" title="Tous sélectionner" type="button" class="btn btn-default btn-min-width" ng-class="{disabled: !search.result.total}">
+                    <i class="fa fa-square-o"></i>
+                </button>
+
+                <button ng-if="selected.length" ng-click="deselectAll()" title="Tous désélectionner" type="button" class="btn btn-default">
+                    <i class="fa fa-check-square-o" ng-if="selected.length == search.result.total"></i>
+                    <i class="fa fa-minus-square-o" ng-if="selected.length < search.result.total"></i>
+                </button>
+
+                <button type="button" class="btn btn-default dropdown-toggle" data-toggle="dropdown" ng-class="{disabled: !search.result.total}">
+                    <span class="caret"></span>
+                </button>
+                <ul class="dropdown-menu">
+                    <li><a href="" ng-click="selectAll()">Tous sélectionner</a></li>
+                    <li ng-show="selected.length" class="divider"></li>
+                    <li ng-show="selected.length"><a href="" ng-click="deselectAll()" >Tout desélectionner</a></li>
+                </ul>
+            </div>
+
+            <!-- Mass operations -->
+            <div class="btn-group btn-mass-operation">
+                <button type="button" class="btn btn-default dropdown-toggle" data-toggle="dropdown" ng-class="{disabled: !selected.length}">
+                    Action groupée <span class="caret"></span>
+                </button>
+                <ul class="dropdown-menu">
+                    <li ng-repeat="operation in batchOperations| filter: batchOperationAvailable" ng-class="{'dropdown-submenu': operation.subitems}">
+                        <!-- with subitems -->
+                        <a href="" ng-if="operation.subitems"><i class="fa {{ operation.icon }}"></i> {{ operation.label }}</a>
+                        <ul class="dropdown-menu" ng-if="operation.subitems">
+                            <li ng-repeat="sub in operation.subitems"><a href="" ng-click="batch(sub)"><i class="fa {{ sub.icon }}"></i> {{ sub.label }}</a></li>
+                        </ul>
+                        <!-- without subitems -->
+                        <a href="" ng-click="batch(operation)" ng-if="!operation.subitems"><i class="fa {{ operation.icon }}"></i> {{ operation.label }}</a>
+                    </li>
+                </ul>
+            </div>
+        </div>
+    </div>
+
+    <!-- Search bar -->
+    <div class="center-group form-group">
+        <div class="center-group-container">
+            <!--input type="search" class="form-control"  placeholder="Rechercher..." ng-model="search.query.keywords"-->
+            <div search-box ng-controller="SearchBoxController" placeholder="Cliquez pour filtrer la liste..." facet-list="sbfacets" result-list="sbparameters"></div>
+        </div>
+    </div>
+
+    <!-- View switch -->
+    <div class="right-group">
+        <div class="right-group-container btn-group">
+            <span ng-show="!!search.result.total" class="btn btn-default btn-deactivated"><strong>{{ (search.query.page-1)*search.query.size + 1  }} - {{ search.query.page*search.query.size < search.result.total ? search.query.page*search.query.size : search.result.total  }}</strong> sur <strong>{{ search.result.total }}</strong></span><!--
+            --><button ng-repeat="state in $state.$current.self.root.states|orderObjectBy : 'weight'" type="button" ng-attr-title="Visualiser en mode : {{ state.label }}" class="btn btn-default" ng-class="{active: $state.includes(state.name)}" ng-click="$state.go(state.name)"><i class="fa {{ state.icon }}"></i></button>
+        </div>
+    </div>
+
+    <!-- add button -->
+    <div class="btn-add-operation">
+        <div class="btn-add-operation-container">
+            <div class="btn-group">
+                <!-- <button type="button" class="btn btn-default" ng-click="addOperation(addOperations[0])"><i class="fa {{ addOperations[0].label }}"></i></button>
+                <div ng-switch-default> -->
+                <button type="button" class="btn btn-primary dropdown-toggle" data-toggle="dropdown" ng-class="{disabled: (addOperations | filter: addOperationAvailable).length == 0 }">
+                    Ajouter <span class="caret"></span>
+                </button>
+                <ul class="dropdown-menu">
+                    <li ng-repeat="operation in addOperations | filter: addOperationAvailable"><a href="" ng-click="operation.execute(operation.key)"><i class="fa {{ operation.icon }}"></i> {{ operation.label }}</a></li>
+                </ul>
+            </div>
+        </div>
+    </div>
+
+</div>

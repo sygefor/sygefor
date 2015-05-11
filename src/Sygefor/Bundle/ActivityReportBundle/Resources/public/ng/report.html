@@ -1,0 +1,49 @@
+<div class="search-list full-height-container is-full-width is-absolute">
+    <div class="full-height-item">
+        <!-- Search bar -->
+        <div class="list-toolbar">
+            <div class="center-group form-group pl-0">
+                <div class="center-group-container">
+                    <!--input type="search" class="form-control"  placeholder="Rechercher..." ng-model="search.query.keywords"-->
+                    <div search-box ng-controller="SearchBoxController" placeholder="Cliquez pour affiner le bilan..." facet-list="sbfacets" result-list="sbparameters"></div>
+                </div>
+            </div>
+            <div class="btn-add-operation">
+                <div class="btn-add-operation-container">
+                    <button type="button" class="btn btn-primary" ng-click="download('pdf')"><i class="fa fa-file-pdf-o"></i>&nbsp; Télécharger</button>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="list-view full-height-item is-grow">
+        <div class="full-height-container is-absolute is-full-width is-direction-row">
+
+            <div class="full-height-item grid-list-detail-results">
+                <div class="full-height-container is-full-width is-absolute is-direction-column">
+                    <div class="full-height-item is-full-width is-grow is-overflow-y">
+                        <div class="list-group">
+                            <h4 class="panel-heading mt-0">Activités de formation</h4>
+                            <a href="" class="list-group-item" ui-sref="report.training.summaries" ui-sref-active="active">Synthèse</a>
+                            <a href="" class="list-group-item" ui-sref="report.training.crosstabs" ui-sref-active="active">Croisements</a>
+                            <a href="" class="list-group-item" ui-sref="report.training.listings" ui-sref-active="active">Récapitulatifs</a>
+                        </div>
+
+                        <div class="list-group">
+                            <h4 class="panel-heading mt-0">Rencontre scientifique</h4>
+                            <a href="" class="list-group-item" ui-sref="report.meeting.summaries" ui-sref-active="active">Synthèse</a>
+                            <a href="" class="list-group-item" ui-sref="report.meeting.crosstabs" ui-sref-active="active">Croisements</a>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="full-height-item grid-list-detail-view">
+                <div class="full-height-container is-full-width is-absolute is-direction-column">
+                    <div class="full-height-item is-overflow-y is-grow view">
+                        <div ui-view autoscroll></div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>

@@ -1,0 +1,16 @@
+@import "../../../../../../../app/Resources/scss/base/variables";
+
+/**
+* State : detail.view
+*/
+
+// preview sidebar
+.list-detail .view .sidebar {
+  .block-sessions {
+    .list {
+      li.past a {
+        color: $gray-light;
+      }
+    }
+  }
+}

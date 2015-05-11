@@ -1,0 +1,10 @@
+<div class="block block-comments">
+    <div class="block-title">
+        <span class="h4"><span class="fa fa-comment-o"></span> Commentaires</span>
+    </div>
+    <div class="block-body">
+        <form sf-xeditable-form="form" sf-href='training.view({id: training.id})' on-success="onSuccess(data)">
+            <p><span sf-xeditable="form.children.comments" data-type="textarea">{{ training.comments }}</span></p>
+        </form>
+    </div>
+</div>

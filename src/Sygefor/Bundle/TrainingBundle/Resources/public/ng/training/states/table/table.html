@@ -1,0 +1,52 @@
+<div class="full-height-container is-full-width is-absolute is-direction-column">
+
+    <!-- Results -->
+    <div ng-if="search.result.total" class="full-height-item is-full-width is-grow">
+        <div class="col-xs-12">
+            <table search-table ng-class="{loading: search.processing}">
+                <thead>
+                <tr>
+                    <th></th>
+                    <th search-table-th field="training.organization.name.source">URFIST</th>
+                    <th search-table-th field="year">Année</th>
+                    <th search-table-th field="semester">Semestre</th>
+                    <th search-table-th field="training.number">Numéro</th>
+                    <th search-table-th field="training.typeLabel.source">Type</th>
+                    <th search-table-th field="training.name.source">Intitulé</th>
+                    <th search-table-th field="training.theme.source">Thématique</th>
+                    <th search-table-th field="sessionsCount">Sessions</th>
+                    <th search-table-th field="lastSession.dateBegin">Dernière</th>
+                    <th search-table-th field="nextSession.dateBegin">Prochaine</th>
+                </tr>
+                </thead>
+                <tbody>
+                <tr ng-repeat="item in search.result.items" ng-class="{warning: isSelected(item.id)}">
+                    <td ng-click="switchSelect(item.id)" stop-event><i class="fa" ng-class="{'fa-square-o': !isSelected(item.id), 'fa-check-square-o': isSelected(item.id)}"></i></td>
+                    <td>{{ item.training.organization.name.replace('URFIST de', '') }}</td>
+                    <td>{{ item.year }}</td>
+                    <td>{{ item.semester }}</td>
+                    <td>{{ item.training.number }}</td>
+                    <td>{{ item.training.typeLabel }}</td>
+                    <td><a ui-sref="training.detail.view({id: item.id})">{{ item.training.name ? item.training.name : '(Sans titre)' }}</a></td>
+                    <td>{{ item.training.theme }}</td>
+                    <td>{{ item.sessionsCount }}</td>
+                    <td><a ui-sref="session.detail.view({id: item.lastSession.id, training: item.training.id})">{{ item.lastSession.dateBegin|date: 'dd/MM/yyyy' }}</a></td>
+                    <td><a ui-sref="session.detail.view({id: item.nextSession.id, training: item.training.id})">{{ item.nextSession.dateBegin|date: 'dd/MM/yyyy' }}</a></td>
+                </tr>
+                </tbody>
+            </table>
+        </div>
+    </div>
+    <div ng-if="search.result.total" class="full-height-item is-full-width">
+        <div search-table-controls></div>
+    </div>
+
+    <!-- No results -->
+    <div class="full-height-item is-full-width is-grow" ng-if="search.executed && !search.result.total">
+        <div class="col-xs-12">
+            <h1>Oops!</h1>
+            <p>Il n'y a aucune formation correspondante à votre recherche.</p>
+        </div>
+    </div>
+
+</div>

@@ -1,0 +1,9 @@
+<div>
+    <h3><span class="fa fa-graduation-cap"></span> Participants <small>({{ getTotal() }})</small></h3><hr>
+    <ul class="summary">
+        <li ng-repeat="public in publics">
+            {{ public.name }}
+            <span class="pull-right inline-block" sf-xeditable="getFormElement(public)" data-mode="popup" data-placement="left">{{ getCount(public) }}</span>
+        </li>
+    </ul>
+</div>

@@ -1,0 +1,96 @@
+{#
+# macro : listing
+#}
+{% macro listing(caption, data, template) %}
+    {% if data %}
+        {% include template with {'caption': caption, 'data': data} only %}
+    {% endif %}
+{% endmacro %}
+
+{#
+# macro : crosstab
+#}
+{% macro crosstab(caption, data) %}
+    <table class="table">
+        <caption>{{ caption }}</caption>
+        <thead>
+        <tr>
+            <th></th>
+            {% for col in data.cols %}
+            <th class="text-right">{{ col.label }}</th>
+            {% endfor %}
+            <th></th>
+        </tr>
+        </thead>
+        <tbody>
+        {% for row in data.rows %}
+        <tr>
+            <td>{{ row.label }}</td>
+            {% for col in row.data %}
+                <td class="text-right">{{ col.value }}</td>
+            {% endfor %}
+            <td class="text-right active">{{ row.value }}</td>
+        </tr>
+        {% endfor %}
+        <tr>
+            <td class="active"></td>
+            {% for col in data.cols %}
+                <td class="text-right active">{{ col.value }}</td>
+            {% endfor %}
+            <td class="text-right active"><strong>{{ data.value }}</strong></td>
+        </tr>
+        </tbody>
+    </table>
+{% endmacro %}
+
+{#
+# macro : crosstab
+#}
+{% macro crosstab3way(caption, data) %}
+    <table class="table">
+        <caption>{{ caption }}</caption>
+        <thead>
+        <tr>
+            <th></th>
+            <th></th>
+            {% for col in data.cols %}
+                <th class="text-right">{{ col.label }}</th>
+            {% endfor %}
+            <th></th>
+        </tr>
+        </thead>
+        {% for row in data.rows %}
+            <tbody>
+            {% for subrow in row.data %}
+                <tr>
+                    {% if loop.index == 1 %}
+                        <td rowspan="{{ loop.length + 1 }}">{{ row.label }}</td>
+                    {% endif %}
+                    <td>{{ subrow.label }}</td>
+                    {% for value in subrow.data %}
+                        <td class="text-right">{{ value.value }}</td>
+                    {% endfor %}
+                    <td class="active text-right">{{ subrow.value }}</td>
+                </tr>
+            {% endfor %}
+            <tr>
+                <td class="active"></td>
+                {% for col in data.cols %}
+                    <td class="active text-right">{#{{ sum(row, col.key) }}#}</td>
+                {% endfor %}
+                <td class="active text-right"><strong>{{ row.value }}</strong></td>
+            </tr>
+            </tbody>
+        {% endfor %}
+        <tbody>
+            <tr>
+                <td class="active"></td>
+                <td class="active"></td>
+                {% for col in data.cols %}
+                    <td class="text-right active">{{ col.value }}</td>
+                {% endfor %}
+                <td class="text-right active"><strong>{{ data.value }}</strong></td>
+            </tr>
+        </tbody>
+    </table>
+{% endmacro %}

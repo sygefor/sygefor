@@ -1,0 +1,63 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>{{ training.name }}</title>
+    <link href='http://fonts.googleapis.com/css?family=Open+Sans:400,300,600' rel='stylesheet' type='text/css'>
+    <link href="{{ link }}\build\styles.css" rel="stylesheet" type='text/css'>
+</head>
+<body style="background-color: white">
+<div class="pre-title">{{ training.typeLabel }} n°{{ training.id }} -  {{ training.organization.name }}</div>
+<h2><span>{{ training.name }}</span></h2>
+<div class="infos">
+    {% if training.theme is not null %}
+        <div><span>{{ training.theme.name }}</span></div>
+    {% endif %}
+    {% if training.tags is not null %}
+        <div><span>{{  training.tags|join('name') }}</span></div>
+    {% endif %}
+</div>
+
+<h3><span>Objectifs</span></h3>
+<p><span class="text-justify">{{ training.objectives|nl2br }}</span></p>
+
+<h3><span>Contenu du programme</span></h3>
+<p><span class="text-justify">{{ training.program|nl2br }}</span></p>
+
+<h3><span>Ressources</span></h3>
+<p><span class="text-justify">{{ training.resources|nl2br }}</span></p>
+
+<h3><span>Action : {{ training.typeLabel }}</span></h3>
+<div class="row">
+    <div class="col-md-6">
+        <ul class="summary">
+            {% if training.variousAction is not null %}
+                <li><label> Type</label> <span>{{ training.variousAction.name }}</span></li>
+            {% endif %}
+            {% if training.publicTypes is not null %}
+                <li><label>Publics prioritaires</label> <span>{{ training.publicTypes | join('name') }}</span></li>
+            {% endif %}
+            <li><label> Organisme</label><span> {{ ((training.organism == 1) ? 'Premier Semestres' : 'Deuxième Semestre') }}</span></li>
+        </ul>
+    </div>
+</div>
+
+<h3><span>Commentaires</span></h3>
+<p><span>{{ training.comments }}</span></p>
+
+<h4>Sessions <span>({{ training.sessions|length}})</span></h4>
+{% if training.sessions|length == 0 %}
+    <div class="well well-sm">
+        Il n'y a aucune session.
+    </div>
+{% endif %}
+<ul class="list list-grid">
+    {% for session in training.sessions %}
+        <li>
+            {{ session.dateBegin |date("d/m/Y") }}
+        </li>
+    {% endfor %}
+</ul>
+</body>
+</html>

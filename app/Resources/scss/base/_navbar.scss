@@ -1,0 +1,44 @@
+
+/*-------------------------------
+            NAVBAR STYLES
+-------------------------------*/
+
+.navbar-default {
+  border-bottom: 0px;
+
+  .navbar-brand {
+    background-color: $brand-logo !important;
+    color: #fff !important;
+    font-size: 1.5em;
+    font-weight: lighter;
+    padding-left: $grid-gutter-width;
+    padding-right: $grid-gutter-width;
+
+    & sup {
+
+    }
+  }
+
+  .navbar-nav li  a {
+    font-size: 15px;
+  }
+}
+
+
+/**
+* loading bar
+*/
+#loading-bar .bar {
+  background: $brand-primary;
+  position: fixed;
+  z-index: 1023;
+  top: $navbar-height;
+  left: 0;
+  width: 100%;
+  height: 2px;
+}
+
+/* Fancy blur effect */
+#loading-bar .peg {
+  box-shadow: 0 0 10px $brand-primary, 0 0 5px $brand-primary;
+}

@@ -1,0 +1,22 @@
+<table class="table">
+    <caption>{{ caption }}</caption>
+   <thead>
+       <tr>
+           <th></th>
+           <th ng-repeat="col in data.cols" class="text-right">{{ col.label }}</th>
+           <th></th>
+       </tr>
+   </thead>
+   <tbody>
+       <tr ng-repeat="row in data.rows">
+           <td>{{ row.label }}</td>
+           <td ng-repeat="col in row.data" class="text-right">{{ col.value }}</td>
+           <td class="text-right active">{{ row.value }}</td>
+       </tr>
+       <tr>
+           <td class="active"></td>
+           <td ng-repeat="col in data.cols" class="text-right active">{{ col.value }}</td>
+           <td class="text-right active"><strong>{{ data.value }}</strong></td>
+       </tr>
+   </tbody>
+</table>

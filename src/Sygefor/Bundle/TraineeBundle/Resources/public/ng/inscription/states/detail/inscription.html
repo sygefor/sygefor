@@ -1,0 +1,81 @@
+<div class="btn-group pull-right">
+    <a class="btn btn-fa" href="" tooltip="Publipostage" ng-click="$dialog.open('batch.publipost', { items: [inscription.id], service: 'inscription' })"><span class="fa fa-file-word-o"></span></a>
+    <a class="btn btn-fa" href="" tooltip="Attestation de stage" ng-if="inscription.presenceStatus.status == 1" ng-click="$dialog.open('batch.export.pdf', { items: [inscription.id], service: 'inscription.attestation' })"><span class="fa fa-file-pdf-o"></span></a>
+    <a class="btn btn-fa" href="" tooltip="Voir le profil" ng-if="inscription.trainee._accessRights.view" ui-sref="trainee.detail.view({id: inscription.trainee.id})"><span class="fa fa-user"></span></a>
+    <a class="btn btn-fa" href="" tooltip="Voir la session" ng-if="inscription.session.training._accessRights.view" ui-sref="session.detail.view({training: inscription.session.training.id, id: inscription.session.id})"><span class="fa fa-calendar-o"></span></a>
+    <a class="btn btn-fa" href="" tooltip="Supprimer" ng-if="inscription._accessRights.delete" ng-click="delete()"><span class="fa fa-trash-o"></span></a>
+</div>
+
+<div class="pre-title">{{ inscription.session.dateBegin|date: 'dd/MM/yyyy' }} - {{ inscription.session.training.name }}</div>
+
+<h2>Inscription de {{ inscription.trainee.fullName }}</h2>
+
+<div>
+    <strong>Date :</strong> {{ inscription.createdAt | date: 'dd/MM/yyyy HH:mm' }}<br>
+
+    <div class="btn-group dropdown">
+        <button class="btn btn-xs dropdown-toggle" ng-class="$root.inscriptionStatusClass(inscription.inscriptionStatus.status, 'btn')" data-toggle="dropdown">{{ inscription.inscriptionStatus.name }} <span class="caret"></span></button>
+        <ul class="dropdown-menu text-small">
+            <li ng-repeat="status in inscriptionStatus track by status.id" ng-class="{disabled :inscription.inscriptionStatus.id == status.id}"><a href="" ng-click="updateInscriptionStatus(status)"><i class="fa fa-check" ng-if="inscription.inscriptionStatus.id == status.id"></i> {{ status.name }}</a></li>
+        </ul>
+    </div>
+
+    <div ng-if="inscription.presenceStatus || inscription.inscriptionStatus.status == 2" class="btn-group dropdown">
+        <button class="btn btn-xs dropdown-toggle" ng-class="$root.presenceStatusClass(inscription.presenceStatus.status, 'btn')" data-toggle="dropdown">
+            <span ng-if="inscription.presenceStatus">{{ inscription.presenceStatus.name }}</span>
+            <span ng-if="!inscription.presenceStatus"><em>Statut de présence</em></span>
+            <span class="caret"></span>
+        </button>
+        <ul class="dropdown-menu text-small">
+            <li ng-repeat="status in presenceStatus track by status.id" ng-class="{disabled :inscription.inscriptionStatus.id == status.id}"><a href="" ng-click="updatePresenceStatus(status)"><i class="fa fa-check" ng-if="inscription.inscriptionStatus.id == status.id"></i> {{ status.name }}</a></li>
+        </ul>
+    </div>
+</div>
+
+<div class="row">
+    <div class="col-sm-6">
+        <h3><i class="fa fa-user"></i> {{ inscription.trainee.title.name }} {{ inscription.trainee.fullName }}</h3><hr>
+
+        <ul class="summary">
+            <li><label>Email</label> {{ inscription.trainee.email }}</li>
+            <li><label>Téléphone</label> {{ inscription.phoneNumber }}</li>
+            <li><label>Etablissement</label> {{ inscription.institution.name === 'Autre' ? inscription.otherInstitution : inscription.institution.name }}</li>
+            <li><label>Code postal</label> {{ inscription.zip }}</li>
+            <li><label>Ville</label> {{ inscription.city }}</li>
+        </ul>
+
+        <h3>{{ inscription.publicCategory.name ? inscription.publicCategory.name : 'Profil professionnel' }}</h3><hr>
+        <ul class="summary">
+            <li><label>Catégorie de public</label> {{ inscription.publicCategory.name }}</li>
+            <li><label>Situation professionnelle</label> {{ inscription.professionalSituation.name }}</li>
+            <li><label>Fonction, statut</label> {{ inscription.status }}</li>
+            <li><label>Domaine disciplinaire</label> {{ inscription.disciplinaryDomain.name }}</li>
+            <li><label>Discipline</label> {{ inscription.disciplinary.name }}</li>
+            <li><label>Cursus d'enseignement</label> {{ inscription.teachingCursus.name }}</li>
+        </ul>
+
+        <div class="alert alert-warning well-sm"><strong>Important :</strong> les informations présentées ci-dessus <strong>sont datées de la date de la session</strong> ({{ inscription.session.dateBegin|date: 'dd/MM/yyyy' }}).
+            <span ng-if="inscription.trainee._accessRights.view">Pour obtenir des informations à jour, vous pouvez <a ui-sref="trainee.detail.view({id: inscription.trainee.id})" class="alert-link">consulter le profil du participant <i class="fa fa-external-link"></i></a>.</span>
+            <span ng-if="!inscription.trainee._accessRights.view">Pour obtenir des informations à jour, contactez un administrateur de l'{{ inscription.trainee.organization.name }}.</span>
+        </div>
+
+    </div>
+    <div class="col-sm-6">
+
+        <h3><i class="fa fa-calendar"></i> {{ inscription.session.training.name }}</h3><hr>
+        <ul class="summary">
+            <li><label>Thématique</label> {{ inscription.session.training.theme.name }}</li>
+            <li><label>Publics prioritaires</label> <span ng-show="inscription.session.training.publicTypes">{{ inscription.session.training.publicTypes|joinObjects:'name' }}</span></li>
+            <li><label>Date(s)</label> {{ inscription.session.dateBegin|date: 'dd/MM/yyyy' }} {{ inscription.session.dateEnd ? ' - ' + (inscription.session.dateEnd|date: 'dd/MM/yyyy') : '' }}</li>
+            <li><label>Horaires</label> {{ inscription.session.schedule }}</li>
+            <li><label>Durée</label> {{ inscription.session.hourDuration ? inscription.session.hourDuration + ' heure(s)' : '' }}</li>
+            <li><label>Tarif</label> {{ inscription.session.price ? inscription.session.price + ' &euro;' : '' }}</li>
+            <li><label>Lieu</label> {{ inscription.session.place.name }}</li>
+        </ul>
+
+        <!--div class="well">
+            statistiques
+        </div-->
+
+    </div>
+</div>

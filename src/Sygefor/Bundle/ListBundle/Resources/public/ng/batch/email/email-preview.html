@@ -1,0 +1,27 @@
+<div class="modal-header">
+    <button type="button" class="close" ng-click="modalInstance.dismiss()">×</button>
+    <h4 class="modal-title">Prévisualisation du message :</h4>
+</div>
+<div class="modal-body">
+    <div class="form-horizontal">
+    <div class="form-group">
+        <label class="col-sm-3 control-label">Sujet</label>
+        <div class="col-md-9">
+            <div class="form-control" style="height: auto">
+                {{ email.subject }}
+            </div>
+        </div>
+    </div>
+    <div class="form-group">
+        <label class="col-sm-3 control-label">Message</label>
+    <div class="col-md-9">
+        <div ng-bind-html="email.message | nl2br" class="form-control" style="height: auto">
+    </div>
+    </div>
+
+    </div>
+    </div>
+</div>
+<div class="modal-footer">
+    <a class="btn btn-primary" ng-click="modalInstance.dismiss()">Fermer</a>
+</div>

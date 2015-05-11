@@ -1,0 +1,533 @@
+@import "base/variables";
+@import "../../../node_modules/bootstrap-sass/assets/stylesheets/bootstrap";
+@import "../../../node_modules/font-awesome/scss/font-awesome.scss";
+
+//@import "normalize";
+@import "base/fonts";
+@import "base/common";
+@import "base/blocks";
+@import "base/icons";
+@import "base/buttons";
+@import "base/displays";
+@import "base/paginations";
+@import "base/forms";
+@import "base/dropdowns";
+@import "base/navbar";
+@import "base/xeditable";
+@import "base/scrollbar";
+@import "base/dashboard";
+@import "modules/login";
+@import "modules/list";
+
+body {
+  padding-top: $navbar-height;
+  //background:#F2F2F2;
+  font-weight: normal;
+  font-style: normal;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+  //text-rendering: optimizeLegibility;
+}
+
+.container-navigation {
+  min-height: 48px;
+}
+
+.main-content {
+  padding-bottom: $padding-base-vertical*2;
+}
+
+.modal-backdrop {
+  bottom: 0; // ???
+}
+
+.full-height-container {
+
+
+  html.no-flexboxlegacy & {
+    //display: table; // fallback ie
+
+    &.is-direction-row {
+      > .full-height-item {
+        //display: table-cell;
+      }
+    }
+    &.is-direction-column {
+      > .full-height-item {
+        //display: table-row;
+      }
+    }
+
+  }
+
+  //html.flexbox.flexboxlegacy & {
+  html.flexbox & {
+    display: flex;
+    flex-direction: column;
+    height: 100%;
+    top: 0;
+    left: 0;
+    //overflow-x: hidden;
+
+
+    &.is-direction-row {
+      flex-direction: row;
+
+      > .full-height-item.is-grow {
+        width: 100%;
+      }
+    }
+    &.is-full-width {
+      width: 100%;
+    }
+
+    &.is-absolute {
+      position: absolute;
+      left: 0;
+      //overflow: hidden;
+    }
+    &.is-overflow-y {
+      overflow-y: auto !important;
+      -webkit-overflow-scrolling: touch;
+    }
+    &.is-no-overflow {
+      overflow: hidden !important;
+    }
+  }
+}
+.full-height-item {
+  position: relative;
+  //html.flexbox.flexboxlegacy & {
+  html.flexbox & {
+    //display: table-row; // fallback
+    flex-grow: 0; /* default 0 */
+    flex-shrink: 0;
+    flex-basis: auto;
+    //overflow-x: hidden;
+
+    &.is-full-width {
+      width: 100%;
+    }
+    &.is-grow {
+      flex-grow: 1;
+      flex-shrink: 1;
+      height: 100%;
+      overflow: auto;
+    }
+    &.is-overflow-y {
+      overflow-y: auto !important;
+      -webkit-overflow-scrolling: touch;
+    }
+    &.is-no-overflow {
+      overflow: hidden !important;
+    }
+  }
+
+  //html.flexbox.flexboxlegacy .navbar-default + & {
+  html.flexbox .navbar-default + & {
+    &, .main-content {
+      padding-top: 48px;
+    }
+  }
+}
+
+/**
+* bootstrap
+*/
+.table-nohead > tbody > tr:first-child td {
+  border-top:0px;
+}
+
+/**
+* breadcrumb
+*/
+.breadcrumb {
+  padding-left: 0;
+  padding-right: 0;
+  margin-bottom: $padding-base-vertical;
+
+  > li {
+    display: inline-block;
+    + li:before {
+      color: lighten($breadcrumb-color, 30%);
+    }
+  }
+
+  a {
+    color: $breadcrumb-color;
+  }
+
+  a:hover,
+  .active a {
+    color: $link-color;
+    text-decoration: none;
+  }
+
+  &:before {
+    font-family: FontAwesome;
+    content: "\f015";
+    padding: 0 3px 0 0;
+    font-size:1.2em;
+    position: relative;
+    top:1px;
+    color: $breadcrumb-color;
+  }
+}
+
+/*
+.breadcrumb {
+  padding-left: 0;
+  padding-right: 0;
+  margin-bottom: $padding-base-vertical;
+  background: transparent;
+  a {
+    &:hover {
+      color:$breadcrumb-active-color
+    }
+  }
+
+  &:before {
+    font-family: FontAwesome;
+    content: "\f015";
+    padding: 0 3px 0 0;
+    font-size:1.2em;
+    position: relative;
+    top:1px;
+  }
+}
+*/
+
+/**
+* Labels
+*/
+a.label {
+  color:#FFFFFF !important;
+}
+
+/**
+* Growl
+*/
+.growl {
+  top:60px;
+  z-index: 9999;
+  position: fixed;
+  .growl-item {
+    padding:10px 15px;
+    &.ng-enter,
+    &.ng-leave {
+      -webkit-transition:1s linear all;
+      -moz-transition:1s linear all;
+      -o-transition:1s linear all;
+      transition:1s linear all;
+    }
+  }
+}
+
+/**
+* Dropdown submenu
+*/
+.dropdown-submenu {
+  position:relative;
+  & > .dropdown-menu {
+    top:0;
+    left:100%;
+    margin-top:-6px;
+    margin-left:-1px;
+  }
+  &:hover > .dropdown-menu {
+    display:block;
+  }
+  & > a:after {
+    display:block;
+    content:" ";
+    float:right;
+    width:0;
+    height:0;
+    border-color:transparent;
+    border-style:solid;
+    border-width:5px 0 5px 5px;
+    border-left-color:#cccccc;
+    margin-top:5px;
+    margin-right:-10px;
+  }
+  &:hover > a:after {
+    border-left-color:#000000;
+  }
+  &.pull-left{
+    float:none !important;
+    & > .dropdown-menu {
+      left:-100%;
+    }
+  }
+}
+
+/**
+* Daterange picker
+*/
+
+.daterangepicker td.in-range {
+  background: $gray-lighter;
+}
+.daterangepicker td.available:hover {
+  background:darken($gray-lighter, 10%);
+}
+.daterangepicker td.active,
+.daterangepicker td.active:hover {
+  background-color: $brand-primary;
+  border-color: transparent !important;
+  color: #fff;
+}
+
+.daterangepicker .ranges li.active,
+.daterangepicker .ranges li:hover {
+  background-color: $brand-primary;
+  border-color: transparent !important;
+  color: #fff;
+}
+
+.daterangepicker .ranges li {
+  color: $brand-primary;
+}
+/**
+<ul class="dropdown-menu" role="menu" aria-labelledby="dropdownMenu" style="display: block; position: static; margin-bottom: 5px; *width: 180px;">
+  <li><a href="#">Action</a></li>
+  <li><a href="#">Another action</a></li>
+  <li><a href="#">Something else here</a></li>
+  <li class="divider"></li>
+  <li class="dropdown-submenu">
+    <a tabindex="-1" href="#">More options</a>
+    <ul class="dropdown-menu">
+      <li><a tabindex="-1" href="#">Second level</a></li>
+      <li class="dropdown-submenu">
+        <a href="#">More..</a>
+        <ul class="dropdown-menu">
+        	<li><a href="#">3rd level</a></li>
+        	<li><a href="#">3rd level</a></li>
+        </ul>
+      </li>
+      <li><a href="#">Second level</a></li>
+      <li><a href="#">Second level</a></li>
+    </ul>
+  </li>
+</ul>
+**/
+
+
+// temp
+.editable-checklist label {
+  display: block;
+}
+
+// temp
+.col-md-10 .page-header {
+  margin-top: 0;
+}
+
+// temp
+#loading-bar-spinner {
+  display: block;
+  position: fixed;
+  z-index: 2000;
+  top: 10px;
+  left: auto;
+  right: 10px;
+  display: none;
+}
+
+
+/**
+* Loader
+*/
+
+/*
+<div class="wrap">
+  <div class="loader">
+    <div class="cube1"></div>
+    <div class="cube2"></div>
+    <div class="cube3"></div>
+    <div class="cube4"></div>
+    <div class="cube5"></div>
+  </div>
+</div>
+*/
+
+.wrap {
+  position: absolute;
+  left: 50%;
+  top: 50%;
+  margin-top: -12px;
+  margin-left: -80px;
+  overflow: hidden;
+  height: 50px;
+  width: 200px;
+}
+
+.loader {
+  margin: 0 auto;
+  width: 32px;
+  height: 32px;
+  position: relative;
+}
+
+.cube1,
+.cube2,
+.cube3,
+.cube4,
+.cube5 {
+  background-color: #000;
+  width: 10px;
+  height: 10px;
+  position: absolute;
+  top: 20px;
+  left: 0;
+
+  -webkit-animation: cubemove 2s infinite ease-in-out;
+  animation: cubemove 2s infinite ease-in-out;
+}
+
+.cube2 {
+  -webkit-animation-delay: -0.5s;
+  animation-delay: -0.5s;
+}
+
+.cube3 {
+  -webkit-animation-delay: -1s;
+  animation-delay: -1s;
+}
+
+.cube4 {
+  -webkit-animation-delay: -1.5s;
+  animation-delay: -1.5s;
+}
+.cube5 {
+  -webkit-animation-delay: -2s;
+  animation-delay: -2s;
+}
+
+@-webkit-keyframes cubemove {
+  0% { -webkit-transform: translateX(-120px);}
+  50% { -webkit-transform: translateX(0px) rotate(180deg) scale(2.2); background: #ff6000; }
+  100% { -webkit-transform: translateX(120px);}
+}
+
+@keyframes cubemove {
+  0% {
+    -webkit-transform: translateX(-120px);
+    transform: translateX(-120px);
+  }
+  50% {
+    -webkit-transform: translateX(0px) rotate(180deg) scale(2.2); background: #ff6000;
+    transform: translateX(0px) rotate(180deg) scale(2.2); background: #ff6000;
+  }
+  100% {
+    -webkit-transform: translateX(120px);
+    transform: translateX(120px);
+  }
+}
+
+/* trainee typeahead list*/
+.typeahead-inscription-item p{
+  margin-bottom: 4px;
+}
+
+.typeahead-inscription-item .item-name {
+  font-size:1.2em;
+}
+
+.typeahead-inscription-item .item-complement {
+  font-size:1em;
+  .small {
+    font-size:0.8em;
+  }
+
+  .col-xs-6 {
+    overflow:hidden;
+    text-overflow: ellipsis;
+  }
+}
+
+
+.absolute-fixed-wrapper {
+  padding-bottom: $line-height-computed/2 + $grid-gutter-width;
+}
+.relative-fixed-wrapper {
+  //position: relative;
+  display: block;
+
+
+  width: 100%;
+  height: auto;
+  //float: left;
+  //@extend .clearfix;
+
+  .fixed-bloc-wrapper {
+      background-color: rgba(250, 250, 250, 0.9);
+      //margin-left: 25%;
+      //margin-right: -$grid-gutter-width;
+      bottom: 0;
+      //right: 0;
+      //left: 0;
+      //width: inherit;
+      padding: $padding-base-vertical $padding-base-horizontal;
+      display: block;
+      //transform: translateX(-$grid-gutter-width/2);
+      position: fixed;
+  }
+}
+
+h2 {
+  .fa {
+    font-size: 0.66em;
+    line-height: 100%;
+
+  }
+}
+
+.table.table-condensed {
+  td {
+    padding: $padding-base-vertical;
+    &:first-child { padding-left: 0;}
+    &:last-child { padding-right: 0;}
+  }
+}
+
+// modal traineeMerge
+.merge .col-md-3.grid-list-detail-results, .merge .col-md-9 {
+  width:inherit;
+}
+
+.merge .list-group {
+  padding-top: 0px;
+}
+
+.merge .list-group-item label {
+  color: #d9534f;
+}
+
+.merge .summary {
+  padding-top: 10px;
+}
+
+
+//modal fileUpload
+#fileupload button a{
+  color:inherit;
+  text-decoration: none;
+}
+#fileupload div.row {
+  padding-top: 10px;
+}
+
+#fileupload div.progress {
+  margin-bottom: 0px;
+}
+
+//inactive buttons on details right list views (trainee)
+.block-inscriptions.nonViewable .btn-disabled {
+  margin: 0;
+  padding: 0;
+  cursor: default;
+  .fa {
+    margin-right: 0.5em;
+  }
+}

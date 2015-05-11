@@ -1,0 +1,107 @@
+<div class="container-fluid">
+    <form id="fileupload" method="POST" enctype="multipart/form-data" file-upload="options" auto-upload="true">
+        <!-- The fileupload-buttonbar contains buttons to add/delete files and start/cancel the upload -->
+        <div class="row fileupload-buttonbar">
+            <div class="col-md-12">
+                <!-- The fileinput-button span is used to style the file input field as button -->
+                <div class="btn-group pull-right">
+                    <span class="btn btn-primary fileinput-button">
+                        <i class="glyphicon glyphicon-plus"></i>
+                        <span>Ajouter un fichier</span>
+                        <input type="file" name="files[]" multiple>
+                    </span>
+
+                    <span class="btn btn-primary" ng-click="addLinkMaterial()">
+                        <i class="glyphicon glyphicon-plus"></i>
+                        <span>Ajouter un lien</span>
+                    </span>
+                </div>
+            </div>
+        </div>
+
+        <div ng-if='uploadErrors.length' class="alert alert-danger">
+            Erreurs lors du téléchargement :
+            <ul>
+                <li ng-repeat="error in uploadErrors">{{error}}</li>
+            </ul>
+        </div>
+
+        <!-- The list of files availables for upload/download -->
+        <div ng-if='!queue.length' class="well well-empty well-sm">
+             Aucun fichier présent
+        </div>
+
+        <div ng-if='!!queue.length' ng-repeat="file in queue track by $index" class="row">
+            <!-- file is already present on server -->
+
+            <div ng-if="file.isLocal==true || file.$state()=='pending'">
+
+                <div data-ng-switch="file.present">
+                    <div data-ng-switch-when="true">
+                        <div class="col-md-6">
+                            <button type="button" class="btn btn-default">
+                                {{file.fileName}}
+                            </button>
+                        </div>
+
+                        <div class="col-md-3">
+                            <button type="button" class="btn btn-success" data-ng-click="getFile(file)">
+                                <i class="fa fa-download"></i>
+                                    <span>Voir</span>
+
+                            </button>
+                        </div>
+                        <div class="col-md-3">
+                            <button type="button" class="btn btn-warning cancel" data-ng-click="removeFile(file)">
+                                <i class="glyphicon glyphicon-ban-circle"></i>
+                                <span>Retirer</span>
+                            </button>
+                        </div>
+
+                    </div>
+                    <div data-ng-switch-default>
+                        <div class="col-md-6">
+                            <button type="button" class="btn btn-default">
+                                {{file.name}}
+                            </button>
+                        </div>
+                        <div class="col-md-3">
+                            <div class="progress progress-striped active fade" data-ng-class="{pending: 'in'}[file.$state()]"
+                                 data-file-upload-progress="file.$progress()" style="width:96px;height:33px;">
+                                <div class="progress-bar progress-bar-success" data-ng-style="{width: num + '%'}"></div>
+                            </div>
+
+                        </div>
+                        <div class="col-md-3">
+                            <button type="button" class="btn btn-warning cancel" data-ng-click="file.$cancel()"
+                                    data-ng-hide="!file.$cancel">
+                                <i class="glyphicon glyphicon-ban-circle"></i>
+                                <span>Arreter</span>
+                            </button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div ng-if="file.isLocal===false ">
+
+                <div class="col-md-6">
+                    <button type="button" class="btn btn-default">
+                        {{file.name}}
+                    </button>
+                </div>
+                <div class="col-md-3">
+                    <button type="button" class="btn btn-success">
+                        <a target="_blank" href="{{file.url}}"><i class="fa fa-external-link"></i>
+                        <span>Voir</span></a>
+                    </button>
+                </div>
+                <div class="col-md-3">
+                    <button type="button" class="btn btn-warning cancel" data-ng-click="removeFile(file)">
+                        <i class="glyphicon glyphicon-ban-circle"></i>
+                        <span>Retirer</span>
+                    </button>
+                </div>
+            </div>
+        </div>
+    </form>
+</div>

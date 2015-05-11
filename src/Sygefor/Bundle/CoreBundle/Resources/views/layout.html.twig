@@ -1,0 +1,55 @@
+{% extends "SygeforCoreBundle::html.html.twig" %}
+{% from 'MopaBootstrapBundle::flash.html.twig' import session_flash %}
+{% set ngApp = ngApp is defined ? ngApp : 0 %}
+{% block body %}
+<div class="full-height-container is-full-width is-absolute is-direction-column">
+    <div role="navigation" class="navbar navbar-default navbar-fixed-top">
+        <div class="container-fluid">
+            <div class="navbar-header">
+                <button type="button" class="navbar-toggle collapsed" ng-init="navCollapsed = true" ng-click="navCollapsed = !navCollapsed">
+                    <span class="sr-only">Afficher la navigation</span>
+                    <span class="icon-bar"></span>
+                    <span class="icon-bar"></span>
+                    <span class="icon-bar"></span>
+                </button>
+                <a class="navbar-brand" href="/">Sygefor<sup>3</sup></a>
+            </div>
+            <div collapse="navCollapsed" class="collapse navbar-collapse navbar-responsive-collapse">
+                {{ mopa_bootstrap_menu(knp_menu_get('main'), {'automenu': 'navbar'}) }}
+                <ul class="nav navbar-nav navbar-right">
+                    <li class="dropdown">
+                        <a href="#" class="dropdown-toggle" data-toggle="dropdown"><i class="fa fa-user"></i> {{ app.user.username }}<span class="caret"></span></a>
+                        <ul class="dropdown-menu" role="menu">
+                            <li><a href="{{ path('fos_user_security_logout') }}">Déconnexion</a></li>
+                        </ul>
+                    </li>
+                </ul>
+            </div>
+        </div>
+    </div>
+
+    <div class="full-height-item is-full-width is-grow">
+        <div class="container-fluid" {% if ngApp %}ng-app="conjecto.sygefor.app"{% endif %}>
+            <div class="row">
+                <div class="col-md-12 main-content full-height-container is-absolute is-full-width">
+
+                    <!-- breadcrumb -->
+                    {% block breadcrumbs %}{% endblock %}
+
+                    <!-- flashes -->
+                    {% block flashes %}
+                        {% if app.session.flashbag.peekAll|length > 0 %}
+                            <div class="full-height-item">{{ session_flash() }}</div>
+                        {% endif %}
+                    {% endblock flashes %}
+
+                    <!-- content -->
+                    {% block content %}{% endblock %}
+
+                </div>
+            </div>
+            <div growl></div>
+        </div>
+    </div>
+</div>
+{% endblock %}

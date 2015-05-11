@@ -1,0 +1,10 @@
+imports:
+    - { resource: config.yml }
+
+#doctrine:
+#    dbal:
+#        dbname:   "sygefor3_migrate"
+
+# deactivate elastica listeners
+sygefor_elastica:
+    listeners: false

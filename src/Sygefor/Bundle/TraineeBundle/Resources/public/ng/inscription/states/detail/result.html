@@ -1,0 +1,15 @@
+<a ui-sref="inscription.detail.view({id: result.id})" title="{{ result.session.training.name }} - {{ result.session.dateBegin | date: 'dd/MM/yyyy' }}">
+    <div class="list-group-item-title">{{ result.trainee.fullName }}</div>
+    <div class="list-group-item-text">
+        {{ result.createdAt | date: 'dd/MM/yyyy HH:mm' }}
+    </div>
+    <div class="list-group-item-text">
+        {{ result.session.training.name | characters:80 }} - {{ result.session.dateBegin | date: 'dd/MM/yyyy' }}
+    </div>
+    <span ng-if="!result.presenceStatus.id" class="label" ng-class="$root.inscriptionStatusClass(result.inscriptionStatus.status)">
+        {{ result.inscriptionStatus.name }}
+    </span>
+    <span ng-if="result.presenceStatus.id" class="label" ng-class="$root.presenceStatusClass(result.presenceStatus.status)">
+        {{ result.presenceStatus.name }}
+    </span>
+</a>

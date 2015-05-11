@@ -1,0 +1,21 @@
+<html>
+<head>
+    <link href="{{ app.request.getSchemeAndHttpHost() ~ asset('build/pdf.css') }}" rel="stylesheet" type="text/css" />
+    {% block head %}{% endblock %}
+</head>
+<body class="urfist-{{ organization.code }}">
+    <div class="row">
+        <div class="col-xs-7">
+            <img src="{{ app.request.getSchemeAndHttpHost() ~ asset('img/urfist/' ~ organization.code ~ '/logo.png') }}" />
+        </div>
+        <div class="col-xs-5">
+            <strong>{{ organization.name }}</strong><br>
+            {{ organization.fullAddress|nl2br }}
+        </div>
+    </div>
+    <div class="row">
+        <div class="col-xs-12">
+            {% block body %}{% endblock %}
+        </div>
+    </div>
+</body>

@@ -1,0 +1,24 @@
+{% extends "SygeforCoreBundle::html.html.twig" %}
+{% set body_classes = ['login'] %}
+{% block body %}
+    <div class="container">
+        <form class="form-login" action="{{ path('fos_user_security_check') }}" method="POST">
+            <input type="hidden" name="_csrf_token" value="{{ csrf_token }}" />
+            <div class="login-wrap">
+                {% if error %}
+                    <div class="alert alert-danger">{{ error|trans([], 'FOSUserBundle') }}</div>
+                {% endif %}
+                <input id="username" name="_username" type="text" class="form-control" placeholder="Nom d'utilisateur">
+                <input id="password" name="_password" type="password" class="form-control" placeholder="Mot de passe">
+                <button class="btn btn-lg btn-login btn-block btn-primary" type="submit">
+                    <i class="fa fa-power-off"></i>
+                </button>
+                <div class="checkbox">
+                    <label>
+                        <input type="checkbox" id="remember_me" name="_remember_me" value="on"> {{ 'security.login.remember_me'|trans([], 'FOSUserBundle') }}
+                    </label>
+                </div>
+            </div>
+        </form>
+    </div>
+{% endblock %}

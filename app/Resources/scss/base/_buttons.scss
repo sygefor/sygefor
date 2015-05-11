@@ -1,0 +1,123 @@
+.btn {
+  border-color:transparent !important;
+
+  .list-toolbar & {
+  	@include button-size($padding-base-vertical, $padding-base-horizontal, 13px, 22px, $border-radius-base);
+  }
+
+  &:active,
+  &.active {
+    outline: 0;
+    background-image: none;
+    //@include box-shadow(inset 1px 1px 1px rgba(0,0,0,.3));
+    box-shadow: none;
+  }
+
+  .fa {
+    color: $custom-input-icon-color;
+  }
+}
+
+.btn-primary .fa {
+  color:#FFF !important;
+}
+
+.list-toolbar .btn-default {
+  background: #FFF;
+  &.active {
+    background: darken($btn-default-bg, 5%);
+  }
+}
+
+
+.btn-group {
+
+}
+
+.btn-deactivated {
+  cursor: not-allowed;
+  pointer-events: none;
+  /*opacity: 0.65;
+  filter: alpha(opacity=65);*/
+  -webkit-box-shadow: none;
+  box-shadow: none;
+}
+
+.btn-link {
+  padding: 0;
+  margin: 0;
+  .fa {
+    margin-right: 0.5em;
+  }
+  .caret {
+    @extend .fa-angle-down;
+    margin-right: 0.1em;
+    margin-left: 0.1em;
+  }
+  &:first-child > .caret {
+    margin-left: 0.1em;
+  }
+}
+
+
+.btn-fa {
+  color: $custom-input-icon-color;
+
+  padding: 0px 7px;
+  &:hover {
+    color:$brand-primary;
+  }
+  .fa:before {
+    font-size: 14px;
+  }
+
+  &.btn-sm {
+    padding: 0px 5px;
+    .fa:before {
+      font-size: 12px;
+    }
+  }
+
+  &.btn-xs {
+    padding: 0px 3px;
+    .fa:before {
+      font-size: 10px;
+    }
+  }
+}
+
+.add {
+
+  &:hover {
+      text-decoration: none;
+
+      .fa {
+        color: $brand-primary !important;
+        transition: $transition-all;
+      }
+  }
+
+  .fa {
+    color: $gray-darker;
+    transition: $transition-all;
+  }
+
+  .fa:first-child {
+    color: #bfbcb8;
+    margin-right: $padding-base-vertical;
+  }
+}
+
+.btn-success,
+.btn-warning,
+.btn-danger {
+  .fa,
+  .caret {
+    color:#FFF;
+  }
+}
+
+.dropdown-header {
+  color: #000000;
+  font-weight: bold;
+}

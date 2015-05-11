@@ -1,0 +1,13 @@
+Bonjour {{ trainee.fullName }},
+
+Voici le récapitulatif de votre demande d'inscription sur la plateforme SYGEFOR :
+
+{% for inscription in inscriptions %}
+* {{ inscription.session.training.name }}, {{ inscription.session.dateBegin|date("d/m/Y") }}{{ inscription.session.dateEnd ? " - " ~ inscription.session.dateEnd|date("d/m/Y") : "" }}
+  {{ inscription.session.training.organization.name }}{% if inscription.session.place %}, Lieu : {{ inscription.session.place }}{% endif %}{% if inscription.session.schedule %}, Horaires : {{ inscription.session.schedule }}{% endif %}
+{% endfor %}
+
+Vous pouvez suivre l'évolution de votre demande à partir de votre espace personnel sur notre site : http://sygefor.reseau-urfist.fr/#/account?email={{ trainee.email }}
+
+Avec nos cordiales salutations,
+L'équipe de l'URFIST.

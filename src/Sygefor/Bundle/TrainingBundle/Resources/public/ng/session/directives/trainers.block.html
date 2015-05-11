@@ -1,0 +1,22 @@
+<div class="block block-trainers">
+    <div class="block-title">
+        <div class="full-width">
+            <a ui-sref="trainer.table({session: session.id})" class="btn btn-link h4"><span class="fa fa-user"></span>Formateurs</a>
+            <div class="pull-right">
+                <a ng-if="session._accessRights.edit" class="btn btn-fa btn-sm" href="" tooltip="Ajouter un formateur" tooltip-placement="left" ng-click="addTrainer()"><span class="fa fa-plus"></span></a><!--
+                --><span class="badge">{{ session.trainers.length }}</span>
+            </div>
+        </div>
+    </div>
+
+    <div class="block-body">
+        <div class="well well-empty well-sm" ng-if="!session.trainers.length">
+            {{ emptyMsg }}
+        </div>
+        <span ng-repeat="trainer in session.trainers">
+            <button ng-if="session._accessRights.edit" type="button" class="close close-inline" ng-click="removeTrainer(trainer)"><span aria-hidden="true">&times;</span></button>
+            <a ui-sref="trainer.detail.view({session: session.id, id: trainer.id})">{{ trainer.fullName }}</a>
+            {{$last ? '' : ', '}}
+        </span>
+    </div>
+</div>

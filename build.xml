@@ -1,0 +1,213 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project name="Sygefor3" default="build">
+    <target name="build" depends="prepare,bootstrap,tests,quality"/>
+    <property name="build" value="${basedir}/.build" />
+
+    <!-- target: prepare -->
+    <target name="prepare">
+        <delete dir="${build}" />
+        <mkdir dir="${build}" />
+        <mkdir dir="${build}/doc" />
+        <mkdir dir="${build}/logs" />
+        <mkdir dir="${build}/logs/pdepend" />
+        <mkdir dir="${build}/coverage" />
+    </target>
+
+    <!-- target : bootstrap -->
+    <target name="bootstrap" description="Application bootstraping" depends="composer,cache,database,fixtures,populate"></target>
+
+    <!-- bootstrap : composer -->
+    <target name="composer" description="Install dependencies with Composer">
+        <get src="https://getcomposer.org/composer.phar" dest="${basedir}/composer.phar" skipexisting="true"/>
+        <exec executable="php">
+            <arg value="composer.phar"/>
+            <arg value="install"/>
+        </exec>
+    </target>
+
+    <!-- bootstrap : cache -->
+    <target name="cache" description="Clear all the caches">
+        <exec executable="php" failonerror="true">
+            <arg value='app/console' />
+            <arg value="cache:clear" />
+            <arg value='--env=test' />
+        </exec>
+    </target>
+
+    <!-- bootstrap : drop/create database schema -->
+    <target name="database" description="Drop database">
+        <exec executable="php" failonerror="true">
+            <arg value='app/console' />
+            <arg value="doctrine:database:drop" />
+            <arg value='-n' />
+            <arg value='--force' />
+        </exec>
+        <exec executable="php" failonerror="true">
+            <arg value='app/console' />
+            <arg value="doctrine:database:create" />
+            <arg value='-n' />
+        </exec>
+        <exec executable="php" failonerror="true">
+            <arg value='app/console' />
+            <arg value="doctrine:schema:create" />
+            <arg value='-n' />
+            <arg value='--env=test' />
+        </exec>
+    </target>
+
+    <!-- bootstrap : fixtures -->
+    <target name="fixtures" description="Load fixtures">
+        <exec executable="php" failonerror="true">
+            <arg value='app/console' />
+            <arg value="doctrine:fixtures:load" />
+            <arg value='-n' />
+            <arg value='--env=test' />
+        </exec>
+    </target>
+
+    <!-- bootstrap : elasticsearch populate -->
+    <target name="populate" description="Elasticsearch populate">
+        <exec executable="php" failonerror="true">
+            <arg value='app/console' />
+            <arg value="fos:elastica:populate" />
+            <arg value='-n' />
+        </exec>
+    </target>
+
+    <!-- target : tests -->
+    <target name="tests" description="Application tests" depends="phpunit-run,phpunit-report,phpunit-coverage"></target>
+
+    <!-- phpunit : run -->
+    <target name="phpunit-run">
+        <exec dir="${basedir}" executable="phpunit" failonerror="true" description="Run unit app with PHPUnit 3.6.4">
+            <arg line="--configuration app/phpunit.xml.dist" />
+            <arg line="--log-junit ${build}/logs/phpunit.xml" />
+            <arg line="--coverage-html ${build}/coverage/phpunit" />
+            <arg line="--verbose" />
+            <arg line="--debug" />
+        </exec>
+        <available file="${build}/logs/phpunit.xml" property="phpunit.xml" />
+        <available file="${build}/coverage/phpunit" type="dir" property="phpunit.coverage" />
+    </target>
+
+    <!-- phpunit : report -->
+    <target name="phpunit-report" if="phpunit.xml">
+        <get src="https://raw.github.com/qyi/cookbooks/master/teamcity/files/default/phpunit_to_junit.xsl" dest="${build}/phpunit_to_junit.xsl" skipexisting="true"/>
+        <xslt in="${build}/logs/phpunit.xml" out="${build}/logs/junit.xml" style="${build}/phpunit_to_junit.xsl"/>
+        <echo message="##teamcity[importData type='junit' path='${build}/logs/junit.xml']" />
+    </target>
+
+    <!-- phpunit : coverage -->
+    <target name="phpunit-coverage" if="phpunit.coverage">
+        <zip destfile="${build}/logs/coverage.zip" basedir="${build}/coverage/phpunit"/>
+        <delete dir="${build}/coverage/phpunit"/>
+        <echo message="##teamcity[publishArtifacts '${build}/logs/coverage.zip']" />
+    </target>
+
+    <!-- target : quality -->
+    <target name="quality" description="Application quality" depends="phpmd,phpcpd,phpcs,pdepend,phploc,phpdcd,phpcb"></target>
+
+    <!-- quality : phpmd -->
+    <target name="phpmd" description="PHP Mess Detector" >
+        <property name="phpmd" value="${build}/logs/phpmd.xml" />
+        <exec executable="phpmd" failonerror="false" osfamily="unix">
+            <arg line="${basedir}/src" />
+            <arg line="xml" />
+            <arg line="naming,unusedcode,codesize" />
+            <arg line="--reportfile ${phpmd}" />
+            <!--arg line="- -exclude vendor/,app/cache/" /-->
+        </exec>
+        <echo message="##teamcity[importData type='pmd' path='${phpmd}']"/>
+    </target>
+
+    <!-- quality : phpcpd -->
+    <target name="phpcpd" description="Copy/Paste Detector" >
+        <property name="phpcpd" value="${build}/logs/phpcpd.xml" />
+        <exec executable="phpcpd" failonerror="false" osfamily="unix">
+            <arg line="--log-pmd ${phpcpd}" />
+            <!--<arg line="- -exclude vendor/" />-->
+            <!--<arg line="- -exclude app/cache/" />-->
+            <arg line="${basedir}/src" />
+        </exec>
+        <echo message="##teamcity[importData type='pmdCpd' path='${phpcpd}']"/>
+        <echo message="##teamcity[publishArtifacts '${phpcpd}']" />
+    </target>
+
+    <!-- quality : phpcs -->
+    <target name="phpcs" description="PHP_CodeSniffer" >
+        <property name="phpcs" value="${build}/logs/phpcs.xml" />
+        <exec executable="phpcs" failonerror="false" osfamily="unix">
+            <arg line="--tab-width=4" />
+            <arg line="--report=xml" />
+            <arg line="--report-file=${phpcs}" />
+            <arg line="--standard=Symfony2" />
+            <!--<arg line="- -ignore=vendor/,app/cache/" />-->
+            <arg line="${basedir}/src" />
+        </exec>
+        <!--echo message="##teamcity[importData type='checkstyle' path='${phpcs}']"/-->
+        <echo message="##teamcity[publishArtifacts '${phpcs}']" />
+        <get src="https://raw.github.com/wycks/CodeSniffer-HTML/master/PHP-Codesniffer.xsl" dest="${build}/phpcs.xsl" skipexisting="true"/>
+        <xslt in="${phpcs}" out="${build}/logs/phpcs.html" style="${build}/phpcs.xsl"/>
+        <echo message="##teamcity[publishArtifacts '${build}/logs/phpcs.html']" />
+    </target>
+
+    <!-- quality : pdepend -->
+    <target name="pdepend" description="PHP_Depend" >
+        <exec executable="pdepend" failonerror="false" osfamily="unix">
+            <arg line="--jdepend-chart=${build}/logs/pdepend/pdepend.jdepend.chart.png" />
+            <arg line="--jdepend-xml=${build}/logs/pdepend/pdepend.jdepend.xml" />
+            <arg line="--overview-pyramid=${build}/logs/pdepend/pdepend.overview.pyramid.png" />
+            <arg line="--summary-xml=${build}/logs/pdepend/pdepend.summary.xml" />
+            <arg line="--coderank-mode=inheritance,property,method" />
+            <!--<arg line="- -ignore=vendor/,app/cache/" />-->
+            <arg line="${basedir}/src" />
+        </exec>
+        <echo message="##teamcity[publishArtifacts '${build}/logs/pdepend/pdepend.jdepend.chart.png']" />
+        <echo message="##teamcity[publishArtifacts '${build}/logs/pdepend/pdepend.jdepend.xml']" />
+        <echo message="##teamcity[publishArtifacts '${build}/logs/pdepend/pdepend.overview.pyramid.png']" />
+        <echo message="##teamcity[publishArtifacts '${build}/logs/pdepend/pdepend.summary.xml']" />
+        <echo message="##teamcity[publishArtifacts '${build}/logs/pdepend/phpunit.clover.xml']" />
+    </target>
+
+    <!-- quality : phploc -->
+    <target name="phploc" description="Tool for quickly measuring the size of a PHP project" >
+        <property name="phploc" value="${build}/logs/phploc.xml" />
+        <exec executable="phploc" failonerror="false" osfamily="unix">
+            <arg line="--count-tests" />
+            <arg line="--log-xml ${build}/logs/phploc.xml" />
+            <!--<arg line="- -exclude vendor/" />-->
+            <!--<arg line="- -exclude app/cache/" />-->
+            <arg line="${basedir}/src" />
+        </exec>
+        <echo message="##teamcity[publishArtifacts '${phploc}']" />
+    </target>
+
+    <!-- quality : phpdcd -->
+    <target name="phpdcd" description="PHP Dead Code Detector" >
+        <property name="phpdcd" value="${build}/logs/phpdcd.txt" />
+        <exec executable="phpdcd" failonerror="false" osfamily="unix" output="${phpdcd}">
+            <arg line="--recursive" />
+            <!--<arg line="- -exclude vendor/" />-->
+            <!--<arg line="- -exclude app/cache/" />-->
+            <arg line="${basedir}/src" />
+        </exec>
+        <echo message="##teamcity[publishArtifacts '${phpdcd}']" />
+    </target>
+
+    <!-- quality : phpcb -->
+    <target name="phpcb" description="PHP_CodeBrowser" >
+        <property name="phpcb" value="${build}/coverage/phpcb" />
+        <exec executable="phpcb" failonerror="false" osfamily="unix">
+            <arg line="--log ${build}/logs" />
+            <arg line="--source ${basedir}/src" />
+            <arg line="--output ${phpcb}" />
+            <!--<arg line="- -exclude ${basedir}/vendor*" />-->
+            <!--<arg line="- -exclude ${basedir}/app/cache*" />-->
+            <arg line="--debugExcludes" />
+        </exec>
+        <zip destfile="${build}/logs/codebrowser.zip" basedir="${phpcb}" />
+        <echo message="##teamcity[publishArtifacts '${build}/logs/codebrowser.zip']" />
+        <delete dir="${build}/logs/phpcb"/>
+    </target>
+
+</project>

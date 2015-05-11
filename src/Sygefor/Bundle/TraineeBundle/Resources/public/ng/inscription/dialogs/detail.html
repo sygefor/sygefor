@@ -1,0 +1,58 @@
+<!--div class="modal-header">
+    <button type="button" class="close" ng-click="dialog.dismiss()" aria-hidden="true">×</button>
+    <h4 class="modal-title"><i class="fa fa-graduation-cap"></i>{{ inscription.session.training.name }} - {{ inscription.trainee.fullName }}</h4>
+</div-->
+
+<div class="modal-body">
+    <div class="row">
+
+        <!-- STAGIAIRE -->
+        <div class="col-xs-6">
+
+            <h3 class="mt-0"><i class="fa fa-user"></i> {{ inscription.trainee.fullName }}</h3><hr>
+            <ul class="summary">
+                <li><label>Civilité</label> {{ inscription.trainee.title.name }}</li>
+                <li><label>Nom</label> {{ inscription.trainee.lastName }}</li>
+                <li><label>Prénom</label> {{ inscription.trainee.firstName }}</li>
+                <li><label>Email</label> {{ inscription.trainee.email }}</li>
+                <li><label>Téléphone</label> {{ inscription.trainee.phoneNumber }}</li>
+                <li><label>Etablissement</label> {{ inscription.trainee.institution.name }}</li>
+                <li ng-if="inscription.trainee.institution.name === 'Autre'"><label>Autre établissement</label> {{ inscription.trainee.otherInstitution }}</li>
+            </ul>
+
+            <h3>Coordonnées</h3><hr>
+            <ul class="summary">
+                <!--ABASSI -> 0 / 0 perso 1 pro-->
+                <li><label>Type d'adresse</label> {{ inscription.trainee.addressType ? 'Professionnelle' : 'Personnelle'}}</li>
+                <li ng-if="inscription.trainee.addressType"><label>Etablissement</label> {{ inscription.trainee.institutionName }}</li>
+                <li ng-if="inscription.trainee.addressType"><label>Service</label> {{ inscription.trainee.service }}</li>
+                <li><label>Adresse</label> {{ inscription.trainee.address }}</li>
+                <li><label>Code postal</label> {{ inscription.trainee.zip }}</li>
+                <li><label>Ville</label> {{ inscription.trainee.city }}</li>
+                <li ng-if="inscription.trainee.addressType && inscription.trainee.bp"><label>Boîte postale</label> {{ inscription.trainee.bp }}</li>
+            </ul>
+
+        </div>
+
+        <!-- SESSION -->
+        <div class="col-xs-6">
+            <button type="button" class="close" ng-click="dialog.dismiss()" aria-hidden="true">×</button>
+            <h3 class="mt-0"><i class="fa fa-calendar"></i> {{ inscription.session.training.name }}</h3><hr>
+            <ul class="summary">
+                <li><label>Date(s)</label> {{ inscription.session.dateBegin|date: 'dd/MM/yyyy' }} {{ inscription.session.dateEnd ? ' - ' + (inscription.session.dateEnd|date: 'dd/MM/yyyy') : '' }}</li>
+                <li><label>Horaires</label> {{ inscription.session.schedule }}</li>
+                <li><label>Durée</label> {{ inscription.session.hourDuration ? inscription.session.hourDuration + ' heure(s)' : '' }}</li>
+                <li><label>Tarif</label> {{ inscription.session.price ? session.price + ' &euro;' : '' }}</li>
+                <li><label>Lieu</label> {{ inscription.session.place }}</li>
+                <li><label>Inscriptions</label> {{ $trainingBundle.registrationStates[inscription.session.registration] }}</li>
+                <li><label>Participants max</label> {{ inscription.session.maximumNumberOfRegistrations }}</li>
+                <li><label>Date limite</label> {{ inscription.session.limitRegistrationDate|date: 'dd/MM/yyyy' }}</li>
+            </ul>
+
+        </div>
+    </div>
+</div>
+
+<div class="modal-footer">
+    <a class="btn btn-default" ng-click="dialog.dismiss()">Fermer</a>
+</div>

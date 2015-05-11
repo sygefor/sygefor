@@ -1,0 +1,95 @@
+{% extends "SygeforTaxonomyBundle:Taxonomy:layout.html.twig" %}
+
+{# BREADCRUMB  #}
+{% block breadcrumbs %}
+    <ol class="breadcrumb full-height-item">
+        <li><a href="{{ path('core.index') }}">Accueil</a></li>
+        <li><a href="#">Administration</a></li>
+        <li><a href="{{ path('taxonomy.index') }}">Vocabulaires</a></li>
+        <li class="active"><a href="{{ path('taxonomy.view',{'id':id}) }}">{{ vocabulary.vocabularyName }}</a></li>
+    </ol>
+{% endblock %}
+
+{# JAVASCRIPTS  #}
+{% block javascripts %}
+    <script type="text/javascript" src="{{ asset('bundles/sygefortaxonomy/libs/nestable/jquery.nestable.js') }}"></script>
+    <script type="text/javascript">
+        $(document).ready(function() {
+            // nestable init
+            {% if sortable %}
+            $('.dd')
+                .nestable({ maxDepth: {{ depth }} })
+                .on('change', function() {
+                    $.post(
+                            Routing.generate('taxonomy.terms_order', {id: '{{ vocabulary.vocabularyId }}'}),
+                            {'serialized': $(this).nestable('serialize')}
+                    );
+                });
+            {% endif %}
+            // delete protection
+            /*$(".dd-actions .dd-action-remove").on('click', function() {
+                return confirm("Souhaitez-vous supprimer définitivement ce terme du vocabulaire ?");
+            });*/
+        });
+    </script>
+{% endblock %}
+
+{% block tabs %}
+    {% if (organizations is defined) and (organizations is not empty) %}
+        <ul class="nav nav-tabs">
+            {% for org in organizations %}
+                <li {% if org.id == organization.id %}class="active"{% endif %}><a href="{{ path('taxonomy.view_by_org',{'id':vocabulary.vocabularyId,'organization_id':org.id}) }}">{{ org.name }}</a></li>
+            {% endfor %}
+        </ul>
+    {% endif %}
+{% endblock %}
+
+{% block subcontent %}
+
+    {% if terms|length > 0 %}
+        <div class="dd">
+            {{ _self.nested_tree(vocabulary, terms, sortable) }}
+        </div>
+    {% else %}
+        <div class="alert alert-warning" role="alert">Il n'y a aucun terme associé à ce vocabulaire.</div>
+    {% endif %}
+
+    {% if organization is defined %}
+        <a class="btn btn-primary" href="{{ path('taxonomy.addLocal',{'organization_id':organization.id, 'id':vocabulary.vocabularyId}) }}">Ajouter un terme</a>
+    {% else %}
+        <a class="btn btn-primary" href="{{ path('taxonomy.addNational',{ 'id':vocabulary.vocabularyId}) }}">Ajouter un terme</a>
+    {% endif %}
+{% endblock %}
+
+{# MACRO : PANEL  #}
+{% macro nested_tree(vocabulary, terms, sortable) %}
+
+    {% if terms|length > 0 %}
+        <ol class="dd-list {% if not sortable %} dd-unsortable{% endif %}">
+            {% for term in terms %}
+                <li class="dd-item dd3-item" data-id="{{ term.id }}">
+                    {% if term.name != 'Autre' %}
+                    <div class="dd-actions">
+                        {% if organization is defined %}
+                            <a class="dd-action-edit btn mini" href="{{ path('taxonomy.editLocal', {'organization_id':organization.id, 'id':vocabulary.vocabularyId, 'term_id': term.id}) }}" class="btn mini"><span class="fa fa-pencil"></span></a>
+                        {% else %}
+                            <a class="dd-action-edit btn mini" href="{{ path('taxonomy.editNational', {'id':vocabulary.vocabularyId, 'term_id': term.id}) }}" class="btn mini"><span class="fa fa-pencil"></span></a>
+                        {% endif %}
+                        <a class="dd-action-remove btn mini red" href="{{ path('taxonomy.remove', {'id':vocabulary.vocabularyId, 'term_id': term.id }) }}" class="btn mini red"><span class="fa fa-times"></span></a>
+                    </div>
+                    {% endif %}
+                    <div class="dd-handle dd3-handle"></div>
+                    {% if term.name|length > 230 %}
+                        <div class="dd3-content">{{ term.name|slice(0, 230) }}...</div>
+                    {% else %}
+                        <div class="dd3-content">{{ term.name }}</div>
+                    {% endif %}
+                    {% if term.children is defined %}
+                        {{ _self.nested_tree(vocabulary, term.children, sortable) }}
+                    {% endif %}
+                </li>
+            {% endfor %}
+        </ol>
+    {% endif %}
+
+{% endmacro %}

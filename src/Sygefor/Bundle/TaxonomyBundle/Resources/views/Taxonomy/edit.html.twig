@@ -1,0 +1,29 @@
+{% extends "SygeforTaxonomyBundle:Taxonomy:layout.html.twig" %}
+{% form_theme form 'SygeforTaxonomyBundle:Form:fields.html.twig' %}
+
+{% block breadcrumbs %}
+    <ol class="breadcrumb full-height-item">
+        <li><a href="{{ path('core.index') }}">Accueil</a></li>
+        <li><a href="#">Administration</a></li>
+        <li><a href="{{ path('taxonomy.index') }}">Vocabulaires</a></li>
+        <li><a href="{{ path('taxonomy.view',{'id':id}) }}">{{ vocabulary.vocabularyName }}</a></li>
+        <li class="active"><a href="#">{{ term.id ? term.name : "Ajouter un terme" }}</a></li>
+    </ol>
+{% endblock %}
+
+{% block subcontent %}
+
+    {{ form_start(form) }}
+    {% for child in form.children%}
+        {{ form_row(child) }}
+    {% endfor %}
+
+    <div class="form-group">
+        <div class="col-sm-offset-2 col-sm-10">
+            <button type="submit" class="btn btn-primary">Enregistrer</button>
+        </div>
+    </div>
+
+    {{ form_end(form) }}
+
+{% endblock %}

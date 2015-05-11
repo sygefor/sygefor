@@ -1,0 +1,103 @@
+<form sf-xeditable-form="form" sf-href='trainer.view({id: trainer.id})' on-success="onSuccess(data)">
+    <div class="row">
+        <div class="col-md-8">
+            <div class="btn-group pull-right">
+                <a class="btn btn-fa" href="" tooltip="Supprimer" ng-if="trainer._accessRights.delete" ng-click="delete()"><span class="fa fa-trash-o"></span></a>
+            </div>
+
+            <div class="pre-title">Enregistré le {{ trainer.createdAt|date: 'dd/MM/yyyy' }} - {{ trainer.organization.name }}</div>
+
+            <h2>{{ trainer.fullName }}</h2>
+
+            <h3><span>Informations personnelles</span></h3>
+            <hr>
+            <div class="row mb-1">
+                <div class="col-lg-6">
+                    <ul class="summary">
+                        <li><label>Nom</label> <span sf-xeditable="form.children.lastName">{{ trainer.lastName }}</span></li>
+                        <li><label>Prénom</label> <span sf-xeditable="form.children.firstName">{{ trainer.firstName }}</span></li>
+                        <li><label>Email</label> <span sf-xeditable="form.children.email">{{ trainer.email }}</span></li>
+                        <li><label>Téléphone</label> <span sf-xeditable="form.children.phoneNumber">{{ trainer.phoneNumber }}</span></li>
+                    </ul>
+                </div>
+                <div class="col-lg-6">
+                    <ul class="summary">
+                        <li><label>Site web</label> <span sf-xeditable="form.children.website">{{ trainer.website }}</span></li>
+                        <!-- li><label>Domaines de compétence</label> <span sf-xeditable="form.children.competenceFields" e-multiple>{{ trainer.competenceFields.name }}</span></li -->
+                        <li><label>Statut</label>  <span sf-xeditable="form.children.status">{{ trainer.status }}</span></li>
+                        <li><label>Domaine de compétences</label>  <span sf-xeditable="form.children.competenceFields" data-type="select2" multiple="multiple" ng-bind-html="trainer.competenceFields | joinObjects:'name':'\n' |nl2br"></span></li>
+                        <li><label>Publié sur le web</label>  <span sf-xeditable="form.children.isPublic">{{ trainer.isPublic ? 'Oui' : 'Non' }}</span></li>
+                    </ul>
+                </div>
+            </div>
+
+            <hr>
+            <div class="row mb-1">
+                <div class="col-lg-6">
+                    <ul class="summary">
+                        <li><label>Etablissement</label> <span sf-xeditable="form.children.institution">{{ trainer.institution.name }}</span></li>
+                        <li ng-if="trainer.institution.name === 'Autre'"><label>Autre établissement</label> <span sf-xeditable="otherInstitution">{{ trainer.otherInstitution }}</span></li>
+                        <!--ABASSI -> 0 / 0 perso 1 pro-->
+                        <li><label>Type d'adresse</label> <span sf-xeditable="form.children.addressType" data-source="[{value: 0, text: 'Personnelle'}, {value: 1, text: 'Professionnelle'}]">{{ trainer.addressType ? 'Professionnelle' : 'Personnelle'}} </span></li>
+                        <li ng-if="trainer.addressType"><label>Service</label> <span sf-xeditable="form.children.service">{{ trainer.service }}</span></li>
+                        <li><label>Responsabilités</label> <span sf-xeditable="form.children.responsabilities">{{ trainer.responsabilities }}</span></li>
+                    </ul>
+                </div>
+                <div class="col-lg-6">
+                    <ul class="summary">
+                        <li><label>Adresse</label> <span sf-xeditable="form.children.address">{{ trainer.address }}</span></li>
+                        <li><label>Code postal</label> <span sf-xeditable="form.children.zip">{{ trainer.zip }}</span></li>
+                        <li><label>Ville</label> <span sf-xeditable="form.children.city">{{ trainer.city }}</span></li>
+                        <li ng-if="trainer.addressType"><label>Boîte postale</label> <span sf-xeditable="form.children.bp">{{ trainer.bp }}</span></li>
+                    </ul>
+                </div>
+            </div>
+            <h3><span>Observations</span></h3><hr>
+            <div class="row mb-1">
+                <div class="col-lg-10">
+                <p><span sf-xeditable="form.children.observations" data-type="textarea">{{ trainer.observations }}</span></p>
+
+                </div>
+            </div>
+        </div>
+
+        <div class="col-md-4 sidebar">
+
+            <!--
+            SESSIONS
+            -->
+            <div class="block block-sessions">
+                <div class="block-title">
+                    <a class="btn btn-link h4" ui-sref="session.table({trainer: trainer.id})"><span class="fa fa-calendar-o"></span>Sessions</a>
+                    <div class="pull-right">
+                        <span class="badge ng-binding">{{ trainer.sessions.length }}</span>
+                    </div>
+                </div>
+
+                <div class="block-body">
+                    <div ng-if="!trainer.sessions.length" class="well well-empty well-sm">
+                        Il n'y a aucune session pour ce formateur.
+                    </div>
+                    <div ng-if="trainer.sessions.length">
+                        <!--div class="well well-sm">
+                            stats...
+                        </div-->
+                        <table class="table table-condensed table-nohead">
+                            <tbody>
+                            <tr ng-repeat="session in trainer.sessions | orderBy:'dateBegin':true">
+                                <td><span class="text-gray-light text-small">{{ session.dateBegin | date:'dd/MM/yy' }}</span></td>
+                                <td><a ui-sref="session.detail.view({id: session.id})">{{ session.training.name }}</a><br>
+                                    <span class="text-light text-gray-light">{{ session.training.typeLabel }}</span>
+                                </td>
+                            </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+
+            </div>
+        </div>
+
+
+    </div>
+</form>

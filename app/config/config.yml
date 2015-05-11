@@ -1,0 +1,438 @@
+imports:
+    - { resource: parameters.yml }
+    - { resource: security.yml }
+    - { resource: elastica.yml }
+    - { resource: ../../vendor/knplabs/doctrine-behaviors/config/orm-services.yml }
+
+framework:
+    #esi:             ~
+    translator:      { fallback: "%locale%" }
+    secret:          "%secret%"
+    router:
+        resource: "%kernel.root_dir%/config/routing.yml"
+        strict_requirements: ~
+    form:            ~
+    csrf_protection: ~
+    validation:      { enable_annotations: true }
+    templating:
+        engines: ['twig']
+        #assets_version: SomeVersionScheme
+    default_locale:  "%locale%"
+    trusted_hosts:   ~
+    trusted_proxies: ~
+    session:
+        # handler_id set to null will use default session handler from php.ini
+        handler_id:  ~
+    fragments:       ~
+    http_method_override: true
+
+# Twig Configuration
+twig:
+    debug:            "%kernel.debug%"
+    strict_variables: "%kernel.debug%"
+
+# Doctrine Configuration
+doctrine:
+    dbal:
+        driver:   "%database_driver%"
+        host:     "%database_host%"
+        port:     "%database_port%"
+        dbname:   "%database_name%"
+        user:     "%database_user%"
+        password: "%database_password%"
+        charset:  UTF8
+        # if using pdo_sqlite as your database driver, add the path in parameters.yml
+        # e.g. database_path: "%kernel.root_dir%/data/data.db3"
+        # path:     "%database_path%"
+    orm:
+        auto_generate_proxy_classes: "%kernel.debug%"
+        entity_managers:
+            default:
+                auto_mapping: true
+                mappings:
+                    gedmo_tree:
+                        type: annotation
+                        prefix: Gedmo\Tree\Entity
+                        dir: "%kernel.root_dir%/../vendor/gedmo/doctrine-extensions/lib/Gedmo/Tree/Entity"
+                        alias: GedmoTree # this one is optional and will default to the name set for the mapping
+                        is_bundle: false
+
+# Doctrine extensions configuration
+stof_doctrine_extensions:
+    default_locale: fr_FR
+    orm:
+        default:
+            tree: true
+            timestampable: true
+
+# Swiftmailer configuration
+swiftmailer:
+    default_mailer: default
+    mailers:
+        default:
+            transport: "%mailer_transport%"
+            encryption: "%mailer_encryption%"
+            host:      "%mailer_host%"
+            username:  "%mailer_user%"
+            password:  "%mailer_password%"
+            auth_mode: "%mailer_auth_mode%"
+            port:      "%mailer_port%"
+#            spool:
+#                type: file
+#                path: "%kernel.root_dir%/spool"
+            spool:     { type: memory }
+        local:
+            transport: %mailer_local_transport%
+            encryption: %mailer_local_encryption%
+            host:      %mailer_local_host%
+            username:  %mailer_local_user%
+            password:  %mailer_local_password%
+            auth_mode: "%mailer_local_auth_mode%"
+            port:      "%mailer_local_port%"
+            spool:     { type: memory }
+
+# SensionFrameworkExtra configuration
+sensio_framework_extra:
+    view:    { annotations: false }
+    router:  { annotations: true }
+#    request: { converters: true }
+
+# Monolog configuration
+monolog:
+    channels: ["api"]
+
+# FOSRestBundle configuration
+fos_rest:
+    body_listener: true
+    format_listener: false
+#        rules:
+#            - { path: '^/api/proxy.html', priorities: [html] }
+#            - { path: '^/api', priorities: [json], fallback_format: json }
+#            - { path: '^/', priorities: [json, html], fallback_format: json }
+#    format_listener: true
+    body_converter: { enabled: true }
+    view:
+        view_response_listener: true
+
+jms_serializer:
+    metadata:
+        cache: file
+        debug: "%kernel.debug%"
+        auto_detection: true
+        file_cache:
+            dir: "%kernel.cache_dir%/serializer"
+        directories:
+            SygeforUserBundle:
+                namespace_prefix: Sygefor\Bundle\UserBundle
+                path: "@SygeforUserBundle/Resources/config/serializer/sygeforuser"
+            FOSUserBundle:
+                namespace_prefix: FOS\UserBundle
+                path: "@SygeforUserBundle/Resources/config/serializer/fosuser"
+
+#MOPA
+mopa_bootstrap:
+    icons:
+        icon_set: fontawesome4
+    form:
+#        render_required_asterisk: true
+        render_optional_text: false
+        horizontal: true
+        horizontal_label_class:  col-sm-2 control-label
+        horizontal_label_offset_class:  col-sm-offset-2
+        horizontal_input_wrapper_class:  col-sm-10
+        checkbox_label: both
+    menu: ~  # enables twig helpers for menu
+
+# FOS user configuration
+fos_user:
+    db_driver: orm
+    firewall_name: main
+    user_class: Sygefor\Bundle\UserBundle\Entity\User
+    group:
+        group_class: Sygefor\Bundle\UserBundle\Entity\Group
+
+
+# KnpSnappyBundle configuration
+knp_snappy:
+    pdf:
+        enabled:    true
+        binary:     %wkhtmltopdf_bin%
+        options:    {encoding : 'utf8'}
+
+
+#SygeforListBundle
+sygefor_list:
+    batch:
+        csv:
+            user:
+                class: 'SygeforUserBundle:User'
+                filename: 'utilisateurs.csv'
+                fields:
+                    username: Nom
+                    email: Email
+                    organization.name: URFIST
+            group:
+                class: 'SygeforUserBundle:Group'
+                filename: 'group.csv'
+                fields:
+                    name: Nom
+            session:
+                class: 'SygeforTrainingBundle:Session'
+                filename: 'session.csv'
+                fields:
+                    dateBegin: { label: "Date de début", type: "date" }
+                    dateEnd: { label: "Date de fin", type: "date" }
+                    training.name: Formation
+                    maximumNumberOfRegistrations: 'Nombre de places'
+                    numberOfRegistrations: "Nombre d'inscrits"
+                    numberOfParticipants: 'Nombre de présents'
+            semestered_training:
+                class: 'SygeforTrainingBundle:SemesteredTraining'
+                filename: 'formation.csv'
+                fields:
+                    year: { label: 'Année' }
+                    semester: { label: 'Semestre' }
+                    training.name: { label: 'Intitulé' }
+                    training.theme: { label: 'Thématique' }
+                    sessionsCount: { label: 'nombre de sessions' }
+                    nextSession.dateBegin: { label: 'Prochaine', type: 'date' }
+                    lastSession.dateBegin: { label: 'Dernière', type: 'date' }
+            trainee:
+                class: 'SygeforTraineeBundle:Trainee'
+                filename: 'stagiaire.csv'
+                fields:
+                    createdAt: { label: "Date d'inscription", type: "date" }
+                    title: "Civilité"
+                    fullName: "Nom"
+                    organization.name: "URFIST"
+                    email: "Email"
+                    institution.name: "Etablissement"
+                    publicCategory: "Catégorie de public"
+                    professionalSituation: "Situation professionnelle"
+                    status: "Statut"
+                    disciplinary: "Discipline"
+                    disciplinaryDomain : "Domaine disciplinaire"
+                    teachingCursus: "Cursus d'enseignement"
+                    address: "Adresse"
+                    bp: "Boite postale"
+                    zip: "Code postal"
+                    city: "Ville"
+                    cedex: "Cedex"
+            trainer:
+                class: 'SygeforTrainerBundle:Trainer'
+                filename: 'formateur.csv'
+                fields:
+                    createdAt: { label: "Date d'inscription", type: "date" }
+                    title: "Civilité"
+                    fullName: "Nom"
+                    organization.name: "URFIST"
+                    email: "Email"
+                    webSite: "Site Web"
+                    institution.name: "Société"
+                    service.name: "Service"
+                    responsabilities: "Responsabilités"
+                    #competenceFields.name: "Domaine de compétences"
+                    status: "Statut"
+                    address: "Adresse"
+                    bp: "Boite postale"
+                    zip: "Code postal"
+                    city: "Ville"
+                    cedex: "Cedex"
+            inscription:
+                class: 'SygeforTraineeBundle:Inscription'
+                filename: 'inscription.csv'
+                fields:
+                    createdAt: { label: "Date d'inscription", type: "date" }
+                    trainee.fullName: "Nom"
+                    session.training.name: "Formation"
+                    session.dateBegin: { label: 'Session', type: "date" }
+                    inscriptionStatus: "Statut de l'inscription"
+                    presenceStatus: "Statut de présence"
+        mailing:
+            inscription:
+                class: 'Sygefor\Bundle\TraineeBundle\Entity\Inscription'
+                emailPath: 'trainee.email'
+                alias: 'inscription'
+                fields:
+                    date: { property: createdAt }
+                    session: { property: session }
+                    stagiaire: { property: trainee }
+                    statusInscription: { property: inscriptionStatus.name }
+                    statusPresence: { property: presenceStatus.name }
+            trainee:
+                class: 'Sygefor\Bundle\TraineeBundle\Entity\Trainee'
+                alias: 'stagiaire'
+                emailPath: 'email'
+                fields:
+                    #personTrait
+                    nomComplet: { property: fullName }
+                    civilite: { property: title }
+                    nom: { property: firstName }
+                    prenom: { property: lastName }
+                    typePublic: { property: publicType }
+                    #coordinates
+                    typeAdresse : { property: addressType }
+                    #etablissement: { property: institutionName }
+                    adresse: { property: address }
+                    boitePostale: {property: bp }
+                    codePostal: { property: zip }
+                    ville: {property: city }
+                    cedex: { property: cedex }
+                    email: { property: email }
+                    telephone: { property: phoneNumber }
+                    fax: { property: faxNumber }
+                    siteWeb: { property: website }
+                    #coordinatesTrait
+                    etablissement: { property: institution.name }
+                    autreEtablissement: { property: otherInstitution }
+                    service: { property: service }
+                    status: { property: status }
+                    cursus: { property: teachingCursus }
+                    inscriptions: { property: inscriptions }
+                    domaineDisciplinaire: { property: disciplinary }
+                    typePublic: { property: publicType }
+            trainer:
+                class: 'Sygefor\Bundle\TrainerBundle\Entity\Trainer'
+                alias: 'formateur'
+                emailPath: 'email'
+                fields:
+                    #personTrait
+                    nomComplet: { property: fullName }
+                    nom: { property: firstName }
+                    prenom: { property: lastName }
+                    civilite: { property: title }
+                    #coordinatesTrait
+                    etablissement: { property: institution.name }
+                    autreEtablissement: { property: otherInstitution }
+                    service: { property: service }
+                    status: { property: status }
+                    cursus: { property: teachingCursus }
+                    sessions: { property: sessions }
+                    responsabilites: { property: responsabilities }
+            session:
+                class: 'Sygefor\Bundle\TrainingBundle\Entity\Session'
+                alias: 'session'
+                fields:
+                    dateDebut: { property: "dateBegin", type: "date" }
+                    dateFin: { property: "dateEnd", type: "date" }
+                    formation: { property: "training" }
+                    formateurs: { property: "trainersListString" }
+                    listeFormateurs: { property: "trainers" }
+                    formateur: { property: "trainers[0]" }
+                    nombrePlaces: { property: "maximumNumberOfRegistrations" }
+                    nombreInscrits: { property: "numberOfRegistrations" }
+                    dateLimiteInscription: { property: limitRegistrationDate }
+                    duree: { property: hourDuration }
+                    horaires: { property: schedule }
+                    prix: { property: price }
+                    participantsMax: { property: maximumNumberOfRegistrations }
+                    lieu: { property: place }
+                    programme: { property: training.program }
+                    observations: { property: observations }
+                    commentaires: { property: comments }
+                    #nombrePresents: { property: "numberOfPresentPeople" }
+                    fraisMissionFormateursReseau: { property: networkTrainerCost }
+                    fraisMissionIntervenantsExterieurs: { property: externTrainerCost }
+                    remunerationIntervenantsExterieurs: { property: externTrainerConsideration }
+                    fraisReprographie: { property: reprographyCost }
+                    autresFrais: { property: otherCost }
+                    droitsInscription: { property: subscriptionRightTaking }
+                    autresRecettes: { property: otherTaking }
+                    totalRecettes: {property: totalTaking }
+                    totalCouts: { property: totalCost }
+                    inscriptions: { property: inscriptions }
+            training:
+                class: 'Sygefor\Bundle\TrainingBundle\Entity\Training'
+                alias: 'formation'
+                fields:
+                    thematique: {property: theme.name}
+                    numero: { property: "number"}
+                    sessions: { property: sessions }
+                    tags: { property: tagsListString }
+                    nom: { property: name }
+                    urfist: { property: organization }
+                    objectifs: { property: objectives }
+                    programme: { property: program }
+                    typeIntervention: { property: interventionType }
+                    superviseur: { property: supervisor }
+                    ressources: { property: resources }
+                    #internship
+                    prerequis: { property: prerequisite }
+                    typePublic: { property: publicType.name }
+                    publicsPrioritaires: { property: publicTypesListString }
+                    initiativeExterne: { property: externalInitiative }
+                    responsable: { property: supervisor }
+                    #diversetraining
+                    organisme: { property: organism }
+                    typeAction: { property: variousAction }
+                    enConvention: { property: agreement }
+                    evaluation: { property: evaluation }
+                    initiativeExterne: { property: externalInitiative }
+                    responsable: { property: supervisor }
+                    publicsPrioritaires: { property: publicTypesListString }
+                    #teaching cursus
+                    cursus: { property: teachingCursus }
+                    etablissement: { property: institution.name }
+                    contexte: { property: context }
+                    domaineDisciplinaire: {property: disciplinary }
+                    domaine: { property: disciplinaryDomain }
+                    responsable: { property: supervisor }
+                    initiativeExterne: { property: externalInitiative }
+                    evaluation: { property: evaluation }
+                    #meeting
+                    type: { property: eventType}
+                    nature: { property: eventKind}
+                    nationale: { property: national }
+                    partenaires: { property: partners }
+                    date: {property: session.dateDebut}
+                    dateFin: {property: session.dateFin}
+                    tarif: {property: session.price}
+                    dateInscripitonLimite: {property: session.limitRegistrationDate}
+                    participantsMax: {property: session.maximumNumberOfRegistrations}
+                    horaires: { property: session.schedule }
+                    lieu: { property: session.place }
+            internship:
+                class: 'Sygefor\Bundle\TrainingBundle\Entity\Internship'
+                parent: training
+            training_course:
+                class: 'Sygefor\Bundle\TrainingBundle\Entity\TrainingCourse'
+                parent: training
+            diverse_training:
+                class: 'Sygefor\Bundle\TrainingBundle\Entity\DiverseTraining'
+                parent: training
+            meeting:
+                class: 'Sygefor\Bundle\TrainingBundle\Entity\Meeting'
+                parent: training
+            semestered_training:
+                class: 'Sygefor\Bundle\TrainingBundle\Model\SemesteredTraining'
+                alias: 'programme'
+                fields:
+                    annee: { property: year }
+                    formation: {property: training}
+                    sessions: {property: sessions}
+                    semestre: { property: 'semester' }
+                    intitule: { property: 'training.name' }
+                    thematique: { property: 'training.theme' }
+                    nombreSessions: { property: 'sessionsCount' }
+                    prochaineSession: { property: 'nextSession.dateBegin', type:'date', format: 'd/m/Y' }
+                    derniereSession: { property: 'lastSession.dateBegin', type:'date', format: 'd/m/Y' }
+        pdf:
+            training:
+                class: 'Sygefor\Bundle\TrainingBundle\Entity\Training'
+                template: 'SygeforTrainingBundle:Training:pdf.html.twig'
+                templateDiscriminator: 'type'
+                templates:
+                    internship: 'SygeforTrainingBundle:Training:pdf/internship.html.twig'
+                    training_course: 'SygeforTrainingBundle:Training:pdf/training_course.html.twig'
+                    meeting: 'SygeforTrainingBundle:Training:pdf/meeting.html.twig'
+                    diverse_training: 'SygeforTrainingBundle:Training:pdf/diverse_training.html.twig'
+            session:
+                class: 'Sygefor\Bundle\TrainingBundle\Entity\Session'
+                template: 'SygeforTrainingBundle:Session:pdf.html.twig'
+
+            inscription.attestation:
+                class: 'Sygefor\Bundle\TraineeBundle\Entity\Inscription'
+                template: 'SygeforTraineeBundle:Inscription:attestation.pdf.twig'
+                key: inscription
+                filename: "attestation.pdf"
+

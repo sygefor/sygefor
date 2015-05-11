@@ -1,0 +1,10 @@
+<span ng-if="session.registration">
+    <span ng-if="!session.registration" class="label label-danger" ng-class="class">désactivées</span>
+    <span ng-if="session.registration == 3 && session.registrable" class="label label-success" ng-class="class" tooltip="Inscriptions ouvertes">ouvertes</span>
+    <span ng-if="session.registration == 2 && session.registrable" class="label label-warning" ng-class="class" tooltip="Inscriptions privées">privées</span>
+    <span ng-if="session.registration == 1 && !session.registrable" class="label label-danger" ng-class="class" tooltip="Inscriptions fermées">fermées</span>
+    <span ng-if="session.registration > 1 && !session.registrable">
+        <span ng-if="$moment().isAfter(session.limitRegistrationDate)" class="label label-danger" ng-class="class" tooltip="Date limite d'inscription atteinte : {{ session.limitRegistrationDate|date: 'dd/MM/yyyy' }}">terminées</span>
+        <span ng-if="!$moment().isAfter(session.limitRegistrationDate) && session.numberOfAcceptedRegistrations >= session.maximumNumberOfRegistrations" class="label label-danger" ng-class="class" tooltip="Nombre max de participants atteint : {{ session.maximumNumberOfRegistrations }}">complet</span>
+    </span>
+</span>

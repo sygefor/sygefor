@@ -1,0 +1,6 @@
+<a ui-sref="session.detail.view({id: result.id})" title="{{ result.training.name }}">
+    <div class="list-group-item-title">{{ result.training.name }}</div>
+    <div class="list-group-item-text">
+        {{ result.dateBegin | date: 'dd/MM/yyyy' }}
+    </div>
+</a>

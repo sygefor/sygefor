@@ -1,0 +1,87 @@
+
+
+.flex-container {
+  html.no-flexbox & {
+	display: table; // fallback ie
+  }
+	display: flex;
+	flex-direction: row;
+ 	//width: 100%;
+ 	//background-color: rgba(0,250,15,.15) !important;
+}
+.flex-item {
+  html.no-flexbox & {
+    display: table-cell; // fallback
+  }
+    flex-grow: 0; /* default 0 */
+   	//flex-shrink: 1;
+	//flex-basis: auto;
+	//background-color: rgba(250,0,15,.15) !important;
+}
+.flex-grow-1 {
+	flex-grow: 1;
+}
+
+
+.grid-list-detail-view, .grid-list-detail-results {
+	//padding-top: $padding-base-vertical*4;
+
+}
+
+
+.grid-list-detail-view {
+
+	//padding-left: $grid-gutter-width !important;
+
+
+	& {
+	    @include make-xs-column(7);
+	    @include make-sm-column(8);
+	    @include make-md-column(9);
+	    @include make-lg-column(10);
+	 }
+
+	&.is-fixed-bottom {
+		@include make-sm-column-offset(4);
+		@include make-md-column-offset(3);
+		@include make-lg-column-offset(2);
+
+	}
+
+	 .relative-fixed-wrapper {
+	 	@include make-lg-column(12);
+	 }
+
+
+}
+.grid-list-detail-results {
+
+	@include make-xs-column(5);
+	@include make-sm-column(4);
+    @include make-md-column(3);
+    @include make-lg-column(2);
+
+    &::after {
+    	border-left: 1px solid #D9D9D9;
+    	right: 0;
+    	top: 0;
+    	position: absolute;
+    	display: block;
+    	width: 0;
+    	height: 100%;
+    	content: '';
+    	z-index: 999;
+    }
+}
+
+
+.ui-view-container {
+	/*padding-top: $padding-base-vertical*4.5;
+	padding-bottom: $padding-base-vertical*4.5;
+	padding-left: $grid-gutter-width/2;
+	padding-right: $grid-gutter-width/2;*/
+	@extend .clearfix;
+}
+
+
+

@@ -1,0 +1,21 @@
+{% block vocabulary_widget %}
+    {# cycling over choices families#}
+    {% for fam_name,family in form.vars.choices %}
+
+        {# for each choice of family, we seek for corresponding form child #}
+        {% for fam_child in family %}
+            {% for child in form.children %}
+                {% if fam_child.value == child.vars.value %}
+                    <div style="clear:both;overflow:hidden">{{ form_row(child) }}</div>
+                {% endif %}
+            {% endfor %}
+        {% endfor %}
+    {% endfor %}
+{% endblock %}
+
+{% block file_widget %}
+    {{ form_widget(form) }}
+    {% if form.parent.vars.value.file is not empty %}
+        Fichier courant : {{ form.parent.vars.value.fileName }} - ({{ form.parent.vars.value.file.getSize/1000 }} ko)
+    {% endif %}
+{% endblock %}

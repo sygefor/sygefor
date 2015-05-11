@@ -1,0 +1,24 @@
+<div class="btn-group pull-right">
+    <a class="btn btn-fa" href="" tooltip="Bilan" ng-if="training.sessions.length && training._accessRights.view" ng-click="getBalanceSheet()"><span class="fa fa-file-excel-o"></span></a>
+    <a class="btn btn-fa" href="" tooltip="Publipostage" ng-click="$dialog.open('batch.publipost', { items: [training.id], service: 'training' })"><span class="fa fa-file-word-o"></span></a>
+    <a class="btn btn-fa" href="" tooltip="Dupliquer" ng-if="training._accessRights.edit" ng-click="duplicate()"><span class="fa fa-copy"></span></a>
+    <a class="btn btn-fa" href="" tooltip="Supprimer" ng-if="training._accessRights.delete" ng-click="delete()"><span class="fa fa-trash-o"></span></a>
+</div>
+
+<div class="pre-title">{{ training.typeLabel }} n°{{ training.id }} -  {{ training.organization.name }}</div>
+
+<h2><span sf-xeditable="form.children.name" data-type="text">{{ training.name }}<!-- action button --></span></h2>
+
+<div class="infos">
+    <div><label>Thématique :</label> <span sf-xeditable="form.children.theme" data-type="select">{{ training.theme.name }}</span></div>
+    <div><label>Tags :</label> <span sf-xeditable="form.children.tags" data-type="select2">{{ training.tags|joinObjects:'name' }}</span></div>
+</div>
+
+<h3>Objectifs</h3><hr>
+<p><span sf-xeditable="form.children.objectives" data-type="textarea">{{ training.objectives }}</span></p>
+
+<h3>Programme</h3><hr>
+<p><span sf-xeditable="form.children.program" data-type="textarea">{{ training.program }}</span></p>
+
+<h3>Ressources</h3><hr>
+<p><span sf-xeditable="form.children.resources" data-type="textarea">{{ training.resources }}</span></p>

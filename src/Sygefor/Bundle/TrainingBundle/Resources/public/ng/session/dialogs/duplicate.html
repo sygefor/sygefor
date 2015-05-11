@@ -1,0 +1,31 @@
+<div class="modal-header">
+    <button type="button" class="close" ng-click="dialog.dismiss()" aria-hidden="true">×</button>
+    <h4 class="modal-title"><i class="fa fa-copy"></i> Dupliquer une session</h4>
+</div>
+<form sf-href="session.duplicate({id: session.id})" sf-form="form" json-path="form"
+      on-success="onSuccess(data)" class="form-horizontal" novalidate>
+    <div class="modal-body center-block">
+        <div class="form-group">
+            <label class="col-sm-3 control-label" for="form.children.dateBegin.id">Date(s)</label>
+            <div class="col-sm-9">
+                <div class="controls form-inline input-daterange" bs-datepicker bs-datepicker-view-date="{{ $moment().add('month', 6).year() }}-{{ $moment().add('month', 6).quarter() < 3 ? '01' : '07' }}-01">
+                    <span ng-class="{'has-error': form.children.dateBegin.errors.length }">
+                        <input type="text" class="form-control input-datepicker" ng-model="form.children.dateBegin.value" />
+                    </span>
+                    <label>au</label>
+                    <span ng-class="{'has-error': form.children.dateEnd.errors.length }">
+                        <input type="text" class="form-control input-datepicker" ng-model="form.children.dateEnd.value" />
+                    </span>
+                </div>
+                <span ng-class="{'has-error': form.children.dateBegin.errors.length+form.children.dateEnd.errors }">
+                    <div ng-repeat="error in form.children.dateBegin.errors" class="help-block">{{ error }}</div>
+                    <div ng-repeat="error in form.children.dateEnd.errors" class="help-block">{{ error }}</div>
+                </span>
+            </div>
+        </div>
+    </div>
+    <div class="modal-footer">
+        <a class="btn btn-default" ng-click="dialog.dismiss()">Annuler</a>
+        <input class="btn btn-primary" type="submit" value="Valider" />
+    </div>
+</form>

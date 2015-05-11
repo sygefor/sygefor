@@ -1,0 +1,19 @@
+<div class="block block-inscriptions">
+    <div class="block-title">
+        <div class="full-width">
+            <!-- title -->
+            <span class="h4"><span class="fa fa-graduation-cap"></span> Participants</span>
+            <!-- badge -->
+            <span class="badge pull-right">{{ getTotal() }}</span>
+        </div>
+    </div>
+
+    <div class="block-body">
+        <ul class="list-unstyled text-gray">
+            <li ng-repeat="public in publics">
+                <label class="text-small">{{ public.name }}</label>
+                <span class="pull-right inline-block" sf-xeditable="getFormElement(public)" data-mode="popup" data-placement="left">{{ getCount(public) }}</span>
+            </li>
+        </ul>
+    </div>
+</div>

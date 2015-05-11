@@ -1,0 +1,25 @@
+
+.block-title {
+	padding-bottom: $padding-base-vertical*2;
+}
+.block-body {
+	//padding: $padding-base-vertical $padding-base-horizontal;
+	padding-bottom: $padding-base-vertical*2;
+	margin-bottom: $grid-gutter-width;
+	border-bottom: 1px solid $gray-lighter;
+}
+
+
+/** ??? */
+.block {
+
+	.sidebar &:first-child {
+		//@extend .mt-2;
+	}
+
+	/* Sessions */
+	&-sessions {
+
+	}
+
+}

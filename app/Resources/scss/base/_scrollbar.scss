@@ -1,0 +1,29 @@
+// IE
+body {
+	scrollbar-face-color: #ccc;  
+    scrollbar-shadow-color: #fff;  
+    scrollbar-highlight-color:#fff;  
+    scrollbar-3dlight-color: #fff;  
+    scrollbar-darkshadow-color: #fff;  
+    scrollbar-track-color: #fff;  
+    scrollbar-arrow-color: #fff;
+}
+
+// WEBKIT
+
+::-webkit-scrollbar {
+    width: 6px;
+    background: rgba(0,0,0,0.05); 
+    //background: rgba(0,0,0,0.25); 
+
+}
+::-webkit-scrollbar-track {
+
+}
+::-webkit-scrollbar-thumb {
+    background: rgba(0,0,0,0.25); 
+}
+::-webkit-scrollbar-thumb:window-inactive {
+	background: rgba(0,0,0,0.05); 
+}
+

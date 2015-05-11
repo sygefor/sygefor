@@ -1,0 +1,45 @@
+imports:
+    - { resource: config_dev.yml }
+
+framework:
+    test: ~
+    session:
+        storage_id: session.storage.mock_file
+    profiler:
+        collect: false
+
+web_profiler:
+    toolbar: false
+    intercept_redirects: false
+
+swiftmailer:
+    disable_delivery: true
+
+security:
+    firewalls:
+        main:
+            http_basic:
+
+# Doctrine Configuration
+doctrine:
+    orm:
+        auto_generate_proxy_classes: "%kernel.debug%"
+        entity_managers:
+            default:
+                auto_mapping: true
+                mappings:
+                    vocabulary_fixtures:
+                        type: annotation
+                        prefix: Sygefor\Bundle\TaxonomyBundle\Tests\Entity
+                        dir: "%kernel.root_dir%/../src/Sygefor/Bundle/TaxonomyBundle/Tests/Entity"
+                        is_bundle: false
+
+services:
+    sygefor_taxonomy.vocabulary_local:
+        class:        Sygefor\Bundle\TaxonomyBundle\Tests\Entity\MyOrganizationVocabulary
+        tags:
+            - { name: sygefor_taxonomy.vocabulary_provider, group: "GROUPE Vocabulaire 1" }
+    sygefor_taxonomy.vocabulary_national:
+        class:        Sygefor\Bundle\TaxonomyBundle\Tests\Entity\MyNationalVocabulary
+        tags:
+            - { name: sygefor_taxonomy.vocabulary_provider, group: "GROUPE Vocabulaire 2" }

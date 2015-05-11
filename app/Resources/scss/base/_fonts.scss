@@ -1,0 +1,114 @@
+/*-------------------------------
+            FONTS STYLES
+-------------------------------*/
+$font_dir: '../fonts/';
+
+/*@font-face {
+        font-family: 'SourceSansPro';
+        src: url('#{$font_dir}SourceSansPro/SourceSansPro-ExtraLight.eot');
+        src: url('#{$font_dir}SourceSansPro/SourceSansPro-ExtraLight.eot?#iefix') format('embedded-opentype'),
+                 url('#{$font_dir}SourceSansPro/SourceSansPro-ExtraLight.woff') format('woff'),
+                 url('#{$font_dir}SourceSansPro/SourceSansPro-ExtraLight.ttf') format('truetype'),
+                 url('#{$font_dir}SourceSansPro/SourceSansPro-ExtraLight.svg#SourceSansPro') format('svg');
+        font-weight: lighter;
+        font-style: normal;
+}
+
+@font-face {
+        font-family: 'SourceSansPro';
+        src: url('#{$font_dir}SourceSansPro/SourceSansPro-ExtraLightIt.eot');
+        src: url('#{$font_dir}SourceSansPro/SourceSansPro-ExtraLightIt.eot?#iefix') format('embedded-opentype'),
+                 url('#{$font_dir}SourceSansPro/SourceSansPro-ExtraLightIt.woff') format('woff'),
+                 url('#{$font_dir}SourceSansPro/SourceSansPro-ExtraLightIt.ttf') format('truetype'),
+                 url('#{$font_dir}SourceSansPro/SourceSansPro-ExtraLightIt.svg#SourceSansPro') format('svg');
+        font-weight: lighter;
+        font-style: italic;
+}*/
+
+@font-face {
+        font-family: 'sourcesanspro';
+        src: url('#{$font_dir}sourcesanspro/sourcesanspro-light.eot');
+        src: url('#{$font_dir}sourcesanspro/sourcesanspro-light.eot?#iefix') format('embedded-opentype'),
+                 url('#{$font_dir}sourcesanspro/sourcesanspro-light.woff') format('woff'),
+                 url('#{$font_dir}sourcesanspro/sourcesanspro-light.ttf') format('truetype'),
+                 url('#{$font_dir}sourcesanspro/sourcesanspro-light.svg#sourcesanspro') format('svg');
+        font-weight: 300;
+        font-style: normal;
+}
+
+@font-face {
+        font-family: 'sourcesanspro';
+        src: url('#{$font_dir}sourcesanspro/sourcesanspro-lightit.eot');
+        src: url('#{$font_dir}sourcesanspro/sourcesanspro-lightit.eot?#iefix') format('embedded-opentype'),
+                 url('#{$font_dir}sourcesanspro/sourcesanspro-lightit.woff') format('woff'),
+                 url('#{$font_dir}sourcesanspro/sourcesanspro-lightit.ttf') format('truetype'),
+                 url('#{$font_dir}sourcesanspro/sourcesanspro-lightit.svg#sourcesanspro') format('svg');
+        font-weight: 300;
+        font-style: italic;
+}
+
+@font-face {
+        font-family: 'sourcesanspro';
+        src: url('#{$font_dir}sourcesanspro/sourcesanspro-regular.eot');
+        src: url('#{$font_dir}sourcesanspro/sourcesanspro-regular.eot?#iefix') format('embedded-opentype'),
+                 url('#{$font_dir}sourcesanspro/sourcesanspro-regular.woff') format('woff'),
+                 url('#{$font_dir}sourcesanspro/sourcesanspro-regular.ttf') format('truetype'),
+                 url('#{$font_dir}sourcesanspro/sourcesanspro-regular.svg#sourcesanspro') format('svg');
+        font-weight: 400;
+        font-style: normal;
+}
+
+@font-face {
+        font-family: 'sourcesanspro';
+        src: url('#{$font_dir}sourcesanspro/sourcesanspro-it.eot');
+        src: url('#{$font_dir}sourcesanspro/sourcesanspro-it.eot?#iefix') format('embedded-opentype'),
+                 url('#{$font_dir}sourcesanspro/sourcesanspro-it.woff') format('woff'),
+                 url('#{$font_dir}sourcesanspro/sourcesanspro-it.ttf') format('truetype'),
+                 url('#{$font_dir}sourcesanspro/sourcesanspro-it.svg#sourcesanspro') format('svg');
+        font-weight: 400;
+        font-style: italic;
+}
+
+@font-face {
+        font-family: 'sourcesanspro';
+        src: url('#{$font_dir}sourcesanspro/sourcesanspro-semibold.eot');
+        src: url('#{$font_dir}sourcesanspro/sourcesanspro-semibold.eot?#iefix') format('embedded-opentype'),
+                 url('#{$font_dir}sourcesanspro/sourcesanspro-semibold.woff') format('woff'),
+                 url('#{$font_dir}sourcesanspro/sourcesanspro-semibold.ttf') format('truetype'),
+                 url('#{$font_dir}sourcesanspro/sourcesanspro-semibold.svg#sourcesanspro') format('svg');
+        font-weight: 700;
+        font-style: normal;
+}
+
+@font-face {
+        font-family: 'sourcesanspro';
+        src: url('#{$font_dir}sourcesanspro/sourcesanspro-semiboldit.eot');
+        src: url('#{$font_dir}sourcesanspro/sourcesanspro-semiboldit.eot?#iefix') format('embedded-opentype'),
+                 url('#{$font_dir}sourcesanspro/sourcesanspro-semiboldit.woff') format('woff'),
+                 url('#{$font_dir}sourcesanspro/sourcesanspro-semiboldit.ttf') format('truetype'),
+                 url('#{$font_dir}sourcesanspro/sourcesanspro-semiboldit.svg#sourcesanspro') format('svg');
+        font-weight: 700;
+        font-style: italic;
+}
+
+@font-face {
+        font-family: 'sourcesanspro';
+        src: url('#{$font_dir}sourcesanspro/sourcesanspro-bold.eot');
+        src: url('#{$font_dir}sourcesanspro/sourcesanspro-bold.eot?#iefix') format('embedded-opentype'),
+                 url('#{$font_dir}sourcesanspro/sourcesanspro-bold.woff') format('woff'),
+                 url('#{$font_dir}sourcesanspro/sourcesanspro-bold.ttf') format('truetype'),
+                 url('#{$font_dir}sourcesanspro/sourcesanspro-bold.svg#sourcesanspro') format('svg');
+        font-weight: 900;
+        font-style: normal;
+}
+
+@font-face {
+        font-family: 'sourcesanspro';
+        src: url('#{$font_dir}sourcesanspro/sourcesanspro-boldit.eot');
+        src: url('#{$font_dir}sourcesanspro/sourcesanspro-boldit.eot?#iefix') format('embedded-opentype'),
+                 url('#{$font_dir}sourcesanspro/sourcesanspro-boldit.woff') format('woff'),
+                 url('#{$font_dir}sourcesanspro/sourcesanspro-boldit.ttf') format('truetype'),
+                 url('#{$font_dir}sourcesanspro/sourcesanspro-boldit.svg#sourcesanspro') format('svg');
+        font-weight: 900;
+        font-style: italic;
+}

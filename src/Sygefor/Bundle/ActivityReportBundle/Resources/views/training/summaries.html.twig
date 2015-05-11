@@ -1,0 +1,121 @@
+<section>
+    <h2>Synthèse</h2>
+
+    <div class="row">
+        <div class="col-xs-6">
+            <section>
+                <h3>Stages</h3>
+                <table class="table table-hover">
+                    <tr>
+                        <td>Nombre de stages</td>
+                        <td class="text-right"><strong>{{ report.summaries.internship.trainings }}</strong></td>
+                    </tr>
+                    <tr>
+                        <td>Nombre de sessions</td>
+                        <td class="text-right"><strong>{{ report.summaries.internship.sessions }}</strong></td>
+                    </tr>
+                    <tr>
+                        <td>Nombre d'heures de formation</td>
+                        <td class="text-right"><strong>{{ report.summaries.internship.hours }} h</strong></td>
+                    </tr>
+                    <tr>
+                        <td>Nombre d'heures-personnes</td>
+                        <td class="text-right"><strong>{{ report.summaries.internship.hours_participant | number_format }} h</strong></td>
+                    </tr>
+                    <tr>
+                        <td>Nombre de demandes d'inscriptions</td>
+                        <td class="text-right"><strong>{{ report.summaries.internship.registrations }}</strong></td>
+                    </tr>
+                    <tr>
+                        <td>Nombre de personnes formées</td>
+                        <td class="text-right"><strong>{{ report.summaries.internship.participations }}</strong></td>
+                    </tr>
+                    <tr>
+                        <td>Coût global</td>
+                        <td class="text-right"><strong>{{ report.summaries.internship.cost | number_format(2, ',', ' ') }} €</strong></td>
+                    </tr>
+                    <tr>
+                        <td>Recettes globales</td>
+                        <td class="text-right"><strong>{{ report.summaries.internship.taking | number_format(2, ',', ' ') }} €</strong></td>
+                    </tr>
+                </table>
+            </section>
+            <section>
+                <h3>Enseignements de cursus</h3>
+                <table class="table table-hover">
+                    <tr>
+                        <td>Nombre d'interventions</td>
+                        <td class="text-right"><strong>{{ report.summaries.training_course.sessions }}</strong></td>
+                    </tr>
+                    <tr>
+                        <td>Nombre d'heures de formation</td>
+                        <td class="text-right"><strong>{{ report.summaries.training_course.hours }} h</strong></td>
+                    </tr>
+                    <tr>
+                        <td>Nombre de personnes formées</td>
+                        <td class="text-right"><strong>{{ report.summaries.training_course.participations }}</strong></td>
+                    </tr>
+                    <tr>
+                        <td>Coût global</td>
+                        <td class="text-right"><strong>{{ report.summaries.training_course.cost | number_format(2, ',', ' ') }} €</strong></td>
+                    </tr>
+                </table>
+            </section>
+        </div>
+
+        <div class="col-xs-6">
+            <section>
+                <h3>Actions diverses</h3>
+                <table class="table table-hover">
+                    <tr>
+                        <td>Nombre d'actions diverses</td>
+                        <td class="text-right"><strong>{{ report.summaries.diverse_training.sessions }}</strong></td>
+                    </tr>
+                    <tr>
+                        <td>Nombre d'heures de formation</td>
+                        <td class="text-right"><strong>{{ report.summaries.diverse_training.hours }} h</strong></td>
+                    </tr>
+                    <tr>
+                        <td>Nombre de personnes formées</td>
+                        <td class="text-right"><strong>{{ report.summaries.diverse_training.participations }}</strong></td>
+                    </tr>
+                    <tr>
+                        <td>Coût global</td>
+                        <td class="text-right"><strong>{{ report.summaries.diverse_training.cost | number_format(2, ',', ' ') }} €</strong></td>
+                    </tr>
+                </table>
+                <h3>Total des activités de formation</h3>
+                <table class="table table-hover">
+                    <tr>
+                        <td>Nombre d'actions de formations</td>
+                        <td class="text-right"><strong>{{ report.summaries.all.trainings }}</strong></td>
+                    </tr>
+                    <tr>
+                        <td>Nombre d'actions de sessions</td>
+                        <td class="text-right"><strong>{{ report.summaries.all.sessions }}</strong></td>
+                    </tr>
+                    <tr>
+                        <td>Nombre d'heures de formation</td>
+                        <td class="text-right"><strong>{{ report.summaries.all.hours }} h</strong></td>
+                    </tr>
+                    <tr>
+                        <td>Nombre de personnes formées</td>
+                        <td class="text-right"><strong>{{ report.summaries.all.participations }}</strong></td>
+                    </tr>
+                    <tr>
+                        <td>Nombre de formations à l'initiative de l'URFIST</td>
+                        <td class="text-right"><strong>{{ report.summaries.all.external_false|default(0) }}</strong></td>
+                    </tr>
+                    <tr>
+                        <td>Nombre de formations à la demande d'extérieurs</td>
+                        <td class="text-right"><strong>{{ report.summaries.all.external_true|default(0) }}</strong></td>
+                    </tr>
+                    <tr>
+                        <td>Coût global</td>
+                        <td class="text-right"><strong>{{ report.summaries.all.cost | number_format(2, ',', ' ') }} €</strong></td>
+                    </tr>
+                </table>
+            </section>
+        </div>
+    </div>
+</section>

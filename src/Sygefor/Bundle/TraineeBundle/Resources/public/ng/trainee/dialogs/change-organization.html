@@ -1,0 +1,21 @@
+<div class="modal-header">
+    <button type="button" class="close" ng-click="dialog.dismiss()" aria-hidden="true">×</button>
+    <h4 class="modal-title"><i class="fa fa-university"></i> Changer l'URFIST de rattachement</h4>
+</div>
+<form sf-href="trainee.changeorg({id: dialog.params.trainee.id})" sf-form="form" json-path="form" on-success="onSuccess(data)" class="form-horizontal" novalidate>
+    <div class="modal-body center-block">
+        <div ng-repeat="key in ['organization', 'institution']">
+            <div class="form-group" ng-if="form.children[key]" ng-class="{'has-error': form.children[key].errors.length }">
+                <label class="col-sm-3 control-label" for="{{ form.children[key].id }}">{{ form.children[key].label }}</label>
+                <div class="col-sm-9">
+                    <span sf-form-widget="form.children[key]" class="form-control"/>
+                    <div ng-repeat="error in form.children[key].errors" class="help-block">{{ error }}</div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="modal-footer">
+        <a class="btn btn-default" ng-click="dialog.dismiss()">Annuler</a>
+        <input class="btn btn-primary" type="submit" value="Valider" />
+    </div>
+</form>

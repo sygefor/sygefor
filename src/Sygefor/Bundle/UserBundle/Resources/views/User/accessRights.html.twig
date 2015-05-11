@@ -1,0 +1,15 @@
+{% extends "SygeforUserBundle:User:layout.html.twig" %}
+{% form_theme form 'SygeforUserBundle:Form:fields.html.twig' %}
+{% set breadcrumb_item = "Droits d'accès" %}
+
+{% block subcontent %}
+    {{ form_start(form) }}
+    {{ form_row(form.accessRights) }}
+    <div class="form-group">
+        <div class="col-sm-offset-2 col-sm-10">
+            <button type="submit" class="btn btn-primary">Enregistrer</button>
+        </div>
+    </div>
+    {{ form_widget(form._token) }}
+    {{ form_end(form, {'render_rest': false}) }}
+{% endblock %}

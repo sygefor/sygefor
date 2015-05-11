@@ -1,0 +1,9 @@
+<!DOCTYPE HTML>
+<script src="//cdn.rawgit.com/jpillora/xdomain/0.6.17/dist/xdomain.min.js"></script>
+<script>
+    var masters = {
+        "http://localhost:3000": '/*'
+    };
+    masters["{{ host }}"] = '{{ path }}*';
+    xdomain.masters(masters);
+</script>

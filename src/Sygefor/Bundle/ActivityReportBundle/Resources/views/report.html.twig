@@ -1,0 +1,60 @@
+<!DOCTYPE html>
+<html class="no-js">
+    <head>
+        <meta charset="UTF-8" />
+        <title>SYGEFOR3 - Rapport d'activité</title>
+        <link rel="stylesheet" href="http://maxcdn.bootstrapcdn.com/bootstrap/3.3.4/css/bootstrap.min.css" />
+        <style>
+            h1 {
+                page-break-before: always;
+            }
+
+            h1:first-of-type {
+                page-break-before: avoid;
+            }
+
+            section, table {
+                page-break-inside:avoid
+            }
+
+            .header {
+                text-align: center;
+            }
+            .header img {
+                display: inline-block;
+                vertical-align: middle;
+                margin-right: 10px;
+                height: 80px;
+            }
+            .header h3 {
+                display: inline-block;
+                text-align: left;
+                vertical-align: middle;
+            }
+
+        </style>
+    </head>
+    <body>
+        <div class="container-fluid">
+            <div class="header">
+                <!--img class="logo" src="{{ app.request.getSchemeAndHttpHost() ~ asset('img/urfist/' ~ organization.code ~ '/logo.png') }}"-->
+                <img class="logo" src="http://sygefor-app.reseau-urfist.fr/{{ asset('img/urfist/' ~ organization.code ~ '/logo.png') }}">
+                <h3>{{ infos|join(' <br> ')|raw }}</h3>
+            </div>
+
+            <section>
+                <h1>Activités de formation</h1>
+                {% include "SygeforActivityReportBundle:training:summaries.html.twig" %}
+                {% include "SygeforActivityReportBundle:training:crosstabs.html.twig" %}
+                {% include "SygeforActivityReportBundle:training:listings.html.twig" %}
+            </section>
+
+            <section>
+                <h1>Rencontres scientifiques</h1>
+                {% include "SygeforActivityReportBundle:meeting:summaries.html.twig" %}
+                {% include "SygeforActivityReportBundle:meeting:crosstabs.html.twig" %}
+            </section>
+        </div>
+    </body>
+</html>
+

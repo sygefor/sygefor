@@ -1,0 +1,23 @@
+<div ng-if="items.length">
+    <table class="table table-hover table-search table-condensed">
+        <thead>
+        <tr>
+            <th>Date</th>
+            <th>Nom</th>
+            <th>Établissement</th>
+            <th>Doublons</th>
+        </tr>
+        </thead>
+        <tbody>
+            <tr ng-repeat="item in items">
+                <td>{{ item.createdAt|date: 'dd/MM/yyyy' }}</td>
+                <td><a ui-sref="trainee.detail.view({ id: item.id })">{{ item.fullName }}</a></td>
+                <td>{{ item.institution.name }}</td>
+                <td><a class="label label-danger" href="" ng-click="$dialog.open('trainee.merge', {items: item.duplicatesList.concat([item.id])}).then(refresh)">{{ item.duplicatesList.length + 1 }}</a></td>
+            </tr>
+        </tbody>
+    </table>
+    <pagination ng-if="search.result.total > search.query.size" total-items="search.result.total" items-per-page="search.query.size" ng-model="search.query.page" class="pagination-sm" max-size="5" previous-text="&lsaquo;" next-text="&rsaquo;"></pagination>
+</div>
+
+<div class="widget-empty-msg" ng-if="!items.length && !loading">{{ options.emptymsg || 'Aucun stagiaire dans cette liste' }}</div>

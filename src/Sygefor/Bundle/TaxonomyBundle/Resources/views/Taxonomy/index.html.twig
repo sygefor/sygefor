@@ -1,0 +1,34 @@
+{% extends "SygeforCoreBundle::layout.html.twig" %}
+{% block breadcrumbs %}
+    <ol class="breadcrumb full-height-item">
+        <li><a href="{{ path('core.index') }}">Accueil</a></li>
+        <li><a href="#">Administration</a></li>
+        <li class="active"><a href="{{ path('taxonomy.index') }}">Vocabulaires</a></li>
+    </ol>
+{% endblock %}
+{% block content %}
+    <div class="list-view full-height-item is-grow">
+        <div class="full-height-container is-absolute is-full-width">
+            <div class="col-xs-12">
+                <table class="table table-search table-hover">
+                    <thead>
+                        <tr>
+                            <th>Vocabulaire</th>
+                            <th>Portée</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                    {% for group,vocabularyc in vocabularies %}
+                        {% for id,voc in vocabularyc %}
+                            <tr ng-repeat="item in search.result.items" ng-class="{warning: isSelected(item.id)}">
+                                <td><a href="{{ path('taxonomy.view', { 'id': voc.id }) }}">{{ voc.vocabulary.vocabularyName }}</a></td>
+                                <td><span class="badge">{{ voc.scope == 'N' ? 'Nationale' : 'Locale' }}</span></td>
+                            </tr>
+                        {% endfor %}
+                    {% endfor %}
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+{% endblock %}

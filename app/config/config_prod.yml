@@ -1,0 +1,72 @@
+imports:
+    - { resource: config.yml }
+
+framework:
+    validation:
+        cache: apc
+
+doctrine:
+    orm:
+        metadata_cache_driver: apc
+        result_cache_driver: apc
+        query_cache_driver: apc
+
+monolog:
+    handlers:
+        # channel : main
+        main:
+            type:               fingers_crossed
+            action_level:       error
+            handler:            grouped
+            channels:           [!trainee_merge, !api]
+        grouped:
+            type:               group
+            #members:            [streamed, buffered]
+            members:            [streamed]
+        streamed:
+            type:               stream
+            path:               "%kernel.logs_dir%/%kernel.environment%.log"
+            level:              debug
+        # console
+        console:
+            type:  console
+
+        # buffered mail
+        buffered:
+            type:    buffer
+            handler: swift
+        swift:
+            type:       swift_mailer
+            mailer:     swiftmailer.mailer.local
+            from_email: support@conjecto.com
+            to_email:   support@conjecto.com
+            subject:    SYGEFOR : An Error Occurred!
+            level:      info
+
+        # channel : trainee_merge
+        trainee_merge:
+            type:         fingers_crossed
+            action_level: error
+            handler:      trainee_merge.grouped
+            channels:     trainee_merge
+        trainee_merge.grouped:
+            type:    group
+            members: [trainee_merge.streamed, buffered]
+        trainee_merge.streamed:
+            type:  stream
+            path:  "%kernel.logs_dir%/trainee_merge.%kernel.environment%.log"
+            level: debug
+
+        # channel : api
+        api:
+            type:         fingers_crossed
+            action_level: error
+            handler:      api.grouped
+            channels:     api
+        api.grouped:
+            type:    group
+            members: [api.streamed, buffered]
+        api.streamed:
+            type:  stream
+            path:  "%kernel.logs_dir%/api.%kernel.environment%.log"
+            level: debug

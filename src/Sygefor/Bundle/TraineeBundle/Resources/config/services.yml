@@ -1,0 +1,179 @@
+services:
+    # user provider
+    sygefor_trainee.user_provider:
+        class: Sygefor\Bundle\TraineeBundle\Entity\TraineeRepository
+        factory_service:  doctrine
+        factory_method:   getRepository
+        arguments:
+            - "Sygefor\Bundle\TraineeBundle\Entity\Trainee"
+
+    # orm listeners
+    sygefor_trainee.profesionnal_situation.orm.listener:
+        class: Sygefor\Bundle\TraineeBundle\Listener\TraineeInscriptionListener
+        tags:
+            - { name: doctrine.event_subscriber, connection: default }
+
+    sygefor_trainee.trainee.orm.listener:
+        class: Sygefor\Bundle\TraineeBundle\Listener\TraineeListener
+        arguments:
+            - "@service_container"
+        tags:
+            - { name: doctrine.event_subscriber, connection: default }
+
+    sygefor_trainee.inscription.orm.listener:
+        class: Sygefor\Bundle\TraineeBundle\Listener\InscriptionListener
+        arguments:
+            - "@service_container"
+        tags:
+            - { name: doctrine.event_subscriber, connection: default }
+
+    #trainee menu
+    sygefor_trainee.configure_menu_listener:
+        class: Sygefor\Bundle\TraineeBundle\EventListener\ConfigureMenuListener
+        arguments:
+                    - @security.context
+                    - @router
+        tags:
+            - { name: kernel.event_listener, event: sygefor_core.menu_configure, method: onMenuConfigure }
+
+    #taxonomy
+    sygefor_trainee.vocabulary_title:
+        class:        Sygefor\Bundle\CoreBundle\Entity\Term\Title
+        tags:
+            - { name: sygefor_taxonomy.vocabulary_provider, group: "%sygefor_training.taxonomy.group%" }
+
+    sygefor_trainee.vocabulary_inscription_status:
+            class:        Sygefor\Bundle\TraineeBundle\Entity\Term\InscriptionStatus
+            tags:
+                - { name: sygefor_taxonomy.vocabulary_provider, group: "%sygefor_training.taxonomy.group%" }
+
+    sygefor_trainee.vocabulary_presence_status:
+        class:        Sygefor\Bundle\TraineeBundle\Entity\Term\PresenceStatus
+        tags:
+            - { name: sygefor_taxonomy.vocabulary_provider, group: "%sygefor_training.taxonomy.group%" }
+
+    sygefor_trainee.vocabulary_email_template:
+        class:        Sygefor\Bundle\TraineeBundle\Entity\Term\EmailTemplate
+        tags:
+            - { name: sygefor_taxonomy.vocabulary_provider, group: "%sygefor_training.taxonomy.group%" }
+
+    sygefor_trainee.vocabulary_evaluation_criterion:
+        class:        Sygefor\Bundle\TraineeBundle\Entity\Term\EvaluationCriterion
+        tags:
+            - { name: sygefor_taxonomy.vocabulary_provider, group: "%sygefor_training.taxonomy.group%" }
+
+    #trainee voters
+    #
+    sygefor_trainee.rights.trainee.own.view:
+        class: Sygefor\Bundle\TraineeBundle\Security\Authorization\AccessRight\OwnTraineeViewAccessRight
+        tags:
+            - { name: sygefor_user.right_provider, group: "Stagiaires" }
+    sygefor_trainee.rights.trainee.own.create:
+        class: Sygefor\Bundle\TraineeBundle\Security\Authorization\AccessRight\OwnTraineeCreateAccessRight
+        tags:
+            - { name: sygefor_user.right_provider, group: "Stagiaires" }
+    sygefor_trainee.rights.trainee.own.update:
+        class: Sygefor\Bundle\TraineeBundle\Security\Authorization\AccessRight\OwnTraineeUpdateAccessRight
+        tags:
+            - { name: sygefor_user.right_provider, group: "Stagiaires" }
+    sygefor_trainee.rights.trainee.own.delete:
+        class: Sygefor\Bundle\TraineeBundle\Security\Authorization\AccessRight\OwnTraineeDeleteAccessRight
+        tags:
+            - { name: sygefor_user.right_provider, group: "Stagiaires" }
+
+    sygefor_trainee.rights.trainee.all.view:
+        class: Sygefor\Bundle\TraineeBundle\Security\Authorization\AccessRight\AllTraineeViewAccessRight
+        tags:
+            - { name: sygefor_user.right_provider, group: "Stagiaires" }
+    sygefor_trainee.rights.trainee.all.create:
+        class: Sygefor\Bundle\TraineeBundle\Security\Authorization\AccessRight\AllTraineeCreateAccessRight
+        tags:
+            - { name: sygefor_user.right_provider, group: "Stagiaires" }
+    sygefor_trainee.rights.trainee.all.update:
+        class: Sygefor\Bundle\TraineeBundle\Security\Authorization\AccessRight\AllTraineeUpdateAccessRight
+        tags:
+            - { name: sygefor_user.right_provider, group: "Stagiaires" }
+    sygefor_trainee.rights.trainee.all.delete:
+        class: Sygefor\Bundle\TraineeBundle\Security\Authorization\AccessRight\AllTraineeDeleteAccessRight
+        tags:
+            - { name: sygefor_user.right_provider, group: "Stagiaires" }
+
+    #inscription voters
+    #
+    sygefor_trainee.rights.inscription.own.view:
+        class: Sygefor\Bundle\TraineeBundle\Security\Authorization\AccessRight\OwnInscriptionViewAccessRight
+        tags:
+            - { name: sygefor_user.right_provider, group: "Inscriptions" }
+    sygefor_trainee.rights.inscription.own.create:
+        class: Sygefor\Bundle\TraineeBundle\Security\Authorization\AccessRight\OwnInscriptionCreateAccessRight
+        tags:
+            - { name: sygefor_user.right_provider, group: "Inscriptions" }
+    sygefor_trainee.rights.inscription.own.update:
+        class: Sygefor\Bundle\TraineeBundle\Security\Authorization\AccessRight\OwnInscriptionUpdateAccessRight
+        tags:
+            - { name: sygefor_user.right_provider, group: "Inscriptions" }
+    sygefor_trainee.rights.inscription.own.delete:
+        class: Sygefor\Bundle\TraineeBundle\Security\Authorization\AccessRight\OwnInscriptionDeleteAccessRight
+        tags:
+            - { name: sygefor_user.right_provider, group: "Inscriptions" }
+
+    sygefor_trainee.rights.inscription.all.view:
+        class: Sygefor\Bundle\TraineeBundle\Security\Authorization\AccessRight\AllInscriptionViewAccessRight
+        tags:
+            - { name: sygefor_user.right_provider, group: "Inscriptions" }
+    sygefor_trainee.rights.inscription.all.create:
+        class: Sygefor\Bundle\TraineeBundle\Security\Authorization\AccessRight\AllInscriptionCreateAccessRight
+        tags:
+            - { name: sygefor_user.right_provider, group: "Inscriptions" }
+    sygefor_trainee.rights.inscription.all.update:
+        class: Sygefor\Bundle\TraineeBundle\Security\Authorization\AccessRight\AllInscriptionUpdateAccessRight
+        tags:
+            - { name: sygefor_user.right_provider, group: "Inscriptions" }
+    sygefor_trainee.rights.inscription.all.delete:
+        class: Sygefor\Bundle\TraineeBundle\Security\Authorization\AccessRight\AllInscriptionDeleteAccessRight
+        tags:
+            - { name: sygefor_user.right_provider, group: "Inscriptions" }
+
+    #elastica
+    sygefor_trainee.search:
+        class: Sygefor\Bundle\CoreBundle\Search\SearchService
+        arguments: [@fos_elastica.index.sygefor3.trainee]
+
+    sygefor_trainee.inscription.search:
+        class: Sygefor\Bundle\CoreBundle\Search\SearchService
+        arguments: [@fos_elastica.index.sygefor3.inscription]
+
+    #form
+    sygefor_trainee.form.type.traineemailingtemplate:
+        class: Sygefor\Bundle\TraineeBundle\Form\EmailTemplateVocabularyType
+        arguments:
+            - @security.context
+            - @Sygefor_user.access_right_registry
+        tags:
+            - { name: form.type, alias: emailtemplatevocabulary }
+    sygefor_trainee.form.type.trainee:
+            class: Sygefor\Bundle\TraineeBundle\Form\TraineeType
+            arguments:
+                - @Sygefor_user.access_right_registry
+            tags:
+                - { name: form.type, alias: trainee }
+
+    #batch operation
+    sygefor_list.batch.inscription_status_change:
+          class: Sygefor\Bundle\TraineeBundle\BatchOperations\InscriptionStatusChangeBatchOperation
+          arguments:
+              - @doctrine.orm.entity_manager
+          calls:
+              - [ setContainer, [ @service_container ] ]
+          tags:
+              - {name: sygefor_list.batch_operation_provider}
+
+    sygefor_list.batch.trainee_merge:
+          class: Sygefor\Bundle\TraineeBundle\BatchOperations\TraineeMergeBatchOperation
+          arguments:
+              - @logger
+          calls:
+              - [ setContainer, [ @service_container ] ]
+          tags:
+              - {name: sygefor_list.batch_operation_provider}
+              - {name: monolog.logger, channel: trainee_merge}

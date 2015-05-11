@@ -1,0 +1,54 @@
+<div class="full-height-container is-absolute is-full-width is-direction-row">
+
+    <div class="full-height-item grid-list-detail-results">
+
+        <div class="full-height-container is-full-width is-absolute is-direction-column">
+
+            <div class="full-height-item is-full-width is-grow is-overflow-y">
+                <div class="list-group" ng-if="search.result.items.length">
+                    <div class="list-group-item" ng-repeat="result in search.result.items"
+                         ng-class="{active: $stateParams.id == result.id, 'list-group-item-warning': selected.indexOf(result.id) > -1}">
+                        <i class="fa" ng-click="switchSelect(result.id)"
+                           ng-class="{'fa-square-o': !isSelected(result.id), 'fa-check-square-o': isSelected(result.id)}"></i>
+
+                        <div ng-include="resultTemplateUrl"></div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="full-height-item is-full-width pager-wrapper">
+                <!-- <pager total-items="search.result.total" ng-model="search.query.page"></pager> -->
+                <pagination ng-if="search.result.total > 0" ng-model="search.query.page"
+                            total-items="search.result.total" items-per-page="search.query.size" direction-links="false"
+                            boundary-links="false" rotate="false" max-size="4" next-text=">" previous-text="<"
+                            first-text="Début" last-text="Fin"></pagination>
+            </div>
+        </div>
+
+    </div>
+
+
+    <div class="full-height-item grid-list-detail-view"
+         ng-class="{'': search.result.items.length, 'col-lg-12': !search.result.items.length}">
+        <div class="full-height-container is-full-width is-absolute is-direction-column">
+
+            <div class="full-height-item is-overflow-y is-grow view">
+                <!-- <div class="absolute-fixed-wrapper"> -->
+                <div class="ui-view-container">
+                    <div class="col-xs-12">
+                        <div ui-view></div>
+                    </div>
+                </div>
+                <!-- </div> -->
+            </div>
+            <div ng-if="$state.current.views.bottom" class="fixed-bloc-wrapper full-height-item">
+                <div ui-view="bottom">
+
+                </div>
+            </div>
+
+        </div>
+    </div>
+
+
+</div>
