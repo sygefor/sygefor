@@ -86,7 +86,7 @@ Installation
 
 ### Le projet
 
-- git clone https://github.com/conjecto/sygefor3.git
+- git clone https://github.com/conjecto/sygefor.git
 - cd sygefor3
 - composer install
     - Renseigner les paramètres symfony
