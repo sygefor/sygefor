@@ -4,7 +4,7 @@ SYGEFOR3
 Qu'est-ce que Sygefor3 ?
 -----------------
 
-Sygefor3 est une solution de gestion de formations conçu par l'Association des URFIST et réalisée par [Conjecto](http://www.conjecto.com/). L'application 
+Sygefor3 est une solution de gestion de formations conçu par l'Association du Réseau des URFIST et réalisée par [Conjecto](http://www.conjecto.com/). L'application 
 se présente sous la forme d'une interface de gestion privée et d'une API publique avec authentification OAuth2.
 
 Démonstration
