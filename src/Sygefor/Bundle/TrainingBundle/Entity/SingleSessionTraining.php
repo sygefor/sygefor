@@ -58,15 +58,20 @@ abstract class SingleSessionTraining extends Training
         //session is copied
         if (!empty ($this->sessions)) {
             foreach ($this->sessions as $session) {
-                $session->setTraining($this);
+                $cloned = clone $session;
+                $cloned->resetCostAndConsideration();
+                $cloned->setNumberOfRegistrations(0);
+                $cloned->setTraining($this);
+                $this->setSession($cloned);
             }
         }
-        $this->sessions = new ArrayCollection();
-        if (!empty($this->materials)) {
-            foreach ($this->materials as $material) {
-                $material->setTraining($this);
+
+        $tmpMaterials = $this->getMaterials();
+        if (!empty($tmpMaterials)) {
+            foreach ($tmpMaterials as $material) {
+                $newMat = clone $material;
+                $this->addMaterial($newMat);
             }
         }
-        $this->materials = new ArrayCollection();
     }
 }

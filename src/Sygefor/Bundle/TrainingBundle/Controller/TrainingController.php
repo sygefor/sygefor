@@ -156,6 +156,13 @@ class TrainingController extends Controller
                         $cloned->addMaterial($newMat);
                     }
                 }
+                $cloned->duplicateArrayCollection('addTag', $training->getTags());
+                if ($training->getType() === 'internship' || $training->getType() === 'diverse_training') {
+                    $cloned->duplicateArrayCollection('addPublicType', $training->getPublicTypes());
+                }
+                if ($training->getType() === 'meeting') {
+                    $cloned->duplicateArrayCollection('addEventKind', $training->getEventKind());
+                }
                 $em = $this->getDoctrine()->getManager();
                 $em->persist($cloned);
                 $em->flush();

@@ -14,7 +14,7 @@
    </thead>
    <tbody>
        <tr ng-repeat="training in data">
-           <td>{{ training.name }}</td>
+           <td><a href="" ui-sref="training.detail.view({id: training.id})">{{ training.name }}</a></td>
            <td>{{ training.theme }}</td>
            <td>{{ training.sessions }}</td>
            <td class="text-right">{{ training.hourDuration }}</td>

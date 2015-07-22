@@ -12,6 +12,7 @@
                         <th ng-hide="$stateParams.session" search-table-th field="session.dateBegin">Session</th>
                         <th search-table-th field="trainee.publicCategory.source">Public</th>
                         <th search-table-th field="trainee.institution.name.source">Établissement</th>
+                        <th search-table-th field="publicType.isPaying">Payant</th>
                         <th search-table-th field="inscriptionStatus.id">Inscription</th>
                         <th search-table-th field="presenceStatus.id">Présence</th>
                     </tr>
@@ -24,6 +25,7 @@
                         <td ng-hide="$stateParams.session"><a href="" ui-sref="session.detail.view({ id: item.session.id })">{{ item.session.dateBegin|date: 'dd/MM/yyyy' }} - {{ item.session.training.name }}</a></td>
                         <td>{{ item.trainee.publicCategory }}</td>
                         <td>{{ item.trainee.institution.name }}</td>
+                        <td>{{ item['publicType.isPaying'] ? 'Oui' : 'Non' }}</td>
                         <td><span class="label label-lg" ng-class="$root.inscriptionStatusClass(item.inscriptionStatus.status)">{{ item.inscriptionStatus.name }}</span></td>
                         <td><span class="label label-lg" ng-class="$root.presenceStatusClass(item.presenceStatus.status)" ng-if="item.presenceStatus">{{ item.presenceStatus.name }}</span></td>
                     </tr>

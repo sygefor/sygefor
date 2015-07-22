@@ -20,6 +20,7 @@ class PublicTypeType extends VocabularyType
         parent::buildForm($builder, $options);
 
         $builder->add('priority', 'checkbox', array('label' => 'Public visé', 'required' => false));
+        $builder->add('recursiveIsPaying', 'checkbox', array('label' => 'Payant', 'required' => false));
     }
 
     /**

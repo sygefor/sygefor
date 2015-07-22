@@ -56,6 +56,12 @@ class DiverseTraining extends Training
         $this->publicTypes = new ArrayCollection();
     }
 
+    public function __clone()
+    {
+        parent::__clone();
+        $this->publicTypes = new ArrayCollection();
+    }
+
     /**
      * @return string
      */

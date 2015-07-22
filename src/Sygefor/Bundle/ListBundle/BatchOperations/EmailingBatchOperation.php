@@ -129,11 +129,10 @@ class EmailingBatchOperation extends AbstractBatchOperation
             ));
         } else {
             $message = \Swift_Message::newInstance();
-            $message->setFrom($this->container->getParameter('mailer_from'), $this->container->getParameter('mailer_from_name'));
+            $organization = $this->container->get('security.context')->getToken()->getUser()->getOrganization();
 
-            // set reply to (organization of the current user)
-            $replyTo = $this->container->get('security.context')->getToken()->getUser()->getOrganization()->getEmail();
-            $message->setReplyTo($replyTo);
+            $message->setFrom($this->container->getParameter('mailer_from'), $organization->getName());
+            $message->setReplyTo($organization->getEmail());
 
             // attachements
             if (!empty($attachments)) {

@@ -482,7 +482,6 @@ class ActivityReportBuilder
         $crosstab->addAggregation('training.eventKind.source');
         $return['eventType_eventKind']['local'] = $crosstab->execute();
 
-
         // type / eventKind (national)
 
         // remove URFIST from filters

@@ -35,6 +35,7 @@ class LoadPublicType extends AbstractDataFixture
         $publicType->setName($name);
         $publicType->setPriority($priority);
         $publicType->setPrivate($private);
+        $publicType->setPayingTrainee(false);
         $manager->persist($publicType) ;
         $manager->flush();
         return $publicType;
@@ -52,6 +53,7 @@ class LoadPublicType extends AbstractDataFixture
             $publicType->setName($name);
             $publicType->setParent($parent);
             $publicType->setPriority(false);
+            $publicType->setPayingTrainee(false);
             $manager->persist($publicType) ;
         }
         $manager->flush();

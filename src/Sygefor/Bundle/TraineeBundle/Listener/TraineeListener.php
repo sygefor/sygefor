@@ -141,7 +141,7 @@ class TraineeListener implements EventSubscriber
 
         // send the mail
         $message = \Swift_Message::newInstance()
-          ->setFrom($this->container->getParameter('mailer_from'), $this->container->getParameter('mailer_from_name'))
+          ->setFrom($this->container->getParameter('mailer_from'), $trainee->getOrganization()->getName())
           ->setReplyTo($trainee->getOrganization()->getEmail())
           ->setSubject("Bienvenue sur SYGEFOR !")
           ->setTo($trainee->getEmail())
@@ -182,7 +182,7 @@ class TraineeListener implements EventSubscriber
 
         // send the mail
         $message = \Swift_Message::newInstance()
-          ->setFrom($this->container->getParameter('mailer_from'), $this->container->getParameter('mailer_from_name'))
+          ->setFrom($this->container->getParameter('mailer_from'), $trainee->getOrganization()->getName())
           ->setReplyTo($trainee->getOrganization()->getEmail())
           ->setSubject("SYGEFOR : Activation de votre compte")
           ->setTo($trainee->getEmail())

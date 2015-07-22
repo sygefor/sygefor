@@ -5,7 +5,7 @@
 <form sf-href="trainee.changeduplicateignorance({id: dialog.params.duplicate.id})" sf-form="form" json-path="form" on-success="onSuccess(data)" class="form-horizontal" novalidate>
     <div class="modal-body center-block">
         <div class="form-group" ng-class="{'has-error': form.children.ignored.children.errors.length }">
-            <label class="col-sm-4 control-label" for="{{ form.children.ignored }}">Ce n'est pas un doublon ?</label>
+            <label class="col-sm-4 control-label" for="{{ form.children.ignored }}">S'agit il d'un doublon ?</label>
             <div class="col-sm-8">
                 <span sf-form-widget="form.children.ignored" class="form-control"/>
                 <div ng-repeat="error in form.children.ignored.errors" class="help-block">{{ error }}</div>

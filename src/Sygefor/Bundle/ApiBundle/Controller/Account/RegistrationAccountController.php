@@ -70,7 +70,9 @@ class RegistrationAccountController extends Controller
      */
     public function checkoutAction(Request $request)
     {
+        /** @var Trainee $trainee */
         $trainee = $this->getUser();
+
         $sessions = $request->get('sessions');
         if(!$sessions) {
             throw new BadRequestHttpException('You must provide a list of session id.');
@@ -138,7 +140,7 @@ class RegistrationAccountController extends Controller
         $count = count($inscriptions);
         if($count) {
             $message = \Swift_Message::newInstance()
-                ->setFrom($this->container->getParameter('mailer_from'), $this->container->getParameter('mailer_from_name'))
+                ->setFrom($this->container->getParameter('mailer_from'), $trainee->getOrganization()->getName())
                 ->setReplyTo($trainee->getOrganization()->getEmail())
                 ->setSubject("Votre demande d'inscription a bien été prise en compte.")
                 ->setTo($trainee->getEmail())

@@ -156,6 +156,15 @@ class HumanReadablePropertyAccessor
         return true;
     }
 
+    /**
+     * magic function for string conversion
+     * @return string
+     */
+    public function __toString()
+    {
+        return '';
+    }
+
     private function accessProperty($property) {
         return $this->accessorFactory->getPropertyForAlias( get_class($this->object), $property);
     }

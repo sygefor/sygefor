@@ -121,10 +121,10 @@
                             <!--| filter:isViewable-->
                             <tr ng-repeat="duplicate in trainee.duplicates | filter: {ignored: false}">
                                 <td>
-                                    <button tooltip="Masquer le doublon" ng-if="trainee._accessRights.edit" ng-click="ignoreDuplicate(duplicate)" type="button" class="close close-inline ng-scope">
+                                    <button tooltip="Masquer le doublon" ng-if="trainee._accessRights.edit" ng-click="ignoreDuplicate(duplicate)" type="button" class="close close-inline dbl ng-scope">
                                         <span aria-hidden="true">×</span>
                                     </button>
-                                    <a ui-sref="trainee.detail.view({id: duplicate.traineeTarget.id})" <span>{{ duplicate.traineeTarget.fullName }} </span></a><span class="pre-title">({{ duplicate.type }})</span>
+                                    <a ui-sref="trainee.detail.view({id: duplicate.traineeTarget.id})" >{{ duplicate.traineeTarget.fullName }} </a><span class="pre-title">({{ duplicate.type }})</span>
                                 </td>
                                 <td>
                                     <span class="pre-title">{{ duplicate.traineeTarget.organization.name }}</span>

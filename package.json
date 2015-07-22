@@ -47,7 +47,7 @@
     "angular-resource": "angular/bower-angular-resource#v1.3.0-build.2687+sha.ac37915",
     "angular-animate": "angular/bower-angular-animate#v1.3.0-build.2687+sha.ac37915",
     "bootstrap-sass": "twbs/bootstrap-sass",
-    "bootstrap-datepicker": "eternicode/bootstrap-datepicker",
+    "bootstrap-datepicker": "eternicode/bootstrap-datepicker#81e0da0baa679a9d9e7171e197fb4a423ee0018d",
     "jquery-slimscroll": "rochal/jQuery-slimScroll",
     "angular-zeroclipboard": "lisposter/angular-zeroclipboard"
   }

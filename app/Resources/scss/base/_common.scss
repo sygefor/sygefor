@@ -242,6 +242,17 @@ h4 {
 .close-inline {
   float:none;
   vertical-align: bottom;
+  &.dbl {
+    background-color: #cecece;
+    padding: 1px 5px;
+    border-radius: 3px;
+    opacity: .3;
+    filter: alpha(opacity=30);
+  }
+  &.dbl:hover {
+    opacity: .7;
+    filter: alpha(opacity=70);
+  }
 }
 
 .input-copy-clipboard input[readonly] {

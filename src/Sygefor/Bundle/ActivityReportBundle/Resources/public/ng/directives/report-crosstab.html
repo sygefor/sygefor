@@ -10,7 +10,8 @@
    <tbody>
        <tr ng-repeat="row in data.rows">
            <td>{{ row.label }}</td>
-           <td ng-repeat="col in row.data" class="text-right">{{ col.value }}</td>
+           <td ng-if="row.data" ng-repeat="col in row.data" class="text-right">{{ col.value }}</td>
+           <td ng-if="!row.data" class="text-right">{{ row.value }}</td>
            <td class="text-right active">{{ row.value }}</td>
        </tr>
        <tr>

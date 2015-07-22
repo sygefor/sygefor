@@ -4,6 +4,7 @@ namespace Sygefor\Bundle\ElasticaBundle\Transformer;
 
 use FOS\ElasticaBundle\Transformer\ModelToElasticaAutoTransformer;
 use Symfony\Component\PropertyAccess\Exception\NoSuchPropertyException;
+use Symfony\Component\PropertyAccess\Exception\UnexpectedTypeException;
 use Symfony\Component\PropertyAccess\PropertyAccessorInterface;
 use Elastica\Document;
 
@@ -39,6 +40,8 @@ class ModelToElasticaTransformer extends ModelToElasticaAutoTransformer
                 $value = $this->propertyAccessor->getValue($object, $key);
             } catch(NoSuchPropertyException $e) {   // catch the NoSuchPropertyException to avoid error
                 continue;
+            } catch(UnexpectedTypeException $e) {   // catch the UnexpectedTypeException to avoid error
+                continue;
             }
 
             if (isset($mapping['type']) && in_array($mapping['type'], array('nested', 'object')) && isset($mapping['properties']) && !empty($mapping['properties'])) {
@@ -65,5 +68,35 @@ class ModelToElasticaTransformer extends ModelToElasticaAutoTransformer
         }
 
         return $document;
+    }
+
+    /**
+     * Attempts to convert any type to a string or an array of strings
+     *
+     * @param mixed $value
+     *
+     * @return string|array
+     */
+    protected function normalizeValue($value)
+    {
+        $normalizeValue = function(&$v)
+        {
+            if ($v instanceof \DateTime) {
+                // deactivate timezone support
+                // $v = $v->format('c');
+                $v = $v->format('Y-m-d\TH:i:s');
+            } elseif (!is_scalar($v) && !is_null($v)) {
+                $v = (string)$v;
+            }
+        };
+
+        if (is_array($value) || $value instanceof \Traversable || $value instanceof \ArrayAccess) {
+            $value = is_array($value) ? $value : iterator_to_array($value, false);
+            array_walk_recursive($value, $normalizeValue);
+        } else {
+            $normalizeValue($value);
+        }
+
+        return $value;
     }
 }

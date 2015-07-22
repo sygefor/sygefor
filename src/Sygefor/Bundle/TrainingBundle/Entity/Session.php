@@ -222,6 +222,17 @@ class Session implements SerializedAccessRights
         $this->inscriptions = new ArrayCollection();
     }
 
+    public function resetCostAndConsideration()
+    {
+        $this->setNetworkTrainerCost(null);
+        $this->setExternTrainerCost(null);
+        $this->setExternTrainerConsideration(null);
+        $this->setReprographyCost(null);
+        $this->setOtherCost(null);
+        $this->setSubscriptionRightTaking(null);
+        $this->setOtherTaking(null);
+    }
+
     /**
      * @return integer
      * @Serializer\VirtualProperty

@@ -250,7 +250,7 @@ class MailingBatchOperation extends AbstractBatchOperation implements BatchOpera
         }
 
         $uid = substr(md5(rand()), 0, 5);
-        $fileName = $uid . '_' . ( ( !empty($this->currentTemplateFileName) ? $this->currentTemplateFileName : $template->getFileName()));
+        $fileName = $this->removeAccents($uid . '_' . ( ( !empty($this->currentTemplateFileName) ? $this->currentTemplateFileName : $template->getFileName())));
         $TBS->Show( OPENTBS_FILE, $this->options['tempDir'] . $fileName);
         $TBS->_PlugIns[OPENTBS_PLUGIN]->Close();
 
@@ -338,5 +338,22 @@ class MailingBatchOperation extends AbstractBatchOperation implements BatchOpera
         }
 
         return $outputFileName;
+    }
+
+    /**
+     * @param $str
+     * @param string $charset
+     * @return mixed|string
+     */
+    private function removeAccents($str, $charset='utf-8')
+    {
+        //converting to html elements
+        $str = htmlentities($str, ENT_NOQUOTES, $charset);
+
+        //keeping only first char after '&', so that &eacute becomes e for example
+        $str = preg_replace('#&([A-Za-z])(?:acute|cedil|caron|circ|grave|orn|ring|slash|th|tilde|uml);#', '\1', $str);
+        $str = preg_replace('#&[^;]+;#', '', $str); // removing not recognized chars
+
+        return $str;
     }
 }

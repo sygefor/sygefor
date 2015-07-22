@@ -19,6 +19,7 @@ use Symfony\Component\Security\Core\User\UserInterface;
 use Symfony\Component\Validator\Constraints as Assert;
 use Knp\DoctrineBehaviors\Model as ORMBehaviors;
 use JMS\Serializer\Annotation as Serializer;
+use JMS\Serializer\Annotation\MaxDepth;
 use Symfony\Bridge\Doctrine\Validator\Constraints\UniqueEntity;
 
 /**
@@ -38,11 +39,13 @@ class TraineeDuplicate
 
     /**
      *@ORM\ManyToOne(targetEntity="Sygefor\Bundle\TraineeBundle\Entity\Trainee")
+     * @MaxDepth(1)
      */
     protected $traineeSource;
 
     /**
      * @ORM\ManyToOne(targetEntity="Sygefor\Bundle\TraineeBundle\Entity\Trainee")
+     * @MaxDepth(2)
      */
     protected $traineeTarget;
 

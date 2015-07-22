@@ -324,6 +324,8 @@ fos_elastica:
                             type: string
                             fields:
                                 source: { type: string, index: not_analyzed }
+                        publicType.isPaying:
+                            type: boolean
                         professionalSituation:
                             type: string
                             fields:
@@ -395,6 +397,8 @@ fos_elastica:
                                         source: { type: string, index: not_analyzed }
                         institution:
                             _include: trainee.institution
+                        publicType.isPaying:
+                            type: boolean
                         publicCategory:
                             _include: trainee.publicCategory
                         professionalSituation:

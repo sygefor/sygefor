@@ -196,6 +196,18 @@ abstract class Training implements SerializedAccessRights
         //sessions are not copied.
         $this->sessions = new ArrayCollection();
         $this->materials = new ArrayCollection();
+        $this->tags = new ArrayCollection();
+    }
+
+    /**
+     * @param $addMethod
+     * @param ArrayCollection $arrayCollection
+     */
+    public function duplicateArrayCollection($addMethod, $arrayCollection)
+    {
+        foreach ($arrayCollection as $item) {
+            $this->$addMethod($item);
+        }
     }
 
     /**
@@ -409,7 +421,7 @@ abstract class Training implements SerializedAccessRights
     }
 
     /**
-     * @param mixed $tags
+     * @param ArrayCollection $tags
      */
     public function setTags($tags)
     {
@@ -417,7 +429,27 @@ abstract class Training implements SerializedAccessRights
     }
 
     /**
-     * @return mixed
+     * @param Tag $tag
+     */
+    public function addTag(Tag $tag)
+    {
+        if (!$this->tags->contains($tag)) {
+            $this->tags->add($tag);
+        }
+    }
+
+    /**
+     * @param Tag $tag
+     */
+    public function removeTag(Tag $tag)
+    {
+        if ($this->tags->contains(($tag))) {
+            $this->tags->remove($tag);
+        }
+    }
+
+    /**
+     * @return ArrayCollection
      */
     public function getTags()
     {

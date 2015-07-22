@@ -38,6 +38,12 @@ class PublicType extends AbstractTerm implements NationalVocabularyInterface
     protected $legacyPublicType;
 
     /**
+     * @ORM\Column(name="is_paying", type="boolean")
+     * @Serializer\Groups({"api"})
+     */
+    protected $isPaying;
+
+    /**
      * Constructor
      */
     public function __construct() {
@@ -66,6 +72,44 @@ class PublicType extends AbstractTerm implements NationalVocabularyInterface
     public function setPriority($priority)
     {
         $this->priority = $priority;
+    }
+
+    /**
+     * @return boolean
+     */
+    public function getIsPaying()
+    {
+        return $this->isPaying;
+    }
+
+    /**
+     * Get isPaying to match with PublicTypeType form
+     * @return bool
+     */
+    public function getRecursiveIsPaying()
+    {
+        return $this->getIsPaying();
+    }
+
+    /**
+     * @param boolean $isPaying
+     */
+    public function setIsPaying($isPaying)
+    {
+        $this->isPaying = $isPaying;
+    }
+
+    /**
+     * Set isPaying value to the term and its children
+     * @param $isPaying
+     */
+    public function setRecursiveIsPaying($isPaying)
+    {
+        foreach ($this->getChildren() as $children) {
+            $children->setRecursiveIsPaying($isPaying);
+        }
+
+        $this->setIsPaying($isPaying);
     }
 
     /**

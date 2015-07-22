@@ -20,7 +20,7 @@ class ChangeDuplicateIgnoranceType extends AbstractType
     public function buildForm(FormBuilderInterface $builder, array $options)
     {
         $builder->add('ignored', 'choice', array(
-            'choices' => array(true => 'En effet', false => 'Au contraire'),
+            'choices' => array(true => 'Non', false => 'Oui'),
             'multiple' => false
         ));
     }

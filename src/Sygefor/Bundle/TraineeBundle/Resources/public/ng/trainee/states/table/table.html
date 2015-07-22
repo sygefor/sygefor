@@ -13,6 +13,7 @@
                         <th search-table-th field="publicCategory.source">Public
                         <th search-table-th field="institution.name.source">Établissement</th>
                         <th search-table-th field="createdAt">Inscription</th>
+                        <th search-table-th field="publicType.isPaying">Payant</th>
                     </tr>
                 </thead>
                 <tbody>
@@ -24,6 +25,7 @@
                         <td>{{ item.publicCategory }}</td>
                         <td>{{ item.institution.name }}</td>
                         <td>{{ item.createdAt|date: 'dd/MM/yyyy' }}</td>
+                        <td>{{ item['publicType.isPaying'] ? 'Oui' : 'Non' }}</td>
                     </tr>
                 </tbody>
             </table>

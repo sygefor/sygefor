@@ -151,6 +151,13 @@ sygeforApp.controller('InscriptionListController', ['$scope', '$user', '$injecto
         },
         'session.training.name.source' : {
             label: 'Formation'
+        },
+        'publicType.isPaying' : {
+            label: 'Payant',
+            values: {
+                'T': 'Oui',
+                'F': 'Non'
+            }
         }
     };
 }]);

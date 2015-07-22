@@ -4,6 +4,7 @@ namespace Sygefor\Bundle\TrainingBundle\Entity;
 
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\ORM\Mapping as ORM;
+use Sygefor\Bundle\TrainingBundle\Entity\Term\EventKind;
 use Sygefor\Bundle\TrainingBundle\Entity\Training;
 use Sygefor\Bundle\TrainingBundle\Form\MeetingType;
 use Symfony\Component\Validator\Constraints as Assert;
@@ -62,6 +63,12 @@ class Meeting extends SingleSessionTraining
      */
     protected $website;
 
+    public function __clone()
+    {
+        parent::__clone();
+        $this->eventKind = new ArrayCollection();
+    }
+
     /**
      * @return string
      */
@@ -92,6 +99,29 @@ class Meeting extends SingleSessionTraining
     public function setEventKind($eventKind)
     {
         $this->eventKind = $eventKind;
+    }
+
+    /**
+     * @param EventKind $eventKind
+     */
+    public function addEventKind(EventKind $eventKind)
+    {
+        if (!$this->eventKind) {
+            $this->eventKind = new ArrayCollection();
+        }
+        if (!$this->eventKind->contains(($eventKind))) {
+            $this->eventKind->add($eventKind);
+        }
+    }
+
+    /**
+     * @param EventKind $eventKind
+     */
+    public function removeEventKind(EventKind $eventKind)
+    {
+        if ($this->eventKind->contains(($eventKind))) {
+            $this->eventKind->remove($eventKind);
+        }
     }
 
     /**

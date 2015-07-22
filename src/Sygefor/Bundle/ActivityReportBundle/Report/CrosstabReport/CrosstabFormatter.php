@@ -143,6 +143,7 @@ class CrosstabFormatter
                 $rows = $this->getInversedRows($rows, $cols);
             }
         }
+
         // return
         return $rows;
     }

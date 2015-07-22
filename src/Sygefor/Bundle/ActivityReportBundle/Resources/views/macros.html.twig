@@ -26,9 +26,13 @@
         {% for row in data.rows %}
         <tr>
             <td>{{ row.label }}</td>
-            {% for col in row.data %}
-                <td class="text-right">{{ col.value }}</td>
-            {% endfor %}
+            {%  if row.data is defined %}
+                {% for col in row.data %}
+                    <td class="text-right">{{ col.value }}</td>
+                {% endfor %}
+            {% else %}
+                <td class="text-right">{{ row.value }}</td>
+            {% endif %}
             <td class="text-right active">{{ row.value }}</td>
         </tr>
         {% endfor %}
