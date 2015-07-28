@@ -91,6 +91,7 @@ Installation
 - composer install
     - Renseigner les paramètres symfony
 - npm install
+- napa
 - php app/console doctrine:schema:create
 - php app/console doctrine:fixtures:load (pour générer quelques données initiales)
 - gulp
