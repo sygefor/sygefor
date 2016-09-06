@@ -1,0 +1,29 @@
+<table class="table">
+    <caption>{{ caption }}</caption>
+   <thead>
+       <tr>
+           <th>Intitulé</th>
+           <th>Thématique</th>
+           <th>Nombre de sessions</th>
+           <th>Nombre d'heures</th>
+           <th>Type d'intervenant</th>
+           <th>Participants</th>
+           <th>Partenanaire pédagogique</th>
+           <th>Autre partenaire</th>
+           <th>Coût</th>
+       </tr>
+   </thead>
+   <tbody>
+       <tr ng-repeat="training in data">
+           <td><a href="" ui-sref="training.detail.view({id: training.id})">{{ training.name }}</a></td>
+           <td>{{ training.theme }}</td>
+           <td>{{ training.sessions }}</td>
+           <td class="text-right">{{ training.hourDuration }}</td>
+           <td>{{ training.isUrfist ? 'URFIST' : 'Extérieur' }}</td>
+           <td class="text-right">{{ training.numberOfParticipants }}</td>
+           <td>{{ training.pedagogicPartner }}</td>
+           <td>{{ training.otherPartner }}</td>
+           <td class="text-right">{{ training.totalCost }}&nbsp;€</td>
+       </tr>
+   </tbody>
+</table>

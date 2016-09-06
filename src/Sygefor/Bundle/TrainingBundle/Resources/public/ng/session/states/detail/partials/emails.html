@@ -1,0 +1,31 @@
+<div>
+    <hr>
+    <div class="mb-1">
+        <h4 class="inline"><span class="fa fa-send"></span> Messages envoyés <small>({{ search.result.total ? search.result.total : 0 }})</small></h4>
+    </div>
+    <div ng-if="!search.result.total" class="well well-empty well-sm">
+        Aucun message concernant cette session n'a été envoyé.
+    </div>
+
+    <table ng-if="search.result.total" class="table table-hover table-search.result table-condensed">
+        <!--thead>
+            <tr>
+                <th>Stagiaire</th>
+                <th>Sujet</th>
+                <th>Envoyé par</th>
+                <th>Date</th>
+            </tr>
+        </thead-->
+        <tbody>
+        <tr ng-repeat="email in search.result.items">
+            <td>{{ email.trainee.fullName }}</td>
+            <td title="Sujet du message"><a ng-click="dislayEmail(email.id)" title="Voir le message" href="">{{ email.subject }}</a></td>
+            <td title="Envoyé par {{ email.userFrom.username }}" >{{ email.userFrom.username }}</td>
+            <td title="Date d'envoi">{{ email.sendAt | date: 'dd/MM/yyyy' }}</td>
+        </tr>
+        </tbody>
+    </table>
+    <div ng-if="search.result.total > search.query.size" class="full-height-item is-full-width">
+        <div search-table-controls></div>
+    </div>
+</div>

@@ -1,0 +1,32 @@
+<table class="table">
+    <caption>{{ caption }}</caption>
+    <thead>
+    <thead>
+    <tr>
+        <th>Intitulé</th>
+        <th>Thématique</th>
+        <th>Nombre de sessions</th>
+        <th>Nombre d'heures</th>
+        <th>Type d'intervenant</th>
+        <th>Participants</th>
+        <th>Partenanaire pédagogique</th>
+        <th>Autre partenaire</th>
+        <th>Coût</th>
+    </tr>
+    </thead>
+    <tbody>
+    {% for training in data %}
+        <tr>
+            <td>{% if training.name is defined %}{{ training.name }}{% endif %}</td>
+            <td>{% if training.theme is defined %}{{ training.theme }}{% endif %}</td>
+            <td>{% if training.sessions is defined %}{{ training.sessions }}{% endif %}</td>
+            <td class="text-right">{% if training.hourDuration is defined %}{{ training.hourDuration }}{% endif %}</td>
+            <td>{% if training.isUrfist|default is not empty %}URFIST{% else %}Extérieur{% endif %}</td>
+            <td class="text-right">{% if training.numberOfParticipants is defined %}{{ training.numberOfParticipants }}{% endif %}</td>
+            <td>{% if training.pedagogicPartner is defined %}{{ training.pedagogicPartner }}{% endif %}</td>
+            <td>{% if training.otherPartner is defined %}{{ training.otherPartner }}{% endif %}</td>
+            <td class="text-right">{% if training.totalCost is defined %}{{ training.totalCost }}&nbsp;€{% endif %}</td>
+        </tr>
+    {% endfor %}
+    </tbody>
+</table>

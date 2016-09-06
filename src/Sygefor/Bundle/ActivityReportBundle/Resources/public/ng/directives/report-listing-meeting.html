@@ -1,0 +1,36 @@
+<table class="table">
+    <caption>{{ caption }}</caption>
+    <thead>
+    <tr>
+        <th>Titre</th>
+        <th>Date</th>
+        <th>Nature</th>
+        <th>Type</th>
+        <th>National</th>
+        <th>Thématique</th>
+        <th>Partenaires</th>
+        <th>Demandes d'inscriptions</th>
+        <th>Participants</th>
+        <th>Coût</th>
+        <th>Recette</th>
+    </tr>
+    </thead>
+    <tbody>
+    <tr ng-repeat="training in data">
+        <td><a href="" ui-sref="training.detail.view({id: training.id})">{{ training.name }}</a></td>
+        <td>{{ training['session.date'] |date: 'dd/MM/yyyy' }}</td>
+        <td class="text-right">{{ training.eventKind.join(', ') }}</td>
+        <td class="text-right">{{ training.eventType }}</td>
+        <td>
+            <span ng-if="training.national">Oui</span>
+            <span ng-if="!training.national">Non</span>
+        </td>
+        <td>{{ training.theme }}</td>
+        <td>{{ training.partners }}</td>
+        <td class="text-right">{{ training.numberOfRegistrations }}</td>
+        <td class="text-right">{{ training.numberOfParticipants }}</td>
+        <td class="text-right">{{ training.totalCost }}&nbsp;€</td>
+        <td class="text-right"><span ng-if="training.totalTaking">{{ training.totalTaking }}&nbsp;€</span></td>
+    </tr>
+    </tbody>
+</table>

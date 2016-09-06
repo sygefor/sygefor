@@ -1,0 +1,22 @@
+<div class="block block-comments">
+    <div class="block-title">
+        <div class="full-width">
+            <span class="h4"><span class="fa fa-paperclip"></span> Supports</span>
+            <div class="pull-right">
+                <a ng-if="session._accessRights.edit" class="btn btn-fa btn-sm" href="" tooltip="Gérer les supports" ng-click="addMaterial()"><span class="fa fa-folder-open-o"></span></a><!--
+                --><span class="badge">{{ session.materials.length }}</span>
+            </div>
+        </div>
+    </div>
+    <div class="block-body">
+        <div class="well well-empty well-sm" ng-if="!session.materials.length">
+            Il n'y a aucun support pour cette session.
+        </div>
+        <ul class="list-unstyled">
+            <li ng-repeat="material in session.materials">
+                <a href="" ng-click="getMaterial(material)" ng-if="!material.url">{{ material.fileName }}</a>
+                <a href="{{material.url}}" target="_blank" ng-if="!!material.url">{{ material.name }}</a>
+            </li>
+        </ul>
+    </div>
+</div>

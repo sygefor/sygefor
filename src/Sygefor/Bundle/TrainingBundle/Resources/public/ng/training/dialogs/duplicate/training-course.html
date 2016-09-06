@@ -1,0 +1,13 @@
+<div class="modal-header">
+    <button type="button" class="close" ng-click="dialog.dismiss()" aria-hidden="true">×</button>
+    <h4 class="modal-title" id="myModalLabel">Dupliquer : {{ form.value.typeLabel }}</h4>
+</div>
+<form sf-href="training.duplicate({id: training.id, type: type})" sf-form="form" json-path="form" on-success="onSuccess(data)" class="form-horizontal" novalidate>
+    <div class="modal-body">
+        <ng-include src="'trainingbundle/training/dialogs/common/training-course.html'"></ng-include>
+    </div>
+    <div class="modal-footer">
+        <a class="btn btn-default" ng-click="dialog.dismiss()">Annuler</a>
+        <input class="btn btn-primary" type="submit" value="Enregistrer" />
+    </div>
+</form>
