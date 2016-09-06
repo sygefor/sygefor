@@ -53,6 +53,7 @@ class DiverseTraining extends Training
      */
     public function __construct()
     {
+        parent::__construct();
         $this->publicTypes = new ArrayCollection();
     }
 
@@ -138,7 +139,9 @@ class DiverseTraining extends Training
      */
     public function addPublicType($publicType)
     {
-        $this->publicTypes->add($publicType);
+        if (!$this->publicTypes->contains($publicType)) {
+            $this->publicTypes->add($publicType);
+        }
     }
 
     /**
@@ -146,7 +149,9 @@ class DiverseTraining extends Training
      */
     public function removePublicType($publicType)
     {
-        $this->publicTypes->remove($publicType);
+        if ($this->publicTypes->contains($publicType)) {
+            $this->publicTypes->removeElement($publicType);
+        }
     }
 
     /**

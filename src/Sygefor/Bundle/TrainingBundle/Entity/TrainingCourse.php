@@ -55,6 +55,13 @@ class TrainingCourse extends Training
      */
     protected $evaluation;
 
+    public function __construct()
+    {
+        parent::__construct();
+        $this->evaluation = false;
+    }
+
+
     /**
      * @return string
      */

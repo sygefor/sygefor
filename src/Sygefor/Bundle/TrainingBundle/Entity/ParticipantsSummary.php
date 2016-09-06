@@ -43,12 +43,6 @@ class ParticipantsSummary
     protected $publicType;
 
     /**
-     * @var Disciplinary
-     * @Serializer\Exclude
-     */
-    protected $disciplinary;
-
-    /**
      * @ORM\Column(name="count", type="integer", nullable=true)
      */
     protected $count;
@@ -107,102 +101,4 @@ class ParticipantsSummary
     {
         $this->publicType = $publicType;
     }
-
-    /**
-     * @return PublicType
-     */
-    public function getPublicCategory()
-    {
-        if($this->publicType) {
-            return $this->publicType->getRootEntity();
-        }
-        return null;
-    }
-
-    /**
-     * For activity report
-     * return the legacy public category (search over parents)
-     * @return PublicType
-     */
-    public function getLegacyPublicCategory()
-    {
-        if($this->publicType) {
-            $entity = $this->publicType;
-            while ($entity) {
-                if ($entity->getLegacyPublicType()) {
-                    return $entity->getLegacyPublicType();
-                }
-                if ($entity->getParent()) {
-                    $entity = $entity->getParent();
-                } else {
-                    return $entity;
-                }
-            }
-        }
-        return null;
-    }
-
-    /**
-     * @return PublicType
-     */
-    public function getProfessionalSituation()
-    {
-        if($this->publicType && $this->publicType->getLvl() > 0) {
-            return  $this->publicType;
-        }
-        return null;
-    }
-
-    /**
-     * @param mixed $disciplinary
-     */
-    public function setDisciplinary($disciplinary)
-    {
-        $this->disciplinary = $disciplinary;
-    }
-
-    /**
-     * @return mixed
-     */
-    public function getDisciplinary()
-    {
-        if($this->disciplinary) {
-            return $this->disciplinary;
-        }
-        // if the training has disciplinary
-        $training = $this->getSession()->getTraining();
-        if(method_exists($training, "getDisciplinary")) {
-            return $training->getDisciplinary();
-        }
-        return null;
-    }
-
-    /**
-     * For activity report
-     * return the disciplinary domain
-     * @return Disciplinary
-     */
-    public function getDisciplinaryDomain()
-    {
-        // if there is a disciplinary attached to the summary
-        if($this->disciplinary) {
-            return $this->disciplinary->getRootEntity();
-        }
-        // if the training has disciplinary
-        $training = $this->getSession()->getTraining();
-        if(method_exists($training, "getDisciplinaryDomain")) {
-            return $training->getDisciplinaryDomain();
-        }
-        return null;
-    }
-
-    /**
-     * hack for elasticsearch
-     */
-    public function getId()
-    {
-        return 0;
-    }
-
-
 }

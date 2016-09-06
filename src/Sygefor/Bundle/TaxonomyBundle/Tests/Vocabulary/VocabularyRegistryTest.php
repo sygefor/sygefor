@@ -14,10 +14,10 @@ class VocabularyRegistryTest extends \PHPUnit_Framework_TestCase
     {
         $registry = new VocabularyRegistry();
 
-        $vocabulary1 = $this->getMock('Sygefor\Bundle\TaxonomyBundle\Vocabulary\NationalVocabularyInterface');
+        $vocabulary1 = $this->getMock('Sygefor\Bundle\TaxonomyBundle\Vocabulary\VocabularyInterface');
         $registry->addVocabulary($vocabulary1, "sygefor_taxonomy.vocabulary_provider.foo", "group");
 
-        $vocabulary2 = $this->getMock('Sygefor\Bundle\TaxonomyBundle\Vocabulary\NationalVocabularyInterface');
+        $vocabulary2 = $this->getMock('Sygefor\Bundle\TaxonomyBundle\Vocabulary\VocabularyInterface');
         $registry->addVocabulary($vocabulary2, "sygefor_taxonomy.vocabulary_provider.bar", "group");
 
         $vocabularies = $registry->getVocabularies();

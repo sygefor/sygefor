@@ -2,6 +2,7 @@
 
 namespace Sygefor\Bundle\TaxonomyBundle\Security\Authorization\AccessRight;
 
+use Sygefor\Bundle\TaxonomyBundle\Vocabulary\VocabularyInterface;
 use Sygefor\Bundle\UserBundle\AccessRight\AbstractAccessRight;
 use Symfony\Component\Security\Core\Authentication\Token\TokenInterface;
 use Symfony\Component\Security\Core\Authorization\Voter\VoterInterface;
@@ -25,19 +26,19 @@ class OwnOrganizationVocabularyAccessRight extends AbstractAccessRight
      */
     public function supportsClass($class)
     {
-
-        if ($class == 'Sygefor\Bundle\TaxonomyBundle\Vocabulary\LocalVocabularyInterface') {
-
+        if ($class == 'Sygefor\Bundle\TaxonomyBundle\Vocabulary\VocabularyInterface') {
             return true;
         }
+
         try {
             $refl = new \ReflectionClass($class);
-
-            return $refl ? $refl->isSubclassOf('Sygefor\Bundle\TaxonomyBundle\Vocabulary\LocalVocabularyInterface') : false;
-        } catch (\ReflectionException $re){
+            return $refl->isSubclassOf('Sygefor\Bundle\TaxonomyBundle\Vocabulary\VocabularyInterface');
+        }
+        catch (\ReflectionException $re){
             return false;
         }
 
+        return false;
     }
 
     /**
@@ -45,12 +46,14 @@ class OwnOrganizationVocabularyAccessRight extends AbstractAccessRight
      */
     public function isGranted(TokenInterface $token, $object = null, $attribute)
     {
-        if ($object) {
-            return ($object->getOrganization() == $token->getUser()->getOrganization());
-        } else {
+        if (is_string($object)) {
+            return true;
+        }
+        else if ($object) {
+            return ($object->getVocabularyStatus() !== VocabularyInterface::VOCABULARY_NATIONAL && $object->getOrganization() === $token->getUser()->getOrganization());
+        }
+        else {
             return true;
         }
     }
-
-
 }

@@ -31,7 +31,7 @@ class VocabularyRegistrationPass implements CompilerPassInterface
             //checking class
             $class = $container->getDefinition($id)->getClass();
             if (!$class||!$this->isVocabularyProviderImplementation($class)) {
-                throw new \InvalidArgumentException(sprintf('Vocabulary Registration : %s must implement NationalVocabularyInterface',$class));
+                throw new \InvalidArgumentException(sprintf('Vocabulary Registration : %s must implement VocabularyInterface',$class));
             }
             foreach ($tagAttributes as $attributes) {
                 $definition->addMethodCall(
@@ -50,6 +50,6 @@ class VocabularyRegistrationPass implements CompilerPassInterface
     private function isVocabularyProviderImplementation($class)
     {
         $refl = new \ReflectionClass($class);
-        return $refl->implementsInterface('Sygefor\Bundle\TaxonomyBundle\Vocabulary\NationalVocabularyInterface');
+        return $refl->implementsInterface('Sygefor\Bundle\TaxonomyBundle\Vocabulary\VocabularyInterface');
     }
 }

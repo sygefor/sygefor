@@ -104,7 +104,12 @@ class CrosstabFormatter
                 );
             }
         }
-        $ordered += $mapping;
+
+        // add residual columns from the mapping
+        if(count($mapping)) {
+            $ordered = array_merge($ordered, $mapping);
+        }
+
         return $ordered;
     }
 
@@ -164,9 +169,10 @@ class CrosstabFormatter
             if($key == 'buckets') {
                 $parent['agg'] = $agg_name;
                 $depth++;
-                foreach($value as $bucket) {
+                foreach($value as $key => $bucket) {
+                    $label = isset($bucket['key']) ? $bucket['key'] : $key;
                     $row = array(
-                      'key' => $bucket['key'],
+                      'key' => $label,
                       'value' => $bucket['doc_count']
                     );
                     $subRows = $this->getRows($bucket, $row, $depth, $agg_name);
@@ -270,18 +276,20 @@ class CrosstabFormatter
         $cols = array();
         $new = array();
         foreach($rows as $row) {
-            $subrows = $row['data'];
-            unset($row['data']);
-            if(!isset($cols[$row['key']])) {
-                $cols[$row['key']] = $row;
-            }
-            foreach($subrows as $subrow) {
-                $n = &$new[$subrow['key']];
-                if(!isset($n)) {
-                    $n = $subrow;
+            if (isset($row['data'])) {
+                $subrows = $row['data'];
+                unset($row['data']);
+                if (!isset($cols[$row['key']])) {
+                    $cols[$row['key']] = $row;
                 }
-                $row['value'] = $subrow['value'];
-                $n['data'][] = $row;
+                foreach ($subrows as $subrow) {
+                    $n = &$new[$subrow['key']];
+                    if (!isset($n)) {
+                        $n = $subrow;
+                    }
+                    $row['value'] = $subrow['value'];
+                    $n['data'][] = $row;
+                }
             }
         }
 

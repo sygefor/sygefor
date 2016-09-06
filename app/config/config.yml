@@ -163,6 +163,9 @@ knp_snappy:
 #SygeforListBundle
 sygefor_list:
     batch:
+        convert_type:
+            semestered_training:
+                class: 'Sygefor\Bundle\TrainingBundle\Entity\Training'
         csv:
             user:
                 class: 'SygeforUserBundle:User'
@@ -190,6 +193,7 @@ sygefor_list:
                 class: 'SygeforTrainingBundle:SemesteredTraining'
                 filename: 'formation.csv'
                 fields:
+                    training.id: { label: 'Identifiant' }
                     year: { label: 'Année' }
                     semester: { label: 'Semestre' }
                     training.name: { label: 'Intitulé' }
@@ -315,10 +319,11 @@ sygefor_list:
                 fields:
                     dateDebut: { property: "dateBegin", type: "date" }
                     dateFin: { property: "dateEnd", type: "date" }
+                    date: { property: "dateRange", type: "string" }
                     formation: { property: "training" }
                     formateurs: { property: "trainersListString" }
                     listeFormateurs: { property: "trainers" }
-                    formateur: { property: "trainers[0]" }
+                    formateur: { property: "participations[0]['trainer']" }
                     nombrePlaces: { property: "maximumNumberOfRegistrations" }
                     nombreInscrits: { property: "numberOfRegistrations" }
                     dateLimiteInscription: { property: limitRegistrationDate }
@@ -400,6 +405,9 @@ sygefor_list:
             diverse_training:
                 class: 'Sygefor\Bundle\TrainingBundle\Entity\DiverseTraining'
                 parent: training
+            doctoral_training:
+                class: 'Sygefor\Bundle\TrainingBundle\Entity\DoctoralTraining'
+                parent: training
             meeting:
                 class: 'Sygefor\Bundle\TrainingBundle\Entity\Meeting'
                 parent: training
@@ -426,6 +434,7 @@ sygefor_list:
                     training_course: 'SygeforTrainingBundle:Training:pdf/training_course.html.twig'
                     meeting: 'SygeforTrainingBundle:Training:pdf/meeting.html.twig'
                     diverse_training: 'SygeforTrainingBundle:Training:pdf/diverse_training.html.twig'
+                    doctoral_training: 'SygeforTrainingBundle:Training:pdf/doctoral_training.html.twig'
             session:
                 class: 'Sygefor\Bundle\TrainingBundle\Entity\Session'
                 template: 'SygeforTrainingBundle:Session:pdf.html.twig'

@@ -199,14 +199,40 @@ sygeforApp.config(["$listStateProvider", "$dialogProvider", "$widgetProvider", f
         options: function($user) {
             return {
                 route: 'inscription.search',
-                rights: ['sygefor_trainee.rights.inscription.own.view', 'sygefor_trainee.rights.inscription.all.view'],
+                rights: ['sygefor_trainee.rights.inscription.own.view'],
                 state: 'inscription.table',
                 title: 'Dernières inscriptions',
                 size: 10,
                 filters:{
-                    'session.training.organization.name.source': $user.organization.name
+                    'session.training.organization.name.source': $user.organization.name,
+                    'inscriptionStatus.name.source': 'Attente de validation'
                 },
                 sorts: {'createdAt': 'desc'}
+            }
+        }
+    });
+
+    var date = new Date();
+    date.setMonth(date.getMonth() - 1);
+    $widgetProvider.widget("disclaimer", /* @ngInject */ {
+        controller: 'WidgetListController',
+        templateUrl: 'traineebundle/inscription/widget/disclaimer.html',
+        options: function($user, $filter) {
+            return {
+                route: 'inscription.search',
+                rights: ['sygefor_trainee.rights.inscription.own.view'],
+                state: 'inscription.table',
+                title: 'Derniers désistements',
+                size: 5,
+                filters:{
+                    'inscriptionStatus.machine_name': 'desist',
+                    "inscriptionStatusUpdatedAt": {
+                        "type": "range",
+                        "gte": $filter('date')(date, 'yyyy-MM-dd')
+                    },
+                    'inscription.session.training.organization.name.source': $user.organization.name
+                },
+                sorts: {'inscriptionStatusUpdatedAt': 'desc'}
             }
         }
     });

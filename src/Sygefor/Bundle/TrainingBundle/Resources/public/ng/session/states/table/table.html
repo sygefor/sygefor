@@ -14,6 +14,7 @@
                         <th search-table-th field="numberOfRegistrations">Inscrits</th>
                         <th>Statistiques</th>
                         <th search-table-th field="numberOfParticipants">Présents</th>
+                        <th search-table-th field="displayOnline">En ligne</th>
                     </tr>
                 </thead>
                 <tbody>
@@ -30,6 +31,7 @@
                             <a registration-stats-label="item" class="label-lg"></a>
                         </td>
                         <td>{{ item.numberOfParticipants }}</td>
+                        <td><span class="label label-lg" ng-class="item.displayOnline ? 'label-success' : 'label-default'">{{ item.displayOnline ? "Oui" : "Non" }}</span></td>
                     </tr>
                 </tbody>
             </table>

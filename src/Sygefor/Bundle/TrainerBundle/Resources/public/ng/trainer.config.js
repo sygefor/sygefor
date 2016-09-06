@@ -26,6 +26,7 @@ sygeforApp.config(["$listStateProvider", "$dialogProvider",  function($listState
                     search.filters["sessions.id"] = session.id;
                 }
                 search.query.filters['organization.name.source'] = $user.organization.name;
+                //search.query.filters['isArchived'] = false;
                 search.extendQueryFromJson($stateParams.q);
                 return search.search().then(function() { return search; });
             }
@@ -109,6 +110,30 @@ sygeforApp.config(["$listStateProvider", "$dialogProvider",  function($listState
 
                 });
             };
+        }
+
+    });
+
+    /**
+     * trainer change organization modal window
+     */
+    $dialogProvider.dialog('trainer.changeOrg', /* @ngInject */ {
+        templateUrl: 'trainerbundle/dialogs/change-organization.html',
+        controller: function($scope, $modalInstance, $dialogParams, $state, $http, form, growl) {
+            $scope.dialog = $modalInstance;
+            $scope.dialog.params = $dialogParams;
+            $scope.form = form;
+            $scope.onSuccess = function(response) {
+                growl.addSuccessMessage("Le formateur a bien changé d'URFIST de référence.");
+                $scope.dialog.close(response);
+            };
+        },
+        resolve: {
+            form: function ($http, $dialogParams){
+                return $http.get(Routing.generate('trainer.changeorg', {id: $dialogParams.trainer.id })).then(function(response) {
+                    return response.data.form;
+                });
+            }
         }
 
     });

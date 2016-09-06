@@ -1,6 +1,7 @@
 <?php
 namespace Sygefor\Bundle\ApiBundle\Controller;
 
+use Elastica\Filter\BoolOr;
 use Elastica\Filter\Nested;
 use Elastica\Filter\Range;
 use Elastica\Filter\Term;
@@ -55,10 +56,13 @@ class TrainingController extends AbstractController
           'maximumNumberOfRegistrations',
           'place',
           'registration',
+          'displayOnline',
           'availablePlaces',
-          'trainers',
+          'participations',
           'schedule',
-          'promote'
+          'promote',
+          'collegeYear',
+          'collegeSemester'
         ),
         'training' => array(
           'id',
@@ -77,7 +81,13 @@ class TrainingController extends AbstractController
           'publicTypes',
           'resources',
           'firstSessionPeriodSemester',
-          'firstSessionPeriodYear'
+          'firstSessionPeriodYear',
+          'doctoralSchools',
+          'doctoralYears',
+          'applicantOrganism',
+          'ects',
+          'collegeYear',
+          'collegeSemester'
         )
     );
 
@@ -97,8 +107,8 @@ class TrainingController extends AbstractController
             self::buildAuthorizedFieldsArray('session', 'sessions')
         ));
 
-        // the training must contain at least one session with public registration
-        $filter = new Term(array('sessions.registration' => Session::REGISTRATION_PUBLIC));
+        // the training must contain at least one session online displayed
+        $filter = new Term(array('sessions.displayOnline' => true));
         $search->filterQuery($filter);
 
         return $search->search();
@@ -121,13 +131,20 @@ class TrainingController extends AbstractController
           self::buildAuthorizedFieldsArray('training', 'training')
         ));
 
-        // filter session by registration set by public
-        $filter = new Terms('registration', array(Session::REGISTRATION_PUBLIC));
-        if($includePrivate) {
-            // include private sessions
-            $filter->addTerm(Session::REGISTRATION_PRIVATE);
+        // filter session by displayOnline
+        $onlineFilter = new Term(array('displayOnline' => true));
+
+        // include private sessions
+        if ($includePrivate) {
+            $orFilter = new BoolOr();
+            $privateFilter = new Term(array('registration' => Session::REGISTRATION_PRIVATE));
+            $orFilter->addFilter($onlineFilter);
+            $orFilter->addFilter($privateFilter);
+            $search->filterQuery($orFilter);
         }
-        $search->filterQuery($filter);
+        else {
+            $search->filterQuery($onlineFilter);
+        }
 
         return $search->search();
     }
@@ -141,10 +158,10 @@ class TrainingController extends AbstractController
      */
     public function trainingAction(Training $training)
     {
-        // only training with a session with opened registration
+        // only training with a online displayed session
         /** @var Session $session */
-        foreach($training->getSessions() as $session) {
-            if($session->getRegistration() >= Session::REGISTRATION_PRIVATE) {
+        foreach ($training->getSessions() as $session) {
+            if ($session->getDisplayOnline() || $session->getRegistration() === Session::REGISTRATION_PRIVATE) {
                 return $training;
             }
         }

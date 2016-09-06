@@ -19,7 +19,7 @@ class AllOrganizationVocabularyAccessRightTest extends \PHPUnit_Framework_TestCa
         $this->assertEquals(false,$AccessRight->supportsClass('Foo\Bar\Class'));
         $this->assertEquals(false,$AccessRight->supportsClass('Sygefor\Bundle\TaxonomyBundle\Tests\Entity\MyNationalVocabulary'));
         $this->assertEquals(true,$AccessRight->supportsClass('Sygefor\Bundle\TaxonomyBundle\Tests\Entity\MyOrganizationVocabulary'));
-        $this->assertEquals(true,$AccessRight->supportsClass('Sygefor\Bundle\TaxonomyBundle\Vocabulary\LocalVocabularyInterface'));
+        $this->assertEquals(true,$AccessRight->supportsClass('Sygefor\Bundle\TaxonomyBundle\Vocabulary\VocabularyInterface'));
 
     }
 

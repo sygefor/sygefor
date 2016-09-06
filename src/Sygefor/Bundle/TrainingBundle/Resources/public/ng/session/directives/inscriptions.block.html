@@ -86,12 +86,16 @@
             </table>
         </div>
 
-
-        <div class="row" ng-if="session.registration >= 2">
-            <div class="col-lg-12">
+        <div class="block" ng-if="session.displayOnline === true && session.registration !== 2">
+            <div class="block-body">
                 <div input-copy-clipboard="session.publicUrl"></div>
             </div>
         </div>
 
+        <div class="block" ng-if="session.registration === 2">
+            <div class="block-body">
+                <div input-copy-clipboard="session.privateUrl"></div>
+            </div>
+        </div>
     </div>
 </div>

@@ -23,7 +23,7 @@
   },
   "devDependencies": {
     "gulp": "~3.8.0",
-    "gulp-sass": "~0.7.1",
+    "gulp-sass": "~2.1.1",
     "gulp-browserify": "~0.5.0",
     "gulp-concat": "~2.2.0",
     "gulp-plumber": "^0.6.3",
@@ -46,7 +46,7 @@
     "angular-ui-bootstrap": "angular-ui/bootstrap-bower#0.11.2",
     "angular-resource": "angular/bower-angular-resource#v1.3.0-build.2687+sha.ac37915",
     "angular-animate": "angular/bower-angular-animate#v1.3.0-build.2687+sha.ac37915",
-    "bootstrap-sass": "twbs/bootstrap-sass#3.3.4",
+    "bootstrap-sass": "twbs/bootstrap-sass",
     "bootstrap-datepicker": "eternicode/bootstrap-datepicker#81e0da0baa679a9d9e7171e197fb4a423ee0018d",
     "jquery-slimscroll": "rochal/jQuery-slimScroll",
     "angular-zeroclipboard": "lisposter/angular-zeroclipboard"

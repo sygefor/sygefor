@@ -62,6 +62,7 @@ class ChangeOrganizationType extends AbstractType
                     return $er->createQueryBuilder('i')
                       ->where('i.organization = :organization')
                       ->setParameter('organization', $organization)
+                      ->orWhere('i.organization is null')
                       ->orderBy('i.name', 'ASC');
                 }));
         }

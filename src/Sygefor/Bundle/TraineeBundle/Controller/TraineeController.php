@@ -16,7 +16,7 @@ use Knp\DoctrineBehaviors\Model\Tree\NodeInterface;
 use Sygefor\Bundle\CoreBundle\Search\SearchService;
 use Sygefor\Bundle\TaxonomyBundle\Entity\AbstractTerm;
 use Sygefor\Bundle\TaxonomyBundle\Entity\TreeTrait;
-use Sygefor\Bundle\TaxonomyBundle\Vocabulary\NationalVocabularyInterface;
+use Sygefor\Bundle\TaxonomyBundle\Vocabulary\VocabularyInterface;
 use Sygefor\Bundle\TaxonomyBundle\Vocabulary\VocabularyProviderInterface;
 use Sygefor\Bundle\TaxonomyBundle\Vocabulary\VocabularyRegistry;
 use Sygefor\Bundle\TraineeBundle\Entity\Trainee;
@@ -214,7 +214,7 @@ class TraineeController extends Controller
     public function ignoreDuplicateAction(TraineeDuplicate $traineeDuplicate, Request $request)
     {
         // security check
-        if(!$this->get("sygefor_user.access_right_registry")->hasAccessRight("sygefor_trainee.rights.trainee.all.update")) {
+        if(!$this->get("sygefor_user.access_right_registry")->hasAccessRight("sygefor_trainee.rights.trainee.all.manage_duplicate")) {
             throw new AccessDeniedException();
         }
 

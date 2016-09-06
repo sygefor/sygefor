@@ -39,7 +39,7 @@
         <ul class="summary">
             <li><label>Email</label> {{ inscription.trainee.email }}</li>
             <li><label>Téléphone</label> {{ inscription.phoneNumber }}</li>
-            <li><label>Etablissement</label> {{ inscription.institution.name === 'Autre' ? inscription.otherInstitution : inscription.institution.name }}</li>
+            <li><label>Etablissement</label> {{ inscription.institution.machineName == 'other' ? inscription.otherInstitution : inscription.institution.name }}</li>
             <li><label>Code postal</label> {{ inscription.zip }}</li>
             <li><label>Ville</label> {{ inscription.city }}</li>
         </ul>
@@ -48,6 +48,8 @@
         <ul class="summary">
             <li><label>Catégorie de public</label> {{ inscription.publicCategory.name }}</li>
             <li><label>Situation professionnelle</label> {{ inscription.professionalSituation.name }}</li>
+            <li><label>Etablissement</label> {{ inscription.institutionName }}</li>
+            <li><label>Payant</label> {{ inscription.isPaying ? 'Oui' : 'Non' }}</li>
             <li><label>Fonction, statut</label> {{ inscription.status }}</li>
             <li><label>Domaine disciplinaire</label> {{ inscription.disciplinaryDomain.name }}</li>
             <li><label>Discipline</label> {{ inscription.disciplinary.name }}</li>

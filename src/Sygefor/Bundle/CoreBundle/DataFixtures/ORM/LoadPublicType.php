@@ -1,11 +1,4 @@
 <?php
-/**
- * Created by PhpStorm.
- * User: Erwan
- * Date: 08/04/14
- * Time: 16:03
- */
-
 namespace Sygefor\Bundle\CoreBundle\DataFixtures\ORM;
 
 use Doctrine\Common\DataFixtures\FixtureInterface;
@@ -33,6 +26,9 @@ class LoadPublicType extends AbstractDataFixture
         $publicType = new PublicType();
         $publicType->setId(++$this->autoId);
         $publicType->setName($name);
+        if ($name === "Autre") {
+            $publicType->setMachineName('other');
+        }
         $publicType->setPriority($priority);
         $publicType->setPrivate($private);
         $publicType->setIsPaying(false);

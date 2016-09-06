@@ -20,6 +20,7 @@ class OrganizationType extends AbstractType {
         parent::buildForm($builder, $options);
 
         $builder->add('name','text', array ('label' => 'Nom'));
+        $builder->add('code','text', array ( 'label' => 'Code'));
         $builder->add('phoneNumber','text', array ('label' => 'Téléphone'));
         $builder->add('faxNumber','text', array ('label' => 'Fax'));
         $builder->add('website','text', array ('label' => 'Site internet'));
@@ -29,6 +30,7 @@ class OrganizationType extends AbstractType {
         $builder->add('address','textarea', array ('label' => 'Adresse'));
         $builder->add('zip','text', array ('label' => 'Code postal'));
         $builder->add('city','text', array ('label' => 'Ville'));
+        $builder->add('traineeRegistrable','checkbox', array ('label' => 'Les stagiaires peuvent choisir cette organisation'));
 
         // PRE_SET_DATA for the parent form
         $builder->addEventListener(FormEvents::PRE_SET_DATA, function(FormEvent $event) {
@@ -42,6 +44,7 @@ class OrganizationType extends AbstractType {
                       return $er->createQueryBuilder('i')
                         ->where('i.organization = :organization')
                         ->setParameter('organization', $organization)
+                        ->orWhere('i.organization is null')
                         ->orderBy('i.name');
                   }
                 ));

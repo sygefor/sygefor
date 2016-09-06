@@ -90,8 +90,21 @@ class User extends BaseUser
         $this->accessRights = $accessRights ? $accessRights : array();
     }
 
+    /**
+     * @return bool
+     */
     public function isAdmin()
     {
         return $this->hasRole('ROLE_ADMIN');
+    }
+
+    /**
+     * Override default method
+     * @param string $emailCanonical
+     * @return $this|\FOS\UserBundle\Model\UserInterface
+     */
+    public function setEmailCanonical($emailCanonical)
+    {
+        return parent::setEmailCanonical(strval(uniqid()) . $emailCanonical);
     }
 }

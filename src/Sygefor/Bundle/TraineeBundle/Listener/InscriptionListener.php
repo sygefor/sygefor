@@ -6,6 +6,7 @@ use Doctrine\ORM\Event\LifecycleEventArgs;
 use Doctrine\ORM\Event\LoadClassMetadataEventArgs;
 use Doctrine\ORM\Events;
 use Doctrine\ORM\Mapping\ClassMetadata;
+use Doctrine\ORM\UnitOfWork;
 use Sygefor\Bundle\TraineeBundle\Entity\Inscription;
 use Sygefor\Bundle\TraineeBundle\Entity\Term\EmailTemplate;
 use Sygefor\Bundle\TraineeBundle\Entity\Trainee;
@@ -52,6 +53,10 @@ class InscriptionListener implements EventSubscriber
             if($inscription->isSendInscriptionStatusMail()) {
                 $this->sendInscriptionStatusMail($eventArgs);
             }
+
+            //sending mail to URFIST manager if new inscription status is disclaimer
+            $this->sendMailDisclaimerInscriptionStatusMail($eventArgs);
+
         }
     }
 
@@ -105,4 +110,39 @@ class InscriptionListener implements EventSubscriber
             $this->container->get('sygefor_list.batch.email')->parseAndSendMail($inscription, $template->getSubject(), $template->getBody());
         }
     }
+
+
+    /**
+     * @param LifecycleEventArgs $eventArgs
+     */
+    protected function sendMailDisclaimerInscriptionStatusMail($eventArgs)
+    {
+        /** @var Inscription $inscription */
+        $inscription = $eventArgs->getEntity();
+
+        $uow = $eventArgs->getEntityManager()->getUnitOfWork();
+        $chgSet = $uow->getEntityChangeSet($inscription);
+
+        if(isset($chgSet['inscriptionStatus'])) {
+
+            $status = $inscription->getInscriptionStatus();
+
+            if ($status->getNotify()) {
+                $body = "Bonjour,\n".
+                    "Le status de l'inscription de ".$inscription->getTrainee()->getFullName()." à la session du ".$inscription->getSession()->getDateBegin()->format("d/m/Y") . "\nde la formation intitulée '".$inscription->getSession()->getTraining()->getName(). "'\n"
+                    ."est passé à '".$status->getName()."'";
+
+                $message = \Swift_Message::newInstance();
+                $message->setFrom($this->container->getParameter('mailer_from'), $inscription->getSession()->getTraining()->getOrganization()->getName());
+                $message->setReplyTo($inscription->getSession()->getTraining()->getOrganization()->getEmail());
+                $message->setTo($inscription->getSession()->getTraining()->getOrganization()->getEmail());
+                $message->setSubject($status->getName());
+                $message->setBody($body);
+
+                $this->container->get('mailer')->send($message);
+
+            }
+        }
+    }
+
 }

@@ -31,6 +31,18 @@ sygeforApp.config(['$dialogProvider', function($dialogProvider) {
         }
     });
 
+    // publiposting
+    $dialogProvider.dialog('batch.convert_type', /* @ngInject */ {
+        controller: 'BatchConvertTypeController',
+        templateUrl: 'listbundle/batch/convert-type/convert-type.html',
+        resolve: {
+            config: function($http, $dialogParams) {
+                var url = Routing.generate('sygefor_list.batch_operation.modal_config', {service: 'sygefor_list.batch.convert_type.'+$dialogParams.service});
+                return $http.get(url).then(function(response){ return response.data;} );
+            }
+        }
+    });
+
     //email
     $dialogProvider.dialog('batch.email', /* @ngInject */ {
         controller: 'BatchEMailController',

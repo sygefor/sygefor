@@ -39,6 +39,9 @@ class ProfileType extends AbstractTraineeType
                     ->andWhere('d.private = 0');
               }));
 
+        $builder
+            ->remove('isPaying');
+
         $builder->get('publicCategory')->addEventListener(FormEvents::POST_SUBMIT, function(FormEvent $event) {
               $this->addProfessionalSituationField($event->getForm()->getParent(), $event->getForm()->getData());
           });

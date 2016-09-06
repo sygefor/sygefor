@@ -169,8 +169,8 @@ class EvaluationSheet
             $col++;
 
             $trainers = array();
-            foreach ($this->session->getTrainers() as $trainer) {
-                $trainers[] = $trainer->getFullName();
+            foreach ($this->session->getParticipations() as $participation) {
+                $trainers[] = $participation->getTrainer()->getFullName();
             }
             //G
             $activeSheet->setCellValue($col . '' . $evalCount, implode(", ", $trainers));

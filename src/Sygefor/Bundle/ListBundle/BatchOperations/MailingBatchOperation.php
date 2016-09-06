@@ -19,6 +19,7 @@ use Symfony\Component\DependencyInjection\ContainerInterface;
 use Symfony\Component\Finder\Finder;
 use Symfony\Component\HttpFoundation\File\File;
 use Symfony\Component\HttpFoundation\Response;
+use Symfony\Component\Process\Exception\RuntimeException;
 use Symfony\Component\Process\Process;
 use Symfony\Component\Process\ProcessBuilder;
 use Symfony\Component\PropertyAccess\Exception\UnexpectedTypeException;
@@ -58,7 +59,7 @@ class MailingBatchOperation extends AbstractBatchOperation implements BatchOpera
     {
         $this->em = $em;
 
-        $this->options['tempDir'] = sys_get_temp_dir().'/sygefor/';
+        $this->options['tempDir'] = sys_get_temp_dir() . DIRECTORY_SEPARATOR . 'sygefor' . DIRECTORY_SEPARATOR;
         if (!file_exists($this->options['tempDir'])) {
             mkdir($this->options['tempDir'], 0777);
         }
@@ -331,10 +332,16 @@ class MailingBatchOperation extends AbstractBatchOperation implements BatchOpera
         );
         $pb = new ProcessBuilder($args);
         $process = $pb->getProcess();
+
         // run
-        $process->run();
-        if (!$process->isSuccessful()) {
-            throw new \RuntimeException($process->getCommandLine() . " : " . $process->getErrorOutput());
+        try {
+            $process->run();
+        } catch(RuntimeException $exception) {
+            // unoconv somtimes returns 8 (SIGFPE) error code but still produces a correct output,
+            // so we can ignore it.
+            if($exception->getCode() != 8) {
+                throw $exception;
+            }
         }
 
         return $outputFileName;

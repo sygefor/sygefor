@@ -104,6 +104,6 @@ L'équipe de l'URFIST.", $manager->find('SygeforTraineeBundle:Term\InscriptionSt
      * @return integer
      */
     function getOrder() {
-        return 1;
+        return 2;
     }
 }

@@ -17,6 +17,9 @@
                             <th>URFIST</th>
                             <th>Activ&#233;</th>
                             <th>Date de dernier acc&#232;s</th>
+                            {% if isAdmin %}
+                                <th>Se connecter</th>
+                            {% endif %}
                         </tr>
                     </thead>
                     <tbody>
@@ -26,6 +29,9 @@
                             <td>{{ user.organization }}</td>
                             <td><span class="label label-{{ user.enabled ? 'success' : 'danger' }}">{{ user.enabled ? 'Actif' : 'Inactif' }}</span></td>
                             <td>{{ user.getLastLogin|date("d/m/Y H:i") }}</td>
+                            {% if isAdmin %}
+                                <td><a href="{{ path('user.login', {'id': user.id}) }}" title="{{ user.email }}"><i class="fa fa-user"></i></a></td>
+                            {% endif %}
                         </tr>
                     {% endfor %}
                     </tbody>

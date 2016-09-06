@@ -6,7 +6,12 @@
         <li><a href="{{ path('core.index') }}">Accueil</a></li>
         <li><a href="#">Administration</a></li>
         <li><a href="{{ path('taxonomy.index') }}">Vocabulaires</a></li>
-        <li class="active"><a href="{{ path('taxonomy.view',{'id':id}) }}">{{ vocabulary.vocabularyName }}</a></li>
+        <li><a href="{{ path('taxonomy.view', { 'vocabularyId': vocabulary.vocabularyId }) }}">{{ vocabulary.vocabularyName }}</a></li>
+        {% if organization is not null %}
+            <li class="active"><a href="{{ path('taxonomy.view', { 'vocabularyId': vocabulary.vocabularyId, organizationId: organization.id }) }}">{{ organization.name }}</a></li>
+        {% elseif vocabulary.vocabularyStatus == 2 %}
+            <li class="active"><a href="{{ path('taxonomy.view', { 'vocabularyId': vocabulary.vocabularyId }) }}">Termes nationaux</a></li>
+        {% endif %}
     </ol>
 {% endblock %}
 
@@ -35,54 +40,64 @@
 {% endblock %}
 
 {% block tabs %}
-    {% if (organizations is defined) and (organizations is not empty) %}
+    {#display organization tabs if not a national vocabulary #}
+    {% if vocabulary.vocabularyStatus != 0 %}
         <ul class="nav nav-tabs">
-            {% for org in organizations %}
-                <li {% if org.id == organization.id %}class="active"{% endif %}><a href="{{ path('taxonomy.view_by_org',{'id':vocabulary.vocabularyId,'organization_id':org.id}) }}">{{ org.name }}</a></li>
-            {% endfor %}
+            {#if mixed add national tab#}
+            {% if (vocabulary.vocabularyStatus == 2) and (canEditNationalTerms == true) %}
+                <li {% if organization is null %} class="active" {% endif %} >
+                    <a href="{{ path('taxonomy.view', {'vocabularyId': vocabulary.vocabularyId }) }}">Termes nationaux</a>
+                </li>
+            {% endif %}
+            {#organizations tabs#}
+            {% if (organizations | length > 1) or (canEditNationalTerms == true) %}
+                {% for org in organizations %}
+                    <li {% if organization is not null and org is defined and org.id == organization.id %} class="active" {% endif %}>
+                        <a href="{{ path('taxonomy.view', {'vocabularyId': vocabulary.vocabularyId, 'organizationId': org.id}) }}">{{ org.name }}</a>
+                    </li>
+                {% endfor %}
+            {% endif %}
         </ul>
     {% endif %}
 {% endblock %}
 
 {% block subcontent %}
-
-    {% if terms|length > 0 %}
+    {% if terms | length > 0 %}
         <div class="dd">
-            {{ _self.nested_tree(vocabulary, terms, sortable) }}
+            {{ _self.nested_tree(vocabulary, terms, sortable, organization) }}
         </div>
     {% else %}
         <div class="alert alert-warning" role="alert">Il n'y a aucun terme associé à ce vocabulaire.</div>
     {% endif %}
 
-    {% if organization is defined %}
-        <a class="btn btn-primary" href="{{ path('taxonomy.addLocal',{'organization_id':organization.id, 'id':vocabulary.vocabularyId}) }}">Ajouter un terme</a>
+    {% if organization is not null %}
+        <a class="btn btn-primary" href="{{ path('taxonomy.edit', { 'vocabularyId': vocabulary.vocabularyId, id: 'undefined', 'organizationId': organization.id }) }}">Ajouter un terme</a>
     {% else %}
-        <a class="btn btn-primary" href="{{ path('taxonomy.addNational',{ 'id':vocabulary.vocabularyId}) }}">Ajouter un terme</a>
+        <a class="btn btn-primary" href="{{ path('taxonomy.edit', { 'vocabularyId': vocabulary.vocabularyId }) }}">Ajouter un terme</a>
     {% endif %}
 {% endblock %}
 
 {# MACRO : PANEL  #}
-{% macro nested_tree(vocabulary, terms, sortable) %}
-
-    {% if terms|length > 0 %}
+{% macro nested_tree(vocabulary, terms, sortable, organization) %}
+    {% if terms | length > 0 %}
         <ol class="dd-list {% if not sortable %} dd-unsortable{% endif %}">
             {% for term in terms %}
                 <li class="dd-item dd3-item" data-id="{{ term.id }}">
-                    {% if term.name != 'Autre' %}
                     <div class="dd-actions">
-                        {% if organization is defined %}
-                            <a class="dd-action-edit btn mini" href="{{ path('taxonomy.editLocal', {'organization_id':organization.id, 'id':vocabulary.vocabularyId, 'term_id': term.id}) }}" class="btn mini"><span class="fa fa-pencil"></span></a>
+                        {% if organization is not null %}
+                            <a class="dd-action-edit btn mini" href="{{ path('taxonomy.edit', {'vocabularyId': vocabulary.vocabularyId, 'organizationId': organization.id, 'id': term.id}) }}" class="btn mini"><span class="fa fa-pencil"></span></a>
                         {% else %}
-                            <a class="dd-action-edit btn mini" href="{{ path('taxonomy.editNational', {'id':vocabulary.vocabularyId, 'term_id': term.id}) }}" class="btn mini"><span class="fa fa-pencil"></span></a>
+                            <a class="dd-action-edit btn mini" href="{{ path('taxonomy.edit', {'vocabularyId': vocabulary.vocabularyId, 'id': term.id}) }}" class="btn mini"><span class="fa fa-pencil"></span></a>
                         {% endif %}
-                        <a class="dd-action-remove btn mini red" href="{{ path('taxonomy.remove', {'id':vocabulary.vocabularyId, 'term_id': term.id }) }}" class="btn mini red"><span class="fa fa-times"></span></a>
+                        {% if term.isLocked() == false %}
+                            <a class="dd-action-remove btn mini red" href="{{ path('taxonomy.remove', {'vocabularyId': vocabulary.vocabularyId, 'id': term.id }) }}" class="btn mini red"><span class="fa fa-times"></span></a>
+                        {% endif %}
                     </div>
-                    {% endif %}
                     <div class="dd-handle dd3-handle"></div>
-                    {% if term.name|length > 230 %}
-                        <div class="dd3-content">{{ term.name|slice(0, 230) }}...</div>
+                    {% if term.name | length > 230 %}
+                        <div {% if term.isLocked() == true %} title="Ce terme est protégé par le système" {% endif %} class="dd3-content">{{ term.name | slice(0, 230) }}...</div>
                     {% else %}
-                        <div class="dd3-content">{{ term.name }}</div>
+                        <div {% if term.isLocked() == true %} title="Ce terme est protégé par le système" {% endif %} class="dd3-content">{{ term.name }}</div>
                     {% endif %}
                     {% if term.children is defined %}
                         {{ _self.nested_tree(vocabulary, term.children, sortable) }}
@@ -91,5 +106,4 @@
             {% endfor %}
         </ol>
     {% endif %}
-
 {% endmacro %}

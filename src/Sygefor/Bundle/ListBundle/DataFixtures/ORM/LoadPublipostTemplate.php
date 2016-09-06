@@ -14,12 +14,8 @@ class LoadPublipostTemplate extends AbstractDataFixture
     /**
      * @param ObjectManager $manager
      * @param $name
-     * @param File $file
+     * @param $file
      * @param $entity
-     * @internal param $subject
-     * @internal param $body
-     * @internal param null $inscriptionStatus
-     * @internal param null $presenceStatus
      */
     public function loadOneEntry(ObjectManager $manager, $name, $file, $entity) {
         foreach($manager->getRepository('SygeforCoreBundle:Organization')->findAll() as $organization) {

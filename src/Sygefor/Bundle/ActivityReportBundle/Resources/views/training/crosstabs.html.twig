@@ -17,6 +17,9 @@
     {{ macros.crosstab('Répartition des publics dans les stages par origine géographique', report.crosstabs.public_orig.internship) }}
     {{ macros.crosstab('Répartition des publics dans les enseignements de cursus par origine géographique', report.crosstabs.public_orig.training_course) }}
     {{ macros.crosstab('Répartition des publics dans les actions diverses par origine géographique', report.crosstabs.public_orig.diverse_training) }}
+    {% if report.crosstabs.public_orig.doctoral_training is defined %}
+        {{ macros.crosstab('Répartition des publics dans les formations doctorales par origine géographique', report.crosstabs.public_orig.doctoral_training) }}
+    {% endif %}
 </section>
 
 <section>
@@ -24,6 +27,9 @@
     {{ macros.crosstab('Répartition des étudiants dans les enseignements de cursus par discipline', report.crosstabs.public_discipline.training_course) }}
     {{ macros.crosstab('Répartition des étudiants et enseignants-chercheurs dans les stages par discipline', report.crosstabs.public_discipline.internship) }}
     {{ macros.crosstab('Répartition des étudiants et enseignants-chercheurs dans les actions diverses par discipline', report.crosstabs.public_discipline.diverse_training) }}
+    {% if report.crosstabs.public_discipline.doctoral_training is defined %}
+        {{ macros.crosstab('Répartition des étudiants et enseignants-chercheurs dans les formations doctorales par discipline', report.crosstabs.public_discipline.doctoral_training) }}
+    {% endif %}
     {{ macros.crosstab("Répartition des étudiants et enseignants-chercheurs dans l'ensemble des formations par discipline", report.crosstabs.public_discipline.all) }}
 </section>
 

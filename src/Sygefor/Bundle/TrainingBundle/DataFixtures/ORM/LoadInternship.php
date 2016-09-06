@@ -41,7 +41,7 @@ class LoadInternship extends AbstractTestDataFixture
                 },
             'name' => function() use ($faker) { return $faker->sentence($nbWords = 6); },
             'externInitiative' => function() use ($faker) { return $faker->boolean($chanceOfGettingTrue = 50); },
-            'supervisor' => function() use ($faker) { return $faker->name; },
+//            'supervisor' => function() use ($faker) { return $faker->name; },
             'firstSessionPeriodSemester' => function() use ($faker) { return $faker->randomNumber(1, 2); },
             'firstSessionPeriodYear' => function() use ($faker) { return $faker->randomNumber(1990, 2020); },
 

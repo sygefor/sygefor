@@ -9,15 +9,12 @@ use Gedmo\Tree\Entity\Repository\NestedTreeRepository;
 use Knp\DoctrineBehaviors\Model\Tree\NodeInterface;
 use Sygefor\Bundle\TaxonomyBundle\Entity\AbstractTerm;
 use Sygefor\Bundle\TaxonomyBundle\Entity\TreeTrait;
-use Sygefor\Bundle\TaxonomyBundle\Vocabulary\NationalVocabularyInterface;
-use Sygefor\Bundle\TaxonomyBundle\Vocabulary\VocabularyProviderInterface;
+use Sygefor\Bundle\TaxonomyBundle\Vocabulary\VocabularyInterface;
 use Sygefor\Bundle\TaxonomyBundle\Vocabulary\VocabularyRegistry;
 use Sygefor\Bundle\TraineeBundle\Entity\Inscription;
+use Sygefor\Bundle\TraineeBundle\Entity\Term\InscriptionStatus;
 use Sygefor\Bundle\TraineeBundle\Entity\Trainee;
-use Sygefor\Bundle\TraineeBundle\Entity\TraineeArray;
-use Sygefor\Bundle\TraineeBundle\Form\ArrayTraineeType;
 use Sygefor\Bundle\TraineeBundle\Form\InscriptionType;
-use Sygefor\Bundle\TraineeBundle\Form\TraineeArrayType;
 use Sygefor\Bundle\TraineeBundle\Form\TraineeType;
 use Sygefor\Bundle\TrainingBundle\Entity\Session;
 use Symfony\Bundle\FrameworkBundle\Controller\Controller;
@@ -51,14 +48,9 @@ class InscriptionController extends Controller
         $search->handleRequest($request);
 
         // security check : training
-        if(!$this->get("sygefor_user.access_right_registry")->hasAccessRight("sygefor_training.rights.training.all.view")) {
+        if(!$this->get("sygefor_user.access_right_registry")->hasAccessRight("sygefor_trainee.rights.inscription.all.view")) {
             $search->addTermFilter("session.training.organization.id", $this->getUser()->getOrganization()->getId());
         }
-
-        // security check : trainee
-        //if(!$this->get("sygefor_user.access_right_registry")->hasAccessRight("sygefor_trainee.rights.trainee.all.view")) {
-        //    $search->addTermFilter("trainee.organization.id", $this->getUser()->getOrganization()->getId());
-        //}
 
         return $search->search();
     }
@@ -73,7 +65,7 @@ class InscriptionController extends Controller
     {
         $return = array("inscription" => $inscription);
         if($this->get("security.context")->isGranted('EDIT', $inscription)) {
-            $form = $this->createForm(new InscriptionType(), $inscription);
+            $form = $this->createForm(new InscriptionType($inscription->getSession()->getTraining()->getOrganization()), $inscription);
             if ($request->getMethod() == 'POST') {
                 $form->handleRequest($request);
                 if ($form->isValid()) {
@@ -99,8 +91,18 @@ class InscriptionController extends Controller
         $em = $this->getDoctrine()->getManager();
         $inscription = new Inscription() ;
         $inscription->setSession($session);
-        $inscription->setInscriptionStatus($em->getRepository('SygeforTraineeBundle:Term\InscriptionStatus')->find(1));
-        $form = $this->createForm(new InscriptionType(), $inscription);
+
+        // national inscription status
+        $defaultInscriptionStatus = $em->getRepository('SygeforTraineeBundle:Term\InscriptionStatus')->findOneBy(
+            array('organization' => null, 'status' => InscriptionStatus::STATUS_PENDING));
+        // local inscription status if national is not found
+        if (!$defaultInscriptionStatus) {
+            $defaultInscriptionStatus = $em->getRepository('SygeforTraineeBundle:Term\InscriptionStatus')->findOneBy(
+                array('organization' => $this->getUser()->getOrganization(), 'status' => InscriptionStatus::STATUS_PENDING));
+        }
+
+        $inscription->setInscriptionStatus($defaultInscriptionStatus);
+        $form = $this->createForm(new InscriptionType($session->getTraining()->getOrganization()), $inscription);
         if ($request->getMethod() == 'POST') {
             $form->handleRequest($request);
             if ($form->isValid()) {

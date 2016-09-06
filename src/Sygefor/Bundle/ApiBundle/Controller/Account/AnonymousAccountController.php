@@ -22,7 +22,7 @@ use Sygefor\Bundle\ApiBundle\Form\Type\RegistrationType;
 use Sygefor\Bundle\CoreBundle\Search\SearchService;
 use Sygefor\Bundle\TaxonomyBundle\Entity\AbstractTerm;
 use Sygefor\Bundle\TaxonomyBundle\Entity\TreeTrait;
-use Sygefor\Bundle\TaxonomyBundle\Vocabulary\NationalVocabularyInterface;
+use Sygefor\Bundle\TaxonomyBundle\Vocabulary\VocabularyInterface;
 use Sygefor\Bundle\TaxonomyBundle\Vocabulary\VocabularyProviderInterface;
 use Sygefor\Bundle\TaxonomyBundle\Vocabulary\VocabularyRegistry;
 use Sygefor\Bundle\TraineeBundle\Entity\Trainee;
@@ -95,7 +95,7 @@ class AnonymousAccountController extends Controller
                     // and set active to true
                     $persistentId = $token->getAttribute('persistent_id');
                     $email = $token->getAttribute('mail');
-                    $trainee->setShibbolethPersistentId($persistentId ? $persistentId : 1);
+                    $trainee->setShibbolethPersistentId($persistentId ? $persistentId : $email);
                     $trainee->setEmail($email);
                     $trainee->setIsActive(true);
                 } else {
@@ -111,6 +111,10 @@ class AnonymousAccountController extends Controller
                     $password = TraineeRepository::generatePassword();
                 }
                 $trainee->setPlainPassword($password);
+
+                // set isPaying from publicType
+                $trainee->setIsPaying($trainee->getPublicType()->getIsPaying());
+
                 //$trainee->setSendCredentialsMail(true);
                 $em->persist($trainee);
                 $em->flush();

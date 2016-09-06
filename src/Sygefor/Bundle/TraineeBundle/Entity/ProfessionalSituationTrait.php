@@ -43,6 +43,12 @@ trait ProfessionalSituationTrait {
     protected $service;
 
     /**
+     * @ORM\Column(name="is_paying", type="boolean")
+     * @Serializer\Groups({"trainee", "inscription", "api.profile","api.token"})
+     */
+    protected $isPaying = false;
+
+    /**
      * @var string status
      * @ORM\Column(name="function", type="string", length=512, nullable=true)
      * @Serializer\Groups({"trainee", "inscription", "api.profile"})
@@ -68,6 +74,7 @@ trait ProfessionalSituationTrait {
         $this->setOtherInstitution($entity->getOtherInstitution());
         $this->setPublicType($entity->getPublicType());
         $this->setService($entity->getService());
+        $this->setIsPaying($entity->getIsPaying());
         $this->setStatus($entity->getStatus());
         $this->setTeachingCursus($entity->getTeachingCursus());
     }
@@ -117,6 +124,22 @@ trait ProfessionalSituationTrait {
     public function getService()
     {
         return $this->service;
+    }
+
+    /**
+     * @return boolean
+     */
+    public function getIsPaying()
+    {
+        return $this->isPaying;
+    }
+
+    /**
+     * @param boolean $isPaying
+     */
+    public function setIsPaying($isPaying)
+    {
+        $this->isPaying = $isPaying;
     }
 
     /**

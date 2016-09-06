@@ -201,10 +201,12 @@ sygeforApp.config(["$listStateProvider", "$dialogProvider", "$widgetProvider", f
     /**
      * WIDGETS
      */
+    var date = new Date();
+    date.setMonth(date.getMonth() - 2);
     $widgetProvider.widget("trainee", /* @ngInject */ {
         controller: 'WidgetListController',
         templateUrl: 'traineebundle/trainee/widget/trainee.html',
-        options: function($user) {
+        options: function($user, $filter) {
             return {
                 route: 'trainee.search',
                 rights: ['sygefor_trainee.rights.trainee.own.view', 'sygefor_trainee.rights.trainee.all.view'],
@@ -212,7 +214,11 @@ sygeforApp.config(["$listStateProvider", "$dialogProvider", "$widgetProvider", f
                 title: 'Derniers stagiaires inscrits',
                 size: 10,
                 filters:{
-                    'organization.name.source': $user.organization.name
+                    'organization.name.source': $user.organization.name,
+                    "createdAt": {
+                        "type": "range",
+                        "gte": $filter('date')(date, 'yyyy-MM-dd', 'Europe/Paris')
+                    }
                 },
                 sorts: {'createdAt': 'desc'}
             }

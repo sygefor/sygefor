@@ -17,7 +17,7 @@
                 <li><label>Email</label> {{ inscription.trainee.email }}</li>
                 <li><label>Téléphone</label> {{ inscription.trainee.phoneNumber }}</li>
                 <li><label>Etablissement</label> {{ inscription.trainee.institution.name }}</li>
-                <li ng-if="inscription.trainee.institution.name === 'Autre'"><label>Autre établissement</label> {{ inscription.trainee.otherInstitution }}</li>
+                <li ng-if="inscription.trainee.institution.machineName == 'other'"><label>Autre établissement</label> {{ inscription.trainee.otherInstitution }}</li>
             </ul>
 
             <h3>Coordonnées</h3><hr>

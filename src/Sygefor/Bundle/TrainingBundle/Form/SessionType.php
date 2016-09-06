@@ -97,6 +97,14 @@ class SessionType extends AbstractType
                 'label' => 'Inscriptions'
 
             ))
+            ->add('displayOnline', 'choice', array(
+                'required' => false,
+                'choices' => array(
+                    0 => 'Non',
+                    1 => 'Oui'
+                ),
+                'label' => "Afficher en ligne"
+            ))
             ->add('networkTrainerCost', 'money', array(
                 'required' => false,
                 'label' => "Frais de mission des formateurs réseau"
@@ -180,6 +188,7 @@ class SessionType extends AbstractType
                         return $er->createQueryBuilder('i')
                             ->where('i.organization = :organization')
                             ->setParameter('organization', $organization)
+                            ->orWhere('i.organization is null')
                             ->orderBy('i.name', 'ASC');
                     }
                 ));

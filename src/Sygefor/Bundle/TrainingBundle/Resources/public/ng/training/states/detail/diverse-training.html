@@ -13,7 +13,7 @@
                         <li><label>Type d'action diverse</label> <span sf-xeditable="form.children.variousAction">{{ training.variousAction.name }}</span></li>
                         <li><label>Publics prioritaires</label> <span sf-xeditable="form.children.publicTypes" data-type="checklist" data-mode="popup" ng-bind-html="training.publicTypes | joinObjects:'name':'\n' | nl2br"></span></li>
                         <li><label>Organisme</label> <span sf-xeditable="form.children.organism">{{ training.organism }}</span></li>
-                        <li><label>Responsable pédagogique</label> <span sf-xeditable="form.children.supervisor">{{ training.supervisor }}</span></li>
+                        <li><label>Responsable pédag.</label> <span sf-xeditable="form.children.supervisors" data-type="select2">{{ training.supervisors|joinObjects:'fullName' }}</span></li>
                     </ul>
                 </div>
                 <div class="col-lg-6">

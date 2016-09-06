@@ -97,6 +97,10 @@ services:
         class: Sygefor\Bundle\TraineeBundle\Security\Authorization\AccessRight\AllTraineeDeleteAccessRight
         tags:
             - { name: sygefor_user.right_provider, group: "Stagiaires" }
+    sygefor_trainee.rights.trainee.all.manage_duplicate:
+        class: Sygefor\Bundle\TraineeBundle\Security\Authorization\AccessRight\AllTraineeDuplicateAccessRight
+        tags:
+            - { name: sygefor_user.right_provider, group: "Stagiaires" }
 
     #inscription voters
     #
@@ -151,6 +155,21 @@ services:
             - @Sygefor_user.access_right_registry
         tags:
             - { name: form.type, alias: emailtemplatevocabulary }
+
+    sygefor_trainee.form.type.instription_status:
+        class: Sygefor\Bundle\TraineeBundle\Form\InscriptionStatusVocabularyType
+        arguments:
+            - @security.context
+        tags:
+            - { name: form.type, alias: inscriptionstatusvocabulary }
+
+    sygefor_trainee.form.type.presence_status:
+            class: Sygefor\Bundle\TraineeBundle\Form\PresenceStatusVocabularyType
+            arguments:
+                - @security.context
+            tags:
+                - { name: form.type, alias: presencestatusvocabulary }
+
     sygefor_trainee.form.type.trainee:
             class: Sygefor\Bundle\TraineeBundle\Form\TraineeType
             arguments:

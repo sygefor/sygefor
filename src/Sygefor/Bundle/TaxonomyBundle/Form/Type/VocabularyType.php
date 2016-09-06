@@ -1,6 +1,7 @@
 <?php
 namespace Sygefor\Bundle\TaxonomyBundle\Form\Type;
 
+use Sygefor\Bundle\TaxonomyBundle\Vocabulary\VocabularyInterface;
 use Symfony\Component\Form\AbstractType;
 use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Component\Form\FormEvent;
@@ -43,33 +44,6 @@ class VocabularyType extends AbstractType
     public function buildForm(FormBuilderInterface $builder, array $options)
     {
         $builder->add('name', 'text', array ('label' => 'Nom'));
-
-        if ( !$builder->getData()->isNational() ) {
-            $this->addOrganizationField($builder) ;
-        }
-    }
-
-    /**
-     * Adds an organization field to the builder.
-     * If user is granted, a selectbox is displayed, Otherwise an hidden field is added
-     * @param FormBuilderInterface $builder
-     *
-     */
-    private function addOrganizationField(FormBuilderInterface $builder)
-    {
-        $user = $this->securityContext->getToken()->getUser();
-        $vocId = $builder->getData()->getId() ;
-        //we check if user can create a new term or edit existing term
-        if ( ( empty( $vocId ) && !$this->securityContext->isGranted('ADD', 'Sygefor\Bundle\TaxonomyBundle\Vocabulary\LocalVocabularyInterface') )
-            || (!$this->securityContext->isGranted('EDIT', $builder->getData())) ) {
-
-            $builder->addEventListener(
-                FormEvents::POST_SUBMIT,
-                function(FormEvent $event) use ($user) {
-                    $event->getData()->setOrganization($user->getOrganization());
-                }
-            );
-        }
     }
 
     /**

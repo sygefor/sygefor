@@ -21,15 +21,22 @@ sygeforApp.controller('TrainerListController', ['$scope', '$user', '$injector', 
         'isUrfist' : {
             label: 'Statut',
             values: {
-                'true': 'Formateur URFIST',
-                'false': 'Formateur extérieur'
+                'T': 'Formateur URFIST',
+                'F': 'Formateur extérieur'
             }
         },
         'isPublic' : {
             label: 'Publié',
             values: {
-                'true': 'Oui',
-                'false': 'Non'
+                'T': 'Oui',
+                'F': 'Non'
+            }
+        },
+        'isArchived' : {
+            label: 'Archivé',
+            values: {
+                'T': 'Oui',
+                'F': 'Non'
             }
         }
     };
@@ -69,11 +76,4 @@ sygeforApp.controller('TrainerListController', ['$scope', '$user', '$injector', 
             return $user.hasAccessRight('sygefor_trainer.rights.trainer.all.create') || $user.hasAccessRight('sygefor_trainer.rights.trainer.own.create');
         }
     }];
-
-    // Initialize default filters
-    var defaultFilters = {};
-    if($user.organization) {
-        defaultFilters['organization.name.source'] = $user.organization.name;
-    }
-    $scope.search.query.filters = defaultFilters;
 }]);

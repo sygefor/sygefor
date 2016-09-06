@@ -5,8 +5,9 @@ namespace Sygefor\Bundle\TrainingBundle\Entity\Term;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\ORM\Mapping as ORM;
 use Symfony\Component\Validator\Constraints as Assert;
-use Sygefor\Bundle\TaxonomyBundle\Entity\AbstractOrganizationTerm;
-use Sygefor\Bundle\TaxonomyBundle\Vocabulary\LocalVocabularyInterface;
+use Sygefor\Bundle\TaxonomyBundle\Entity\AbstractTerm;
+use Sygefor\Bundle\TaxonomyBundle\Vocabulary\VocabularyInterface;
+use JMS\Serializer\Annotation as Serializer;
 
 /**
  * Institution
@@ -14,9 +15,15 @@ use Sygefor\Bundle\TaxonomyBundle\Vocabulary\LocalVocabularyInterface;
  * @ORM\Table(name="institution")
  * @ORM\Entity
  */
-class Institution extends AbstractOrganizationTerm implements LocalVocabularyInterface
+class Institution extends AbstractTerm implements VocabularyInterface
 {
-     /**
+    /**
+     * This term is required during term replacement
+     * @var bool
+     */
+    static $replacementRequired = true;
+
+    /**
      * @ORM\Column(name="address", type="string")
      * @Assert\NotBlank()
      */
@@ -48,6 +55,14 @@ class Institution extends AbstractOrganizationTerm implements LocalVocabularyInt
      * @ORM\Column(name="is_school", type="boolean", nullable=true)
      */
     protected $isSchool;
+
+    /**
+     * @ORM\ManyToOne(targetEntity="Sygefor\Bundle\TrainingBundle\Entity\Term\GeographicOrigin")
+     * @ORM\JoinColumn(name="geographic_origin_id", nullable=true)
+     * @Assert\NotBlank(message="Vous devez préciser une origine géographique")
+     * @Serializer\Groups({"training", "api"})
+     */
+    protected $geographicOrigin;
 
     /**
      * @param mixed $city
@@ -145,11 +160,32 @@ class Institution extends AbstractOrganizationTerm implements LocalVocabularyInt
         return $this->isSchool;
     }
 
+    /**
+     * @return GeographicOrigin
+     */
+    public function getGeographicOrigin()
+    {
+        return $this->geographicOrigin;
+    }
+
+    /**
+     * @param mixed $geographicOrigin
+     */
+    public function setGeographicOrigin($geographicOrigin)
+    {
+        $this->geographicOrigin = $geographicOrigin;
+    }
+
      /**
      * @return mixed
      */
     public function getVocabularyName(){
         return "Etablissements";
+    }
+
+    public static function getVocabularyStatus()
+    {
+        return VocabularyInterface::VOCABULARY_LOCAL;
     }
 
     /**

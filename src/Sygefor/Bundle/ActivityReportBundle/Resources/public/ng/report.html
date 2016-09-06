@@ -10,7 +10,13 @@
             </div>
             <div class="btn-add-operation">
                 <div class="btn-add-operation-container">
-                    <button type="button" class="btn btn-primary" ng-click="download('pdf')"><i class="fa fa-file-pdf-o"></i>&nbsp; Télécharger</button>
+                    <button type="button" class="btn btn-primary dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                        Télécharger <span class="caret"></span>
+                    </button>
+                    <ul class="dropdown-menu">
+                        <li><a ng-click="download('pdf')" href=""><i class="fa fa-file-pdf-o"></i>&nbsp; PDF</a></li>
+                        <li><a ng-click="download('xls')" href=""><i class="fa fa-file-excel-o"></i>&nbsp; Excel</a></li>
+                    </ul>
                 </div>
             </div>
         </div>
@@ -32,6 +38,7 @@
                             <h4 class="panel-heading mt-0">Rencontre scientifique</h4>
                             <a href="" class="list-group-item" ui-sref="report.meeting.summaries" ui-sref-active="active">Synthèse</a>
                             <a href="" class="list-group-item" ui-sref="report.meeting.crosstabs" ui-sref-active="active">Croisements</a>
+                            <a href="" class="list-group-item" ui-sref="report.meeting.listings" ui-sref-active="active">Récapitulatifs</a>
                         </div>
                     </div>
                 </div>

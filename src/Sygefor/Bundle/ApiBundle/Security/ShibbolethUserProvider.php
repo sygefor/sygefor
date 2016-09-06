@@ -84,13 +84,13 @@ class ShibbolethUserProvider implements ShibbolethUserProviderInterface
 
         // else, set it to 1
         if(!$shibbolethId) {
-            $shibbolethId = 1;
+            $shibbolethId = $email;
         }
 
         // try to find the user by email, and then by persistent id
-        $user = $this->repository->findOneByEmail($email);
-        if(!$user && $shibbolethId != 1) {
-            $user = $this->repository->findOneByShibbolethPersistentId($shibbolethId);
+        $user = $this->repository->findOneByShibbolethPersistentId($shibbolethId);
+        if(!$user && ($shibbolethId != $email)) {
+            $user = $this->repository->findOneByEmail($email);
         }
 
         if($user) {

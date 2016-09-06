@@ -11,9 +11,19 @@
                             <div class="list-group">
                                 {% for group,vocabularyc in vocabularies %}
                                     {% for voc in vocabularyc %}
-                                        <div class="list-group-item {{ voc.id == id ? 'active' : '' }}">
-                                            <a href="{{ path('taxonomy.view', { 'id': voc.id }) }}">
-                                                <span class="badge pull-right" title="Vocabulaire {{ voc.scope == 'N' ? 'national' : 'local' }}">{{ voc.scope }}</span>
+                                        <div class="list-group-item {{ voc.id == vocabulary.vocabularyId ? 'active' : '' }}">
+                                            <a href="{{ path('taxonomy.view', { 'vocabularyId': voc.id }) }}">
+                                                <span class="badge pull-right" title="Vocabulaire {{ voc.scope == 0 ? 'national' : (voc.scope == 1 ? 'local' : 'mixte') }}">
+                                                    {% if voc.scope == 0 %}
+                                                        N
+                                                    {% elseif voc.scope == 1 %}
+                                                        L
+                                                    {% elseif voc.scope == 2 %}
+                                                        M
+                                                    {% else %}
+                                                        {{ voc.scope }}
+                                                    {% endif %}
+                                                </span>
                                                 <div class="list-group-item-title">{{ voc.vocabulary.vocabularyName }}</div>
                                             </a>
                                         </div>

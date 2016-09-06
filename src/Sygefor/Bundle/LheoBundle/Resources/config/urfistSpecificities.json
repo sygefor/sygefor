@@ -117,5 +117,22 @@
 		"activityNumber": "11111111111",
 		"specificRenseignements": "",
 		"siret": "11111111111111"
+	},
+	"aru": {
+		"name" : "ARU",
+		"street": "17 rue des Bernardins",
+		"zip":  "75005",
+		"city": "Paris",
+		"region": "",
+		"fixNumber": "01 43 26 85 22",
+		"faxNumber": "01 56 24 97 33",
+		"email": "aru@reseau-urfist.fr",
+		"webUrl": "sygefor.reseau-urfist.fr",
+		"FORMACODE": "46375",
+		"NSF": "325",
+		"ROME": "32214",
+		"activityNumber": "11111111111",
+		"specificRenseignements": "",
+		"siret": "11111111111111"
 	}
 }

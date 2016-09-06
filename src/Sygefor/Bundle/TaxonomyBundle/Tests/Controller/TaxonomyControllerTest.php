@@ -7,7 +7,7 @@ use Doctrine\Common\Persistence\ObjectRepository;
 use Sygefor\Bundle\CoreBundle\Entity\Organization;
 use Sygefor\Bundle\CoreBundle\Test\WebTestCase;
 use Sygefor\Bundle\TaxonomyBundle\Entity\AbstractTerm;
-use Sygefor\Bundle\TaxonomyBundle\Vocabulary\LocalVocabularyInterface;
+use Sygefor\Bundle\TaxonomyBundle\Vocabulary\VocabularyInterface;
 use Sygefor\Bundle\UserBundle\Entity\User;
 use Sygefor\Bundle\TaxonomyBundle\Controller\TaxonomyController;
 use Symfony\Component\BrowserKit\Cookie;

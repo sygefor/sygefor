@@ -9,12 +9,14 @@ use Elastica\Suggest\Phrase;
 use Sygefor\Bundle\CoreBundle\Search\SearchService;
 use Sygefor\Bundle\TaxonomyBundle\Entity\AbstractTerm;
 use Sygefor\Bundle\TaxonomyBundle\Vocabulary\VocabularyProviderInterface;
+use Sygefor\Bundle\TrainerBundle\Entity\Participation;
 use Sygefor\Bundle\TrainerBundle\Entity\Trainer;
 use Sygefor\Bundle\TrainingBundle\Entity\Session;
 use Symfony\Bundle\FrameworkBundle\Controller\Controller;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Template;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Security;
+use Sygefor\Bundle\TrainerBundle\Form\ChangeOrganizationType;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\Routing\Exception\ResourceNotFoundException;
 use Symfony\Component\Security\Core\Exception\AccessDeniedException;
@@ -59,8 +61,7 @@ class TrainerController extends Controller
      */
     public function viewAction(Trainer $trainer, Request $request)
     {
-        $return = array("trainer" => $trainer);
-        if($this->get("security.context")->isGranted('EDIT', $trainer)) {
+        if ($this->get("security.context")->isGranted('EDIT', $trainer)) {
             $form = $this->createForm('trainer', $trainer);
             if ($request->getMethod() == 'POST') {
                 $form->handleRequest($request);
@@ -68,12 +69,12 @@ class TrainerController extends Controller
                     $em = $this->getDoctrine()->getManager();
                     $em->persist($trainer);
                     $em->flush();
-                    return $return;
                 }
             }
-            $return['form'] = $form->createView();
+            return array('form' => $form->createView(), 'trainer' => $trainer);
         }
-        return $return;
+
+        return array('trainer' => $trainer);
     }
 
     /**
@@ -107,9 +108,9 @@ class TrainerController extends Controller
      * @Route("/{session}/add", name="trainer.add", options={"expose"=true}, defaults={"_format" = "json"})
      * @SecureParam(name="session", permissions="EDIT")
      * @ParamConverter("session", class="SygeforTrainingBundle:Session", options={"id" = "session"})
-     * @Rest\View(serializerGroups={"Default", "trainer"}, serializerEnableMaxDepthChecks=true)
+     * @Rest\View(serializerGroups={"Default", "session"}, serializerEnableMaxDepthChecks=true)
      */
-    public function addAction(Session $session, Request $request)
+    public function addParticipationAction(Session $session, Request $request)
     {
         $em = $this->getDoctrine()->getManager();
 
@@ -127,16 +128,22 @@ class TrainerController extends Controller
 
         if ($request->getMethod() == 'POST') {
             $form->handleRequest($request);
-            if ($form->isValid('')) {
+            if ($form->isValid()) {
                 $data = $form->getData();
                 $trainer = $data['trainer'];
 
-                if(!$session->hasTrainer($trainer)) {
-                    $session->addTrainer($trainer);
-                    $em->flush();
-                    return array('trainer' => $trainer);
-                } else {
+                $participation = new Participation();
+                $participation->setSession($session);
+                $participation->setTrainer($trainer);
+                if ($session->getParticipations()->contains($participation)) {
                     $form->get('trainer')->addError(new FormError('Ce formateur est déjà associé à cet évènement.'));
+                }
+                else {
+                    $session->addParticipation($participation);
+                    $session->updateTimestamps();
+                    $em->persist($participation);
+                    $em->flush();
+                    return array('participation' => $participation);
                 }
             }
         }
@@ -145,27 +152,42 @@ class TrainerController extends Controller
     }
 
     /**
-     * @Route("/{session}/remove/{trainer}", name="trainer.remove", options={"expose"=true}, defaults={"_format" = "json"})
+     * @Route("/{session}/remove/{participation}", name="trainer.remove", options={"expose"=true}, defaults={"_format" = "json"})
      * @Method("POST")
      * @SecureParam(name="session", permissions="EDIT")
      * @ParamConverter("session", class="SygeforTrainingBundle:Session", options={"id" = "session"})
-     * @ParamConverter("trainer", class="SygeforTrainerBundle:Trainer", options={"id" = "trainer"})
+     * @ParamConverter("participation", class="SygeforTrainerBundle:Participation", options={"id" = "participation"})
+     * @Rest\View(serializerGroups={"Default", "session"}, serializerEnableMaxDepthChecks=true)
+     */
+    public function removeParticipationAction(Session $session, Participation $participation)
+    {
+        $this->getDoctrine()->getManager()->remove($participation);
+        $this->getDoctrine()->getManager()->flush();
+
+        return null;
+    }
+
+    /**
+     * @Route("/{id}/changeorg", name="trainer.changeorg", options={"expose"=true}, defaults={"_format" = "json"})
+     * @SecureParam(name="trainer", permissions="EDIT")
+     * @ParamConverter("trainer", class="SygeforTrainerBundle:Trainer", options={"id" = "id"})
      * @Rest\View(serializerGroups={"Default", "trainer"}, serializerEnableMaxDepthChecks=true)
      */
-    public function removeAction(Session $session, Trainer $trainer)
+    public function changeOrganizationAction(Trainer $trainer, Request $request)
     {
-        $session->removeTrainer($trainer);
+        // security check
+        if(!$this->get("sygefor_user.access_right_registry")->hasAccessRight("sygefor_trainer.rights.trainer.all.update")) {
+            throw new AccessDeniedException();
+        }
 
-        $em = $this->getDoctrine()->getManager();
-
-        $trainer->setUpdatedAt(new \DateTime());
-
-        //persisting both $session and $trainer
-        $em->persist($session);
-        $em->persist($trainer);
-        $em->flush();
-
-        return array();
+        $form = $this->createForm(new ChangeOrganizationType(), $trainer);
+        if ($request->getMethod() == 'POST') {
+            $form->handleRequest($request);
+            if ($form->isValid()) {
+                $this->getDoctrine()->getManager()->flush();
+            }
+        }
+        return array('form' => $form->createView());
     }
 
     /**

@@ -1,5 +1,7 @@
 parameters:
     sygefor_activity_report.builder_factory.class: Sygefor\Bundle\ActivityReportBundle\Service\ActivityReportBuilderFactory
+    sygefor_excel_writer.class: Sygefor\Bundle\ActivityReportBundle\Service\ExcelWriter
+    sygefor_xls_paginer.class: Sygefor\Bundle\ActivityReportBundle\Service\XlsExportPaginer
 
 services:
     sygefor_activity_report.builder_factory:
@@ -12,3 +14,7 @@ services:
                     - @router
         tags:
             - { name: kernel.event_listener, event: sygefor_core.menu_configure, method: onMenuConfigure }
+    sygefor_excel_writer:
+        class: %sygefor_excel_writer.class%
+    sygefor_xls_paginer:
+        class: %sygefor_xls_paginer.class%

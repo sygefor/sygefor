@@ -1,11 +1,4 @@
 <?php
-/**
- * Created by PhpStorm.
- * User: Erwan
- * Date: 08/04/14
- * Time: 15:53
- */
-
 namespace Sygefor\Bundle\ApiBundle\DataFixtures\ORM;
 
 use Doctrine\Common\DataFixtures\FixtureInterface;

@@ -5,8 +5,8 @@ namespace Sygefor\Bundle\TrainingBundle\Entity\Term;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\ORM\Mapping as ORM;
 use Symfony\Component\Validator\Constraints as Assert;
-use Sygefor\Bundle\TaxonomyBundle\Entity\AbstractOrganizationTerm;
-use Sygefor\Bundle\TaxonomyBundle\Vocabulary\LocalVocabularyInterface;
+use Sygefor\Bundle\TaxonomyBundle\Entity\AbstractTerm;
+use Sygefor\Bundle\TaxonomyBundle\Vocabulary\VocabularyInterface;
 
 /**
  * Tag
@@ -14,7 +14,7 @@ use Sygefor\Bundle\TaxonomyBundle\Vocabulary\LocalVocabularyInterface;
  * @ORM\Table(name="tag")
  * @ORM\Entity
  */
-class Tag extends AbstractOrganizationTerm implements LocalVocabularyInterface
+class Tag extends AbstractTerm implements VocabularyInterface
 {
     /**
      * @return mixed
@@ -22,6 +22,11 @@ class Tag extends AbstractOrganizationTerm implements LocalVocabularyInterface
     public function getVocabularyName()
     {
         return "Tags";
+    }
+
+    public static function getVocabularyStatus()
+    {
+        return VocabularyInterface::VOCABULARY_LOCAL;
     }
 
     /**

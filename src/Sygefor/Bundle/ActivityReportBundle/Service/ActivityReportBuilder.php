@@ -6,6 +6,7 @@ use Doctrine\Bundle\DoctrineBundle\Registry;
 use Doctrine\ORM\EntityManager;
 use Elastica\Aggregation\AbstractAggregation;
 use Elastica\Aggregation\Filter;
+use Elastica\Aggregation\Filters;
 use Elastica\Aggregation\Nested;
 use Elastica\Aggregation\Sum;
 use Elastica\Aggregation\ValueCount;
@@ -26,6 +27,14 @@ use Elastica\Search;
 use Gedmo\Tree\Entity\Repository\NestedTreeRepository;
 use Sygefor\Bundle\ActivityReportBundle\Report\CrosstabReport;
 use Sygefor\Bundle\ActivityReportBundle\Report\CrosstabReport\CrosstabReportAggregation;
+use Sygefor\Bundle\ActivityReportBundle\Service\Aggregation\GeographicOriginStatsAggregation;
+use Sygefor\Bundle\ActivityReportBundle\Service\Aggregation\ParticipantsStatsAggregation;
+use Sygefor\Bundle\ActivityReportBundle\Service\Aggregation\ParticipantStatsAggregation;
+use Sygefor\Bundle\ActivityReportBundle\Service\Aggregation\ParticipantSummariesAggregation;
+use Sygefor\Bundle\ActivityReportBundle\Service\Aggregation\PublicTypeGeographicOriginStatsAggregation;
+use Sygefor\Bundle\ActivityReportBundle\Service\Aggregation\TrainerTypeAggregation;
+use Sygefor\Bundle\ActivityReportBundle\Service\Aggregation\TrainingThemeAggregation;
+use Sygefor\Bundle\TraineeBundle\Entity\Term\PresenceStatus;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\StreamedResponse;
 
@@ -87,9 +96,11 @@ class ActivityReportBuilder
         }
 
         // some usefull terms
-        $this->terms['public_type'] = $this->getSortedTerms('Sygefor\Bundle\CoreBundle\Entity\Term\PublicType', array('parent' => null));
         $this->terms['theme'] = $this->getSortedTerms('Sygefor\Bundle\TrainingBundle\Entity\Term\Theme');
+        $this->terms['geographic_origin'] = $this->getSortedTerms('Sygefor\Bundle\TrainingBundle\Entity\Term\GeographicOrigin');
         $this->terms['disciplinary'] = $this->getSortedTerms('Sygefor\Bundle\CoreBundle\Entity\Term\Disciplinary', array('parent' => null));
+        $this->terms['public_type'] = $this->getSortedTerms('Sygefor\Bundle\CoreBundle\Entity\Term\PublicType', array('parent' => null));
+        $this->terms['public_type']['Professionnels de l’information'] = 'Autres professionnels de l’information';
     }
 
     /**
@@ -99,7 +110,8 @@ class ActivityReportBuilder
     {
         $repo = $this->em->getRepository($class);
         $terms = $repo->findBy($criteria, array('position' => 'ASC'));
-        return array_map(function($type) { return $type->getName(); }, $terms);
+        $terms = array_map(function($type) { return $type->getName(); }, $terms);
+        return array_combine($terms, $terms);
     }
 
     /**
@@ -197,6 +209,9 @@ class ActivityReportBuilder
         // Coût global
         $return['cost'] = $sums['totalCost'];
 
+        // Recettes globales
+        $return['taking'] = $sums['totalTaking'];
+
         // specific : stages
         if($type == 'internship') {
 
@@ -205,9 +220,6 @@ class ActivityReportBuilder
 
             // Nombre de demande d'inscription
             $return['registrations'] = $sums['numberOfRegistrations'];
-
-            // Recettes globales
-            $return['taking'] = $sums['totalTaking'];
         }
 
         // specific : all trainings
@@ -238,7 +250,7 @@ class ActivityReportBuilder
     /**
      * Lists
      */
-    public function getListing($types = array())
+    public function getListing($types = array(), $options = array())
     {
         $search = $this->index->getType('session');
         $filter = $this->getSessionFilter();
@@ -250,8 +262,8 @@ class ActivityReportBuilder
         $query->setFilter($filter);
         //$query->setSize(9999);
 
-        $trainingKeys = array('id', 'name', 'theme', 'interventionType', 'publicTypes', 'teachingCursus', 'disciplinary', 'organism');
-        $sumKeys = array('hourDuration', 'publicTypes', 'numberOfRegistrations', 'numberOfParticipants', 'totalCost');
+        $trainingKeys = (isset ($options['trainingKeys'])&& is_array($options['trainingKeys'])) ? $options['trainingKeys'] : array('id', 'name', 'theme', 'eventKind', 'eventType', 'publicTypes', 'teachingCursus', 'disciplinary', 'organism', 'pedagogicPartner', 'otherPartner');
+        $sumKeys = (isset ($options['sumKeys'])&& is_array($options['sumKeys'])) ? $options['sumKeys'] : array('hourDuration', 'publicTypes', 'numberOfRegistrations', 'numberOfParticipants', 'totalCost');
 
         $scroll = $search->search($query, array(
             Search::OPTION_SEARCH_TYPE => Search::OPTION_SEARCH_TYPE_SCAN,
@@ -287,6 +299,9 @@ class ActivityReportBuilder
                 if(!$training) {
                     $training = array_intersect_key($session['training'], array_flip($trainingKeys));
                     $training['sessions'] = 0;
+                    if ($type == "meeting") {
+                        $training['session.date'] = $session['dateBegin'];
+                    }
                 }
 
                 // sums
@@ -299,9 +314,9 @@ class ActivityReportBuilder
                 }
 
                 // type d'intervenant
-                if(in_array($type, array('internship', 'training_course'))) {
-                    if($session['trainers']) {
-                        $training['isUrfist'] = $session['trainers'][0]['isUrfist'];
+                if(in_array($type, array('internship', 'training_course', 'doctoral_training'))) {
+                    if(!empty($session['participations'])) {
+                        $training['isUrfist'] = $session['participations'][0]['trainer']['isUrfist'];
                     }
                 }
             }
@@ -337,19 +352,19 @@ class ActivityReportBuilder
         $filter = $this->getSessionFilter();
         $filter->addFilter(new BoolNot(new Term(array('training.type' => 'meeting'))));
 
-        // ---
-        // Thematiques
-        // ---
-
         $aggTypeEvt =  new \Elastica\Aggregation\Terms('training.typeLabel.source');
         $aggTypeEvt->setExclude('Rencontre scientifique');
         $aggTypeEvt->setMinimumDocumentCount(0);
 
+        // ---
+        // Thematiques
+        // ---
+
         // theme / type de formation
         $crosstab = new CrosstabReport($type, $filter);
-        $crosstab->addAggregation('training.theme.source', $this->terms['theme']);
-        $crosstab->addAggregation($aggTypeEvt);
-        $return['theme_type'] = $crosstab->execute();
+        $crosstab->addAggregation(new TrainingThemeAggregation());
+        $crosstab->setTerms('training.theme.source', $this->terms['theme']);
+        $return['theme_type'] = $crosstab->execute(true);
 
         // ---
         // Types / Partenarias
@@ -358,7 +373,7 @@ class ActivityReportBuilder
         // Répartition de l'ensemble des formations par type d'intervention (tp/pas tp)
         $crosstab = new CrosstabReport($type, $filter);
         $crosstab->addAggregation($aggTypeEvt);
-        $tp = $crosstab->addAggregation("training.tp", array('true' => "Avec TP", 'false' => 'Sans TP'));
+        $crosstab->addAggregation("training.tp", array('true' => "Avec TP", 'false' => 'Sans TP'));
         $return['type_intervention'] = $crosstab->execute();
 
         // Répartition de l'ensemble des formations par initiative
@@ -370,7 +385,7 @@ class ActivityReportBuilder
         // Répartition de l'ensemble des formations par type d'intervenant
         $crosstab = new CrosstabReport($type, $filter);
         $crosstab->addAggregation($aggTypeEvt);
-        $crosstab->addAggregation("trainers.isUrfist", array('true' => "Formateur URFIST", 'false' => 'Formateur extérieur'));
+        $crosstab->addAggregation(new TrainerTypeAggregation());
         $return['type_intervenant'] = $crosstab->execute();
 
         // ---
@@ -384,14 +399,8 @@ class ActivityReportBuilder
         // Répartition des publics dans les actions diverses
         // Répartition des publics dans l'ensemble des formations
         $crosstab = new CrosstabReport($type, $filter);
-        $crosstab->addAggregation($aggTypeEvt);
-
-        $nested = new Nested('summary', 'participantsSummaries');
-        $crosstab->addAggregation($nested, null, $sum);
-
-        $types = array_combine($this->terms['public_type'], $this->terms['public_type']);
-        $types['Professionnels de l’information'] = 'Autres professionnels de l’information';
-        $crosstab->addAggregation('publicCategory', $types, $sum);
+        $crosstab->addAggregation(new ParticipantsStatsAggregation());
+        $crosstab->setTerms('publicCategory', $this->terms['public_type']);
         $return['public_type'] = $crosstab->execute(true);
 
         // ---
@@ -400,7 +409,7 @@ class ActivityReportBuilder
         $crosstab = new CrosstabReport($type, $filter);
         $crosstab->addAggregation($aggTypeEvt);
 
-        $nested = new Nested('summary', 'participantsSummaries');
+        $nested = new Nested('summary', 'participantsStats');
         $crosstab->addAggregation($nested, null, $sum);
 
         // filtered by "Professionnels de l’information"
@@ -416,15 +425,17 @@ class ActivityReportBuilder
         // Répartition des étudiants dans les enseignements de cursus par discipline
         // Répartition des étudiants et enseignants-chercheurs dans les stages par discipline
         // Répartition des étudiants et enseignants-chercheurs dans les actions diverses par discipline
+        // Répartition des étudiants et enseignants-chercheurs dans les formations doctorales par discipline
+        // Répartition des étudiants et enseignants-chercheurs dans les formations doctorales par discipline
         // Répartition des étudiants et enseignants-chercheurs dans l'ensemble des formations par discipline
-        foreach(array('internship', 'diverse_training', 'training_course', 'all') as $key) {
+        foreach(array('internship', 'diverse_training', 'doctoral_training', 'training_course', 'all') as $key) {
             $_filter = clone $filter;
             if($key != "all") {
                 $_filter->addFilter(new Term(array('training.type' => $key)));
             }
             $crosstab = new CrosstabReport($type, $_filter);
 
-            $nested = new Nested('summary', 'participantsSummaries');
+            $nested = new Nested('summary', 'participantsStats');
             $crosstab->addAggregation($nested, null, $sum);
 
             // filtered by "Professionnels de l’information"
@@ -440,23 +451,20 @@ class ActivityReportBuilder
             $crosstab->addAggregation('publicCategory', array_intersect_assoc($this->terms['public_type'], $terms), $sum);
             $crosstab->addAggregation('disciplinaryDomain', $this->terms['disciplinary'], $sum);
 
-            $return['public_discipline'][$key] = $crosstab->execute();
+            $return['public_discipline'][$key] = $crosstab->execute(true);
         }
 
         // ---
         // ORIGINE GEOGRAPHIQUE
+        // Le total ne peut pas être équivalent au sommaire car impossible de ventiler les participants d'une session aux inscriptions désactivées
         // ---
-        $type = $this->index->getType('inscription');
-        $filter = $this->getSessionFilter('session.id');
-        $filter->addFilter(new BoolNot(new Term(array('session.training.type' => 'meeting'))));
-
         // Répartition des publics par origine géographique
-        foreach(array('internship', 'diverse_training', 'training_course') as $key) {
+        foreach(array('internship', 'doctoral_training', 'diverse_training', 'training_course') as $key) {
             $_filter = clone $filter;
-            $_filter->addFilter(new Term(array('session.training.type' => $key)));
+            $_filter->addFilter(new Term(array('training.type' => $key)));
             $crosstab = new CrosstabReport($type, $_filter);
-            $crosstab->addAggregation('publicCategory.source', $this->terms['public_type']);
-            $crosstab->addAggregation('zoneCompetence', array('Etablissement de rattachement', 'Agglomération', 'Zone de compétence', 'Hors zone'));
+            $crosstab->addAggregation(new PublicTypeGeographicOriginStatsAggregation());
+            $crosstab->setTerms('geographicOrigin', $this->terms['geographic_origin']);
             $return['public_orig'][$key] = $crosstab->execute();
         }
 
@@ -486,9 +494,9 @@ class ActivityReportBuilder
 
         // remove URFIST from filters
         $_query = $this->query->toArray();
-        $filters = $_query['filter']['and'];
-        foreach($filters as $key => $filter) {
-            if(isset($filter['term']['training.organization.name.source'])) {
+        $filters = isset($_query['filter']['and']) ? $_query['filter']['and'] : array();
+        foreach($filters as $key => $_filter) {
+            if(isset($_filter['term']['training.organization.name.source'])) {
                 unset($filters[$key]);
             }
         }
@@ -500,6 +508,55 @@ class ActivityReportBuilder
         $crosstab->addAggregation('training.eventType.source');
         $crosstab->addAggregation('training.eventKind.source');
         $return['eventType_eventKind']['national'] = $crosstab->execute();
+
+        //thématiques
+        $crosstab = new CrosstabReport($type, $filter);
+        $crosstab->addAggregation(new TrainingThemeAggregation(true));
+        $crosstab->setTerms('training.theme.source', $this->terms['theme']);
+        $return['theme_meeting'] = $crosstab->execute(true);
+
+        // public
+        $crosstab = new CrosstabReport($type, $filter);
+        $crosstab->addAggregation(new ParticipantsStatsAggregation(true));
+        $crosstab->setTerms('publicCategory', $this->terms['public_type']);
+        $return['publicType_meeting'] = $crosstab->execute(true);
+
+        //zone géographique
+        $type = $this->index->getType('inscription');
+        // catégories
+        $filter = $this->getSessionFilter('session.id');
+        $filter->addFilter(new Term(array('session.training.type' => 'meeting')));
+        $filter->addFilter(new Term(array('presenceStatus.status' => PresenceStatus::STATUS_PRESENT)));
+        $crosstab = new CrosstabReport($type, $filter);
+        $crosstab->addAggregation('session.training.type', array('meeting' => 'Rencontre'));
+        $crosstab->addAggregation('zoneCompetence', array('Etablissement de rattachement', 'Agglomération', 'Zone de compétence', 'Hors zone'));
+        $return['origingeo_meeting'] = $crosstab->execute(true);
+
+        // docto/chercheur / discipline
+        $sum = new Sum('sum');
+        $sum->setField('count');
+        $type = $this->index->getType('session');
+        $_filter = $this->getSessionFilter();
+
+        $_filter->addFilter(new Term(array('training.type' => 'meeting')));
+
+        $crosstab = new CrosstabReport($type, $_filter);
+
+        $nested = new Nested('summary', 'participantsStats');
+        $crosstab->addAggregation($nested, null, $sum);
+
+        // filtered by "Professionnels de l’information"
+        $terms = array("Enseignant du supérieur, chercheur", "Doctorant", "Etudiant");
+//        var_dump($terms);
+        $filtered = new Filter('publicCategory');
+        $filtered->setFilter(new Terms('publicCategory', $terms));
+        $crosstab->addAggregation($filtered, null, $sum);
+
+        // public / discipline
+        $crosstab->addAggregation('publicCategory', $terms, $sum);
+        $crosstab->addAggregation('disciplinaryDomain', $this->terms['disciplinary'], $sum);
+
+        $return['meeting_public_discipline'] = $crosstab->execute(true);
 
         return $return;
     }

@@ -26,7 +26,7 @@ class LoadPresenceStatus extends AbstractDataFixture
 {
     /**
      * @param ObjectManager $manager
-     * @param $name
+     * @param $id
      * @return PresenceStatus
      */
     public function loadOneEntry(ObjectManager $manager, $id, $name, $status) {
@@ -49,5 +49,14 @@ class LoadPresenceStatus extends AbstractDataFixture
         $this->loadOneEntry($manager, 2, "Absent", PresenceStatus::STATUS_ABSENT);
         $this->loadOneEntry($manager, 3, "Excusé(e)", PresenceStatus::STATUS_ABSENT);
         $manager->flush();
+    }
+
+    /**
+     * Get the order of this fixture
+     *
+     * @return integer
+     */
+    function getOrder() {
+        return 1;
     }
 }

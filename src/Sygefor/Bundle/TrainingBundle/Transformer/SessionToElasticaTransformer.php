@@ -66,19 +66,21 @@ class SessionToElasticaTransformer extends ModelToElasticaTransformer
 
             /**
              * HACK
-             * ActivityReport : replace null disciplinary by "Autre"
+             * ActivityReport : replace null by "Autre"
              */
             if($session instanceof Session) {
-                $summaries = $document->get('participantsSummaries');
-                foreach($summaries as $key => $summary) {
-                    if(!$summary['disciplinaryDomain']) {
-                        $summaries[$key]['disciplinaryDomain'] = 'Autre';
+                $stats = $document->get('participantsStats');
+                foreach($stats as $key => $stat) {
+                    if(!$stat['disciplinaryDomain']) {
+                        $stats[$key]['disciplinaryDomain'] = 'Autre';
+                    }
+                    if(!$stat['geographicOrigin']) {
+                        $stats[$key]['geographicOrigin'] = 'Autre';
                     }
                 }
-                $document->set('participantsSummaries', $summaries);
+                $document->set('participantsStats', $stats);
             }
         }
-
 
         return $document;
     }

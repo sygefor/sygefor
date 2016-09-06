@@ -47,6 +47,8 @@ class TrainerType extends AbstractType
                     return $er->createQueryBuilder('o')->orderBy('o.name', 'ASC');
                 }
             ))
+            ->add('isArchived')
+            ->add('isAllowSendMail')
             ->add('isUrfist')
             ->add('isPublic')
             ->add('service')
@@ -77,7 +79,7 @@ class TrainerType extends AbstractType
                     '1' => 'Adresse professionnelle'
                 ),
                 'label' => 'Type d\'adresse'))
-            ->add('institutionName')
+            ->add('otherInstitution')
             ->add('address', null, array(
                 'label' => 'Adresse',
             ))
@@ -136,6 +138,7 @@ class TrainerType extends AbstractType
                         return $er->createQueryBuilder('i')
                             ->where('i.organization = :organization')
                             ->setParameter('organization', $organization)
+                            ->orWhere('i.organization is null')
                             ->orderBy('i.name', 'ASC');
                     }
                 ));
@@ -177,6 +180,7 @@ class TrainerType extends AbstractType
                     return $er->createQueryBuilder('i')
                         ->where('i.organization = :organization')
                         ->setParameter('organization', $organization)
+                        ->orWhere('i.organization is null')
                         ->orderBy('i.name', 'ASC');
                 }));
         }

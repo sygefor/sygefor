@@ -37,10 +37,10 @@ class TrainingEventSubscriber implements EventSubscriberInterface
     public function onPreSerialize(PreSerializeEvent $event)
     {
         $training = $event->getObject();
-        if($training instanceof Training && $this->isApiGroup($event->getContext())) {
+        if($training instanceof Training && self::isApiGroup($event->getContext())) {
             $sessions = $training->getSessions();
             foreach($sessions as $key => $session) {
-                if(!$session->isAvailable()) {
+                if(!$session->getDisplayOnline()) {
                     unset($sessions[$key]);
                 }
             }
@@ -52,7 +52,7 @@ class TrainingEventSubscriber implements EventSubscriberInterface
      * @param Context $context
      * @return boolean
      */
-    protected function isApiGroup(Context $context) {
+    static public function isApiGroup(Context $context) {
         $groups = $context->attributes->get('groups');
         foreach($groups->getOrElse(array()) as $group) {
             if($group == 'api' || strpos($group, 'api.') === 0) {

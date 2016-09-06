@@ -30,10 +30,14 @@
     <p>&nbsp;</p>
     <h3>{{ inscription.session.training.name }}</h3>
 
-    {% if inscription.session.dateEnd %}
+    {% if inscription.session.dateEnd and (inscription.session.dateBegin | date("d/m/Y")) != (inscription.session.dateEnd | date("d/m/Y")) %}
         <h4>du {{ inscription.session.dateBegin | date("d/m/Y") }} au {{ inscription.session.dateEnd | date("d/m/Y")  }}</h4>
     {% else %}
         <h4>le {{ inscription.session.dateBegin | date("d/m/Y") }}</h4>
+    {% endif %}
+
+    {% if inscription.session.schedule %}
+        <p><center>[Horaires : {{ inscription.session.schedule }} ]</center></p>
     {% endif %}
 
     {% if inscription.session.hourDuration %}
@@ -41,10 +45,10 @@
     {% endif %}
     <p>&nbsp;</p>
 
-    {% if inscription.session.trainers|length %}
+    {% if inscription.session.participations|length %}
         <p>animé par :</p>
-        {% for trainer in inscription.session.trainers %}
-            <h4>{{ trainer.fullName }}</h4>
+        {% for participation in inscription.session.participations %}
+            <h4>{{ participation.trainer.fullName }}</h4>
         {% endfor %}
     {% endif %}
     <p>&nbsp;</p>

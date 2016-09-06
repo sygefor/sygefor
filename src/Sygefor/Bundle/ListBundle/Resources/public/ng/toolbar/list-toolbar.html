@@ -6,13 +6,13 @@
                 <button ng-if="!selected.length" ng-click="selectAll()" title="Tous sélectionner" type="button" class="btn btn-default btn-min-width" ng-class="{disabled: !search.result.total}">
                     <i class="fa fa-square-o"></i>
                 </button>
-
-                <button ng-if="selected.length" ng-click="deselectAll()" title="Tous désélectionner" type="button" class="btn btn-default">
+                <button ng-if="selected.length" ng-click="deselectAll()" title="Tous désélectionner" type="button" class="btn btn-{{ selected.length > search.result.total ? 'danger' : 'default' }}">
                     <i class="fa fa-check-square-o" ng-if="selected.length == search.result.total"></i>
                     <i class="fa fa-minus-square-o" ng-if="selected.length < search.result.total"></i>
+                    <i class="fa fa-warning" ng-if="selected.length > search.result.total" title="{{ selected.length }} eléments sont sélectionnés alors que la dernière recherche a retourné {{ search.result.total }} résultat{{ search.result.total > 1 ? 's' : '' }}"></i>
                 </button>
 
-                <button type="button" class="btn btn-default dropdown-toggle" data-toggle="dropdown" ng-class="{disabled: !search.result.total}">
+                <button type="button" class="btn btn-{{ selected.length > search.result.total ? 'danger' : 'default' }} dropdown-toggle" data-toggle="dropdown" ng-class="{disabled: !search.result.total}">
                     <span class="caret"></span>
                 </button>
                 <ul class="dropdown-menu">

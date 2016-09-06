@@ -15,7 +15,7 @@ use Sygefor\Bundle\TaxonomyBundle\Entity\TreeTrait;
 use Sygefor\Bundle\TaxonomyBundle\Vocabulary\VocabularyProviderInterface;
 use Symfony\Component\Validator\Constraints as Assert;
 use Sygefor\Bundle\TaxonomyBundle\Entity\AbstractTerm;
-use Sygefor\Bundle\TaxonomyBundle\Vocabulary\NationalVocabularyInterface;
+use Sygefor\Bundle\TaxonomyBundle\Vocabulary\VocabularyInterface;
 
 /**
  * Civilité
@@ -23,13 +23,24 @@ use Sygefor\Bundle\TaxonomyBundle\Vocabulary\NationalVocabularyInterface;
  * @ORM\Table(name="title")
  * @ORM\Entity
  */
-class Title extends AbstractTerm implements NationalVocabularyInterface
+class Title extends AbstractTerm implements VocabularyInterface
 {
+    /**
+     * This term is required during term replacement
+     * @var bool
+     */
+    static $replacementRequired = true;
+
     /**
      * @return mixed
      */
     public function getVocabularyName()
     {
         return "Civilités";
+    }
+
+    public static function getVocabularyStatus()
+    {
+        return VocabularyInterface::VOCABULARY_NATIONAL;
     }
 }

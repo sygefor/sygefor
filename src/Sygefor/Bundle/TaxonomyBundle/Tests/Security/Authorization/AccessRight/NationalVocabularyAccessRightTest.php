@@ -19,7 +19,7 @@ class NationalVocabularyAccessRightTest extends \PHPUnit_Framework_TestCase
 
         $this->assertEquals(false,$AccessRight->supportsClass('Foo\Bar\Class'));
         $this->assertEquals(false,$AccessRight->supportsClass('Sygefor\Bundle\TaxonomyBundle\Tests\Entity\MyOrganizationVocabulary'));
-        $this->assertEquals(true,$AccessRight->supportsClass('Sygefor\Bundle\TaxonomyBundle\Vocabulary\NationalVocabularyInterface'));
+        $this->assertEquals(true,$AccessRight->supportsClass('Sygefor\Bundle\TaxonomyBundle\Vocabulary\VocabularyInterface'));
         $this->assertEquals(true,$AccessRight->supportsClass('Sygefor\Bundle\TaxonomyBundle\Tests\Entity\MyNationalVocabulary'));
     }
 
@@ -53,7 +53,7 @@ class NationalVocabularyAccessRightTest extends \PHPUnit_Framework_TestCase
         $this->assertEquals(true, $AccessRight->isGranted($token1, $object, null));
         $this->assertEquals(false, $AccessRight->isGranted($token1, $object2, null));
         $this->assertEquals(true, $AccessRight->isGranted($token1, null, null));
-        $this->assertEquals(true, $AccessRight->isGranted($token1, 'Sygefor\Bundle\TaxonomyBundle\Vocabulary\NationalVocabularyInterface', null));
+        $this->assertEquals(true, $AccessRight->isGranted($token1, 'Sygefor\Bundle\TaxonomyBundle\Vocabulary\VocabularyInterface', null));
 
     }
 

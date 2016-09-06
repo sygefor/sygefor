@@ -8,7 +8,7 @@ use Sygefor\Bundle\TaxonomyBundle\Entity\TreeTrait;
 use Sygefor\Bundle\TaxonomyBundle\Vocabulary\VocabularyProviderInterface;
 use Symfony\Component\Validator\Constraints as Assert;
 use Sygefor\Bundle\TaxonomyBundle\Entity\AbstractTerm;
-use Sygefor\Bundle\TaxonomyBundle\Vocabulary\NationalVocabularyInterface;
+use Sygefor\Bundle\TaxonomyBundle\Vocabulary\VocabularyInterface;
 use Knp\DoctrineBehaviors\Model as ORMBehaviors;
 use Gedmo\Mapping\Annotation as Gedmo;
 use JMS\Serializer\Annotation as Serializer;
@@ -20,9 +20,15 @@ use JMS\Serializer\Annotation as Serializer;
  * @ORM\Table(name="public_type")
  * @ORM\Entity
  */
-class PublicType extends AbstractTerm implements NationalVocabularyInterface
+class PublicType extends AbstractTerm implements VocabularyInterface
 {
     use TreeTrait;
+
+    /**
+     * This term is required during term replacement
+     * @var bool
+     */
+    static $replacementRequired = true;
 
     /**
      * @ORM\Column(name="priority", type="boolean")
@@ -48,6 +54,7 @@ class PublicType extends AbstractTerm implements NationalVocabularyInterface
      */
     public function __construct() {
         $this->targeted = false;
+        $this->children = new ArrayCollection();
     }
 
     /**
@@ -135,5 +142,10 @@ class PublicType extends AbstractTerm implements NationalVocabularyInterface
     public static function getFormType()
     {
         return 'publictype';
+    }
+
+    public static function getVocabularyStatus()
+    {
+        return VocabularyInterface::VOCABULARY_NATIONAL;
     }
 }

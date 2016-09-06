@@ -15,8 +15,13 @@ use Knp\Bundle\SnappyBundle\Snappy\LoggableGenerator;
 use Knp\Snappy\Pdf;
 use Sygefor\Bundle\ListBundle\BatchOperation\AbstractBatchOperation;
 use Sygefor\Bundle\ListBundle\BatchOperation\BatchOperationInterface;
+use Sygefor\Bundle\TraineeBundle\Entity\Inscription;
+use Sygefor\Bundle\TrainingBundle\Entity\Session;
+use Sygefor\Bundle\TrainingBundle\Entity\Training;
 use Symfony\Bundle\FrameworkBundle\Routing\Router;
+use Symfony\Component\Filesystem\Filesystem;
 use Symfony\Component\HttpFoundation\Response;
+use Symfony\Component\HttpKernel\Kernel;
 use Symfony\Component\PropertyAccess\Exception\UnexpectedTypeException;
 use Symfony\Component\PropertyAccess\PropertyAccess;
 use Symfony\Component\Security\Core\SecurityContext;
@@ -74,15 +79,19 @@ class PDFBatchOperation extends AbstractBatchOperation
      */
     protected $securityContext;
 
+    /** @var Kernel */
+    protected $kernel;
+
     /**
      * @param EntityManager $em
      * @param LoggableGenerator $pdf
      */
-    public function __construct(EntityManager $em, LoggableGenerator $pdf, EngineInterface $templating, SecurityContext $securityContext) {
+    public function __construct(EntityManager $em, LoggableGenerator $pdf, EngineInterface $templating, SecurityContext $securityContext, Kernel $kernel) {
         $this->em = $em;
         $this->pdf = $pdf;
         $this->templating = $templating;
         $this->securityContext = $securityContext;
+        $this->kernel = $kernel;
     }
 
     /**
@@ -150,12 +159,31 @@ class PDFBatchOperation extends AbstractBatchOperation
                         $template = $this->templates[$key];
                     }
                 }
+
+                $signature = null;
+                $training = null;
+                if ($entity instanceof Training) {
+                    $training = $entity;
+                }
+                else if ($entity instanceof Session) {
+                    $training = $entity->getTraining();
+                }
+                else if ($entity instanceof Inscription) {
+                    $training = $entity->getSession()->getTraining();
+                }
+                //checking signature file existence
+                $fs = new Filesystem();
+                if($fs->exists($this->kernel->getRootDir() . '/../web/img/urfist/'.$training->getOrganization()->getCode().'/signature.png' )) {
+                    $signature = '/img/urfist/'.$training->getOrganization()->getCode().'/signature.png';
+                }
+
                 // render the page
                 $vars = array();
                 $vars[$this->entityKey] = $entity;
                 $vars['link'] = $_SERVER['DOCUMENT_ROOT'];
                 //prevent escaping quotes in rendered template.
                 $vars['autoescape'] = false;
+                $vars['signature'] = $signature;
                 $pages[$entity->getId()] = $this->templating->render($template, $vars);
             }
         }

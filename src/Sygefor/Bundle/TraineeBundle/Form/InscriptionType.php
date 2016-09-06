@@ -2,6 +2,8 @@
 namespace Sygefor\Bundle\TraineeBundle\Form;
 
 use Doctrine\ORM\EntityManagerInterface;
+use Doctrine\ORM\EntityRepository;
+use Doctrine\ORM\QueryBuilder;
 use Sygefor\Bundle\UserBundle\AccessRight\AccessRightRegistry;
 use Symfony\Component\Form\AbstractType;
 use Symfony\Component\Form\FormBuilderInterface;
@@ -13,6 +15,13 @@ use Symfony\Component\Security\Core\SecurityContext;
  */
 class InscriptionType extends AbstractType
 {
+    protected $organization;
+
+    function __construct($organization)
+    {
+         $this->organization = $organization;
+    }
+
     /**
      * @param FormBuilderInterface $builder
      * @param array $options
@@ -31,14 +40,29 @@ class InscriptionType extends AbstractType
             'invalid_message' => 'Session non reconnue'
         ));
 
+        $organization = $this->organization;
         $builder->add('inscriptionStatus', 'entity', array(
             'label' => 'Status d\'inscription',
-            'class' => 'SygeforTraineeBundle:Term\InscriptionStatus'
+            'class' => 'SygeforTraineeBundle:Term\InscriptionStatus',
+            'query_builder' => function (EntityRepository $repository) use ($organization) {
+                $qb = $repository->createQueryBuilder('i');
+                $qb->where('i.organization = :organization')
+                    ->setParameter('organization', $organization)
+                    ->orWhere('i.organization is null');
+                return $qb;
+            }
         ));
 
         $builder->add('presenceStatus', 'entity', array(
             'label' => 'Status de présence',
-            'class' => 'SygeforTraineeBundle:Term\PresenceStatus'
+            'class' => 'SygeforTraineeBundle:Term\PresenceStatus',
+            'query_builder' => function (EntityRepository $repository) use ($organization) {
+                $qb = $repository->createQueryBuilder('i');
+                $qb->where('i.organization = :organization')
+                    ->setParameter('organization', $organization)
+                    ->orWhere('i.organization is null');
+                return $qb;
+            }
         ));
     }
 

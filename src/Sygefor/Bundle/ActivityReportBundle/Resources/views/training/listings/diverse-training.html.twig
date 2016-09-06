@@ -10,19 +10,21 @@
            <th>Participants</th>
            <th>Type de formation</th>
            <th>Partenaire</th>
+           <th>Coût</th>
        </tr>
    </thead>
    <tbody>
        {% for training in data %}
        <tr>
-           <td>{{ training.name }}</td>
-           <td>{{ training.theme }}</td>
-           <td>{{ training.sessions }}</td>
-           <td class="text-right">{{ training.hourDuration }}</td>
-           <td>{{ training.publicTypes | join(', ') }}</td>
-           <td class="text-right">{{ training.numberOfParticipants }}</td>
-           <td>{{ training.interventionType }}</td>
-           <td>{{ training.organism }}</td>
+           <td>{% if training.name is defined %}{{ training.name }}{% endif %}</td>
+           <td>{% if training.theme is defined %}{{ training.theme }}{% endif %}</td>
+           <td>{% if training.sessions is defined %}{{ training.sessions }}{% endif %}</td>
+           <td class="text-right">{% if training.hourDuration is defined %}{{ training.hourDuration }}{% endif %}</td>
+           <td>{% if training.publicTypes is defined %}{{ training.publicTypes | join(', ') }}{% endif %}</td>
+           <td class="text-right">{% if training.numberOfParticipants is defined %}{{ training.numberOfParticipants }}{% endif %}</td>
+           <td>{% if training.interventionType is defined %}{{ training.interventionType }}{% endif %}</td>
+           <td>{% if training.organism is defined %}{{ training.organism }}{% endif %}</td>
+           <td class="text-right">{% if training.totalCost is defined %}{{ training.totalCost }}&nbsp;€{% endif %}</td>
        </tr>
        {% endfor %}
    </tbody>

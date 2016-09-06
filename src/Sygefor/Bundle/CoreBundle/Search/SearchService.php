@@ -124,6 +124,7 @@ class SearchService implements SearchServiceInterface
     {
         $aggregation = new \Elastica\Aggregation\Terms($name);
         $aggregation->setField($field);
+        $aggregation->setOrder("_term", 'asc');
         $this->addAggregation($aggregation);
         return $aggregation;
     }
@@ -346,6 +347,21 @@ class SearchService implements SearchServiceInterface
     {
         $query = $request->request->all();
         $this->query->setRawQuery($this->prepareRawQuery($query));
+        $q = $request->query->get('q');
+        if ($q) {
+            $queryStringFilter = new \Elastica\Filter\Query(new Query\QueryString($q));
+            if ($this->getQuery()->hasParam("filter")) {
+                $raw = $this->getQuery()->toArray();
+                $raw['filter'] = array('and' => [$raw['filter'], $queryStringFilter->toArray()]);
+                $this->getQuery()->setRawQuery($raw);
+            } else {
+                $this->getQuery()->setFilter($queryStringFilter);
+            }
+        }
+        $size = $request->query->get('size');
+        if ($size) {
+            $this->setSize($size);
+        }
     }
 
     /**

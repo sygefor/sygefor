@@ -32,6 +32,7 @@
                     <ul class="summary">
                         <li><label>Lieu</label> <span sf-xeditable="form.children.place" data-mode="popup" data-type="select">{{ session.place.name }}</span></li>
                         <li><label>Inscriptions</label> <span sf-xeditable="form.children.registration">{{ $trainingBundle.registrationStates[session.registration] }}</span></li>
+                        <li><label>Afficher en ligne</label> <span sf-xeditable="form.children.displayOnline">{{ session.displayOnline ? 'Oui' : 'Non' }}</span></li>
                         <li><label>Participants max</label> <span sf-xeditable="form.children.maximumNumberOfRegistrations">{{ session.maximumNumberOfRegistrations }}</span></li>
                         <li><label>Date limite</label> <span sf-xeditable="form.children.limitRegistrationDate">{{ session.limitRegistrationDate|date: 'dd/MM/yyyy' }}</span></li>
                         <li ng-if="!session.registration"><label>Nombre d'inscriptions</label> <span sf-xeditable="form.children.numberOfRegistrations">{{ session.numberOfRegistrations }}</span></li>
@@ -50,6 +51,15 @@
                     <div ng-if="session.registration == 0" ng-include src="'trainingbundle/session/states/detail/partials/participants-summary.html'" ng-controller="SessionParticipantsSummaryController"></div>
                 </div>
             </div>
+
+            <!--
+             Emails
+            -->
+            <div class="row">
+                <div class="col-lg-12">
+                    <div entity-emails session="session.id"></div>
+                </div>
+            </div>
         </div>
 
 
@@ -61,9 +71,15 @@
             <!--
              Url
             -->
-            <div class="block" ng-if="session.registration >=2">
+            <div class="block" ng-if="session.displayOnline === true && session.registration !== 2">
                 <div class="block-body">
                     <div input-copy-clipboard="session.publicUrl"></div>
+                </div>
+            </div>
+
+            <div class="block" ng-if="session.registration === 2">
+                <div class="block-body">
+                    <div input-copy-clipboard="session.privateUrl"></div>
                 </div>
             </div>
 
@@ -71,6 +87,11 @@
              Trainers
             -->
             <div trainers-block="session"></div>
+
+            <!--
+             MATERIALS
+            -->
+            <ng-include src="'trainingbundle/session/states/detail/partials/materials.block.html'"></ng-include>
 
             <!--
              Inscriptions
@@ -120,7 +141,7 @@
             <!--
              Comments
             -->
-            <div class="block block-trainers">
+            <div class="block block-comments">
                 <div class="block-title">
                     <span class="fa fa-comment-o"></span> Commentaires
                 </div>

@@ -3,7 +3,7 @@ $.fn.editable.defaults.emptytext = '<a href="#" class="btn btn-xs btn-default"><
 /**
  * Symfony2 xeditable form
  */
-sygeforApp.directive('sfXeditableForm', ['$http', function($http)
+sygeforApp.directive('sfXeditableForm', ['$http', '$timeout', function($http, $timeout)
 {
     /**
      * Extract data from a FormView
@@ -67,7 +67,6 @@ sygeforApp.directive('sfXeditableForm', ['$http', function($http)
 
         },
         controller: function($scope, $element, $attrs) {
-
             /**
              * process the form via a xeditable element
              */
@@ -83,13 +82,22 @@ sygeforApp.directive('sfXeditableForm', ['$http', function($http)
                             $scope.form = form;
                             if(!form.valid) {
                                 var errors = extractErrors(form);
+                                // if error is on current submitted field, return this error
                                 if(formElt && errors[formElt.id]) {
                                     return deferred.reject(errors[formElt.id][0]);
                                 }
+                                // if error is on form, display the error on the current edited field
                                 if(form.errors && form.errors.length) {
                                     return deferred.reject(form.errors[0]);
                                 }
-                                return deferred.reject('Erreur lors de la soumission du formulaire');
+                                // ui element displaying current field is not saved but put aside
+                                $element.addClass('editable-unsaved');
+
+                                // if error is on another field, emit event to display error on this field
+                                $scope.$parent.$broadcast('field-error', errors);
+
+                                // old way displaying an error occured
+                                //return deferred.reject('Erreur lors de la soumission du formulaire');
                             }
                         }
                         $scope.onSuccess({data: data, status: status , headers: headers, config: config});
@@ -128,7 +136,6 @@ sygeforApp.directive('sfXeditableForm', ['$http', function($http)
             this.onElementHidden = function(formElt) {
                 $element.removeClass('editable-shown');
             }
-
         }
     }
 }]);
@@ -331,6 +338,22 @@ sygeforApp.directive('sfXeditable', ['$timeout', function($timeout) {
                     element.removeClass($.fn.editable.defaults.emptyclass);
                 }
             }
+
+            /**
+             * listen sfXeditableForm field-error event to display focus and display the error at correct field
+             * @param $event
+             * @param array errors : array of all errors
+             */
+            scope.$on('field-error', function ($event, errors) {
+                for (var key in errors) {
+                    // if error concerns this field
+                    if (key === scope.sfXeditable.id) {
+                        $element.editable('show');
+                        $element.data('editableContainer').$form.data('editableform').error(errors[key]);
+                        break;
+                    }
+                }
+            });
 
             /**
              * watch element

@@ -236,7 +236,7 @@ class Trainee implements UserInterface, \Serializable, SerializedAccessRights, A
     public function removeDuplicate($duplicate)
     {
         if ($this->duplicates->contains($duplicate)) {
-            return $this->duplicates->remove($duplicate);
+            return $this->duplicates->removeElement($duplicate);
         }
     }
 

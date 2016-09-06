@@ -1,11 +1,4 @@
 <?php
-/**
- * Created by PhpStorm.
- * User: Erwan
- * Date: 08/04/14
- * Time: 15:53
- */
-
 namespace Sygefor\Bundle\CoreBundle\DataFixtures\ORM;
 
 use Doctrine\Common\DataFixtures\FixtureInterface;
@@ -34,6 +27,9 @@ class LoadDisciplinary extends AbstractDataFixture
         $disciplinary = new Disciplinary();
         $disciplinary->setId(++$this->autoId);
         $disciplinary->setName($name);
+        if ($name === "Autre") {
+            $disciplinary->setMachineName('other');
+        }
         $manager->persist($disciplinary) ;
         return $disciplinary;
     }

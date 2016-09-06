@@ -41,10 +41,6 @@ class InternshipType extends AbstractTrainingType
             ->add('externInitiative', 'checkbox', array(
                 'required' => false,
                 'label' => 'Initiative externe'
-            ))
-            ->add('supervisor', 'text', array(
-                'required' => false,
-                'label' => 'Responsable pédagogique'
             ));
     }
 

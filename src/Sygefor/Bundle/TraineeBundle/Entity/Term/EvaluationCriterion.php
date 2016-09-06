@@ -6,7 +6,7 @@ use Doctrine\ORM\Mapping as ORM;
 use Sygefor\Bundle\TaxonomyBundle\Vocabulary\VocabularyProviderInterface;
 use Symfony\Component\Validator\Constraints as Assert;
 use Sygefor\Bundle\TaxonomyBundle\Entity\AbstractTerm;
-use Sygefor\Bundle\TaxonomyBundle\Vocabulary\NationalVocabularyInterface;
+use Sygefor\Bundle\TaxonomyBundle\Vocabulary\VocabularyInterface;
 use JMS\Serializer\Annotation as Serializer;
 
 /**
@@ -15,7 +15,7 @@ use JMS\Serializer\Annotation as Serializer;
  * @ORM\Table(name="evaluation_criterion")
  * @ORM\Entity
  */
-class EvaluationCriterion extends AbstractTerm implements NationalVocabularyInterface
+class EvaluationCriterion extends AbstractTerm implements VocabularyInterface
 {
     /**
      * @return string
@@ -23,5 +23,10 @@ class EvaluationCriterion extends AbstractTerm implements NationalVocabularyInte
     public function getVocabularyName()
     {
         return "Critère d'évaluation";
+    }
+
+    public static function getVocabularyStatus()
+    {
+        return VocabularyInterface::VOCABULARY_NATIONAL;
     }
 }

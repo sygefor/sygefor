@@ -7,17 +7,12 @@ sygeforApp.config(['$listStateProvider', '$tooltipProvider', function($listState
     $listStateProvider.state('dashboard', {
         url: "/dashboard",
         templateUrl: "corebundle/dashboard/dashboard.html",
-        resolve: {
-            inscriptionStatusList: function ($taxonomy) {
-                return $taxonomy.getIndexedTerms('sygefor_trainee.vocabulary_inscription_status');
-            }
-        },
-        controller: function($scope, inscriptionStatusList) {
+        controller: function($scope) {
             $scope.options = {
                 title: "Inscriptions en attente de traitement",
                 size: 5,
                 filters: {
-                    'inscriptionStatus.name.source': inscriptionStatusList[1].name
+                    'inscriptionStatus.status': 0 // status pending
                 }
             }
         }

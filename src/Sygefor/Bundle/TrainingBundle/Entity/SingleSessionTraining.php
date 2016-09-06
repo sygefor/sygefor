@@ -65,13 +65,5 @@ abstract class SingleSessionTraining extends Training
                 $this->setSession($cloned);
             }
         }
-
-        $tmpMaterials = $this->getMaterials();
-        if (!empty($tmpMaterials)) {
-            foreach ($tmpMaterials as $material) {
-                $newMat = clone $material;
-                $this->addMaterial($newMat);
-            }
-        }
     }
 }

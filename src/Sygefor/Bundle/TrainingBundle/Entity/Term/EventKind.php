@@ -7,7 +7,7 @@ use Doctrine\ORM\Mapping as ORM;
 use Sygefor\Bundle\TaxonomyBundle\Vocabulary\VocabularyProviderInterface;
 use Symfony\Component\Validator\Constraints as Assert;
 use Sygefor\Bundle\TaxonomyBundle\Entity\AbstractTerm;
-use Sygefor\Bundle\TaxonomyBundle\Vocabulary\NationalVocabularyInterface;
+use Sygefor\Bundle\TaxonomyBundle\Vocabulary\VocabularyInterface;
 
 /**
  * EventKind
@@ -17,13 +17,24 @@ use Sygefor\Bundle\TaxonomyBundle\Vocabulary\NationalVocabularyInterface;
  * traduction: nature de l'evenement
  *
  */
-class EventKind extends AbstractTerm implements NationalVocabularyInterface
+class EventKind extends AbstractTerm implements VocabularyInterface
 {
+    /**
+     * This term is required during term replacement
+     * @var bool
+     */
+    static $replacementRequired = true;
+
     /**
      * @return mixed
      */
     public function getVocabularyName()
     {
         return "Nature d'événement";
+    }
+
+    public static function getVocabularyStatus()
+    {
+        return VocabularyInterface::VOCABULARY_NATIONAL;
     }
 }

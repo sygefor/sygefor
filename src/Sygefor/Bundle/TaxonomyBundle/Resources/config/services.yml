@@ -61,6 +61,36 @@ services:
             - { name: form.type, alias: institution }
         parent: sygefor_taxonomy.form.type.vocabulary
 
+    sygefor_taxonomy.form.type.applicantorganism_vocabulary:
+        class: Sygefor\Bundle\TaxonomyBundle\Form\Type\ApplicantOrganismType
+        tags:
+            - { name: form.type, alias: applicantorganism }
+        parent: sygefor_taxonomy.form.type.vocabulary
+
+    sygefor_taxonomy.form.type.doctoralschool_vocabulary:
+        class: Sygefor\Bundle\TaxonomyBundle\Form\Type\DoctoralSchoolType
+        tags:
+            - { name: form.type, alias: doctoralschool }
+        parent: sygefor_taxonomy.form.type.vocabulary
+
+    sygefor_taxonomy.form.type.doctoralpartner_vocabulary:
+        class: Sygefor\Bundle\TaxonomyBundle\Form\Type\DoctoralPartnerType
+        tags:
+            - { name: form.type, alias: doctoralpartner }
+        parent: sygefor_taxonomy.form.type.vocabulary
+
+    sygefor_taxonomy.form.type.pedagogicpartner_vocabulary:
+        class: Sygefor\Bundle\TaxonomyBundle\Form\Type\PedagogicPartnerType
+        tags:
+            - { name: form.type, alias: pedagogicpartner }
+        parent: sygefor_taxonomy.form.type.vocabulary
+
+    sygefor_taxonomy.form.type.place_vocabulary:
+        class: Sygefor\Bundle\TaxonomyBundle\Form\Type\PlaceType
+        tags:
+            - { name: form.type, alias: place }
+        parent: sygefor_taxonomy.form.type.vocabulary
+
     sygefor_taxonomy.form.type.place_vocabulary:
         class: Sygefor\Bundle\TaxonomyBundle\Form\Type\PlaceType
         tags:

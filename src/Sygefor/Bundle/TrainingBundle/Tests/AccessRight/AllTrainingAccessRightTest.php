@@ -27,6 +27,7 @@ class AllTrainingAccessRightTest  extends \PHPUnit_Framework_TestCase
         $this->assertEquals(true,$AccessRight->supportsClass('Sygefor\Bundle\TrainingBundle\Entity\DiverseTraining'));
         $this->assertEquals(true,$AccessRight->supportsClass('Sygefor\Bundle\TrainingBundle\Entity\Meeting'));
         $this->assertEquals(true,$AccessRight->supportsClass('Sygefor\Bundle\TrainingBundle\Entity\TrainingCourse'));
+        $this->assertEquals(true,$AccessRight->supportsClass('Sygefor\Bundle\TrainingBundle\Entity\DoctoralTraining'));
         $this->assertEquals(true,$AccessRight->supportsClass('Sygefor\Bundle\TrainingBundle\Entity\Internship'));
     }
 

@@ -8,6 +8,7 @@
 
 namespace Sygefor\Bundle\TrainingBundle\Controller;
 
+use Doctrine\ORM\EntityNotFoundException;
 use Sygefor\Bundle\TrainingBundle\Entity\FileMaterial;
 use Sygefor\Bundle\TrainingBundle\Entity\LinkMaterial;
 use Sygefor\Bundle\TrainingBundle\Entity\Material;
@@ -30,17 +31,45 @@ use JMS\SecurityExtraBundle\Annotation\SecureParam;
 class MaterialController extends Controller {
 
     /**
-     * @Route("{training_id}/add/{type}", name="material.add", options={"expose"=true}, defaults={"_format" = "json", "type"="file"})
+     * @Route("{entity_id}/add/{type_entity}/{material_type}/", name="material.add", options={"expose"=true}, defaults={"_format" = "json", "material_type"="file"})
      * @Rest\View(serializerEnableMaxDepthChecks=true)
-     * @SecureParam(name="training", permissions="EDIT")
-     * @ParamConverter("training", class="SygeforTrainingBundle:Training", options={"id" = "training_id"})
      */
-    public function addAction($training, $type, Request $request)
+    public function addAction($entity_id, $type_entity, $material_type, Request $request)
     {
+        $entity = null;
+        switch ($type_entity) {
+            case 'internship':
+                $entity = $this->getDoctrine()->getRepository('SygeforTrainingBundle:Internship')->find($entity_id);
+                break;
+            case 'doctoraltraining':
+                $entity = $this->getDoctrine()->getRepository('SygeforTrainingBundle:DoctoralTraining')->find($entity_id);
+                break;
+            case 'trainingcourse':
+                $entity = $this->getDoctrine()->getRepository('SygeforTrainingBundle:TrainingCourse')->find($entity_id);
+                break;
+            case 'diversetraining':
+                $entity = $this->getDoctrine()->getRepository('SygeforTrainingBundle:DiverseTraining')->find($entity_id);
+                break;
+            case 'meeting':
+                $entity = $this->getDoctrine()->getRepository('SygeforTrainingBundle:Meeting')->find($entity_id);
+                break;
+            case 'session':
+                $entity = $this->getDoctrine()->getRepository('SygeforTrainingBundle:Session')->find($entity_id);
+                break;
+            default:
+                throw \Exception($type_entity . ' is not managed for materials');
+        }
+
+        if(!$this->get("security.context")->isGranted('EDIT', $entity)) {
+            throw new AccessDeniedException('Accès non autorisé');
+        }
+
+        $setEntityMethod = $type_entity === "session" ? 'setSession' : 'setTraining';
+
         // a file is sent : creating a file material
-        if($type == "file") {
+        if($material_type == "file") {
             $material = new FileMaterial();
-            $material->setTraining($training);
+            $material->$setEntityMethod($entity);
             $form = $this->createForm('material', $material);
 
             if ($request->getMethod() == 'POST') {
@@ -53,7 +82,7 @@ class MaterialController extends Controller {
                         if ($file[0]->getSize() <= FileMaterial::getMaxFileSize()) {
                             $material = new FileMaterial();
 
-                            $material->setTraining($training);
+                            $material->$setEntityMethod($entity);
                             $material->setFile($file[0]);
 
                             $em = $this->getDoctrine()->getManager();
@@ -76,9 +105,10 @@ class MaterialController extends Controller {
                     return array('error' => "Le fichier n'a pu être téléchargé");
                 }
             }
-        } else if($type=="link") { // no file sent : a link material is sent
+        }
+        else if($material_type === "link") { // no file sent : a link material is sent
             $material = new LinkMaterial();
-            $material->setTraining($training);
+            $material->$setEntityMethod($entity);
             $form = $this->createFormBuilder($material)
                 ->add('name', 'text', array("label" => "Nom", "required" => "true"))
                 ->add('url', 'text', array("label" => "Lien"))
@@ -87,7 +117,7 @@ class MaterialController extends Controller {
             if ($request->getMethod() == 'POST') {
                 $form->handleRequest($request);
                 if ($form->isValid()) {
-                    $material->setTraining($training);
+                    $material->$setEntityMethod($entity);
 
                     $em = $this->getDoctrine()->getManager();
                     $em->persist($material);
@@ -104,9 +134,10 @@ class MaterialController extends Controller {
      * @Rest\View
      * @ParamConverter("material", class="SygeforTrainingBundle:Material", options={"id" = "id"})
      */
-    public function deleteAction($material)
+    public function deleteAction(Material $material)
     {
-        if($this->get("security.context")->isGranted('EDIT', $material->getTraining())) {
+        if(($material->getTraining() && $this->get("security.context")->isGranted('EDIT', $material->getTraining())) ||
+            ($material->getSession() && $this->get("security.context")->isGranted('EDIT', $material->getSession()))) {
             /** @var $em */
             $em = $this->getDoctrine()->getManager();
             try {
@@ -128,7 +159,8 @@ class MaterialController extends Controller {
      */
     public function getAction($material)
     {
-        if($this->get("security.context")->isGranted('VIEW', $material->getTraining())) {
+        if(($material->getTraining() && $this->get("security.context")->isGranted('EDIT', $material->getTraining())) ||
+            ($material->getSession() && $this->get("security.context")->isGranted('EDIT', $material->getSession()))) {
 
             if ($material->getType() == "file"){
                 return $material->send();

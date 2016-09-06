@@ -90,7 +90,12 @@ class ElasticaCascadeUpdateListener implements EventSubscriber
         foreach ($this->postFlushCommandLines as $commandLine) {
             if (strtoupper(substr(PHP_OS, 0, 3)) === 'WIN') {
                 // windows
-                // @todo not compatible
+                // prepare the process for development tests
+                $process = new Process("php ../app/console sygeforelasticascade:cascade " . implode(" ", $commandLine));
+                $process->run();
+                if (!$process->isSuccessful()) {
+                    throw new \RuntimeException($process->getErrorOutput());
+                }
             } else {
                 // prepare the process
                 $env = $this->kernel->getEnvironment();

@@ -57,7 +57,7 @@ sygeforApp.controller('InscriptionListController', ['$scope', '$user', '$injecto
         icon: 'fa-envelope-o',
         label: 'Envoyer un Email',
         execute: function(items, $dialog) {
-            return $dialog.open('batch.email', { items: items, targetClass: 'SygeforTraineeBundle:Inscription' })
+            return $dialog.open('batch.email', { items: items, service: 'inscription' })
         }
     },{
         icon: 'fa-file-pdf-o',
@@ -118,6 +118,10 @@ sygeforApp.controller('InscriptionListController', ['$scope', '$user', '$injecto
             label: 'Établissement',
             size: 10
         },
+        'trainee.institution.name.source' : {
+            label: 'Établissement actuel',
+            size: 10
+        },
         'publicCategory.source' : {
             label: 'Catégorie de public'
         },
@@ -133,10 +137,7 @@ sygeforApp.controller('InscriptionListController', ['$scope', '$user', '$injecto
         'trainee.fullName.source' : {
             label: 'Stagiaire'
         },
-        'session.training.name.source' : {
-            label: 'Stage'
-        },
-        'range:session.dateBegin' : {
+        'session.dateBegin' : {
             label: 'Date de session',
             type: 'range'
         },
@@ -152,7 +153,7 @@ sygeforApp.controller('InscriptionListController', ['$scope', '$user', '$injecto
         'session.training.name.source' : {
             label: 'Formation'
         },
-        'publicType.isPaying' : {
+        'isPaying' : {
             label: 'Payant',
             values: {
                 'T': 'Oui',

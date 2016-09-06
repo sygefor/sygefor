@@ -119,9 +119,12 @@ class ShibbolethController extends Controller
             $rep = $em->getRepository('SygeforTrainingBundle:Term\Institution');
             $name = preg_replace('/^\{[^\}]*\}/', "", $attrs['supannEtablissement']);
             $institution = $rep->findOneBy(array('organization' => $data['organization'], 'name' => $name));
-            if(!$institution) {
+            if (!$institution) {
                 $data['otherInstitution'] = $name;
-                $institution = $rep->findOneBy(array('organization' => $data['organization'], 'name' => "Autre"));
+                $institution = $rep->findOneBy(array('organization' => $data['organization'], 'machineName' => "other"));
+                if (!$institution) {
+                    $institution = $rep->findOneBy(array('organization' => null, 'machineName' => "other"));
+                }
             }
             $data['institution'] = $institution->getId();
         }

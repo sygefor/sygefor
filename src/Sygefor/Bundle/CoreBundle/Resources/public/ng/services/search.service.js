@@ -80,7 +80,7 @@ function SearchServiceFactory($http, $q) {
                 angular.extend(query.filters, this.filters);
                 angular.extend(query, {
                     page: 1,
-                    size:9999,
+                    size:99999,
                     fields: fields
                 });
                 $http({method: 'POST', url: url, data: query})

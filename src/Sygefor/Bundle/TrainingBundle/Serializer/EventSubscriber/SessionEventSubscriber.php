@@ -50,10 +50,26 @@ class SessionEventSubscriber implements EventSubscriberInterface
      */
     public function onPostSerialize(ObjectEvent $event)
     {
+        $apiSerialization = false;
+        // do not set public and private URLS across the API
+        $groups = $event->getContext()->attributes->get('groups');
+        $groups = (array)$groups->getOrElse(array());
+        foreach  ($groups as $group) {
+            if (strstr($group, 'api')) {
+                $apiSerialization = true;
+                break;
+            }
+        }
+
         $session = $event->getObject();
-        if($session instanceof Session) {
+        if($session instanceof Session && $session->getTraining() !== null) {
             try {
-                $event->getVisitor()->addData('publicUrl', $this->container->getParameter('front_url') . '/training/' . $session->getTraining()->getId() . '/' . $session->getId());
+                $publicUrl = $this->container->getParameter('front_url') . '/training/' . $session->getTraining()->getId() . '/' . $session->getId();
+                $event->getVisitor()->addData('publicUrl', $publicUrl);
+                if ($session->getRegistration() === Session::REGISTRATION_PRIVATE && !$apiSerialization) {
+                    // URL permitting to register a private session
+                    $event->getVisitor()->addData('privateUrl', $publicUrl  . '/' . md5($session->getId() + $session->getTraining()->getId()));
+                }
             } catch(InvalidArgumentException $e) {
                 // nothing to do
             }

@@ -10,7 +10,6 @@ sygeforApp.directive('sfFileUpload', ['$dialog', 'growl',function($dialog, growl
             thref: "=thref"
         },
         link: function (scope, element, attrs) {
-
             //error messages
             scope.uploadErrors = [];
             scope.errorsTime = new Date().getTime();
@@ -173,11 +172,15 @@ sygeforApp.directive('sfFileUpload', ['$dialog', 'growl',function($dialog, growl
              * add a linked material
              */
             scope.addLinkMaterial = function (){
-
+                var url = "linkmaterial.add";
                 var params = angular.copy(scope.thref.params);
-                var extP = angular.extend(params,{"type":"link"});
 
-                $dialog.open("linkmaterial.add",{route:Routing.generate(scope.thref.route,extP)}).then(function (data){
+                if (params.type_entity) {
+                    url = (params.type_entity === 'session' ? 'session' : 'training') + '.' + url;
+                }
+
+                var extP = angular.extend(params,{"material_type":"link"});
+                $dialog.open(url,{route:Routing.generate(scope.thref.route,extP)}).then(function (data){
 
                         data.material.isLocal = false;
                         scope.addCallback(data.material);

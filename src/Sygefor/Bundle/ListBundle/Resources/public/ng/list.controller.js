@@ -148,7 +148,14 @@ sygeforApp.factory('BaseListController', ['$location', '$timeout', '$modal', '$l
                 result = prop ? result[prop] : result;
                 if (item.id == result.id) {
                     for (var key in item) {
-                        result[key] = item[key];
+                        if (result[key] && key !== 'id') {
+                            result[key] = item[key];
+                        }
+                        // needed to transform id from int to string
+                        // if not, we lose the current selection for batch operation
+                        else if (key === 'id') {
+                            result[key] = item[key] + '';
+                        }
                     }
                 }
             });

@@ -121,56 +121,123 @@ class TrainingController extends Controller
         return array('form' => $form->createView());
     }
 
+
+
     /**
-     * @Route("/duplicate/{id}", name="training.duplicate", options={"expose"=true}, defaults={"_format" = "json"})
+     * @Route("/choosetypeduplicate", name="training.choosetypeduplicate", options={"expose"=true}, defaults={"_format" = "json"})
+     * @Rest\View(serializerGroups={"Default", "training"}, serializerEnableMaxDepthChecks=true)
+     */
+    public function chooseTypeDuplicateAction(Request $request)
+    {
+        $typeChoices = array();
+        foreach ($this->get('sygefor_training.type.registry')->getTypes() as $type => $entity) {
+            $typeChoices[$type] = $entity['label'];
+        }
+        $form = $this->createFormBuilder()
+            ->add('duplicatedType', 'choice', array(
+                'label' => 'Type de stage',
+                'choices' => $typeChoices,
+                'required' => true,
+                'attr' => array(
+                    'title' => 'Type de la formation ciblée'
+                )
+            ))->getForm();
+
+        if ($request->getMethod() == 'POST') {
+            $form->handleRequest($request);
+            if ($form->isValid()) {
+                return array('type' => $form->get('duplicatedType')->getData());
+            }
+        }
+
+        return array('form' => $form->createView());
+    }
+
+    /**
+     * @Route("/duplicate/{id}/{type}", name="training.duplicate", options={"expose"=true}, defaults={"_format" = "json"})
      * @ParamConverter("training", class="SygeforTrainingBundle:Training")
      * @Rest\View(serializerGroups={"Default", "training"}, serializerEnableMaxDepthChecks=true)
      */
-    public function duplicateAction(Training $training, Request $request)
+    public function duplicateAction(Training $training, Request $request, $type)
     {
         //training can't be created if user has no rights for it
         if (!$this->get("security.context")->isGranted('CREATE', $training)) {
             throw new AccessDeniedException("Action non autorisée");
         }
 
-        $cloned = clone $training;
-        $form = $this->createFormBuilder( $cloned)
-            ->add('firstSessionPeriodSemester', 'choice', array(
-            'required' => true,
-            'choices' => array('1' => '1er semestre', '2' => '2nd semestre'),
-            'label' => '1ère session'
-        ))
-            ->add('firstSessionPeriodYear', null, array(
-                'required' => true,
-                'label' => 'Année',
-            ))->getForm();
+        $cloned = null;
+        // get targetted training type
+        $typeClass = $this->get('sygefor_training.type.registry')->getType($type);
+        if ($type === $training->getType()) {
+            $cloned = clone $training;
+        }
+        else {
+            $cloned = new $typeClass['class'];
+            $cloned->copyProperties($training);
+        }
+
+        // special operations for meeting session duplicate
+        if ($typeClass['label'] === "Rencontre scientifique") {
+            if ($training->getType() === "meeting") {
+                $session = clone $cloned->getSession();
+            }
+            else {
+                $session = clone $training->getSessions()->last();
+            }
+            $session->resetCostAndConsideration();
+            $session->setNumberOfRegistrations(0);
+            $session->setTraining($cloned);
+            $cloned->setSession($session);
+        }
+        $form = $this->createForm($typeClass['class']::getFormType(), $cloned);
+
         if ($request->getMethod() == 'POST') {
             $form->handleRequest($request);
             if ($form->isValid()) {
-
-                //we can now duplicate materials
-                $tmpMaterials = $training->getMaterials();
-                if (!empty($tmpMaterials)) {
-                    foreach ($tmpMaterials as $material) {
-                        $newMat = clone $material;
-                        $cloned->addMaterial($newMat);
-                    }
+                // if meeting assign cloned training to the session
+                if ($cloned->getType() === "meeting") {
+                    $cloned->getSession()->setTraining($cloned);
                 }
-                $cloned->duplicateArrayCollection('addTag', $training->getTags());
-                if ($training->getType() === 'internship' || $training->getType() === 'diverse_training') {
-                    $cloned->duplicateArrayCollection('addPublicType', $training->getPublicTypes());
-                }
-                if ($training->getType() === 'meeting') {
-                    $cloned->duplicateArrayCollection('addEventKind', $training->getEventKind());
-                }
-                $em = $this->getDoctrine()->getManager();
-                $em->persist($cloned);
-                $em->flush();
-
-                return array('form'=>$form->createView(),'training'=>$cloned);
+                $this->mergeArrayCollectionsAndFlush($cloned, $training);
+                return array('form' => $form->createView(), 'training' => $cloned);
             }
         }
-        return array('form'=>$form->createView());
+
+        return array('form' => $form->createView());
+    }
+
+    /**
+     * @param Training $dest
+     * @param Training $source
+     */
+    protected function mergeArrayCollectionsAndFlush($dest, $source)
+    {
+        // clone common arrayCollections
+        $dest->duplicateArrayCollection('addTag', $source->getTags());
+
+        // clone duplicate materials
+        $tmpMaterials = $source->getMaterials();
+        if (!empty($tmpMaterials)) {
+            foreach ($tmpMaterials as $material) {
+                $newMat = clone $material;
+                $dest->addMaterial($newMat);
+            }
+        }
+
+        // clone specific arrayCollections
+        if ($source->getType() === 'internship' || $source->getType() === 'diverse_training') {
+            $dest->duplicateArrayCollection('addPublicType', $source->getPublicTypes());
+        } else if ($source->getType() === 'meeting') {
+            $dest->duplicateArrayCollection('addEventKind', $source->getEventKind());
+        } else if ($source->getType() === 'doctoral_training') {
+            $dest->duplicateArrayCollection('addInstitution', $source->getInstitutions());
+            $dest->duplicateArrayCollection('addDoctoralYear', $source->getDoctoralYears());
+            $dest->duplicateArrayCollection('addDoctoralSchool', $source->getDoctoralSchools());
+        }
+
+        $em = $this->getDoctrine()->getManager();
+        $em->persist($dest);
+        $em->flush();
     }
 
     /**

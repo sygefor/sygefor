@@ -2,9 +2,8 @@
 namespace Sygefor\Bundle\TraineeBundle\Entity\Term;
 
 use Sygefor\Bundle\ListBundle\Entity\Term\PublipostTemplate;
-use Sygefor\Bundle\TaxonomyBundle\Entity\AbstractOrganizationTerm;
 use Sygefor\Bundle\TaxonomyBundle\Entity\AbstractTerm;
-use Sygefor\Bundle\TaxonomyBundle\Vocabulary\LocalVocabularyInterface;
+use Sygefor\Bundle\TaxonomyBundle\Vocabulary\VocabularyInterface;
 use Symfony\Component\Intl\Tests\Locale\AbstractLocaleTest;
 use Doctrine\ORM\Mapping as ORM;
 
@@ -13,7 +12,7 @@ use Doctrine\ORM\Mapping as ORM;
  * @ORM\Table(name="trainee_email_template")
  * @ORM\Entity
  */
-class EmailTemplate extends AbstractOrganizationTerm implements LocalVocabularyInterface
+class EmailTemplate extends AbstractTerm implements VocabularyInterface
 {
     /**
      * @ORM\Column(name="subject", type="string", length=255, nullable=false)
@@ -143,6 +142,11 @@ class EmailTemplate extends AbstractOrganizationTerm implements LocalVocabularyI
     public static function getFormType()
     {
         return 'emailtemplatevocabulary';
+    }
+
+    public static function getVocabularyStatus()
+    {
+        return VocabularyInterface::VOCABULARY_LOCAL;
     }
 
     /**

@@ -23,7 +23,7 @@ use Sygefor\Bundle\ApiBundle\Form\Type\ProfileType;
 use Sygefor\Bundle\CoreBundle\Search\SearchService;
 use Sygefor\Bundle\TaxonomyBundle\Entity\AbstractTerm;
 use Sygefor\Bundle\TaxonomyBundle\Entity\TreeTrait;
-use Sygefor\Bundle\TaxonomyBundle\Vocabulary\NationalVocabularyInterface;
+use Sygefor\Bundle\TaxonomyBundle\Vocabulary\VocabularyInterface;
 use Sygefor\Bundle\TaxonomyBundle\Vocabulary\VocabularyProviderInterface;
 use Sygefor\Bundle\TaxonomyBundle\Vocabulary\VocabularyRegistry;
 use Sygefor\Bundle\TraineeBundle\Entity\Evaluation;
@@ -106,10 +106,18 @@ class AttendanceAccountController extends Controller
      */
     public function downloadAction($session, $material, Request $request)
     {
-        /** @var EntityManager $em */
-        //$material = $this->getDoctrine()->getManager()->getRepository('SygeforTrainingBundle:Material')->find($material);
         $attendance = $this->getAttendance($session);
-        foreach($attendance->getSession()->getTraining()->getMaterials() as $_material) {
+        $allMaterials = array();
+
+        // get all materials
+        foreach($attendance->getSession()->getMaterials() as $sessionMaterial) {
+            $allMaterials[$sessionMaterial->getId()] = $sessionMaterial;
+        }
+        foreach($attendance->getSession()->getTraining()->getMaterials() as $trainingMaterial) {
+            $allMaterials[$trainingMaterial->getId()] = $trainingMaterial;
+        }
+
+        foreach($allMaterials as $_material) {
             if($_material->getId() == $material) {
                 $material = $_material;
                 if ($material->getType() == "file"){
@@ -230,7 +238,8 @@ class AttendanceAccountController extends Controller
         $qb->where('i.trainee = :trainee')
             ->setParameter('trainee', $trainee);
         // only with the PRESENT status
-        $qb->andWhere('i.presenceStatus = :presenceStatus')
+        $qb->join('i.presenceStatus', 'p');
+        $qb->andWhere('p.status = :presenceStatus')
             ->setParameter('presenceStatus', PresenceStatus::STATUS_PRESENT);
         // only past sessions
         $qb->join('i.session', 's');

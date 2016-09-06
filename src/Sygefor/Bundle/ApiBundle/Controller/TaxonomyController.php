@@ -3,6 +3,7 @@
 namespace Sygefor\Bundle\ApiBundle\Controller;
 
 use Gedmo\Tree\Entity\Repository\NestedTreeRepository;
+use Sygefor\Bundle\TaxonomyBundle\Vocabulary\VocabularyInterface;
 use Sygefor\Bundle\TrainingBundle\Entity\Term\Institution;
 use Symfony\Bundle\FrameworkBundle\Controller\Controller;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
@@ -60,17 +61,17 @@ class TaxonomyController extends Controller
             $repository = $em->getRepository(get_class($vocabulary));
             // allow organization parameter if the vocabulary is not national
             $organization = null;
-            if(!$vocabulary->isNational()) {
+            if ($vocabulary->getVocabularyStatus() !== VocabularyInterface::VOCABULARY_NATIONAL) {
                 $organization = $request->get('organization');
             }
 
-            if($repository instanceof NestedTreeRepository) {
+            if ($repository instanceof NestedTreeRepository) {
                 $qb = $repository->getRootNodesQueryBuilder($order, 'asc');
                 $qb->andWhere('node.private = 0');
                 $return[$key] = $qb->getQuery()->getResult();
             } else {
                 $params = array('private' => false);
-                if($organization) {
+                if ($organization) {
                     $params['organization'] = $organization;
                 }
                 $return[$key] = $repository->findBy($params, array($order => 'asc'));

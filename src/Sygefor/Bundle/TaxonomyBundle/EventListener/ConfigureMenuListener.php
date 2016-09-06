@@ -35,14 +35,12 @@ class ConfigureMenuListener
         $adminMenu = $menu->getChild('administration');
 
         try {
-            if($this->securityContext->isGranted('VIEW', 'SygeforTaxonomyBundle:AbstractTerm') || $this->securityContext->isGranted('VIEW', 'Sygefor\Bundle\TaxonomyBundle\Vocabulary\LocalVocabularyInterface') ) {
-
+            if($this->securityContext->isGranted('VIEW', 'SygeforTaxonomyBundle:AbstractTerm') || $this->securityContext->isGranted('VIEW', 'Sygefor\Bundle\TaxonomyBundle\Vocabulary\VocabularyInterface') ) {
                 $adminMenu->addChild('taxonomy', array(
                         'label' => 'Vocabulaires',
                         'route' => 'taxonomy.index'
                     ));
             }
-
         } catch(AuthenticationCredentialsNotFoundException $e) {
 
         }

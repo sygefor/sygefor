@@ -63,6 +63,13 @@ class Meeting extends SingleSessionTraining
      */
     protected $website;
 
+    public function __construct()
+    {
+        parent::__construct();
+        $this->eventKind = new ArrayCollection();
+    }
+
+
     public function __clone()
     {
         parent::__clone();
@@ -106,10 +113,7 @@ class Meeting extends SingleSessionTraining
      */
     public function addEventKind(EventKind $eventKind)
     {
-        if (!$this->eventKind) {
-            $this->eventKind = new ArrayCollection();
-        }
-        if (!$this->eventKind->contains(($eventKind))) {
+        if (!$this->eventKind->contains($eventKind)) {
             $this->eventKind->add($eventKind);
         }
     }
@@ -119,8 +123,8 @@ class Meeting extends SingleSessionTraining
      */
     public function removeEventKind(EventKind $eventKind)
     {
-        if ($this->eventKind->contains(($eventKind))) {
-            $this->eventKind->remove($eventKind);
+        if ($this->eventKind->contains($eventKind)) {
+            $this->eventKind->removeElement($eventKind);
         }
     }
 

@@ -24,6 +24,7 @@ class MeetingType extends AbstractSingleSessionTrainingType
 
         $builder
             ->add('eventType', null, array(
+                'required' => true,
                 'label' => "Type d'événement"
             ))
             ->add('eventKind', 'entity', array(

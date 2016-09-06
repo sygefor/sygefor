@@ -86,7 +86,7 @@ class VocabularyRegistrationPassTest extends \PHPUnit_Framework_TestCase
      */
     private function createProviderDefinition($tag, array $attrs = array())
     {
-        $provider = $this->getMock('Sygefor\Bundle\TaxonomyBundle\Vocabulary\NationalVocabularyInterface');
+        $provider = $this->getMock('Sygefor\Bundle\TaxonomyBundle\Vocabulary\VocabularyInterface');
         $definition = new Definition(get_class($provider));
         $definition->addTag($tag, $attrs);
         return $definition;

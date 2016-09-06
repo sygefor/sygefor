@@ -9,13 +9,11 @@
 namespace Sygefor\Bundle\ListBundle\BatchOperations;
 
 use Doctrine\ORM\EntityManager;
-use Doctrine\ORM\Repository\RepositoryFactory;
 use Sygefor\Bundle\ListBundle\BatchOperation\AbstractBatchOperation;
+use Sygefor\Bundle\ListBundle\Entity\Email;
 use Sygefor\Bundle\ListBundle\humanReadablePropertyAccessor\HumanReadablePropertyAccessor;
-use Sygefor\Bundle\TraineeBundle\Entity\Trainee;
 use Symfony\Component\DependencyInjection\ContainerBuilder;
 use Symfony\Component\DependencyInjection\ContainerInterface;
-use Symfony\Component\HttpFoundation\File\File;
 use Symfony\Component\HttpFoundation\File\UploadedFile;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Security\Core\SecurityContext;
@@ -109,6 +107,8 @@ class EmailingBatchOperation extends AbstractBatchOperation
 
 
     /**
+     * Parses subject and body content according to entity, and sends the mail.
+     * WARNING / an $em->clear() is done if there is more than one entity
      * @param $entities
      * @param $subject
      * @param $body
@@ -118,8 +118,10 @@ class EmailingBatchOperation extends AbstractBatchOperation
      */
     public function parseAndSendMail($entities, $subject, $body, $attachments = array(), $preview = false)
     {
+        $doClear = true;
         if(!is_array($entities)) {
             $entities = array($entities);
+            $doClear = false;
         }
 
         if ($preview) {
@@ -146,17 +148,53 @@ class EmailingBatchOperation extends AbstractBatchOperation
             }
 
             // foreach entity
+            $i = 0;
+            $em = $this->container->get('doctrine.orm.entity_manager');
+            if ($doClear) {
+                $em->clear();
+            }
             foreach($entities as $entity) {
                 try {
+                    // reload entity because of em clear
+                    $entity = $em->getRepository(get_class($entity))->find($entity->getId());
+
                     $hrpa = $this->container->get('sygefor_list.human_readable_property_accessor_factory')->getAccessor($entity);
                     $email = $hrpa->email;
                     $message->setTo($email);
                     $message->setSubject($this->replaceTokens($subject, $entity));
                     $message->setBody($this->replaceTokens($body, $entity));
                     $last = $this->container->get('mailer')->send($message);
-                } catch(\Swift_RfcComplianceException $e) {
+
+                    // save email in db
+                    $email = new Email();
+                    $email->setUserFrom($em->getRepository('SygeforUserBundle:User')->find($this->container->get('security.context')->getToken()->getUser()->getId()));
+                    $email->setEmailFrom($organization->getEmail());
+                    if (get_class($entity) === 'Sygefor\Bundle\TraineeBundle\Entity\Trainee') {
+                        $email->setTrainee($entity);
+                    }
+                    else if (get_class($entity) === 'Sygefor\Bundle\TrainerBundle\Entity\Trainer') {
+                        $email->setTrainer($entity);
+                    }
+                    else if (get_class($entity) === 'Sygefor\Bundle\TraineeBundle\Entity\Inscription') {
+                        $email->setTrainee($entity->getTrainee());
+                        $email->setSession($entity->getSession());
+                    }
+                    $email->setSubject($message->getSubject());
+                    $email->setBody($message->getBody());
+                    $email->setSendAt(new \DateTime("now", new \DateTimeZone('Europe/Paris')));
+                    $em->persist($email);
+                    if ($i++ % 500 === 0) {
+                        $em->flush();
+                        $em->clear();
+                    }
+                }
+                catch(\Swift_RfcComplianceException $e) {
                     // continue
                 }
+            }
+            $em->flush();
+            if ($doClear) {
+                $em->clear();
             }
 
             return $last;

@@ -25,6 +25,7 @@ class Configuration implements ConfigurationInterface
             ->children()
                 ->arrayNode('batch')//->defaultValue(array())
                 ->children()
+                    ->append($this->getConvertTypeConfigTree())
                     ->append($this->getCSVConfigTree())
                     ->append($this->getMailingConfigTree())
                     ->append($this->getPDFConfigTree())
@@ -61,6 +62,25 @@ class Configuration implements ConfigurationInterface
                             ->scalarNode('format')->end()
                         ->end()
                     ->end()
+                ->end()
+            ->end();
+
+        return $node;
+    }
+
+    /**
+     * @return \Symfony\Component\Config\Definition\Builder\ArrayNodeDefinition|\Symfony\Component\Config\Definition\Builder\NodeDefinition
+     */
+    private function getConvertTypeConfigTree()
+    {
+        $treeBuilder = new TreeBuilder();
+        $node = $treeBuilder->root('convert_type');
+
+        $node
+            ->prototype('array')
+                ->treatNullLike(array())
+                ->children()
+                    ->scalarNode('class')->isRequired()->end()
                 ->end()
             ->end();
 

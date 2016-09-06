@@ -38,7 +38,7 @@ class TraineeDuplicate
     protected $id;
 
     /**
-     *@ORM\ManyToOne(targetEntity="Sygefor\Bundle\TraineeBundle\Entity\Trainee")
+     *@ORM\ManyToOne(targetEntity="Sygefor\Bundle\TraineeBundle\Entity\Trainee", inversedBy="duplicates")
      * @MaxDepth(1)
      */
     protected $traineeSource;

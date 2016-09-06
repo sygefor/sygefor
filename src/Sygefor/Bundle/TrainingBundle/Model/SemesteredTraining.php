@@ -12,6 +12,7 @@ namespace Sygefor\Bundle\TrainingBundle\Model;
 
 use Doctrine\ORM\EntityManager;
 use Doctrine\ORM\Query\Expr\Join;
+use Sygefor\Bundle\TrainingBundle\Entity\Meeting;
 use Sygefor\Bundle\TrainingBundle\Entity\Session;
 use Sygefor\Bundle\TrainingBundle\Entity\Training;
 use Symfony\Component\Validator\Constraints\DateTime;
@@ -63,6 +64,34 @@ class SemesteredTraining
     public function getSemester()
     {
         return $this->semester;
+    }
+
+    /**
+     * Return doctoral training college year for elastica filter
+     * @return string
+     */
+    public function getCollegeYear()
+    {
+        if ($this->training->getType() === "doctoral_training") {
+            if ($this->getSemester() < 2) {
+                return strval($this->getYear() - 1) . "-" . strval($this->getYear());
+            } else {
+                return strval($this->getYear()) . "-" . strval($this->getYear() + 1);
+            }
+        }
+        return null;
+    }
+
+    /**
+     * Return doctoral training college semester for elastica filter
+     * @return string
+     */
+    public function getCollegeSemester()
+    {
+        if ($this->training->getType() === "doctoral_training") {
+            return $this->getSemester() === 1 ? 2 : 1;
+        }
+        return null;
     }
 
     /**
@@ -206,6 +235,23 @@ class SemesteredTraining
     }
 
     /**
+     * Get array of trainer
+     * @return array
+     */
+    public function getTrainers()
+    {
+        $trainers = array();
+        foreach ($this->sessions as $session) {
+            foreach ($session->getParticipations() as $participation) {
+                // do not add several times the same trainer
+                $trainers[$participation->getTrainer()->getId()] = $participation->getTrainer();
+            }
+        }
+
+        return $trainers;
+    }
+
+    /**
      * builds and returns SemesteredTraining objects array corresponding to Training object.
      * @param Training $training
      * @return array
@@ -257,7 +303,33 @@ class SemesteredTraining
 
             return array ($semTraining) ;
         }
+    }
 
+    /**
+     * Return an array of training and remove duplicates from semestered training list
+     * @param array $idList
+     * @param EntityManager $em
+     * @param array $excludedTypes
+     */
+    public static function getTrainingsByIds(array $idList, EntityManager $em, $excludedTypes)
+    {
+        $arrayIds = array();
+        foreach ($idList as $semesteredTrainingId) {
+            $arrayIds[] = explode('_', $semesteredTrainingId)[0];
+        }
+        $arrayIds = array_unique($arrayIds);
+
+        $allEntities = $em->getRepository('SygeforTrainingBundle:Training')
+            ->findBy(array("id" => $arrayIds));
+
+        $notMeetingEntities = array();
+        foreach ($allEntities as $entity) {
+            if (!in_array($entity->getType(), $excludedTypes)) {
+                $notMeetingEntities[] = $entity;
+            }
+        }
+
+        return $notMeetingEntities;
     }
 
     /**

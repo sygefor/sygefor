@@ -4,6 +4,7 @@ namespace Sygefor\Bundle\TrainingBundle\Entity;
 
 use Doctrine\ORM\Mapping as ORM;
 use Doctrine\Common\Collections\ArrayCollection;
+use Sygefor\Bundle\TrainerBundle\Entity\Trainer;
 use Sygefor\Bundle\TrainingBundle\Entity\Term\Tag;
 use Sygefor\Bundle\TrainingBundle\Form\TrainingType;
 use Sygefor\Bundle\UserBundle\AccessRight\SerializedAccessRights;
@@ -69,8 +70,8 @@ abstract class Training implements SerializedAccessRights
     /**
      * @ORM\ManyToMany(targetEntity="Sygefor\Bundle\TrainingBundle\Entity\Term\Tag")
      * @ORM\JoinTable(name="training__training_tag",
-     *      joinColumns={@ORM\JoinColumn(name="training_id", referencedColumnName="id")},
-     *      inverseJoinColumns={@ORM\JoinColumn(name="tag_id", referencedColumnName="id")}
+     *      joinColumns={@ORM\JoinColumn(name="training_id", referencedColumnName="id", onDelete="cascade")},
+     *      inverseJoinColumns={@ORM\JoinColumn(name="tag_id", referencedColumnName="id", onDelete="cascade")}
      * )
      * @Serializer\Groups({"training", "api"})
      */
@@ -129,11 +130,21 @@ abstract class Training implements SerializedAccessRights
     protected $externInitiative;
 
     /**
-     * @ORM\Column(name="supervisor", type="string", length=255, nullable=true)
+     * @ORM\Column(name="_supervisor", type="string", length=255, nullable=true)
      * @var String
      * @Serializer\Groups({"training"})
      */
-    protected $supervisor;
+    protected $_supervisor;
+
+    /**
+     * @ORM\ManyToMany(targetEntity="Sygefor\Bundle\TrainerBundle\Entity\Trainer")
+     * @ORM\JoinTable(name="trainining__training_supervisor",
+     *      joinColumns={@ORM\JoinColumn(name="training_id", referencedColumnName="id")},
+     *      inverseJoinColumns={@ORM\JoinColumn(name="supervisor_id", referencedColumnName="id")}
+     * )
+     * @Serializer\Groups({"training", "api.training", "session"})
+     */
+    protected $supervisors;
 
     /**
      * @ORM\Column(name="resources", type="text", nullable=true)
@@ -153,7 +164,7 @@ abstract class Training implements SerializedAccessRights
      * @var ArrayCollection $materials
      * @ORM\OneToMany(targetEntity="Sygefor\Bundle\TrainingBundle\Entity\Material", mappedBy="training", cascade={"remove", "persist"})
      * @ORM\JoinColumn(nullable=true)
-     * @Serializer\Groups({"training", "api.attendance"})
+     * @Serializer\Groups({"training", "session", "api.attendance"})
      */
     protected $materials;
 
@@ -183,6 +194,7 @@ abstract class Training implements SerializedAccessRights
     {
         $this->tags = new ArrayCollection();
         $this->sessions = new ArrayCollection();
+        $this->supervisors = new ArrayCollection();;
     }
 
     /**
@@ -206,7 +218,42 @@ abstract class Training implements SerializedAccessRights
     public function duplicateArrayCollection($addMethod, $arrayCollection)
     {
         foreach ($arrayCollection as $item) {
-            $this->$addMethod($item);
+            if (method_exists($this, $addMethod)) {
+                $this->$addMethod($item);
+            }
+        }
+    }
+
+    /**
+     * Copy all properties from a training except id and number
+     * @param Training $originalTraining
+     */
+    public function copyProperties($originalTraining)
+    {
+        foreach (array_keys(get_object_vars($this)) as $key) {
+            if ($key !== 'id' && $key !== 'number' && $key !== "sessions" && $key != "session") {
+                if (isset($originalTraining->$key)) {
+                    $this->$key = $originalTraining->$key;
+                }
+            }
+        }
+
+        // convert institution field to institutionS fields for doctoral trainings
+        if ($this->getType() === "doctoral_training" && $originalTraining->getType() !== "doctoral_training") {
+            if (method_exists($originalTraining, 'getInstitution')) {
+                $institution = $originalTraining->getInstitution();
+                if ($institution) {
+                    $this->addInstitution($institution);
+                }
+            }
+        }
+        else if ($this->getType() !== "doctoral_training" && $originalTraining->getType() === "doctoral_training") {
+            if (method_exists($originalTraining, 'setInstitution')) {
+                $institutions = $originalTraining->getInstitutions();
+                if ($institutions) {
+                    $this->setInstitution($institutions->first());
+                }
+            }
         }
     }
 
@@ -405,19 +452,42 @@ abstract class Training implements SerializedAccessRights
     }
 
     /**
-     * @param String $supervisor
+     * @param $supervisors
      */
-    public function setSupervisor($supervisor)
+    public function setSupervisors($supervisors)
     {
-        $this->supervisor = $supervisor;
+        $this->supervisors = $supervisors;
     }
 
     /**
-     * @return String
+     * @param $supervisor
+     * @return bool
      */
-    public function getSupervisor()
+    public function addSupervisor($supervisor)
     {
-        return $this->supervisor;
+        if (!$this->supervisors->contains($supervisor)) {
+            return $this->supervisors->add($supervisor);
+        }
+        return false;
+    }
+
+    /**
+     * @return mixed|null
+     */
+    public function removeSupervisor($supervisor)
+    {
+        if ($this->supervisors->contains($supervisor)) {
+            return $this->supervisors->removeElement($supervisor);
+        }
+        return null;
+    }
+
+    /**
+     * @return ArrayCollection
+     */
+    public function getSupervisors()
+    {
+        return $this->supervisors;
     }
 
     /**
@@ -443,8 +513,8 @@ abstract class Training implements SerializedAccessRights
      */
     public function removeTag(Tag $tag)
     {
-        if ($this->tags->contains(($tag))) {
-            $this->tags->remove($tag);
+        if ($this->tags->contains($tag)) {
+            $this->tags->removeElement($tag);
         }
     }
 
@@ -516,7 +586,7 @@ abstract class Training implements SerializedAccessRights
      */
     public function removeSession($session)
     {
-        $this->sessions->remove($session);
+        $this->sessions->removeElement($session);
     }
 
     /**
@@ -539,7 +609,8 @@ abstract class Training implements SerializedAccessRights
     /**
      * @param $material
      */
-    public function addMaterial($material) {
+    public function addMaterial($material)
+    {
         $material->setTraining($this);
         $this->materials->add($material);
     }
@@ -550,6 +621,22 @@ abstract class Training implements SerializedAccessRights
     public function getMaterials()
     {
         return $this->materials;
+    }
+
+    /**
+     * @return Trainer
+     */
+    public function getResponsable()
+    {
+        return $this->responsable;
+    }
+
+    /**
+     * @param mixed $responsable
+     */
+    public function setResponsable(Trainer $responsable)
+    {
+        $this->responsable = $responsable;
     }
 
     /**
@@ -586,4 +673,15 @@ abstract class Training implements SerializedAccessRights
         return $this->getName();
     }
 
+    /**
+     * Used for duplicate training choose type form
+     * @return string
+     */
+    public function getDuplicatedType()
+    {
+        return $this->getType();
+    }
+
+    /** Used for duplicate training choose type form */
+    public function setDuplicatedType($type) {}
 }

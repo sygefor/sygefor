@@ -49,4 +49,51 @@ sygeforApp.controller('SessionDetailViewController', ['$scope', '$taxonomy', '$d
         $window.location = url;
     }
 
+    /*
+     * Manage session materials
+     */
+
+    /**
+     * Add material modal
+     */
+    $scope.addMaterial = function () {
+        $dialog.open('session.material.add', {
+            session: $scope.session,
+            removeCallback: $scope.removeMaterial,
+            downloadCallback: $scope.getMaterial,
+            addCallback: $scope.addToMaterialList
+        });
+    }
+
+    /**
+     * calls callback
+     * @param element
+     */
+    $scope.addToMaterialList = function(element) {
+        $scope.session.materials.push(element);
+    }
+
+    /**
+     * download material
+     * @param material
+     */
+    $scope.getMaterial = function (material) {
+        var url = Routing.generate('material.get', {id: material.id});
+        $window.location = url;
+    }
+
+    /**
+     * calls remove material modal and updates material list
+     * @param material
+     */
+    $scope.removeMaterial = function (material) {
+        return $dialog.open('session.material.remove', {material: material}).then(function() {
+            for (var i = 0 ; $scope.session.materials ; i++) {
+                if ($scope.session.materials[i].id === material.id) {
+                    $scope.session.materials.splice(i, 1);
+                    break;
+                }
+            }
+        });
+    }
 }]);

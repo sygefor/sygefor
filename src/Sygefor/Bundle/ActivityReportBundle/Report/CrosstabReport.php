@@ -94,6 +94,14 @@ class CrosstabReport
     }
 
     /**
+     * @param array $terms
+     */
+    public function setTerms($key, $terms)
+    {
+        $this->terms[$key] = $terms;
+    }
+
+    /**
      * @param AbstractAggregation $aggregation
      * @param array $terms
      * @param AbstractAggregation[] $subaggs
@@ -171,9 +179,19 @@ class CrosstabReport
         // add the final agg
         $query->addAggregation($agg);
 
+//        if($this->debug) {
+//            print json_encode($query->toArray(), JSON_PRETTY_PRINT);
+//            die();
+//        }
+
         // get the result
         $rs = $this->index->search($query);
         $data = $rs->getAggregation($agg->getName());
+
+//        if($this->debug) {
+//            print_r($data);
+//            die;
+//        }
 
         // add specific terms
         $this->formatter->setTerms($this->terms);

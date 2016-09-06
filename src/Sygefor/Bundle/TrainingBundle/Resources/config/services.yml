@@ -16,6 +16,10 @@ services:
         class: Sygefor\Bundle\TrainingBundle\Entity\TrainingCourse
         tags:
             - { name: sygefor_training.type }
+    sygefor_training.type.doctoral_training:
+        class: Sygefor\Bundle\TrainingBundle\Entity\DoctoralTraining
+        tags:
+            - { name: sygefor_training.type }
     sygefor_training.type.diverse_training:
         class: Sygefor\Bundle\TrainingBundle\Entity\DiverseTraining
         tags:
@@ -72,6 +76,36 @@ services:
         class:        Sygefor\Bundle\TrainingBundle\Entity\Term\EventType
         tags:
             - { name: sygefor_taxonomy.vocabulary_provider, group: "%sygefor_training.taxonomy.group%" }
+    sygefor_training.vocabulary_place:
+        class:        Sygefor\Bundle\TrainingBundle\Entity\Term\Place
+        tags:
+            - { name: sygefor_taxonomy.vocabulary_provider, group: "%sygefor_training.taxonomy.group%" }
+
+    sygefor_training.vocabulary_applicantorganism:
+        class:        Sygefor\Bundle\TrainingBundle\Entity\Term\ApplicantOrganism
+        tags:
+            - { name: sygefor_taxonomy.vocabulary_provider, group: "%sygefor_training.taxonomy.group%" }
+
+    sygefor_training.vocabulary_doctoralschool:
+        class:        Sygefor\Bundle\TrainingBundle\Entity\Term\DoctoralSchool
+        tags:
+            - { name: sygefor_taxonomy.vocabulary_provider, group: "%sygefor_training.taxonomy.group%" }
+
+    sygefor_training.vocabulary_doctoralyear:
+        class:        Sygefor\Bundle\TrainingBundle\Entity\Term\DoctoralYear
+        tags:
+            - { name: sygefor_taxonomy.vocabulary_provider, group: "%sygefor_training.taxonomy.group%" }
+
+    sygefor_training.vocabulary_doctoralpartner:
+        class:        Sygefor\Bundle\TrainingBundle\Entity\Term\DoctoralPartner
+        tags:
+            - { name: sygefor_taxonomy.vocabulary_provider, group: "%sygefor_training.taxonomy.group%" }
+
+    sygefor_training.vocabulary_pedagogicpartner:
+        class:        Sygefor\Bundle\TrainingBundle\Entity\Term\PedagogicPartner
+        tags:
+            - { name: sygefor_taxonomy.vocabulary_provider, group: "%sygefor_training.taxonomy.group%" }
+
     sygefor_training.vocabulary_place:
         class:        Sygefor\Bundle\TrainingBundle\Entity\Term\Place
         tags:
@@ -158,6 +192,13 @@ services:
         tags:
             - { name: form.type, alias: diversetrainingtype }
 
+    sygefor_training.form.type.doctoraltraining:
+        class:      Sygefor\Bundle\TrainingBundle\Form\DoctoralTrainingType
+        arguments:
+            - "@sygefor_user.access_right_registry"
+        tags:
+            - { name: form.type, alias: doctoraltrainingtype }
+
     sygefor_training.form.type.session:
             class:      Sygefor\Bundle\TrainingBundle\Form\SessionType
             tags:
@@ -172,6 +213,12 @@ services:
             - @security.context
         tags:
             - { name: form.type, alias: publictype }
+    sygefor_training.form.type.duplicateTraining:
+        class:      Sygefor\Bundle\TrainingBundle\Form\DuplicateTrainingType
+        arguments:
+            - @security.context
+        tags:
+            - { name: form.type, alias: duplicatetrainingtype }
 
     # doctrine training event subscriber
     sygefor_training.training.listener:

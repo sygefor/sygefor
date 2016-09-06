@@ -86,7 +86,7 @@ sygeforApp.controller('TraineeListController', ['$scope', '$user', '$injector', 
             label: 'Inscription',
             type: 'range'
         },
-        'publicType.isPaying' : {
+        'isPaying' : {
             label: 'Payant',
             values: {
                 'T': 'Oui',

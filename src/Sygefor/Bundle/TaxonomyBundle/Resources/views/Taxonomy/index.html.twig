@@ -18,11 +18,21 @@
                         </tr>
                     </thead>
                     <tbody>
-                    {% for group,vocabularyc in vocabularies %}
-                        {% for id,voc in vocabularyc %}
+                    {% for group, vocabulary in vocabularies %}
+                        {% for id, voc in vocabulary %}
                             <tr ng-repeat="item in search.result.items" ng-class="{warning: isSelected(item.id)}">
-                                <td><a href="{{ path('taxonomy.view', { 'id': voc.id }) }}">{{ voc.vocabulary.vocabularyName }}</a></td>
-                                <td><span class="badge">{{ voc.scope == 'N' ? 'Nationale' : 'Locale' }}</span></td>
+                                <td><a href="{{ path('taxonomy.view', { 'vocabularyId': voc.id }) }}">{{ voc.vocabulary.vocabularyName }}</a></td>
+                                <td><span class="badge">
+                                        {% if voc.scope == 0 %}
+                                            Nationale
+                                        {% elseif voc.scope == 1 %}
+                                            Local
+                                        {% elseif voc.scope == 2 %}
+                                            Mixte
+                                        {% else %}
+                                            Non défini
+                                        {% endif %}
+                                    </span></td>
                             </tr>
                         {% endfor %}
                     {% endfor %}

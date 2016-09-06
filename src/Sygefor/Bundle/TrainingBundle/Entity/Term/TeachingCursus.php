@@ -8,7 +8,7 @@ use Sygefor\Bundle\TaxonomyBundle\Entity\TreeTrait;
 use Sygefor\Bundle\TaxonomyBundle\Vocabulary\VocabularyProviderInterface;
 use Symfony\Component\Validator\Constraints as Assert;
 use Sygefor\Bundle\TaxonomyBundle\Entity\AbstractTerm;
-use Sygefor\Bundle\TaxonomyBundle\Vocabulary\NationalVocabularyInterface;
+use Sygefor\Bundle\TaxonomyBundle\Vocabulary\VocabularyInterface;
 use Gedmo\Mapping\Annotation as Gedmo;
 use JMS\Serializer\Annotation as Serializer;
 
@@ -19,9 +19,15 @@ use JMS\Serializer\Annotation as Serializer;
  * @ORM\Table(name="teaching_cursus")
  * @ORM\Entity
  */
-class TeachingCursus extends AbstractTerm implements NationalVocabularyInterface
+class TeachingCursus extends AbstractTerm implements VocabularyInterface
 {
     use TreeTrait;
+
+    /**
+     * This term is required during term replacement
+     * @var bool
+     */
+    static $replacementRequired = true;
 
     /**
      * @return mixed
@@ -29,5 +35,10 @@ class TeachingCursus extends AbstractTerm implements NationalVocabularyInterface
     public function getVocabularyName()
     {
         return "Cursus d'enseignement";
+    }
+
+    public static function getVocabularyStatus()
+    {
+        return VocabularyInterface::VOCABULARY_NATIONAL;
     }
 }

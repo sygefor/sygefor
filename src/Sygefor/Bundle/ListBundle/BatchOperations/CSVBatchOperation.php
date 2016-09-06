@@ -105,7 +105,9 @@ class CSVBatchOperation extends AbstractBatchOperation
                         $rvalue = $accessor->getValue($entity, $key);
 
                         if (!empty ($value['type']) && $value['type'] == 'date') {
-                            $rvalue = $rvalue->format('d/m/Y');
+                            if ($rvalue) {
+                                $rvalue = $rvalue->format('d/m/Y');
+                            }
                         }
                         $data[$key] = ($rvalue) ? $rvalue : '';
                     } catch(UnexpectedTypeException $e) { }

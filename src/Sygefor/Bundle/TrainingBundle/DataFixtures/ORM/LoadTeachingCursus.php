@@ -27,6 +27,9 @@ class LoadTeachingCursus extends AbstractDataFixture
         $teachingCursus = new TeachingCursus();
         $teachingCursus->setId(++$this->autoId);
         $teachingCursus->setName($name);
+        if ($name === "Autre") {
+            $teachingCursus->setMachineName('other');
+        }
         $manager->persist($teachingCursus) ;
         $manager->flush();
         return $teachingCursus;

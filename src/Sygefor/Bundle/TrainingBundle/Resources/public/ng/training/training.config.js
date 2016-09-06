@@ -116,26 +116,68 @@ sygeforApp.config(["$trainingBundleProvider", "$listStateProvider", "$dialogProv
         }
     });
 
-    $dialogProvider.dialog('training.duplicate', /* @ngInject */ {
-        controller: function($scope, $modalInstance, $dialogParams, $state, $trainingBundle, $http, form, growl) {
+
+
+    /**
+     * Choose cloned training type and first period params
+     */
+    $dialogProvider.dialog('training.choosetypeduplicate', /* @ngInject */ {
+        controller: function($scope, $modalInstance, $dialogParams, $state, $trainingBundle, $http, form) {
             $scope.dialog = $modalInstance;
             $scope.dialog.params = $dialogParams;
             $scope.training = $dialogParams.training;
             $scope.form = form;
             $scope.onSuccess = function(response) {
-                growl.addSuccessMessage("La formation a bien été dupliquée. Vous êtes à présent sur la fiche de la nouvelle formation.");
-                $scope.dialog.close(response.training);
-             };
+                $scope.dialog.close(response);
+            };
         },
-        templateUrl: 'trainingbundle/training/dialogs/duplicate/training.html',
+        templateUrl: 'trainingbundle/training/dialogs/duplicate/choose-type.html',
+        resolve:{
+            form: function ($http, $dialogParams){
+                return $http.get(Routing.generate('training.choosetypeduplicate')).then(function(response) {
+                    var form = response.data.form;
+                    form.children.duplicatedType.value = $dialogParams.training.type;
+                    // @todo why have no underscores ?
+                    if (form.children.duplicatedType.value === "diversetraining") {
+                        form.children.duplicatedType.value = "diverse_training";
+                    }
+                    else if (form.children.duplicatedType.value === "trainingcourse") {
+                        form.children.duplicatedType.value = "training_course";
+                    }
+                    else if (form.children.duplicatedType.value === "doctoraltraining") {
+                        form.children.duplicatedType.value = "doctoral_training";
+                    }
+                    return form;
+                });
+            }
+        }
+    });
+
+    $dialogProvider.dialog('training.duplicate', /* @ngInject */ {
+        controller: function($scope, $modalInstance, $dialogParams, $state, $trainingBundle, $http, form, growl, $timeout) {
+            $scope.dialog = $modalInstance;
+            $scope.dialog.params = $dialogParams;
+            $scope.form = form;
+            $scope.training = $dialogParams.training;
+            $scope.type = $dialogParams.type;
+
+            $scope.onSuccess = function(response) {
+                growl.addSuccessMessage("La formation a bien été dupliquée. Vous êtes à présent sur la fiche de la nouvelle formation.");
+                // used to close modal if there are no supplementary fields to fill-in
+                $timeout(function() {
+                    $scope.dialog.close(response.training);
+                })
+            };
+        },
+        template: '<div training-template="duplicate" type="dialog.params.type" default="/bundles/sygefortraining/ng/training/dialogs/duplicate/training.html"></div>',
         resolve:{
             // @todo blaise : fix form directive to remove this resolve
             form: function ($http, $dialogParams){
-                return $http.get(Routing.generate('training.duplicate', {id: $dialogParams.training.id })).then(function(response) {
-                    var form = response.data.form;
-                    form.children.firstSessionPeriodYear.value = $dialogParams.training.firstSessionPeriodYear;
-                    form.children.firstSessionPeriodSemester.value = $dialogParams.training.firstSessionPeriodSemester + "";
-                    return form;
+                var params= {};
+                params.id = $dialogParams.training.id;
+                params.type = $dialogParams.type;
+                return $http.get(Routing.generate('training.duplicate', params)).then(function(response) {
+                    return response.data.form;
                 });
             }
         }
@@ -157,7 +199,7 @@ sygeforApp.config(["$trainingBundleProvider", "$listStateProvider", "$dialogProv
     });
 
     // add material (general dialog)
-    $dialogProvider.dialog('material.add', /* @ngInject */ {
+    $dialogProvider.dialog('training.material.add', /* @ngInject */ {
         controller:function ($scope, $modalInstance, $dialogParams) {
             $scope.dialog = $modalInstance;
             $scope.dialog.params = angular.copy($dialogParams);
@@ -182,7 +224,7 @@ sygeforApp.config(["$trainingBundleProvider", "$listStateProvider", "$dialogProv
     });
 
     //add link material (specific dialog)
-    $dialogProvider.dialog('linkmaterial.add', /* @ngInject */ {
+    $dialogProvider.dialog('training.linkmaterial.add', /* @ngInject */ {
         controller:function ($scope, $modalInstance, $dialogParams, form) {
             $scope.dialog = $modalInstance;
             $scope.formRoute = $dialogParams.route
@@ -214,7 +256,8 @@ sygeforApp.config(["$trainingBundleProvider", "$listStateProvider", "$dialogProv
         label: 'Stage',
         templates: {
             view: 'trainingbundle/training/states/detail/internship.html',
-            create: 'trainingbundle/training/dialogs/create/internship.html'
+            create: 'trainingbundle/training/dialogs/create/internship.html',
+            duplicate: 'trainingbundle/training/dialogs/duplicate/internship.html'
         }
     });
 
@@ -223,7 +266,18 @@ sygeforApp.config(["$trainingBundleProvider", "$listStateProvider", "$dialogProv
         label: 'Enseignement de cursus',
         templates: {
             view: 'trainingbundle/training/states/detail/training-course.html',
-            create: 'trainingbundle/training/dialogs/create/training-course.html'
+            create: 'trainingbundle/training/dialogs/create/training-course.html',
+            duplicate: 'trainingbundle/training/dialogs/duplicate/training-course.html'
+        }
+    });
+
+    // doctoral_training
+    $trainingBundleProvider.addType('doctoral_training', {
+        label: 'Formation doctorale',
+        templates: {
+            view: 'trainingbundle/training/states/detail/doctoral-training.html',
+            create: 'trainingbundle/training/dialogs/create/doctoral-training.html',
+            duplicate: 'trainingbundle/training/dialogs/duplicate/doctoral-training.html'
         }
     });
 
@@ -232,7 +286,8 @@ sygeforApp.config(["$trainingBundleProvider", "$listStateProvider", "$dialogProv
         label: 'Action diverse',
         templates: {
             view: 'trainingbundle/training/states/detail/diverse-training.html',
-            create: 'trainingbundle/training/dialogs/create/diverse-training.html'
+            create: 'trainingbundle/training/dialogs/create/diverse-training.html',
+            duplicate: 'trainingbundle/training/dialogs/duplicate/diverse-training.html'
         }
     });
 
@@ -241,7 +296,8 @@ sygeforApp.config(["$trainingBundleProvider", "$listStateProvider", "$dialogProv
         label: 'Rencontre scientifique',
         templates: {
             view: 'trainingbundle/training/states/detail/meeting.html',
-            create: 'trainingbundle/training/dialogs/create/meeting.html'
+            create: 'trainingbundle/training/dialogs/create/meeting.html',
+            duplicate: 'trainingbundle/training/dialogs/duplicate/meeting.html'
         }
     });
 }]);

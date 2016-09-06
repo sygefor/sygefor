@@ -13,5 +13,15 @@ sygeforApp.controller('TrainerDetailViewController', ['$scope', '$user', '$state
         $dialog.open('trainer.delete', {trainer: $scope.trainer}).then(function (){
             $state.go('trainer.table', null, {reload: true});
         });
-    }
+    };
+
+    /**
+     * Change Organization
+     */
+    $scope.changeOrganization = function () {
+        $dialog.open('trainer.changeOrg', {trainer: $scope.trainer}).then(function(data) {
+            $scope.form = data.form;
+            $scope.trainer = data.form.value;
+        });
+    };
 }]);

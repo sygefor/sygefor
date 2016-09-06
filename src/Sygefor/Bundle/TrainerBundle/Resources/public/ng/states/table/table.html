@@ -12,6 +12,7 @@
                         <th search-table-th field="institution.name.source">Établissement</th>
                         <th search-table-th field="service.source">Service</th>
                         <th search-table-th field="isUrfist">Statut</th>
+                        <th search-table-th field="isArchived">Archivé</th>
                         <th search-table-th field="isPublic">Publié</th>
                     </tr>
                 </thead>
@@ -23,6 +24,7 @@
                         <td>{{ item.institution.name }}</td>
                         <td>{{ item.service }}</td>
                         <td>{{ item.isUrfist ? 'Formateur URFIST' : 'Formateur extérieur' }}</td>
+                        <td><span ng-class="{'label label-lg label-danger': item.isArchived}">{{ item.isArchived === true ? 'Oui' : 'Non' }}</span></td>
                         <td><span class="label label-lg" ng-class="{'label-success': item.isPublic, 'label-danger': !item.isPublic}">{{ item.isPublic ? 'Publié' : 'Non publié' }}</span></td>
                     </tr>
                 </tbody>

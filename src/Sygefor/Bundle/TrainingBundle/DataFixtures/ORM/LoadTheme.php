@@ -34,6 +34,9 @@ class LoadTheme extends AbstractDataFixture
         $theme = new Theme();
         $theme->setId(++$this->autoId);
         $theme->setName($name);
+        if ($name === "Autre") {
+            $theme->setMachineName('other');
+        }
         $theme->setPosition($position);
         $manager->persist($theme) ;
         $manager->flush();

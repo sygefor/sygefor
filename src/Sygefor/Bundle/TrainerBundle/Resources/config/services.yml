@@ -14,7 +14,10 @@ services:
         class:        Sygefor\Bundle\TrainerBundle\Entity\Term\CompetenceField
         tags:
             - { name: sygefor_taxonomy.vocabulary_provider, group: "%sygefor_training.taxonomy.group%" }
-
+    sygefor_trainer.participation.orm.listener:
+        class: Sygefor\Bundle\TrainerBundle\Listener\TrainerParticipationListener
+        tags:
+            - { name: doctrine.event_subscriber, connection: default }
     # voter
     sygefor_trainer.rights.trainer.own.view:
         class: Sygefor\Bundle\TrainerBundle\Security\Authorization\AccessRight\OwnTrainerViewAccessRights

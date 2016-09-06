@@ -32,7 +32,35 @@ sygeforApp.controller('TrainingListController', ['$scope', '$user', '$injector',
                 }
             }
         ]
-
+    },{
+        icon: 'fa-exchange',
+        label: 'Changer de type',
+        subitems: [
+            {
+                label: 'Stage',
+                execute: function(items, $dialog) {
+                    return $dialog.open('batch.convert_type', { items: items, service: 'semestered_training', type: 'internship' })
+                }
+            },
+            {
+                label: 'Enseignement de cursus',
+                execute: function(items, $dialog) {
+                    return $dialog.open('batch.convert_type', { items: items, service: 'semestered_training', type: 'training_course' })
+                }
+            },
+            {
+                label: 'Formation doctorale',
+                execute: function(items, $dialog) {
+                    return $dialog.open('batch.convert_type', { items: items, service: 'semestered_training', type: 'doctoral_training' })
+                }
+            },
+            {
+                label: 'Action diverse',
+                execute: function(items, $dialog) {
+                    return $dialog.open('batch.convert_type', { items: items, service: 'semestered_training', type: 'diverse_training' })
+                }
+            },
+        ]
     }];
 
     /**
@@ -41,7 +69,7 @@ sygeforApp.controller('TrainingListController', ['$scope', '$user', '$injector',
      */
     $scope.addOperations = function (){
         var ops = [];
-        var trainingTypes = $trainingBundle.getTypes() ;
+        var trainingTypes = $trainingBundle.getTypes();
 
         for (var key in trainingTypes) {
             var type = trainingTypes[key];
@@ -64,17 +92,32 @@ sygeforApp.controller('TrainingListController', ['$scope', '$user', '$injector',
      * Declare facets
      */
     $scope.facets = {
-        'training.organization.name.source' : {
+        'training.organization.name.source': {
             label: 'URFIST'
         },
-        'year' : {
+        'year': {
             label: 'Année'
         },
-        'semester' : {
+        'semester': {
             label: 'Semestre'
-        },
+        }
+    };
+
+    if ($scope.$state.params !== undefined && $scope.$state.params.type === "doctoral_training") {
+        $scope.facets.collegeSemester = {
+            label: 'Semestre universitaire'
+        };
+        $scope.facets.collegeYear = {
+            label: 'Année universitaire'
+        };
+    }
+
+    angular.extend($scope.facets, {
         'training.theme.source' : {
             label: 'Thématique'
+        },
+        'trainers.fullName' : {
+            label: 'Formateur'
         },
         'training.typeLabel.source' : {
             label: 'Type'
@@ -90,5 +133,5 @@ sygeforApp.controller('TrainingListController', ['$scope', '$user', '$injector',
                 'false': 'Non'
             }
         }
-    };
+    });
 }]);

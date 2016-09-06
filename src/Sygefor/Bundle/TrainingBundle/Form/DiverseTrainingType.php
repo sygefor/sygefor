@@ -2,9 +2,15 @@
 namespace Sygefor\Bundle\TrainingBundle\Form;
 
 use Doctrine\ORM\EntityRepository;
+use Sygefor\Bundle\CoreBundle\Entity\Organization;
+use Sygefor\Bundle\TrainingBundle\Entity\DiverseTraining;
+use Sygefor\Bundle\TrainingBundle\Entity\Training;
 use Sygefor\Bundle\UserBundle\AccessRight\AccessRightRegistry;
 use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Component\Form\AbstractType;
+use Symfony\Component\Form\FormEvent;
+use Symfony\Component\Form\FormEvents;
+use Symfony\Component\Form\FormInterface;
 
 /**
  * Class DiverseTrainingType
@@ -30,14 +36,10 @@ class DiverseTrainingType extends AbstractTrainingType
                       ->where('pt.priority = 1');
                 }
             ))
-            ->add('variousAction', null, array(
+            /*->add('variousAction', null, array(
                 'required' => false,
                 'label' => "Type d'action diverse"
-            ))
-            ->add('supervisor', null, array(
-                'required' => false,
-                'label' => 'Responsable pédagogique'
-            ))
+            ))*/
             ->add('interventionType', null, array(
                 'required' => false,
                 'label' => "Type d'intervention"
@@ -54,6 +56,46 @@ class DiverseTrainingType extends AbstractTrainingType
                 'required' => false,
                 'label' => 'Etablissement en convention'
             ));
+
+        // PRE_SET_DATA for the parent form
+        $builder->addEventListener(FormEvents::PRE_SET_DATA, function(FormEvent $event) {
+            $this->addType($event->getForm(), $event->getData());
+        });
+
+        // POST_SUBMIT for each field
+        if($builder->has('organization')) {
+            $builder->get('organization')->addEventListener(FormEvents::POST_SUBMIT, function(FormEvent $event) {
+                $this->addType($event->getForm()->getParent(), $event->getForm()->getData());
+            });
+        }
+    }
+
+    /**
+     * Add institution field depending organization
+     * @param FormInterface $form
+     * @param $data
+     */
+    function addType(FormInterface $form, $data) {
+
+        if ($data instanceof DiverseTraining) {
+            $organization = $data->getOrganization();
+        } else if ($data instanceof Organization) {
+            $organization = $data;
+        }
+        if ($organization) {
+            $form->add('variousAction', 'entity', array(
+                'required' => false,
+                'class' => 'Sygefor\Bundle\TrainingBundle\Entity\Term\VariousAction',
+                'label' => 'Type d\'action diverse',
+                'query_builder' => function (EntityRepository $er) use ($organization) {
+                    return $er->createQueryBuilder('i')
+                        ->where('i.organization = :organization')
+                        ->setParameter('organization', $organization)
+                        ->orWhere('i.organization is null')
+                        ->orderBy('i.name', 'ASC');
+                }
+            ));
+        }
     }
 
     /**

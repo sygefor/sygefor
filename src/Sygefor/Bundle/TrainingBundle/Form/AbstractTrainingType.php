@@ -57,6 +57,7 @@ class AbstractTrainingType extends AbstractType
                     return $er->createQueryBuilder('t')
                       ->where('t.organization = :organization')
                       ->setParameter('organization', $builder->getData()->getOrganization())
+                      ->orWhere('t.organization is null')
                       ->orderBy('t.name', 'ASC');
                 },
                 'prePersist' => function(Tag $tag) use ($builder) {
@@ -82,6 +83,18 @@ class AbstractTrainingType extends AbstractType
             ))
             ->add('program', null, array(
                 'label' => 'Contenu/Programme',
+            ))
+            ->add('supervisors', 'entity', array(
+                'required' => false,
+                'multiple' => true,
+                'class' => 'Sygefor\Bundle\TrainerBundle\Entity\Trainer',
+                'label' => 'Responsables pédagogiques',
+                'query_builder' => function(EntityRepository $er) use ($builder) {
+                    return $er->createQueryBuilder('t')
+                        ->where('t.isArchived is null')
+                        ->orWhere('t.isArchived = false')
+                        ->orderBy('t.lastName', 'ASC');
+                },
             ))
             ->add('resources', null, array(
                 'required' => false,

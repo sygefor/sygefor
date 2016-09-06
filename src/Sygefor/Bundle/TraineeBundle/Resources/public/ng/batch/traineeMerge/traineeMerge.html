@@ -30,7 +30,7 @@
                         <li><label>Email</label> <span> <select ng-model="$parent.selectedEmail" ng-options="o.email as o.email + ' - ' + (o.date | date:'dd/MM/yyyy') for o in emails"></select></span></li>
                         <li><label>Téléphone</label> <span >{{ traineeToKeep.phoneNumber }}</span></li>
                         <li><label>Etablissement</label>  <span >{{ traineeToKeep.institution.name }}</span></li>
-                        <li ng-if="traineeToKeep.institution.name === 'Autre'"><label>Autre établissement</label> <span >{{ traineeToKeep.otherInstitution }}</span></li>
+                        <li ng-if="traineeToKeep.institution.machineName == 'other'"><label>Autre établissement</label> <span >{{ traineeToKeep.otherInstitution }}</span></li>
                     </ul>
                     <ul class="summary">
                         <li><label>Catégorie de public</label> <span >{{ traineeToKeep.publicCategory.name }}</span></li>

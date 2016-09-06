@@ -30,6 +30,11 @@ services:
         tags:
             - { name: jms_serializer.event_subscriber }
 
+    sygefor_api.serializer.session.event_subscriber:
+        class: Sygefor\Bundle\ApiBundle\Serializer\EventSubscriber\SessionEventSubscriber
+        tags:
+            - { name: jms_serializer.event_subscriber }
+
     # error parser
     sygefor_api.form_errors.parser:
         class: Sygefor\Bundle\ApiBundle\Service\FormErrorsParser

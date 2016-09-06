@@ -44,10 +44,9 @@
                 <span>{{ training.teachingCursus.name }}</span>
             {% endif %}
             </li>
-            {% if training.teachingCursus is not null and training.teachingCursus.name == 'Autre' %}
+            {% if training.teachingCursus is not null and training.teachingCursus.isMachineName('other') %}
                 <li> <label> Autre cursus</label> <span>{{ training.otherCursus }}</span></li>
             {% endif %}
-            {{training.teachingCursus}}
             <li><label> Domaine disciplinaire</label>
             {% if training.disciplinary is not null %}
                 <span>{{ training.disciplinary.name }}</span>

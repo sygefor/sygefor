@@ -12,9 +12,9 @@
                     <ul class="summary">
                         <li><label>Établissement</label> <span sf-xeditable="form.children.institution" data-type="select">{{ training.institution.name }}</span></li>
                         <li><label>Contexte</label> <span sf-xeditable="form.children.context" data-type="textarea">{{ training.context }}</span></li>
-                        <li><label>Responsable pédag.</label> <span sf-xeditable="form.children.supervisor">{{ training.supervisor }}</span></li>
+                        <li><label>Responsable pédag.</label> <span sf-xeditable="form.children.supervisors" data-type="select2">{{ training.supervisors|joinObjects:'fullName' }}</span></li>
                         <li><label>Cursus d'enseignement</label> <span sf-xeditable="form.children.teachingCursus">{{ training.teachingCursus.name }}</span></li>
-                        <li ng-if="training.teachingCursus.name === 'Autre'"><label>Autre cursus</label> <span sf-xeditable="form.children.otherCursus">{{ training.otherCursus }}</span></li>
+                        <li ng-if="training.teachingCursus.machineName == 'other'"><label>Autre cursus</label> <span sf-xeditable="form.children.otherCursus">{{ training.otherCursus }}</span></li>
                         <li><label>Domaine disciplinaire</label> <span sf-xeditable="form.children.disciplinaryDomain" on-change="unset('disciplinary')">{{ training.disciplinaryDomain.name }}</span></li>
                         <li ng-show="form.children.disciplinary"><label>Discipline</label> <span sf-xeditable="form.children.disciplinary">{{ training.disciplinary.name }}</span></li>
                     </ul>

@@ -3,6 +3,7 @@
     <div ng-if="training" class="row" xmlns="http://www.w3.org/1999/html">
         <div class="col-md-8">
             <div class="btn-group pull-right">
+                <a class="btn btn-fa" href="" tooltip="Bilan" ng-if="training.sessions.length && training._accessRights.view" ng-click="getBalanceSheet()"><span class="fa fa-file-excel-o"></span></a>
                 <a class="btn btn-fa" href="" tooltip="Publipostage" ng-click="$dialog.open('batch.publipost', { items: [training.id], service: 'training' })"><span class="fa fa-file-word-o"></span></a>
                 <a class="btn btn-fa" href="" ng-if="!training.session.promote" tooltip="Promouvoir la session" ng-if="training._accessRights.edit" ng-click="promote(1)"><span class="fa fa-star-o"></span></a>
                 <a class="btn btn-fa" href="" ng-if="training.session.promote" tooltip="Dépromouvoir la session" ng-if="training._accessRights.edit" ng-click="promote(0)"><span class="fa fa-star fa-highlight"></span></a>
@@ -34,6 +35,7 @@
                         <li><label>Horaires</label> <span sf-xeditable="form.children.session.children.schedule">{{ training.session.schedule }}</span></li>
                         <li><label>Tarif</label> <span sf-xeditable="form.children.session.children.price">{{ training.session.price }}</span></li>
                         <li><label>Inscriptions</label> <span sf-xeditable="form.children.session.children.registration">{{ $trainingBundle.registrationStates[training.session.registration] }}</span></li>
+                        <li><label>Afficher en ligne</label> <span sf-xeditable="form.children.session.children.displayOnline">{{ training.session.displayOnline ? 'Oui' : 'Non' }}</span></li>
                         <li><label>Participants max</label> <span sf-xeditable="form.children.session.children.maximumNumberOfRegistrations">{{ training.session.maximumNumberOfRegistrations }}</span></li>
                         <li><label>Date limite</label> <span sf-xeditable="form.children.session.children.limitRegistrationDate">{{ training.session.limitRegistrationDate|date: 'dd/MM/yyyy' }}</span></li>
                         <li ng-if="!training.session.registration"><label>Nombre d'inscriptions</label> <span sf-xeditable="form.children.session.children.numberOfRegistrations">{{ training.session.numberOfRegistrations }}</span></li>
@@ -65,9 +67,15 @@
             <!--
              Url
             -->
-            <div class="block" ng-if="session.registration >=2">
+            <div class="block" ng-if="session.displayOnline === true && session.registration !== 2">
                 <div class="block-body">
                     <div input-copy-clipboard="session.publicUrl"></div>
+                </div>
+            </div>
+
+            <div class="block" ng-if="session.registration === 2">
+                <div class="block-body">
+                    <div input-copy-clipboard="session.privateUrl"></div>
                 </div>
             </div>
 

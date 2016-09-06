@@ -32,6 +32,7 @@ class SygeforListExtension extends Extension
         $loader->load('services.yml');
 
         $this->loadCSVServices($config['batch']['csv'], $container);
+        $this->loadConvertTypeServices($config['batch']['convert_type'], $container);
         $this->loadPubliPostServices($config['batch']['mailing'], $container);
         $this->loadHumanReadablePropertyAccessor($config['batch']['mailing'], $container);
         $this->loadPDFServices($config['batch']['pdf'], $container);
@@ -52,6 +53,24 @@ class SygeforListExtension extends Extension
               ->setDefinition($exportId, $decorator)
               ->addMethodCall("setTargetClass", array($options['class']))
               ->addMethodCall("setOptions", array($options))
+              ->setTags(array('sygefor_list.batch_operation_provider' => array()));
+        }
+    }
+
+
+    /**
+     * Adds csv export service definitions according
+     * @param array $config
+     * @param ContainerBuilder $container
+     */
+    private function loadConvertTypeServices(array $config, ContainerBuilder $container)
+    {
+        foreach ($config as $id => $options) {
+            $exportId = sprintf("sygefor_list.batch.convert_type.%s", $id);
+            $decorator = new DefinitionDecorator('sygefor_list.batch.convert_type');
+            $container
+              ->setDefinition($exportId, $decorator)
+              ->addMethodCall("setTargetClass", array($options['class']))
               ->setTags(array('sygefor_list.batch_operation_provider' => array()));
         }
     }

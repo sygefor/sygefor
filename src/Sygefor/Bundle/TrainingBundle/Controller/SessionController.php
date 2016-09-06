@@ -1,17 +1,15 @@
 <?php
 namespace Sygefor\Bundle\TrainingBundle\Controller;
 
+use Sygefor\Bundle\TrainerBundle\Entity\Participation;
+use Sygefor\Bundle\TrainingBundle\Entity\Material;
 use Sygefor\Bundle\TrainingBundle\SpreadSheet\EvaluationSheet;
 use Sygefor\Bundle\TrainingBundle\Entity\Training;
 use Symfony\Bundle\FrameworkBundle\Controller\Controller;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\ParamConverter;
-use Sensio\Bundle\FrameworkExtraBundle\Configuration\Template;
-use Doctrine\ORM\EntityManager;
 use Symfony\Component\HttpFoundation\Request;
-use Sensio\Bundle\FrameworkExtraBundle\Configuration\Security;
 use JMS\SecurityExtraBundle\Annotation\SecureParam;
-use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Security\Core\SecurityContext;
 use Sygefor\Bundle\TrainingBundle\Form\SessionType;
 use Sygefor\Bundle\TrainingBundle\Entity\Session;
@@ -85,6 +83,7 @@ class SessionController extends Controller
             if ($form->isValid()) {
                 $em = $this->getDoctrine()->getManager();
                 $em->persist($session);
+                $training->updateTimestamps();
                 $em->flush();
                 return array('session' => $session);
             }
@@ -129,12 +128,26 @@ class SessionController extends Controller
             $form->handleRequest($request);
             if ($form->isValid()) {
                 $em = $this->getDoctrine()->getManager();
-                $em->persist($cloned);
-                $em->flush();
 
-                foreach ($session->getTrainers() as $trainer) {
-                    $cloned->addTrainer($trainer);
+                foreach ($session->getParticipations() as $participation) {
+                    $newParticipation = new Participation();
+                    $newParticipation->setSession($cloned);
+                    $newParticipation->setTrainer($participation->getTrainer());
+                    $newParticipation->setOrganization($participation->getTrainer()->getOrganization());
+                    $newParticipation->setIsUrfist($participation->getTrainer()->getIsUrfist());
+                    $cloned->addParticipation($newParticipation);
+                    $em->persist($newParticipation);
                 }
+
+                // clone duplicate materials
+                $tmpMaterials = $session->getMaterials();
+                if (!empty($tmpMaterials)) {
+                    foreach ($tmpMaterials as $material) {
+                        $newMat = clone $material;
+                        $cloned->addMaterial($newMat);
+                    }
+                }
+
                 $em->persist($cloned);
                 $em->flush();
                 return array('session' => $cloned);
@@ -153,12 +166,14 @@ class SessionController extends Controller
      */
     public function removeAction(Session $session)
     {
+        $training = $session->getTraining();
         $em = $this->getDoctrine()->getManager();
         $em->remove($session);
+        $training->updateTimestamps();
         $em->flush();
         $this->get('fos_elastica.index')->refresh();
 
-        return $this->redirect($this->generateUrl('session.search'));
+        return $this->redirect($this->generateUrl('training.view', ['id' => $training->getId()]));
 
     }
 

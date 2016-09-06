@@ -7,7 +7,6 @@ use Sygefor\Bundle\CoreBundle\Entity\Organization;
 use Sygefor\Bundle\CoreBundle\Entity\Term\Disciplinary;
 use Sygefor\Bundle\CoreBundle\Entity\Term\PublicType;
 use Symfony\Component\Form\AbstractType;
-use Symfony\Component\Form\Form;
 use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Component\Form\FormEvent;
 use Symfony\Component\Form\FormEvents;
@@ -92,6 +91,9 @@ abstract class AbstractTraineeType extends AbstractType
           ->add('status', null, array(
               'label' => 'Statut'))
 
+          ->add('isPaying', null, array(
+              'label' => 'Payant'))
+
           ->add('publicCategory', 'entity', array(
               'class' => 'Sygefor\Bundle\CoreBundle\Entity\Term\PublicType',
               'required' => true,
@@ -156,6 +158,7 @@ abstract class AbstractTraineeType extends AbstractType
                     return $er->createQueryBuilder('i')
                       ->where('i.organization = :organization')
                       ->setParameter('organization', $organization)
+                      ->orWhere('i.organization is null')
                       ->orderBy('i.name', 'ASC');
                 }));
         }

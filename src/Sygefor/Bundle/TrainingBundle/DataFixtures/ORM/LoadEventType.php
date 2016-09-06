@@ -40,6 +40,9 @@ class LoadEventType extends AbstractDataFixture
             $eventType = new EventType();
             $eventType->setId(++$this->autoId);
             $eventType->setName($name);
+            if ($name === "Autre") {
+                $eventType->setMachineName('other');
+            }
             $eventType->setPosition($name == "Autre" ? 1 : 0);
             $manager->persist($eventType) ;
         }

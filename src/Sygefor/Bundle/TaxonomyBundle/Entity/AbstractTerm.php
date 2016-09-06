@@ -1,7 +1,8 @@
 <?php
 namespace Sygefor\Bundle\TaxonomyBundle\Entity;
 
-use Sygefor\Bundle\TaxonomyBundle\Vocabulary\NationalVocabularyInterface;
+use Sygefor\Bundle\CoreBundle\Entity\Organization;
+use Sygefor\Bundle\TaxonomyBundle\Vocabulary\VocabularyInterface;
 use Doctrine\ORM\Mapping as ORM;
 use Gedmo\Mapping\Annotation as Gedmo;
 use Sygefor\Bundle\TaxonomyBundle\Vocabulary\VocabularyProviderInterface;
@@ -13,7 +14,7 @@ use JMS\Serializer\Annotation as Serializer;
  * @package Sygefor\Bundle\TaxonomyBundle\Entity
  * @ORM\MappedSuperclass()
  */
-abstract class AbstractTerm implements NationalVocabularyInterface
+abstract class AbstractTerm implements VocabularyInterface
 {
     use SortableTrait;
 
@@ -49,17 +50,22 @@ abstract class AbstractTerm implements NationalVocabularyInterface
     private $private = false;
 
     /**
+     * @var Organization $organization
+     * @ORM\ManyToOne(targetEntity="Sygefor\Bundle\CoreBundle\Entity\Organization")
+     * @ORM\JoinColumn(nullable=true, onDelete="CASCADE")
+     */
+    protected $organization;
+
+    /**
+     * @var string $machineName
+     * @ORM\Column(name="machine_name", type="string", length=255, nullable=true)
+     */
+    protected $machineName;
+
+    /**
      * @return mixed
      */
     abstract public function getVocabularyName();
-
-    /**
-     * @return boolean
-     */
-    public function isNational()
-    {
-        return true;
-    }
 
     /**
      * @param int $id
@@ -107,6 +113,67 @@ abstract class AbstractTerm implements NationalVocabularyInterface
     public function setPrivate($private)
     {
         $this->private = $private;
+    }
+
+    /**
+     * @param Organization $organization
+     */
+    public function setOrganization($organization)
+    {
+        $this->organization = $organization;
+    }
+
+    /**
+     * @return Organization
+     */
+    public function getOrganization()
+    {
+        return $this->organization;
+    }
+
+    /**
+     * api helper
+     * @Serializer\VirtualProperty
+     * @Serializer\Groups({"Default", "api"})
+     * @return integer
+     */
+    public function getOrganizationId()
+    {
+        return $this->getOrganization() ? $this->getOrganization()->getId() : null;
+    }
+
+    /**
+     * @return string|null
+     */
+    public function getMachineName()
+    {
+        return $this->machineName;
+    }
+
+    /**
+     * @param string
+     */
+    public function setMachineName($machineName)
+    {
+        $this->machineName = $machineName;
+    }
+
+    /**
+     * If term is used for internal system processes
+     * @return bool
+     */
+    public function isLocked($machineName = null)
+    {
+        return !empty($this->machineName);
+    }
+
+    /**
+     * Check machine name match
+     * @return bool
+     */
+    public function isMachineName($machineName)
+    {
+        return $this->machineName === $machineName;
     }
 
     /**

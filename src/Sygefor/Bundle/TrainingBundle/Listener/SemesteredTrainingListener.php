@@ -98,27 +98,27 @@ class SemesteredTrainingListener extends Listener
             foreach ($semTrainings as $semT) {
                 $this->scheduledForDeletion []= $semT->getId() ;
             }
-
-        } else if (get_class($object) == 'Sygefor\Bundle\TrainingBundle\Entity\Session') {
-            //Here a session is being removed. We need to update/delete the semesteredTraining its associated with
-            /** @var \DateTime $date */
-            $date = $object->getDateBegin();
-
+            $this->scheduledForDeletion[] = $object->getId().'_'.$object->getFirstSessionPeriodYear().'_'.$object->getFirstSessionPeriodSemester();
+        }
+        else if (get_class($object) == 'Sygefor\Bundle\TrainingBundle\Entity\Session')
+        {
             $training = $object->getTraining();
             if ($training) {
+                // remove all semestered training associated to this training because of root id change possibility
+                $semTrainings = SemesteredTraining::getSemesteredTrainingsForTraining($training);
+                foreach ($semTrainings as $semT) {
+                    $this->scheduledForDeletion [] = $semT->getId();
+                }
+                $this->scheduledForDeletion[] = $training->getId().'_'.$training->getFirstSessionPeriodYear().'_'.$training->getFirstSessionPeriodSemester();
+                $this->scheduledForDeletion[] = $training->getId().'_'.$object->getYear().'_'.$object->getSemester();
+
+                // we need to update the semesteredTraining its associated with
+                $date = $object->getDateBegin();
+                $training = $object->getTraining();
                 $year = $date->format('Y');
                 $semester = ($date->format('m') < 6) ? 1 : 2;
-
-                /** @var SemesteredTraining $semesteredTraining */
                 $semesteredTraining = new SemesteredTraining($year, $semester, $training);
-                $sessionsForSemesterdTraining = $semesteredTraining->getSessions();
-
-                //if one (or less) session was present in semestered training, we can remove it
-                if ( count ($sessionsForSemesterdTraining) == 0 ) {
-                    $this->scheduledForDeletion []= $semesteredTraining->getId();
-                } else {//we update session list semestered training and give it to the "to be updated" object list
-                    $this->scheduledForUpdate []= $semesteredTraining;
-                }
+                $this->scheduledForUpdate [] = $semesteredTraining;
             }
         }
     }
@@ -133,8 +133,8 @@ class SemesteredTrainingListener extends Listener
         if (in_array('Sygefor\Bundle\TrainingBundle\Entity\Training', class_parents(get_class($object)))) {
             $semTrainings = SemesteredTraining::getSemesteredTrainingsForTraining($object);
             $this->scheduledForInsertion = array_merge($this->scheduledForInsertion, $semTrainings);
-        } else if (get_class($object) == 'Sygefor\Bundle\TrainingBundle\Entity\Session') {
-
+        }
+        else if (get_class($object) == 'Sygefor\Bundle\TrainingBundle\Entity\Session') {
             //building SemesteredTraining object
             $training = $object->getTraining();
             if ($training) {
@@ -146,7 +146,18 @@ class SemesteredTrainingListener extends Listener
                 /** @var SemesteredTraining $semesteredTraining */
                 $semesteredTraining = new SemesteredTraining($year, $semester, $training);
 
-                $this->scheduledForUpdate[] = $semesteredTraining ;
+                // delete initial semestered training if needed
+                $keepInitialSemesteredTraining = false;
+                foreach ($training->getSessions() as $session) {
+                    if ((int)$session->getSemester() === $training->getFirstSessionPeriodSemester() && (int)$session->getYear() === $training->getFirstSessionPeriodYear()) {
+                        $keepInitialSemesteredTraining = true;
+                        break;
+                    }
+                }
+                if (!$keepInitialSemesteredTraining) {
+                    $this->scheduledForDeletion[] = $training->getId() . '_' . $training->getFirstSessionPeriodYear() . '_' . $training->getFirstSessionPeriodSemester();
+                }
+                $this->scheduledForUpdate[] = $semesteredTraining;
             }
         }
     }

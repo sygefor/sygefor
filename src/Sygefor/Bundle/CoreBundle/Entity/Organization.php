@@ -55,14 +55,12 @@ class Organization
     /**
      * @var ArrayCollection $users
      * @ORM\OneToMany(targetEntity="Sygefor\Bundle\UserBundle\Entity\User", mappedBy="organization", cascade={"persist", "merge"})
-     * @Serializer\Exclude()
      */
     private $users;
 
     /**
      * @var Institution $institution
      * @ORM\ManyToOne(targetEntity="Sygefor\Bundle\TrainingBundle\Entity\Term\Institution")
-     * @Serializer\Exclude()
      */
     private $institution;
 
@@ -70,6 +68,12 @@ class Organization
      * @ORM\Column(name="map", type="json_array", nullable=true)
      */
     protected $map;
+
+    /**
+     * @var bool $traineeRegistrable
+     * @ORM\Column(name="trainee_registrable", type="boolean")
+     */
+    protected $traineeRegistrable = true;
 
     /**
      * Constructor
@@ -190,6 +194,22 @@ class Organization
     public function setInstitution($institution)
     {
         $this->institution = $institution;
+    }
+
+    /**
+     * @return boolean
+     */
+    public function getTraineeRegistrable()
+    {
+        return $this->traineeRegistrable;
+    }
+
+    /**
+     * @param boolean $traineeRegistrable
+     */
+    public function setTraineeRegistrable($traineeRegistrable)
+    {
+        $this->traineeRegistrable = $traineeRegistrable;
     }
 
     function __toString()

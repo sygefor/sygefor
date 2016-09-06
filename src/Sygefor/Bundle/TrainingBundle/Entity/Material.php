@@ -43,6 +43,14 @@ abstract class Material
     protected $training;
 
     /**
+     * @var Session $session
+     * @ORM\ManyToOne(targetEntity="Sygefor\Bundle\TrainingBundle\Entity\Session", inversedBy="materials")
+     * @ORM\JoinColumn(nullable=true)
+     * @Serializer\Exclude
+     */
+    protected $session;
+
+    /**
      * Get id
      *
      * @return integer
@@ -76,18 +84,34 @@ abstract class Material
     }
 
     /**
-     * @param \Sygefor\Bundle\TrainingBundle\Entity\Training $training
+     * @param Training $training
      */
-    public function setTraining($training)
+    public function setTraining($training = null)
     {
         $this->training = $training;
     }
 
     /**
-     * @return \Sygefor\Bundle\TrainingBundle\Entity\Training
+     * @return Training
      */
     public function getTraining()
     {
         return $this->training;
+    }
+
+    /**
+     * @return Session
+     */
+    public function getSession()
+    {
+        return $this->session;
+    }
+
+    /**
+     * @param Session $session
+     */
+    public function setSession($session = null)
+    {
+        $this->session = $session;
     }
 }

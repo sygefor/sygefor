@@ -24,5 +24,9 @@ class InstitutionType extends VocabularyType {
         $builder->add('address','text', array ('label' => 'Adresse'));
         $builder->add('postal','text', array ('label' => 'Code postal'));
         $builder->add('city','text', array ('label' => 'Ville'));
+        $builder->add('geographicOrigin','entity', array (
+            'class' => 'Sygefor\Bundle\TrainingBundle\Entity\Term\GeographicOrigin',
+            'label' => 'Origine géographique'
+        ));
     }
 }

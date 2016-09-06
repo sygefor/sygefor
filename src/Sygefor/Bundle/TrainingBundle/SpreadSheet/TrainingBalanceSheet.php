@@ -12,6 +12,10 @@ namespace Sygefor\Bundle\TrainingBundle\SpreadSheet;
 
 
 use Sygefor\Bundle\TraineeBundle\Entity\Term\PresenceStatus;
+use Sygefor\Bundle\TrainerBundle\Entity\Participation;
+use Sygefor\Bundle\TrainingBundle\Entity\ParticipantsSummary;
+use Sygefor\Bundle\TrainingBundle\Entity\Session;
+use Symfony\Component\DependencyInjection\Container;
 
 class TrainingBalanceSheet
 {
@@ -58,7 +62,7 @@ class TrainingBalanceSheet
 
         $response =  $this->phpExcel->createStreamedResponse($writer);
         $response->headers->set('Content-Type', 'text/vnd.ms-excel; charset=utf-8');
-        $response->headers->set('Content-Disposition', 'attachment;filename=fiche_'.strtolower($this->training->getTypeLabel()).'_'.$this->training->getId().'.xls');
+        $response->headers->set('Content-Disposition', 'attachment;filename=fiche_'.strtolower(Container::camelize($this->training->getTypeLabel())).'_'.$this->training->getId().'.xls');
         $response->headers->set('Pragma', 'public');
         $response->headers->set('Cache-Control', 'maxage=1');
         return $response;
@@ -70,8 +74,12 @@ class TrainingBalanceSheet
      */
     private function collectSessionInfos () {
         $sessions = $this->training->getSessions();
-        $infos = array();
-
+        $infos = array(
+          'publics' => array(),
+          'dates' => '',
+          'trainers' => array(),
+          'duration' => 0
+        );
 
         $publicType = $this->container->get('doctrine')->getRepository('SygeforCoreBundle:Term\PublicType')
             ->findAll();
@@ -81,52 +89,57 @@ class TrainingBalanceSheet
 
             $sDates = array();
             $sPlaces = array();
+            /** @var Session $session */
             foreach($sessions as $session) {
-                if (empty($infos['publics'])) { $infos['publics'] = array ();}
-                if (empty($infos['dates'])) { $infos['dates'] = "";}
-                if (empty($infos['trainers'])) { $infos['trainers'] = array();}
 
-                /** @var Trainer $trainer */
-                foreach ($session->getTrainers() as $trainer) {
-                    $infos['trainers'][$trainer->getId()] = $trainer;
+                foreach ($session->getParticipations() as $participation) {
+                    $infos['trainers'][$participation->getTrainer()->getId()] = $participation->getTrainer();
                 }
 
                 //registrations stats
                 if (empty($infos['regstats'])) {
                     $infos['regstats'] = array();
-                    /** @var TeachingCursus $tc */
-                    $infos['regstats']['allregs'] =  array('label' => "Nombre total de demandes d'inscription :", 'count' => 0);
+                    $infos['regstats']['allregs'] = array('label' => "Nombre total de demandes d'inscription :", 'count' => 0);
                     $infos['regstats']['present'] =  array('label' => "Nombre total de formés :", 'count' => 0);
                     foreach ($publicType as $pt) {
                         $ptc = $pt->getParent();
-                        $infos['regstats'][$pt->getId()] = array('label' => (!empty($ptc) ? "   " : "").$pt->getName(), 'count' => 0);
+                        $infos['regstats'][$pt->getId()] = array('label' => (!empty($ptc) ? "   " : "") . $pt->getName(), 'count' => 0);
                     }
                 }
 
-                /** @var Inscription $inscription */
-                foreach ($session->getInscriptions() as $inscription) {
-                    $presStatus = $inscription->getPresenceStatus() ;
-                    if ( !empty($presStatus) && ($presStatus->getStatus() == PresenceStatus::STATUS_PRESENT) ) {
+                if ($session->getRegistration() !== Session::REGISTRATION_DEACTIVATED) {
+                    /** @var Inscription $inscription */
+                    foreach ($session->getInscriptions() as $inscription) {
+                        $presStatus = $inscription->getPresenceStatus();
+                        if (!empty($presStatus) && ($presStatus->getStatus() == PresenceStatus::STATUS_PRESENT)) {
 
-                        /** @var Trainee $trainee */
-                        $trainee = $inscription->getTrainee();
-                        $tpt = $trainee->getPublicCategory();
-                        $tps = $trainee->getProfessionalSituation();
+                            /** @var Trainee $trainee */
+                            $trainee = $inscription->getTrainee();
+                            $tpt = $trainee->getPublicCategory();
+                            $tps = $trainee->getProfessionalSituation();
 
-                        //echo $trainee->getFullName();
-                        /** @var PublicType $pt */
-                        foreach ($publicType as $pt) {
-                            //echo $pt->getId()."-";
-                            if ( (!empty($tps) && ( $tps->getId() == $pt->getId())) || ( !empty($tpt) && ($tpt->getId() == $pt->getId()))) {
-                                $infos['regstats'][$pt->getId()]['count']++;
+                            //echo $trainee->getFullName();
+                            /** @var PublicType $pt */
+                            foreach ($publicType as $pt) {
+                                //echo $pt->getId()."-";
+                                if ((!empty($tps) && ($tps->getId() == $pt->getId())) || (!empty($tpt) && ($tpt->getId() == $pt->getId()))) {
+                                    $infos['regstats'][$pt->getId()]['count']++;
+                                }
                             }
+                            $infos['regstats']['present']['count']++;
                         }
 
-                        $infos['regstats']['present']['count']++;
                     }
-
+                    $infos['regstats']['allregs']['count'] += count($session->getInscriptions());
                 }
-                $infos['regstats']['allregs']['count'] += count($session->getInscriptions());
+                else {
+                    $total = 0;
+                    /** @var ParticipantsSummary $summary */
+                    foreach($session->getParticipantsSummaries() as $summary) {
+                        $infos['regstats'][$summary->getPublicType()->getId()]['count'] += $summary->getCount();
+                        $total += $summary->getCount();
+                    }$infos['regstats']['allregs']['count'] += $total;
+                }
 
                 //costs
                 if (empty($infos['costs'])) { $infos['costs'] = array();}
@@ -180,8 +193,9 @@ class TrainingBalanceSheet
                 } else {
                     $infos['takings']['other']['amount'] += $session->getOtherTaking();
                 }
-                $sDates []= $session->getDateBegin()->format('d/m/Y');
+                $sDates []= $this->getDates($session);
                 $sPlaces []= $session->getPlace();
+                $infos['duration'] += $session->getHourDuration();
             }
 
         }
@@ -306,9 +320,9 @@ class TrainingBalanceSheet
         //initiative
         $activeSheet->setCellValue('A'.$currentRow, "Initiative :")
             ->setCellValue('B'.$currentRow, "de l'URFIST")
-            ->setCellValue('C'.$currentRow,$this->training->getExternInitiative() ? 'X' : '')
+            ->setCellValue('C'.$currentRow,!$this->training->getExternInitiative() ? 'Oui' : 'Non')
             ->setCellValue('B'.($currentRow+1), "demande extérieure")
-            ->setCellValue('C'.($currentRow+1),$this->training->getExternInitiative() ? '' : 'X');
+            ->setCellValue('C'.($currentRow+1),$this->training->getExternInitiative() ? 'Oui' : 'Non');
         $currentRow++;
         $activeSheet->mergeCells('A' . ($currentRow-1) . ':A' . $currentRow);
         //storing line for later adding double thickness
@@ -349,9 +363,9 @@ class TrainingBalanceSheet
             //initiative
             $activeSheet->setCellValue('A'.$currentRow, "Evaluation/notation :")
                 ->setCellValue('B'.$currentRow, "Avec évaluation / notation")
-                ->setCellValue('C'.$currentRow,$this->training->getEvaluation() ? 'X' : '')
+                ->setCellValue('C'.$currentRow,$this->training->getEvaluation() ? 'Oui' : 'Non')
                 ->setCellValue('B'.($currentRow+1), "Sans évaluation / notation")
-                ->setCellValue('C'.($currentRow+1),$this->training->getEvaluation() ? '' : 'X');
+                ->setCellValue('C'.($currentRow+1),!$this->training->getEvaluation() ? 'Oui' : 'Non');
             $currentRow++;
             $activeSheet->mergeCells('A' . ($currentRow-1) . ':A' . $currentRow);
             //storing line for later adding double thickness
@@ -367,17 +381,19 @@ class TrainingBalanceSheet
         //$currentRow++;
         //evaluation
         //$activeSheet->setCellValue('A'.$currentRow, "Evaluation/notation :")
-        //    ->setCellValue('B'.$currentRow, $this->training->getEvaluation() ? 'X' : '');
+        //    ->setCellValue('B'.$currentRow, $this->training->getEvaluation() ? 'Oui' : 'Non');
 
-//        $currentRow++;
-        //duration @todo
-//        $activeSheet->setCellValue('A'.$currentRow, "Durée :")
-//            ->setCellValue('B'.$currentRow, $this->training->getDuration());
+        //duration
+        if(!empty($infos['duration'])) {
+            $currentRow++;
+            $activeSheet->setCellValue('A'.$currentRow, "Durée :")
+              ->setCellValue('B'.$currentRow, $infos['duration']." heure(s)");
+        }
 
         //------------------------------------------------------------------------------------
         $currentRow++;
         //dates
-        $activeSheet->setCellValue('A'.$currentRow, "Dates :")
+        $activeSheet->setCellValue('A'.$currentRow, "Date(s) :")
             ->setCellValue('B'.$currentRow, (!empty($infos['dates']))  ?$infos['dates'] :"");
         $activeSheet->mergeCells('B' . $currentRow . ':C' . $currentRow);
 
@@ -451,8 +467,17 @@ class TrainingBalanceSheet
         //------------------------------------------------------------------------------------
         $currentRow++;
         //responsable
+
+        $supervisors = '';
+        foreach ($this->training->getSupervisors() as $supervisor) {
+            if ($supervisors !== "") {
+                $supervisors += ", ";
+            }
+            $supervisors += $supervisor->getFirstName() . " " . $supervisor->getLastName();
+        }
+
         $activeSheet->setCellValue('A'.$currentRow, "Responsable ".(( $this->training->getType() != 'meeting') ? "pédagogique " : " ").":")
-            ->setCellValue('B'.$currentRow, $this->training->getSupervisor());
+            ->setCellValue('B'.$currentRow, $supervisors);
         $activeSheet->mergeCells('B' . $currentRow . ':C' . $currentRow);
         //storing line for later adding double thickness
         $linebreaks []= $currentRow;
@@ -531,5 +556,16 @@ class TrainingBalanceSheet
         foreach ($linebreaks as $lb) {
             $activeSheet->getStyle('A'.$lb.':C'.$lb)->applyFromArray($linechangeStyleArray);
         }
+    }
+
+    /**
+     * @param Session $session
+     * @return string
+     */
+    protected function getDates($session) {
+        if (!$session->getDateEnd() || $session->getDateBegin()->format('d/m/y') === $session->getDateEnd()->format('d/m/y')) {
+            return $session->getDateBegin()->format('d/m/Y');
+        }
+        return $session->getDateBegin()->format('d/m/Y') . ' - ' . $session->getDateEnd()->format('d/m/Y');
     }
 } 

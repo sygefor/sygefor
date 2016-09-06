@@ -22,7 +22,13 @@ class EmailTemplateVocabularyType extends VocabularyType
             'label' => "Status d'inscription",
             'class' => 'SygeforTraineeBundle:Term\InscriptionStatus',
             'empty_value' => '',
-            'empty_data'  => null
+            'empty_data'  => null,
+            'query_builder' => function(EntityRepository $er) {
+                return $er->createQueryBuilder('i')
+                    ->where('i.organization = :orgId')->setParameters(array('orgId'=>$this->securityContext->getToken()->getUser()->getOrganization()->getId()))
+                    ->orWhere('i.organization is null')
+                    ->orderBy('i.name');
+            }
         ));
         $builder->add('attachmentTemplates', 'entity', array(
             'required' => false,
@@ -30,7 +36,9 @@ class EmailTemplateVocabularyType extends VocabularyType
             'class' => 'SygeforListBundle:Term\PublipostTemplate',
             'query_builder' => function(EntityRepository $er) {
                 return $er->createQueryBuilder('d')
-                    ->where('d.organization = :orgId')->setParameters(array('orgId'=>$this->securityContext->getToken()->getUser()->getOrganization()->getId()));
+                    ->where('d.organization = :orgId')->setParameters(array('orgId'=>$this->securityContext->getToken()->getUser()->getOrganization()->getId()))
+                    ->orWhere('d.organization is null')
+                    ->orderBy('d.name');
             },
             'multiple' => 'true',
             'empty_value' => '',
@@ -41,7 +49,12 @@ class EmailTemplateVocabularyType extends VocabularyType
             'label' => 'Status de présence',
             'class' => 'SygeforTraineeBundle:Term\PresenceStatus',
             'empty_value' => '',
-            'empty_data'  => null
+            'empty_data'  => null,
+            'query_builder' => function(EntityRepository $er) {
+                return $er->createQueryBuilder('p')
+                    ->where('p.organization = :orgId')->setParameters(array('orgId'=>$this->securityContext->getToken()->getUser()->getOrganization()->getId()))
+                    ->orWhere('p.organization is null');
+            }
         ));
     }
 

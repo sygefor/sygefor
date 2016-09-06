@@ -28,7 +28,9 @@
                         <li><label> National</label> <span>{{ training.national ? 'Oui' : 'Non' }}</span></li>
                         <li><label> Nature</label>
                         {% if training.eventKind is not null %}
-                            <span>{{ training.eventKind.name  }}</span>
+                            {% for eventKind in training.eventKind %}
+                                {{ eventKind.name }}
+                            {% endfor %}
                         {% endif %}
                         </li>
                         <li><label> Partenaires</label> <span> {{ training.partners }}</span></li>
@@ -39,7 +41,7 @@
                         </li>
                         <li><label> Statut</label>
                         {% if training.session is not null %}
-                            <span> {{ training.session.published ? 'En ligne' : 'Hors ligne' }}</span>
+                            <span> {{ training.session.displayOnline ? 'En ligne' : 'Hors ligne' }}</span>
                         {% endif %}
                         </li>
                     </ul>
@@ -57,14 +59,14 @@
                         <div class="col-md-6">
                             <ul class="summary">
                                 <li><label> Date</label> <span>{{ training.session.dateBegin|date('d/m/Y') }}</span></li>
-                                <li><label> Date limite d'inscription</label> <span>{{ training.session.limitSubscriptionDate|date('d/m/Y') }}</span></li>
+                                <li><label> Date limite d'inscription</label> <span>{{ training.session.limitRegistrationDate|date('d/m/Y') }}</span></li>
                                 <li><label> Lieu</label> <span>{{ training.session.place }}</span></li>
                             </ul>
                         </div>
                         <div class="col-md-6">
                             <ul class="summary">
-                                <li><label> Places disponibles</label> <span>{{ training.session.maximumNumberOfSubscriptions }}</span></li>
-                                <li><label> Inscrits</label> <span>{{ training.session.numberOfSubscriptions }}</span></li>
+                                <li><label> Places disponibles</label> <span>{{ training.session.maximumNumberOfRegistrations }}</span></li>
+                                <li><label> Inscrits</label> <span>{{ training.session.numberOfRegistrations }}</span></li>
                                 <li><label> Présents</label> <span>{{ training.session.numberOfParticipants }}</span></li>
                             </ul>
                         </div>

@@ -49,10 +49,6 @@ class TrainingCourseType extends AbstractTrainingType
                 'required' => false,
                 'label' => "Contexte"
             ))
-            ->add('supervisor', null, array(
-                'required' => false,
-                'label' => 'Responsable pédagogique'
-            ))
             ->add('teachingCursus', 'entity', array(
                   'required' => false,
                   'class' => 'Sygefor\Bundle\TrainingBundle\Entity\Term\TeachingCursus',
@@ -121,6 +117,7 @@ class TrainingCourseType extends AbstractTrainingType
                     return $er->createQueryBuilder('i')
                       ->where('i.organization = :organization')
                       ->setParameter('organization', $organization)
+                      ->orWhere('i.organization is null')
                       ->orderBy('i.name', 'ASC');
                 }
               ));

@@ -26,7 +26,7 @@ class EvaluationNotedCriterion
     /**
      * @ORM\Id
      * @ORM\ManyToOne(targetEntity="Sygefor\Bundle\TraineeBundle\Entity\Evaluation", inversedBy="criteria")
-     * @ORM\JoinColumn(name="inscription_id", referencedColumnName="inscription_id")
+     * @ORM\JoinColumn(name="inscription_id", referencedColumnName="inscription_id", onDelete="CASCADE")
      * @Serializer\Exclude
      */
     protected $evaluation;
@@ -34,7 +34,7 @@ class EvaluationNotedCriterion
     /**
      * @ORM\Id
      * @ORM\ManyToOne(targetEntity="Sygefor\Bundle\TraineeBundle\Entity\Term\EvaluationCriterion")
-     * @ORM\JoinColumn(name="criterion_id", referencedColumnName="id")
+     * @ORM\JoinColumn(name="criterion_id", referencedColumnName="id", onDelete="CASCADE")
      * @Serializer\Groups({"Default", "api.attendance"})
      */
     protected $criterion;

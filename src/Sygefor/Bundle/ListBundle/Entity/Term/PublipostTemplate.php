@@ -9,8 +9,8 @@ namespace Sygefor\Bundle\ListBundle\Entity\Term;
 
 use Doctrine\ORM\Mapping as ORM;
 use Sygefor\Bundle\CoreBundle\Entity\UploadableTrait;
-use Sygefor\Bundle\TaxonomyBundle\Entity\AbstractOrganizationTerm;
-use Sygefor\Bundle\TaxonomyBundle\Vocabulary\LocalVocabularyInterface;
+use Sygefor\Bundle\TaxonomyBundle\Entity\AbstractTerm;
+use Sygefor\Bundle\TaxonomyBundle\Vocabulary\VocabularyInterface;
 use Symfony\Component\HttpFoundation\File\File;
 use Symfony\Component\HttpFoundation\File\UploadedFile;
 use Symfony\Component\Validator\Constraints as Assert;
@@ -24,7 +24,7 @@ use Symfony\Component\Validator\ExecutionContext;
  * @ORM\HasLifecycleCallbacks
 
  */
-class PublipostTemplate extends AbstractOrganizationTerm implements LocalVocabularyInterface
+class PublipostTemplate extends AbstractTerm implements VocabularyInterface
 {
 
     use UploadableTrait;
@@ -69,7 +69,10 @@ class PublipostTemplate extends AbstractOrganizationTerm implements LocalVocabul
         return 'publiposttemplatevocabulary';
     }
 
-
+    public static function getVocabularyStatus()
+    {
+        return VocabularyInterface::VOCABULARY_LOCAL;
+    }
 
     /**
      * @Assert\Callback()

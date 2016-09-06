@@ -95,7 +95,7 @@ sygeforApp.config(["$listStateProvider", "$dialogProvider", "$widgetProvider", f
                 $scope.dialog.close(data);
             };
         },
-        templateUrl: 'trainingbundle/session/dialogs/create.html',
+        templateUrl: 'trainingbundle/session/dialogs/crud/create.html',
         resolve:{
             // @todo blaise : fix form directive to remove this resolve
             form: function ($http, $dialogParams){
@@ -118,7 +118,7 @@ sygeforApp.config(["$listStateProvider", "$dialogProvider", "$widgetProvider", f
                 $scope.dialog.close(response.session);
             };
         },
-        templateUrl: 'trainingbundle/session/dialogs/duplicate.html',
+        templateUrl: 'trainingbundle/session/dialogs/crud/duplicate.html',
         resolve:{
             // @todo blaise : fix form directive to remove this resolve
             form: function ($http, $dialogParams){
@@ -144,14 +144,14 @@ sygeforApp.config(["$listStateProvider", "$dialogProvider", "$widgetProvider", f
                 });
             };
         },
-        templateUrl: 'trainingbundle/session/dialogs/delete.html'
+        templateUrl: 'trainingbundle/session/dialogs/crud/delete.html'
     });
 
     /**
      * trainer.add: modal for adding a trainer to a session
      */
     $dialogProvider.dialog('trainer.add', /* @ngInject */ {
-        templateUrl: 'trainingbundle/session/dialogs/trainer-add.html',
+        templateUrl: 'trainingbundle/session/dialogs/trainer/trainer-add.html',
         controller: 'TrainerAddController',
         resolve:{
             // @todo blaise : fix form directive to remove this resolve
@@ -163,11 +163,63 @@ sygeforApp.config(["$listStateProvider", "$dialogProvider", "$widgetProvider", f
         }
     });
 
+    // add material (general dialog)
+    $dialogProvider.dialog('session.material.add', /* @ngInject */ {
+        controller:function ($scope, $modalInstance, $dialogParams) {
+            $scope.dialog = $modalInstance;
+            $scope.dialog.params = angular.copy($dialogParams);
+            $scope.removeCallback = $dialogParams.removeCallback;
+            $scope.downloadCallback = $dialogParams.downloadCallback;
+            $scope.addCallback = $dialogParams.addCallback;
+        },
+        templateUrl: 'trainingbundle/session/dialogs/material/add.html'
+    });
+
+    // remove material
+    $dialogProvider.dialog('session.material.remove', /* @ngInject */ {
+        controller:function ($scope, $modalInstance, $dialogParams, $http) {
+            $scope.dialog = angular.copy($modalInstance);
+            $scope.dialog.params = $dialogParams;
+            $scope.ok = function() {
+                var url = Routing.generate('material.remove', {id: $dialogParams.material.id});
+                $http.get(url).then($scope.dialog.close);
+            }
+        },
+        templateUrl: 'trainingbundle/training/dialogs/material/remove.html'
+    });
+
+    //add link material (specific dialog)
+    $dialogProvider.dialog('session.linkmaterial.add', /* @ngInject */ {
+        controller:function ($scope, $modalInstance, $dialogParams, form) {
+            $scope.dialog = $modalInstance;
+            $scope.formRoute = $dialogParams.route
+            $scope.form = form;
+            $scope.dialog.params = angular.copy($dialogParams);
+
+            $scope.onSuccess = function(data) {
+                $scope.dialog.close(data);
+
+            };
+        },
+        resolve:{
+            // @todo blaise : fix form directive to remove this resolve
+            form: function ($http, $dialogParams){
+                return $http.get($dialogParams.route).then(function(response) {
+                    var form = response.data.form;
+
+                    return form;
+                });
+            }
+        },
+        templateUrl: 'trainingbundle/session/dialogs/material/add-link-material.html'
+
+    });
+
     /**
      * trainer.remove : simple confirmation modal for trainer remove
      */
     $dialogProvider.dialog('trainer.remove', /* @ngInject */ {
-        templateUrl: 'trainingbundle/session/dialogs/trainer-remove.html',
+        templateUrl: 'trainingbundle/session/dialogs/trainer/trainer-remove.html',
         controller: 'TrainerRemoveController'
     });
 

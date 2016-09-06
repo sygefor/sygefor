@@ -5,7 +5,7 @@
             <div class="btn-group pull-right">
                 <a class="btn btn-fa" href="" tooltip="Publipostage" ng-click="$dialog.open('batch.publipost', { items: [trainee.id], service: 'trainee' })"><span class="fa fa-file-word-o"></span></a>
                 <a class="btn btn-fa" href="" tooltip="Changer le mot de passe" ng-if="trainee._accessRights.edit" ng-click="changePassword()"><span class="fa fa-key"></span></a>
-                <a class="btn btn-fa" href="" tooltip="Changer l'URFIST de rattachement" ng-if="$user.hasAccessRight('sygefor_trainee.rights.trainee.all.view')" ng-click="changeOrganization()"><span class="fa fa-university"></span></a>
+                <a class="btn btn-fa" href="" tooltip="Changer l'URFIST de rattachement" ng-if="$user.hasAccessRight('sygefor_trainee.rights.trainee.all.update')" ng-click="changeOrganization()"><span class="fa fa-university"></span></a>
                 <a class="btn btn-fa" href="" tooltip="Supprimer" ng-if="trainee._accessRights.delete" ng-click="delete()"><span class="fa fa-trash-o"></span></a>
             </div>
 
@@ -24,7 +24,7 @@
                         <li><label>Email</label> <span sf-xeditable="form.children.email">{{ trainee.email }}</span></li>
                         <li><label>Téléphone</label> <span sf-xeditable="form.children.phoneNumber">{{ trainee.phoneNumber }}</span></li>
                         <li><label>Etablissement</label> <span sf-xeditable="form.children.institution">{{ trainee.institution.name }}</span></li>
-                        <li ng-if="trainee.institution.name === 'Autre'"><label>Autre établissement</label> <span sf-xeditable="form.children.otherInstitution">{{ trainee.otherInstitution }}</span></li>
+                        <li ng-if="trainee.institution.machineName == 'other'"><label>Autre établissement</label> <span sf-xeditable="form.children.otherInstitution">{{ trainee.otherInstitution }}</span></li>
                     </ul>
 
                     <h3>Coordonnées</h3>
@@ -45,7 +45,7 @@
                     <ul class="summary">
                         <li><label>Catégorie de public</label> <span sf-xeditable="form.children.publicCategory" on-change="unset('professionalSituation')">{{ trainee.publicCategory.name }}</span></li>
                         <li ng-show="form.children.professionalSituation"><label>Situation professionnelle</label> <span sf-xeditable="form.children.professionalSituation">{{ trainee.professionalSituation.name }}</span></li>
-
+                        <li><label>Payant</label>  <span sf-xeditable="form.children.isPaying">{{ trainee.isPaying ? 'Oui' : 'Non' }}</span></li>
                         <li><label>Fonction, statut</label>  <span sf-xeditable="form.children.status">{{ trainee.status }}</span></li>
 
                         <li><label>Domaine disciplinaire</label> <span sf-xeditable="form.children.disciplinaryDomain" on-change="unset('disciplinary')">{{ trainee.disciplinaryDomain.name }}</span></li>
@@ -53,6 +53,15 @@
 
                         <li><label>Cursus d'enseignement</label> <span sf-xeditable="form.children.teachingCursus">{{ trainee.teachingCursus.name }}</span></li>
                     </ul>
+                </div>
+            </div>
+
+            <!--
+             Emails
+            -->
+            <div class="row">
+                <div class="col-lg-12">
+                    <div entity-emails trainee="trainee.id"></div>
                 </div>
             </div>
         </div>
@@ -118,18 +127,18 @@
                     <div class="block-body">
                         <table class="table table-condensed table-nohead">
                             <tbody>
-                            <!--| filter:isViewable-->
-                            <tr ng-repeat="duplicate in trainee.duplicates | filter: {ignored: false}">
-                                <td>
-                                    <button tooltip="Masquer le doublon" ng-if="trainee._accessRights.edit" ng-click="ignoreDuplicate(duplicate)" type="button" class="close close-inline dbl ng-scope">
-                                        <span aria-hidden="true">×</span>
-                                    </button>
-                                    <a ui-sref="trainee.detail.view({id: duplicate.traineeTarget.id})" >{{ duplicate.traineeTarget.fullName }} </a><span class="pre-title">({{ duplicate.type }})</span>
-                                </td>
-                                <td>
-                                    <span class="pre-title">{{ duplicate.traineeTarget.organization.name }}</span>
-                                </td>
-                            </tr>
+                                <!--| filter:isViewable-->
+                                <tr ng-repeat="duplicate in trainee.duplicates | filter: {ignored: false}">
+                                    <td>
+                                        <button tooltip="Masquer le doublon" ng-if="trainee._accessRights.edit" ng-click="ignoreDuplicate(duplicate)" type="button" class="close close-inline dbl ng-scope">
+                                            <span aria-hidden="true">×</span>
+                                        </button>
+                                        <a ui-sref="trainee.detail.view({id: duplicate.traineeTarget.id})" >{{ duplicate.traineeTarget.fullName }} </a><span class="pre-title">({{ duplicate.type }})</span>
+                                    </td>
+                                    <td>
+                                        <span class="pre-title">{{ duplicate.traineeTarget.organization.name }}</span>
+                                    </td>
+                                </tr>
                             </tbody>
                         </table>
                     </div>

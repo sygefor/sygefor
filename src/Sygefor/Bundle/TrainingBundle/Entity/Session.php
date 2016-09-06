@@ -4,13 +4,12 @@ namespace Sygefor\Bundle\TrainingBundle\Entity;
 
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\ORM\Mapping as ORM;
-use MyProject\Proxies\__CG__\OtherProject\Proxies\__CG__\stdClass;
 use Sygefor\Bundle\TraineeBundle\Entity\Inscription;
 use Sygefor\Bundle\TraineeBundle\Entity\Term\InscriptionStatus;
 use Sygefor\Bundle\TraineeBundle\Entity\Term\PresenceStatus;
-use Sygefor\Bundle\TrainerBundle\Entity\Trainer;
+use Sygefor\Bundle\TrainerBundle\Entity\Participation;
+use Sygefor\Bundle\TrainingBundle\Entity\Term\GeographicOrigin;
 use Sygefor\Bundle\TrainingBundle\Entity\Term\Place;
-use Sygefor\Bundle\TrainingBundle\Model\SemesteredTraining;
 use Sygefor\Bundle\UserBundle\AccessRight\SerializedAccessRights;
 use Symfony\Component\Validator\Constraints as Assert;
 use Knp\DoctrineBehaviors\Model as ORMBehaviors;
@@ -67,14 +66,10 @@ class Session implements SerializedAccessRights
     protected $dateEnd;
 
     /**
-     * @ORM\ManyToMany(targetEntity="Sygefor\Bundle\TrainerBundle\Entity\Trainer", inversedBy="sessions")
-     * @ORM\JoinTable(name="session__session_trainers",
-     *      joinColumns={@ORM\JoinColumn(name="session_id", referencedColumnName="id")},
-     *      inverseJoinColumns={@ORM\JoinColumn(name="trainer_id", referencedColumnName="id")}
-     * )
-     * @Serializer\Groups({"session", "training", "api.training"})
+     * @ORM\OneToMany(targetEntity="Sygefor\Bundle\TrainerBundle\Entity\Participation", mappedBy="session", cascade={"remove"})
+     * @Serializer\Groups({"session", "api.training"})
      */
-    protected $trainers;
+    protected $participations;
 
     /**
      * @ORM\Column(name="limitRegistrationDate", type="datetime")
@@ -106,6 +101,13 @@ class Session implements SerializedAccessRights
     protected $registration = self::REGISTRATION_CLOSED;
 
     /**
+     * @ORM\Column(name="display_online", type="boolean")
+     * @var boolean
+     * @Serializer\Groups({"Default", "api"})
+     */
+    protected $displayOnline = false;
+
+    /**
      * @ORM\Column(name="maximumNumberOfRegistrations", type="integer")
      * @Serializer\Groups({"session", "training", "inscription", "api"})
      * @Assert\NotBlank()
@@ -126,6 +128,7 @@ class Session implements SerializedAccessRights
     /**
      * @var Place
      * @ORM\ManyToOne(targetEntity="Sygefor\Bundle\TrainingBundle\Entity\Term\Place", cascade={"persist"})
+     * @ORM\JoinColumn(name="place_id", referencedColumnName="id", onDelete="SET NULL")
      * @Serializer\Groups({"session", "inscription", "api"})
      */
     protected $place;
@@ -205,12 +208,27 @@ class Session implements SerializedAccessRights
     protected $promote = false;
 
     /**
+     * @var ArrayCollection $materials
+     * @ORM\OneToMany(targetEntity="Sygefor\Bundle\TrainingBundle\Entity\Material", mappedBy="session", cascade={"remove", "persist"})
+     * @ORM\JoinColumn(nullable=true)
+     * @Serializer\Groups({"training", "session", "api.attendance"})
+     */
+    protected $materials;
+
+    /**
+     * @var ArrayCollection $allMaterials
+     * @Serializer\Groups({"api.attendance"})
+     */
+    protected $allMaterials;
+
+    /**
      *
      */
     function __construct() {
-        $this->trainers = new ArrayCollection();
         $this->inscriptions = new ArrayCollection();
+        $this->participations = new ArrayCollection();
         $this->participantsSummaries = new ArrayCollection();
+        $this->materials = new ArrayCollection();
     }
 
     /**
@@ -218,8 +236,10 @@ class Session implements SerializedAccessRights
      */
     public function __clone() {
         $this->setId(null) ;
-        $this->trainers = new ArrayCollection();
         $this->inscriptions = new ArrayCollection();
+        $this->participations = new ArrayCollection();
+        $this->participantsSummaries = new ArrayCollection();
+        $this->materials = new ArrayCollection();
     }
 
     public function resetCostAndConsideration()
@@ -259,6 +279,34 @@ class Session implements SerializedAccessRights
     public function getSemesterLabel()
     {
         return $this->getYear() . " - " . ($this->getSemester() < 2 ? "1er" : "2nd") . " semestre ";
+    }
+
+    /**
+     * Return doctoral training college year for elastica filter
+     * @return string
+     */
+    public function getCollegeYear()
+    {
+        if ($this->training !== null && $this->training->getType() === "doctoral_training") {
+            if ($this->getSemester() < 2) {
+                return strval($this->getYear() - 1) . "-" . strval($this->getYear());
+            } else {
+                return strval($this->getYear()) . "-" . strval($this->getYear() + 1);
+            }
+        }
+        return null;
+    }
+
+    /**
+     * Return doctoral training college semester for elastica filter
+     * @return string
+     */
+    public function getCollegeSemester()
+    {
+        if ($this->training !== null && $this->training->getType() === "doctoral_training") {
+            return intval($this->getSemester()) === 1 ? 2 : 1;
+        }
+        return null;
     }
 
     /**
@@ -575,6 +623,22 @@ class Session implements SerializedAccessRights
     }
 
     /**
+     * @return boolean
+     */
+    public function getDisplayOnline()
+    {
+        return $this->displayOnline;
+    }
+
+    /**
+     * @param boolean $displayOnline
+     */
+    public function setDisplayOnline($displayOnline)
+    {
+        $this->displayOnline = $displayOnline;
+    }
+
+    /**
      * Return true if the session is available on the website (private or public registration)
      * @return mixed
      */
@@ -677,46 +741,30 @@ class Session implements SerializedAccessRights
     }
 
     /**
-     * @param mixed $trainers
+     * Get date range for OpenTBS
+     * @return string
      */
-    public function setTrainers($trainers)
+    public function getDateRange()
     {
-        $this->trainers = $trainers;
+        if (!$this->dateEnd || $this->dateBegin->format('d/m/y') === $this->dateEnd->format('d/m/y')) {
+            return "le " . $this->dateBegin->format('d/m/Y');
+        }
+        return "du " . $this->dateBegin->format('d/m/Y') . ' au ' . $this->dateEnd->format('d/m/Y');
     }
 
     /**
-     * @return mixed
+     * Return trainers from participations
+     * Used to not to have update all publipost templates
+     * @return ArrayCollection
      */
     public function getTrainers()
     {
-        return $this->trainers;
-    }
-
-    /**
-     * @param $trainer
-     */
-    public function addTrainer($trainer)
-    {
-        $this->trainers->add($trainer);
-    }
-
-    /**
-     * @param $trainer
-     */
-    public function removeTrainer($trainer)
-    {
-        if($this->trainers->contains($trainer)) {
-            $this->trainers->removeElement($trainer);
+        $trainers = new ArrayCollection();
+        foreach ($this->getParticipations() as $participation) {
+            $trainers->add($participation->getTrainer());
         }
-    }
 
-    /**
-     * @param $trainer
-     * @return boolean
-     */
-    public function hasTrainer($trainer)
-    {
-        return $this->trainers->contains($trainer);
+        return $trainers;
     }
 
     /**
@@ -736,34 +784,11 @@ class Session implements SerializedAccessRights
     }
 
     /**
-     * @return mixed
+     * @return ParticipantsSummary[]
      */
     public function getParticipantsSummaries()
     {
-        if($this->getRegistration() > Session::REGISTRATION_DEACTIVATED) {
-            // if the registration is not deactivated, get info from inscriptions
-            $summaries = array();
-            foreach($this->getInscriptions() as $inscription) {
-                if($inscription->getPresenceStatus() && $inscription->getPresenceStatus()->getStatus() == PresenceStatus::STATUS_PRESENT && $inscription->getPublicType()) {
-                    $publicType = $inscription->getPublicType();
-                    $disciplinary = $inscription->getDisciplinary();
-                    $key = $publicType->getId().'-'.($disciplinary ? $disciplinary->getId() : 0);
-                    $summary = &$summaries[$key];
-                    if(!$summary) {
-                        $summary = new ParticipantsSummary();
-                        $summary->setPublicType($publicType);
-                        $summary->setDisciplinary($disciplinary);
-                        $summary->setSession($this);
-                        $summaries[$key] = $summary;
-                    }
-                    $summary->setCount($summary->getCount()+1);
-                }
-            }
-            return array_values($summaries);
-        } else {
-            // else, get info from the entity
-            return $this->participantsSummaries;
-        }
+        return $this->participantsSummaries;
     }
 
     /**
@@ -923,15 +948,171 @@ class Session implements SerializedAccessRights
      */
     public function getTrainersListString()
     {
-        if ( empty($this->trainers) ) return "";
-        else {
-            $names = array();
-            foreach ($this->trainers as $trainer) {
-                $names[] = $trainer->getFullName();
-            }
+        if (!$this->getParticipations()) {
+            return "";
+        }
 
-            return implode (", ",$names);
+        $array = [];
+        foreach ($this->getParticipations() as $participation) {
+            $array[] = $participation->getTrainer()->getFullName();
+        }
+        return implode(", ", $array);
+    }
+
+    /**
+     * @return ArrayCollection
+     */
+    public function getParticipations()
+    {
+        return $this->participations;
+    }
+
+    /**
+     * @param mixed $participations
+     */
+    public function setParticipations($participations)
+    {
+        $this->participations = $participations;
+    }
+
+    /**
+     * @param mixed $participations
+     */
+    public function addParticipation($participation)
+    {
+        if (!$this->participations->contains($participation)) {
+            $this->participations->add($participation);
         }
     }
 
+    /**
+     * @param mixed $participations
+     */
+    public function removeParticipation($participation)
+    {
+        if ($this->participations->contains($participation)) {
+            $this->participations->removeElement($participation);
+        }
+    }
+
+    /**
+     * @param \Doctrine\Common\Collections\ArrayCollection $materials
+     */
+    public function setMaterials($materials)
+    {
+        $this->materials = $materials;
+    }
+
+    /**
+     * @param $material
+     */
+    public function addMaterial($material)
+    {
+        $material->setSession($this);
+        $this->materials->add($material);
+    }
+
+    /**
+     * @return \Doctrine\Common\Collections\ArrayCollection
+     */
+    public function getMaterials()
+    {
+        return $this->materials;
+    }
+
+    /**
+     * @return ArrayCollection
+     */
+    public function getAllMaterials()
+    {
+        return $this->allMaterials;
+    }
+
+    /**
+     * @param ArrayCollection $allMaterials
+     */
+    public function SetAllMaterials($allMaterials)
+    {
+        $this->allMaterials = $allMaterials;
+    }
+
+    /**
+     * Return participants stats for ActivityReport
+     */
+    public function getParticipantsStats() {
+        $stats = array();
+
+        // helper function
+        $getStat = function($publicType, $disciplinary = null, $geographicOrigin = null) use (&$stats) {
+            $hash = array(
+              $publicType->getId(),
+              $disciplinary ? $disciplinary->getId() : 0,
+              $geographicOrigin ? $geographicOrigin->getId() : 0
+            );
+            $id = join('-', $hash);
+            if(isset($stats[$id])) {
+                return $stats[$id];
+            }
+            $stat = new ParticipantsStat();
+            $stat->setSession($this);
+            $stat->setPublicType($publicType);
+            $stat->setDisciplinary($disciplinary);
+            $stat->setGeographicOrigin($geographicOrigin);
+            $stats[$id] = $stat;
+            return $stat;
+        };
+
+        if($this->getRegistration() > Session::REGISTRATION_DEACTIVATED) {
+            // if the registration is not deactivated, get info from inscriptions
+            foreach($this->getInscriptions() as $inscription) {
+                if($inscription->getPresenceStatus() && $inscription->getPresenceStatus()->getStatus() == PresenceStatus::STATUS_PRESENT) {
+                    $geographicOrigin = $this->getGeographicOriginFromInscription($inscription);
+                    $publicType = $inscription->getPublicType();
+                    $disciplinary = $inscription->getDisciplinary();
+                    $getStat($publicType, $disciplinary, $geographicOrigin)->incrementCount();
+                }
+            }
+        } else {
+            // else, get it from participants summaries
+            foreach($this->getParticipantsSummaries() as $summary) {
+                $geographicOrigin = $this->getGeographicOriginFromInscription();
+                $publicType = $summary->getPublicType();
+                if($summary->getCount()) {
+                    $getStat($publicType, null, $geographicOrigin)->setCount($summary->getCount());
+                }
+            }
+        }
+
+        return $stats;
+    }
+
+    /**
+     * Try to return geographic origin for a given inscription, from training otherwise
+     *
+     * @param Inscription $inscription
+     * @return GeographicOrigin
+     */
+    function getGeographicOriginFromInscription($inscription = null) {
+        $institution = null;
+        // fetch institution...
+        if($inscription && $inscription->getInstitution()) {
+            // ... from inscription
+            $institution = $inscription->getInstitution();
+        } elseif($inscription && $inscription->getTrainee()->getInstitution()) {
+            // ... from trainee
+            $institution = $inscription->getTrainee()->getInstitution();
+        } elseif(method_exists($this->getTraining(), 'getInstitution') && $this->getTraining()->getInstitution()) {
+            // ... from training
+            $institution = $this->getTraining()->getInstitution();
+        } else {
+            // impossible à gérer
+            // cf transformer : "Autre"
+        }
+
+        if($institution) {
+            return $institution->getGeographicOrigin();
+        } else {
+            return null;
+        }
+    }
 }

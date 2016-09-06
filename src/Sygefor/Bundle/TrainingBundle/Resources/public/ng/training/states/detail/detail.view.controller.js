@@ -56,11 +56,13 @@ sygeforApp.controller('TrainingDetailViewController', ['$scope', '$taxonomy', '$
     }
 
     /**
-     *
+     * Choose cloned training type and then fill-in specific training type required fields if needed
      */
     $scope.duplicate = function () {
-        $dialog.open('training.duplicate', {training: $scope.training}).then(function (result) {
-            $state.go('training.detail.view', {id: result.id}, { reload:true });
+        $dialog.open('training.choosetypeduplicate', {training: $scope.training}).then(function (result) {
+            $dialog.open('training.duplicate', {training: $scope.training, type: result.type}).then(function (result) {
+                $state.go('training.detail.view', {id: result.id}, { reload: true });
+            });
         });
     }
 
@@ -86,7 +88,7 @@ sygeforApp.controller('TrainingDetailViewController', ['$scope', '$taxonomy', '$
      * Add material modal
      */
     $scope.addMaterial = function () {
-        $dialog.open('material.add', {
+        $dialog.open('training.material.add', {
             training: $scope.training,
             removeCallback: $scope.removeMaterial,
             downloadCallback: $scope.getMaterial,
@@ -107,7 +109,7 @@ sygeforApp.controller('TrainingDetailViewController', ['$scope', '$taxonomy', '$
      * @param material
      */
     $scope.getMaterial = function (material) {
-        var url = Routing.generate ('material.get', {id: material.id});
+        var url = Routing.generate('material.get', {id: material.id});
         $window.location = url;
     }
 
@@ -115,7 +117,7 @@ sygeforApp.controller('TrainingDetailViewController', ['$scope', '$taxonomy', '$
      * Request and download balance sheet
      */
     $scope.getBalanceSheet = function () {
-        var url = Routing.generate ('training.balancesheet', {id: $scope.training.id});
+        var url = Routing.generate('training.balancesheet', {id: $scope.training.id});
         $window.location = url;
     }
 

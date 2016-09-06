@@ -22,7 +22,7 @@ use Sygefor\Bundle\ApiBundle\Form\Type\ProfileType;
 use Sygefor\Bundle\CoreBundle\Search\SearchService;
 use Sygefor\Bundle\TaxonomyBundle\Entity\AbstractTerm;
 use Sygefor\Bundle\TaxonomyBundle\Entity\TreeTrait;
-use Sygefor\Bundle\TaxonomyBundle\Vocabulary\NationalVocabularyInterface;
+use Sygefor\Bundle\TaxonomyBundle\Vocabulary\VocabularyInterface;
 use Sygefor\Bundle\TaxonomyBundle\Vocabulary\VocabularyProviderInterface;
 use Sygefor\Bundle\TaxonomyBundle\Vocabulary\VocabularyRegistry;
 use Sygefor\Bundle\TraineeBundle\Entity\Inscription;
@@ -82,6 +82,7 @@ class RegistrationAccountController extends Controller
         $em = $this->get('doctrine')->getManager();
         $repository = $em->getRepository('SygeforTrainingBundle:Session');
 
+        // @todo change it ?
         // query builder
         $qb = $repository->createQueryBuilder('s')
             ->where('s.id = :session')
@@ -89,18 +90,18 @@ class RegistrationAccountController extends Controller
             ->setParameter('registration', Session::REGISTRATION_PRIVATE); // limitRegistrationDate is empty OR  >= NOW
 
         // get all sessions
-        foreach($sessions as $key => $id) {
+        foreach ($sessions as $key => $id) {
             /** @var Session $session */
             $session = $qb
                 ->setParameter('session', $id)
                 ->getQuery()
                 ->getOneOrNullResult();
-            if(!$session) {
+            if (!$session) {
                 throw new BadRequestHttpException('This session id is invalid : ' . $id);
             }
 
             // check registrable
-            if(!$session->isRegistrable()) {
+            if (!$session->isRegistrable()) {
                 throw new AccessDeniedException('This session is not registrable : ' . $id);
             }
 
@@ -113,7 +114,7 @@ class RegistrationAccountController extends Controller
         // create inscriptions
         $inscriptions = array();
         $repository = $em->getRepository('SygeforTraineeBundle:Inscription');
-        foreach($sessions as $session) {
+        foreach ($sessions as $session) {
             // try to find any existent inscription for this trainee
             /** @var Inscription $inscription */
             $inscription = $repository->findOneBy(array(
@@ -122,8 +123,8 @@ class RegistrationAccountController extends Controller
             ));
 
             // if inscription do not exists OR the trainee desisted
-            if(!$inscription || $inscription->getInscriptionStatus()->getId() == 5) {
-                if(!$inscription) {
+            if (!$inscription || $inscription->getInscriptionStatus()->isMachineName('desist')) {
+                if (!$inscription) {
                     // if not, create it
                     $inscription = new Inscription();
                     $inscription->setTrainee($trainee);
@@ -138,7 +139,7 @@ class RegistrationAccountController extends Controller
 
         // send a recap to the trainee
         $count = count($inscriptions);
-        if($count) {
+        if ($count) {
             $message = \Swift_Message::newInstance()
                 ->setFrom($this->container->getParameter('mailer_from'), $trainee->getOrganization()->getName())
                 ->setReplyTo($trainee->getOrganization()->getEmail())
@@ -149,7 +150,7 @@ class RegistrationAccountController extends Controller
 
             // gerenate & attach authorization forms
             $forms = $this->getAuthorizationForms($trainee, $inscriptions);
-            foreach($forms as $code => $html) {
+            foreach ($forms as $code => $html) {
                 $data = $this->get('knp_snappy.pdf')->getOutputFromHtml($html, array("print-media-type" => null));
                 $attachment = \Swift_Attachment::newInstance($data, 'formulaire_' . $code . '.pdf', 'application/pdf');
                 $message->attach($attachment);
@@ -197,27 +198,30 @@ class RegistrationAccountController extends Controller
             'trainee' => $trainee
         ));
 
-        if(!$inscription) {
+        if (!$inscription) {
             throw new NotFoundHttpException('Unknown registration.');
         }
 
         // check date
-        if($inscription->getSession()->getDateBegin() < new \DateTime()) {
+        if ($inscription->getSession()->getDateBegin() < new \DateTime()) {
             throw new BadRequestHttpException('You cannot desist from a past session.');
         }
 
         // check status
-        if($inscription->getInscriptionStatus()->getStatus() > InscriptionStatus::STATUS_ACCEPTED) {
+        if ($inscription->getInscriptionStatus()->getStatus() > InscriptionStatus::STATUS_ACCEPTED) {
             throw new BadRequestHttpException('Your registration has already been rejected.');
         }
 
         // ok, let's go
-        if($inscription->getInscriptionStatus()->getStatus() == InscriptionStatus::STATUS_PENDING) {
+        if ($inscription->getInscriptionStatus()->getStatus() == InscriptionStatus::STATUS_PENDING) {
             // if the inscription is pending, just delete it
             $em->remove($inscription);
         } else {
             // else set the status to "Desist"
-            $status = $em->getRepository('SygeforTraineeBundle:Term\InscriptionStatus')->find(5);
+            $status = $em->getRepository('SygeforTraineeBundle:Term\InscriptionStatus')->findOneBy(array('machineName' => 'desist', 'organization' => null));
+            if (!$status) {
+                $status = $em->getRepository('SygeforTraineeBundle:Term\InscriptionStatus')->findOneBy(array('machineName' => 'desist', 'organization' => $trainee->getOrganization()));
+            }
             $inscription->setInscriptionStatus($status);
         }
 

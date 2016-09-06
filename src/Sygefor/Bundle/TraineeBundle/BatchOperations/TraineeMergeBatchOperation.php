@@ -1,7 +1,9 @@
 <?php
 namespace Sygefor\Bundle\TraineeBundle\BatchOperations;
 
+use Doctrine\ORM\EntityManager;
 use Sygefor\Bundle\ListBundle\BatchOperation\AbstractBatchOperation;
+use Sygefor\Bundle\ListBundle\Entity\Email;
 use Sygefor\Bundle\TraineeBundle\Entity\Trainee;
 use Sygefor\Bundle\TraineeBundle\Entity\Inscription;
 use Sygefor\Bundle\TraineeBundle\Entity\Term\InscriptionStatus;
@@ -9,6 +11,7 @@ use Sygefor\Bundle\TraineeBundle\Entity\TraineeDuplicate;
 use Symfony\Bridge\Monolog\Logger;
 use Symfony\Component\DependencyInjection\ContainerInterface;
 use Doctrine\Common\Collections\ArrayCollection;
+use Symfony\Component\Form\Exception\InvalidArgumentException;
 use Symfony\Component\Security\Core\Exception\AccessDeniedException;
 use Symfony\Component\Security\Core\SecurityContext;
 use Symfony\Component\HttpFoundation\Response;
@@ -61,15 +64,29 @@ class TraineeMergeBatchOperation extends AbstractBatchOperation
     public function execute(array $idList = array(), array $options = array())
     {
         try  {
-            /** @var Trainee[] $trainees */
-            $trainees = $this->getObjectList($idList);
-
             /** @var SecurityContext $securityContext */
             $securityContext = $this->container->get('security.context');
+
+            /** @var EntityManager $em */
             $em = $this->container->get('doctrine.orm.entity_manager');
 
             /** @var Trainee $traineeToKeep */
             $traineeToKeep = $em->getRepository('Sygefor\Bundle\TraineeBundle\Entity\Trainee')->find($options['traineeToKeep']) ;
+
+            // remove traineeToKeep if in idList in case it was sent
+            if (in_array($options['traineeToKeep'], $idList)) {
+                foreach ($idList as $key => $value) {
+                    if ($value = $options['traineeToKeep']) {
+                        unset($idList[$key]);
+                    }
+                }
+            }
+            if (empty($idList)) {
+                throw new InvalidArgumentException('Empty trainees with trainee to keep ' . $options['traineeToKeep']);
+            }
+
+            /** @var Trainee[] $trainees */
+            $trainees = $this->getObjectList($idList);
 
             /** @var Inscription[] $traineeToKeepInscriptions */
             $traineeToKeepInscriptions = $traineeToKeep->getInscriptions();
@@ -81,8 +98,8 @@ class TraineeMergeBatchOperation extends AbstractBatchOperation
             $this->logger->info("TraineeToKeep : " . $traineeToKeep->getId() . " - " . $traineeToKeep->getFullName());
             $this->logger->info("Trainees : " . join(", ", array_map(function($trainee) { return $trainee->getId() . " - " . $trainee->getFullName(); }, $trainees)) );
 
-            if(!$securityContext->isGranted('EDIT', $traineeToKeep)){
-                throw new AccessDeniedException("Vous n'avez pas le droit de modifier cet individu : " . $traineeToKeep->getFullName() . ".");
+            if(!$securityContext->isGranted('MANAGEDUPLICATE', $traineeToKeep)){
+                throw new AccessDeniedException("Vous n'avez pas le droit de modioiiiifier cet individu : " . $traineeToKeep->getFullName() . ".");
             }
 
             $traineeToKeepDuplicates = $this->findAllNewDuplicates($traineeToKeep, $trainees, $em, $securityContext);
@@ -91,7 +108,7 @@ class TraineeMergeBatchOperation extends AbstractBatchOperation
             foreach ($trainees as $trainee) {
 
                 // check the rights for each trainee
-                if(!$securityContext->isGranted('DELETE', $trainee)){
+                if(!$securityContext->isGranted('MANAGEDUPLICATE', $trainee)){
                     throw new AccessDeniedException("Vous n'avez pas le droit de supprimer cet individu : " . $trainee->getFullName() . ".");
                 }
 
@@ -138,6 +155,13 @@ class TraineeMergeBatchOperation extends AbstractBatchOperation
                         $em->remove($inscription);
                     }
                 }
+
+                $traineeMessages = $em->getRepository('Sygefor\Bundle\ListBundle\Entity\Email')->findBy(array('trainee' => $trainee));
+                /** @var Email $message */
+                foreach ($traineeMessages as $message) {
+                    $message->setTrainee($traineeToKeep);
+                }
+
                 $em->persist($trainee);
             }
             $em->persist($traineeToKeep);
@@ -208,7 +232,7 @@ class TraineeMergeBatchOperation extends AbstractBatchOperation
         $arrayTraineeId = array();
         foreach ($trainees as $trainee) {
             // check the rights for each trainee
-            if(!$securityContext->isGranted('DELETE', $trainee)){
+            if(!$securityContext->isGranted('MANAGEDUPLICATE', $trainee)){
                 throw new AccessDeniedException("Vous n'avez pas le droit de supprimer cet individu : " . $trainee->getFullName() . ".");
             }
             $arrayTraineeId[] = $trainee->getId();

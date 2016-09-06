@@ -24,7 +24,7 @@ sygeforApp.controller('ActivityReportController', ['$scope', '$window', '$user',
      * Download
      */
     $scope.download = function(format) {
-        var url = Routing.generate("report.download");
+        var url = Routing.generate("report.download", {format: format});
         $window.location.href = url + '?' + serialize($stateParams._rawQuery);
     }
 

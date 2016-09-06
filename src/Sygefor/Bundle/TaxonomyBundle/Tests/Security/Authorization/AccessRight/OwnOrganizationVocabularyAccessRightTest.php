@@ -20,7 +20,7 @@ class OwnOrganizationVocabularyAccessRightTest extends \PHPUnit_Framework_TestCa
         $this->assertEquals(false,$AccessRight->supportsClass('Foo\Bar\Class'));
         $this->assertEquals(false,$AccessRight->supportsClass('Sygefor\Bundle\TaxonomyBundle\Tests\Entity\MyNationalVocabulary'));
         $this->assertEquals(true,$AccessRight->supportsClass('Sygefor\Bundle\TaxonomyBundle\Tests\Entity\MyOrganizationVocabulary'));
-        $this->assertEquals(true,$AccessRight->supportsClass('Sygefor\Bundle\TaxonomyBundle\Vocabulary\LocalVocabularyInterface'));
+        $this->assertEquals(true,$AccessRight->supportsClass('Sygefor\Bundle\TaxonomyBundle\Vocabulary\VocabularyInterface'));
     }
 
     public function testAccessRightIsGrantedToUser()
@@ -58,7 +58,7 @@ class OwnOrganizationVocabularyAccessRightTest extends \PHPUnit_Framework_TestCa
         $this->assertEquals(true, $AccessRight->isGranted($token1, $object, null));
         $this->assertEquals(false, $AccessRight->isGranted($token2, $object, null));
         $this->assertEquals(false, $AccessRight->isGranted($token1, null, null));
-        $this->assertEquals(false, $AccessRight->isGranted($token1, 'Sygefor\Bundle\TaxonomyBundle\Entity\LocalVocabularyInterface', null));
+        $this->assertEquals(false, $AccessRight->isGranted($token1, 'Sygefor\Bundle\TaxonomyBundle\Entity\VocabularyInterface', null));
     }
 
 }

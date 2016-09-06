@@ -32,9 +32,9 @@ class VocabularyRegistry
     }
 
     /**
-     * @param NationalVocabularyInterface $vocabulary
+     * @param VocabularyInterface $vocabulary
      */
-    public function addVocabulary(NationalVocabularyInterface $vocabulary, $id, $group = "Misc")
+    public function addVocabulary(VocabularyInterface $vocabulary, $id, $group = "Misc")
     {
         $vocabulary->setVocabularyId($id);
         $this->vocabularies[$id] = $vocabulary;
@@ -46,7 +46,7 @@ class VocabularyRegistry
 
     /**
      * @param string $id
-     * @return NationalVocabularyInterface
+     * @return VocabularyInterface
      */
     public function getVocabularyById($id)
     {

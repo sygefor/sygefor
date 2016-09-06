@@ -75,6 +75,12 @@ class Inscription implements SerializedAccessRights
     protected $evaluation;
 
     /**
+     * @var \DateTime $inscriptionStatusUpdatedAt
+     * @ORM\Column(type="datetime", nullable=true)
+     */
+    protected $inscriptionStatusUpdatedAt;
+
+    /**
      * @var boolean
      */
     protected $sendInscriptionStatusMail = false;
@@ -216,6 +222,20 @@ class Inscription implements SerializedAccessRights
     }
 
     /**
+     * Save update date for property inscription status
+     * @ORM\PreUpdate
+     * @ORM\PrePersist
+     */
+    public function setInscriptionStatusUpdatedAtLifecycle(LifecycleEventArgs $eventArgs)
+    {
+        $uow = $eventArgs->getEntityManager()->getUnitOfWork();
+        $changeset = $uow->getEntityChangeSet($this);
+        if (isset($changeset['inscriptionStatus'])) {
+            $this->setInscriptionStatusUpdatedAt((new \DateTime("now", new \DateTimeZone("Europe/Paris"))));
+        }
+    }
+
+    /**
      * For activity report
      * @return string
      */
@@ -253,4 +273,19 @@ class Inscription implements SerializedAccessRights
         return "Hors zone";
     }
 
+    /**
+     * @return \DateTime
+     */
+    public function getInscriptionStatusUpdatedAt()
+    {
+        return $this->inscriptionStatusUpdatedAt;
+    }
+
+    /**
+     * @param \DateTime $inscriptionStatusUpdatedAt
+     */
+    public function setInscriptionStatusUpdatedAt($inscriptionStatusUpdatedAt)
+    {
+        $this->inscriptionStatusUpdatedAt = $inscriptionStatusUpdatedAt;
+    }
 }

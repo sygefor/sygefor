@@ -52,6 +52,7 @@ fos_elastica:
                                 id: { index: not_analyzed }
                                 code: { index: not_analyzed }
                                 name:
+                                    index: not_analyzed
                                     type: string
                                     fields:
                                         source: { type: string, index: not_analyzed }
@@ -93,7 +94,11 @@ fos_elastica:
                         program: { boost: 3 }
                         interventionType: { index: not_analyzed }
                         externInitiative: { index: not_analyzed }
-                        supervisor: ~
+                        supervisors:
+                            type: object
+                            properties:
+                                id: { index: not_analyzed }
+                                fullName: { index: not_analyzed }
                         resources: ~
                         comments: ~
                         sessions:
@@ -130,6 +135,33 @@ fos_elastica:
                             fields:
                                 source: { type: string, index: not_analyzed }
                         evaluation: ~
+                        # ---
+                        # doctoral training
+                        # ---
+                        collegeYear: { index: not_analyzed }
+                        collegeSemester: { type: integer, index: not_analyzed }
+                        doctoralYears:
+                            type: string
+                            fields:
+                                source: { type: string, index: not_analyzed }
+                        doctoralSchools:
+                            type: string
+                            fields:
+                                source: { type: string, index: not_analyzed }
+                        doctoralPartner:
+                            type: string
+                            fields:
+                                source: { type: string, index: not_analyzed }
+                        pedagogicPartner:
+                            type: string
+                            fields:
+                                source: { type: string, index: not_analyzed }
+                        applicantOrganism:
+                            type: string
+                            fields:
+                                source: { type: string, index: not_analyzed }
+                        otherPartner: { type: string, index: not_analyzed }
+                        ects: { type: integer, index: not_analyzed }
                         # ---
                         # diverse training
                         # ---
@@ -174,6 +206,8 @@ fos_elastica:
                         year: { type: integer, index: not_analyzed }
                         semester: { type: integer, index: not_analyzed }
                         semesterLabel: { index: not_analyzed }
+                        collegeYear: { index: not_analyzed }
+                        collegeSemester: { type: integer, index: not_analyzed }
                         limitRegistrationDate: { type: date, index: not_analyzed }
                         hourDuration:
                             type: integer
@@ -199,6 +233,7 @@ fos_elastica:
                                 source: { type: string, index: not_analyzed }
                         schedule: { index: not_analyzed }
                         registration: { index: not_analyzed }
+                        displayOnline: { type: boolean }
                         networkTrainerCost:
                             type: float
                             index: not_analyzed
@@ -243,14 +278,20 @@ fos_elastica:
                             _private: true
                             type: integer
                             index: not_analyzed
-                        trainers:
-                            type: object
+                        participations:
+                            type: nested
+                            include_in_parent: true
                             properties:
-                                id: { index: not_analyzed }
-                                isUrfist: { index: not_analyzed }
-                                fullName: { index: not_analyzed }
+                                isUrfist: { type: boolean, index: not_analyzed }
+                                isLocal: { type: boolean, index: not_analyzed }
+                                trainer:
+                                    type: object
+                                    properties:
+                                      id: { index: not_analyzed }
+                                      isUrfist: { index: not_analyzed }
+                                      fullName: { index: not_analyzed }
                         promote: { index: not_analyzed }
-                        participantsSummaries:
+                        participantsStats:
                             _private: true
                             type: nested
                             include_in_parent: true
@@ -260,6 +301,7 @@ fos_elastica:
                                 professionalSituation: { index: not_analyzed }
                                 disciplinary: { index: not_analyzed }
                                 disciplinaryDomain: { index: not_analyzed }
+                                geographicOrigin: { index: not_analyzed }
                                 count: { type: integer, index: not_analyzed }
                     persistence:
                         driver: orm # orm, mongodb, propel are available
@@ -276,6 +318,8 @@ fos_elastica:
                     mappings:
                         year: { type: integer, index: not_analyzed }
                         semester: { type: integer, index: not_analyzed }
+                        collegeYear: { index: not_analyzed }
+                        collegeSemester: { type: integer, index: not_analyzed }
                         training:
                             type: object
                             properties:
@@ -289,6 +333,11 @@ fos_elastica:
                             type: object
                             properties:
                                 _include: { type: session, exclude: ['training'] }
+                        trainers:
+                            type: object
+                            properties:
+                              id: { index: not_analyzed }
+                              fullName: { index: not_analyzed }
                     persistence:
                         driver: orm
                         model: Sygefor\Bundle\TrainingBundle\Model\SemesteredTraining
@@ -324,7 +373,7 @@ fos_elastica:
                             type: string
                             fields:
                                 source: { type: string, index: not_analyzed }
-                        publicType.isPaying:
+                        isPaying:
                             type: boolean
                         professionalSituation:
                             type: string
@@ -382,6 +431,7 @@ fos_elastica:
                             properties:
                                 id: { index: not_analyzed }
                                 status: { index: not_analyzed }
+                                machine_name: { type: string, index: not_analyzed }
                                 name:
                                     type: string
                                     fields:
@@ -397,7 +447,7 @@ fos_elastica:
                                         source: { type: string, index: not_analyzed }
                         institution:
                             _include: trainee.institution
-                        publicType.isPaying:
+                        isPaying:
                             type: boolean
                         publicCategory:
                             _include: trainee.publicCategory
@@ -414,6 +464,7 @@ fos_elastica:
                         city: ~
                         createdAt: { index: not_analyzed, type: date }
                         zoneCompetence: { index: not_analyzed }
+                        inscriptionStatusUpdatedAt: { index: not_analyzed, type: date }
                     persistence:
                         driver: orm # orm, mongodb, propel are available
                         model: Sygefor\Bundle\TraineeBundle\Entity\Inscription
@@ -443,8 +494,14 @@ fos_elastica:
                                 source: { type: string, index: not_analyzed }
                         organization:
                             _include: user.organization
-                        isUrfist: { index: not_analyzed }
-                        isPublic: { index: not_analyzed }
+                        isUrfist:
+                            type: boolean
+                        isAllowSendMail:
+                            type: boolean
+                        isArchived:
+                            type: boolean
+                        isPublic:
+                            type: boolean
                         institution:
                             _include: trainee.institution
                         otherInstitution: ~
@@ -460,13 +517,108 @@ fos_elastica:
                             fields:
                                 source: { type: string, index: not_analyzed }
                         observations: ~
-                        sessions:
-                            type: object
-                            properties:
-                                _include: { type: session, exclude: ['trainers'] }
                         createdAt: { index: not_analyzed }
                     persistence:
                         driver: orm # orm, mongodb, propel are available
                         model: Sygefor\Bundle\TrainerBundle\Entity\Trainer
                         provider: ~
                         listener: ~
+
+                # ---------
+                # PARTICIPATION
+                # ---------
+                participation:
+                    mappings:
+                        session:
+                            type: object
+                            properties:
+                                id: { index: not_analyzed }
+                                training:
+                                    type: object
+                                    properties:
+                                        id: { index: not_analyzed }
+                                        organization:
+                                            type: object
+                                            properties:
+                                                id: { index: not_analyzed }
+                        trainer:
+                            type: object
+                            properties:
+                                id: { index: not_analyzed }
+                                fullName: { index: not_analyzed }
+                        organization:
+                            type: object
+                            properties:
+                                id: { index: not_analyzed }
+                        localIsUrfist:
+                            type: boolean
+                        notLocalIsUrfist:
+                            type: boolean
+                    persistence:
+                        driver: orm # orm, mongodb, propel are available
+                        model: Sygefor\Bundle\TrainerBundle\Entity\Participation
+                        provider: ~
+                        listener: ~
+                # ---------
+                # EMAIL
+                # ---------
+                email:
+                  mappings:
+                        id: { index: not_analyzed }
+                        userFrom:
+                            type: object
+                            properties:
+                                id: { index: not_analyzed }
+                                username: { index: not_analyzed }
+                                organization:
+                                    type: object
+                                    properties:
+                                        id: { index: not_analyzed }
+                        emailFrom:
+                            type: string
+                            fields:
+                                source: { type: string, index: not_analyzed }
+                        trainee:
+                            type: object
+                            properties:
+                                id: { index: not_analyzed }
+                                fullName:
+                                    type: string
+                                    index: not_analyzed
+                                organization:
+                                    type: object
+                                    properties:
+                                        id: { index: not_analyzed }
+                        trainer:
+                            type: object
+                            properties:
+                                id: { index: not_analyzed }
+                                fullName:
+                                    type: string
+                                    index: not_analyzed
+                                organization:
+                                    type: object
+                                    properties:
+                                        id: { index: not_analyzed }
+                        session:
+                            type: object
+                            properties:
+                                id: { index: not_analyzed }
+                                training:
+                                    type: object
+                                    properties:
+                                        id: { index: not_analyzed }
+                                        name:
+                                            type: string
+                                            index: not_analyzed
+                                        organization:
+                                            type: object
+                                            properties:
+                                                id: { index: not_analyzed }
+                        subject: { index: not_analyzed }
+                        sendAt: { type: date, index: not_analyzed }
+                  persistence:
+                      driver: orm # orm, mongodb, propel are available
+                      model: Sygefor\Bundle\ListBundle\Entity\Email
+                      provider: ~
+                      listener: ~

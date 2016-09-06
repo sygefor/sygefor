@@ -3,7 +3,7 @@
     <h4 class="modal-title" id="myModalLabel">Gérer les support</h4>
 </div>
 <div class="modal-body">
-    <div sf-file-upload data-thref="{route: 'material.add', params: {training_id: dialog.params.training.id}}" data-add-callback="addCallback" data-download-callback="downloadCallback" data-remove-callback="removeCallback" data-queue='dialog.params.training.materials'></div>
+    <div sf-file-upload data-thref="{route: 'material.add', params: {entity_id: dialog.params.training.id, type_entity: dialog.params.training.type}}" data-add-callback="addCallback" data-download-callback="downloadCallback" data-remove-callback="removeCallback" data-queue='dialog.params.training.materials'></div>
 </div>
 <div class="modal-footer">
     <a class="btn btn-default" ng-click="dialog.dismiss()">Fermer</a>

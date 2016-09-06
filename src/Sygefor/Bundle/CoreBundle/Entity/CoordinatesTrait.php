@@ -23,7 +23,7 @@ trait CoordinatesTrait
     /**
      * @var string institutionName
      * @ORM\Column(name="institution_name", type="string", length=512, nullable=true)
-     * @Serializer\Groups({"trainee", "trainer", "api.profile"})
+     * @Serializer\Groups({"trainee", "trainer", "api.profile", "inscription"})
      */
     protected $institutionName;
 

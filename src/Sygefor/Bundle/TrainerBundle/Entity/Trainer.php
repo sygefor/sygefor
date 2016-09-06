@@ -5,6 +5,7 @@ use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\ORM\Mapping as ORM;
 use Sygefor\Bundle\CoreBundle\Entity\CoordinatesTrait;
 use Sygefor\Bundle\CoreBundle\Entity\PersonTrait;
+use Sygefor\Bundle\TrainingBundle\Entity\Training;
 use Sygefor\Bundle\UserBundle\AccessRight\SerializedAccessRights;
 use Symfony\Component\Validator\Constraints as Assert;
 use Knp\DoctrineBehaviors\Model as ORMBehaviors;
@@ -30,15 +31,29 @@ class Trainer implements SerializedAccessRights
      * @ORM\Column(name="id", type="integer")
      * @ORM\Id
      * @ORM\GeneratedValue(strategy="AUTO")
-     * @Serializer\Groups({"Default", "trainer", "session"})
+     * @Serializer\Groups({"Default", "trainer", "session", "api.training"})
      */
     protected $id;
 
     /**
-     * @ORM\ManyToMany(targetEntity="Sygefor\Bundle\TrainingBundle\Entity\Session", mappedBy="trainers")
+     * @ORM\OneToMany(targetEntity="Sygefor\Bundle\TrainerBundle\Entity\Participation", mappedBy="trainer", cascade={"remove"})
      * @Serializer\Groups({"trainer"})
      */
-    protected $sessions;
+    protected $participations;
+
+    /**
+     * @var boolean $isArchived
+     * @ORM\Column(name="is_archived", type="boolean", nullable=true)
+     * @Serializer\Groups({"trainer"})
+     */
+    protected $isArchived;
+
+    /**
+     * @var boolean $isAllowSendMail
+     * @ORM\Column(name="is_allow_send_mail", type="boolean", nullable=true)
+     * @Serializer\Groups({"trainer", "api.training", "api.trainer"})
+     */
+    protected $isAllowSendMail = false;
 
     /**
      * @var boolean $isUrfist
@@ -119,8 +134,10 @@ class Trainer implements SerializedAccessRights
      */
     function __construct()
     {
+        $this->trainings = new ArrayCollection();
         $this->competenceFields = new ArrayCollection();
         $this->sessions = new ArrayCollection();
+        $this->participations = new ArrayCollection();
         $this->addressType = 0;
         $this->isPublic = false;
     }
@@ -146,7 +163,9 @@ class Trainer implements SerializedAccessRights
 	 */
     public function addCompetenceFields($competenceFields)
     {
-        $this->competenceFields->add($competenceFields);
+        if (!$this->competenceFields->contains($competenceFields)) {
+            $this->competenceFields->add($competenceFields);
+        }
     }
 
 	/**
@@ -154,7 +173,9 @@ class Trainer implements SerializedAccessRights
 	 */
 	public function removeCompetenceFields($competenceFields)
 	{
-		$this->competenceFields->remove($competenceFields);
+        if ($this->competenceFields->contains($competenceFields)) {
+            $this->competenceFields->removeElement($competenceFields);
+        }
 	}
 
     /**
@@ -302,19 +323,18 @@ class Trainer implements SerializedAccessRights
     }
 
     /**
-     * @param mixed $sessions
-     */
-    public function setSessions($sessions)
-    {
-        $this->sessions = $sessions;
-    }
-
-    /**
-     * @return mixed
+     * Return sessions from participations
+     * Used to not to have update all publipost templates
+     * @return ArrayCollection
      */
     public function getSessions()
     {
-        return $this->sessions;
+        $sessions = new ArrayCollection();
+        foreach ($this->getParticipations() as $participation) {
+            $sessions->add($participation->getSession());
+        }
+
+        return $sessions;
     }
 
     /**
@@ -333,5 +353,56 @@ class Trainer implements SerializedAccessRights
         return $this->status;
     }
 
+    /**
+     * @return mixed
+     */
+    public function getParticipations()
+    {
+        return $this->participations;
+    }
 
+    /**
+     * @param mixed $participations
+     */
+    public function setParticipations($participations)
+    {
+        $this->participations = $participations;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getIsArchived()
+    {
+        return $this->isArchived;
+    }
+
+    /**
+     * @param mixed $isArchived
+     */
+    public function setIsArchived($isArchived)
+    {
+        $this->isArchived = $isArchived;
+    }
+
+    public function getName()
+    {
+        return $this->getFullName();
+    }
+
+    /**
+     * @return boolean
+     */
+    public function getIsAllowSendMail()
+    {
+        return $this->isAllowSendMail;
+    }
+
+    /**
+     * @param boolean $isAllowSendMail
+     */
+    public function setIsAllowSendMail($isAllowSendMail)
+    {
+        $this->isAllowSendMail = $isAllowSendMail;
+    }
 }

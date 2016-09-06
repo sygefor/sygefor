@@ -49,7 +49,7 @@ class LoadTrainingCourse extends AbstractTestDataFixture
                 },
             'name' => function() use ($faker) { return $faker->sentence($nbWords = 6); },
             'externInitiative' => function() use ($faker) { return $faker->boolean($chanceOfGettingTrue = 50); },
-            'supervisor' => function() use ($faker) { return $faker->name; },
+//            'supervisor' => function() use ($faker) { return $faker->name; },
             'institution' => function() use ($manager) {
                     $institutions = $manager->getRepository('Sygefor\Bundle\TrainingBundle\Entity\Term\Institution')->findAll();
                     $size = count($institutions);

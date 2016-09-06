@@ -67,6 +67,11 @@ sygeforApp.config(["$listStateProvider", "$dialogProvider", "$widgetProvider", f
                         url: "/crosstabs",
                         controller:"ActivityReportController",
                         templateUrl: "activityreportbundle/meeting/crosstabs.html"
+                    },
+                    listings: {
+                        url: "/listings",
+                        controller:"ActivityReportController",
+                        templateUrl: "activityreportbundle/meeting/listings.html"
                     }
                 }
             }

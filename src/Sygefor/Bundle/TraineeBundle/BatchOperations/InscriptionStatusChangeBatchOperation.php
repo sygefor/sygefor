@@ -62,7 +62,6 @@ class InscriptionStatusChangeBatchOperation extends AbstractBatchOperation
      */
     public function execute(array $idList = array(), array $options = array())
     {
-        /** @var Inscription[] $inscriptions */
         $inscriptions = $this->getObjectList($idList);
         //sending email
 
@@ -73,46 +72,45 @@ class InscriptionStatusChangeBatchOperation extends AbstractBatchOperation
         $inscriptionStatus = (empty($options['inscriptionStatus'])) ? null : $repoInscriptionStatus->find($options['inscriptionStatus']);
         $presenceStatus = (empty($options['presenceStatus'])) ? null : $repoPresenceStatus->find($options['presenceStatus']);
 
-
         //changing status
+        $arrayInscriptionsGranted = array();
         foreach ($inscriptions as $inscription) {
             if($this->container->get('security.context')->isGranted('EDIT', $inscription)) {
                 //setting new inscription status
                 if ($inscriptionStatus) {
                     $inscription->setInscriptionStatus($inscriptionStatus);
                 }
-
-                if ($presenceStatus) {
+                else if ($presenceStatus) {
                     $inscription->setPresenceStatus($presenceStatus);
                 }
+                $arrayInscriptionsGranted[] = $inscription;
+            }
+        }
+        $em->flush();
 
-                $em->persist($inscription);
-
-                //if asked, a mail sent to user
-                if (isset ($options['sendMail']) && ($options['sendMail'] == true)) {
-                    //managing attachments
-                    $attachments = array();
-                    if ( $options['attachmentTemplates'] ) {
-                        $repo = $this->container->get('doctrine.orm.entity_manager')->getRepository('SygeforListBundle:Term\PublipostTemplate');
-                        foreach ($options['attachmentTemplates'] as $tplId){
-                            $tpl = $repo->find($tplId);
-                            $attachments[] = $this->container->get('sygefor_list.batch.publipost.inscription')->parseFile($tpl->getFile(), array ( $inscription ), true, $tpl->getFileName(), true);
-                        }
+        //if asked, a mail sent to user
+        if (isset ($options['sendMail']) && ($options['sendMail'] == true) && (count($arrayInscriptionsGranted) > 0)) {
+            //managing attachments
+            foreach ($arrayInscriptionsGranted as $inscription) {
+                $attachments = array();
+                if ($options['attachmentTemplates']) {
+                    $repo = $this->container->get('doctrine.orm.entity_manager')->getRepository('SygeforListBundle:Term\PublipostTemplate');
+                    foreach ($options['attachmentTemplates'] as $tplId) {
+                        $tpl = $repo->find($tplId);
+                        $attachments[] = $this->container->get('sygefor_list.batch.publipost.inscription')->parseFile($tpl->getFile(), array($inscription), true, $tpl->getFileName(), true);
                     }
+                }
 
-                    //sending with e-mail service
-                    $this->container->get('sygefor_list.batch.email')->parseAndSendMail($inscription, $options['subject'], $options['message'], $attachments, (isset ( $options['preview'] )) ? $options['preview'] : false);
+                //sending with e-mail service
+                $this->container->get('sygefor_list.batch.email')->parseAndSendMail($inscription, $options['subject'], $options['message'], $attachments, (isset ($options['preview'])) ? $options['preview'] : false);
 
-                    //removing files
-                    /** @var File[] $attachments*/
-                    foreach ($attachments as $att) {
-                        unlink($att->getPathname());
-                    }
+                //removing files
+                /** @var File[] $attachments */
+                foreach ($attachments as $att) {
+                    unlink($att->getPathname());
                 }
             }
         }
-
-        $em->flush();
     }
 
     /**

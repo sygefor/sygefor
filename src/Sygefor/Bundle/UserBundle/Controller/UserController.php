@@ -9,16 +9,17 @@
 namespace Sygefor\Bundle\UserBundle\Controller;
 
 use Sygefor\Bundle\UserBundle\Entity\User;
-use Sygefor\Bundle\UserBundle\Form\UserType;
 use Symfony\Bundle\FrameworkBundle\Controller\Controller;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\ParamConverter;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Template;
 use Doctrine\ORM\EntityManager;
+use Symfony\Component\HttpFoundation\RedirectResponse;
 use Symfony\Component\HttpFoundation\Request;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Security;
 use JMS\SecurityExtraBundle\Annotation\SecureParam;
-use Symfony\Component\HttpFoundation\Response;
+use Symfony\Component\HttpKernel\Exception\AccessDeniedHttpException;
+use Symfony\Component\Security\Core\Authentication\Token\UsernamePasswordToken;
 use Symfony\Component\Security\Core\SecurityContext;
 use Symfony\Component\Validator\Constraints\Collection;
 use FOS\RestBundle\Controller\Annotations as Rest;
@@ -48,7 +49,7 @@ class UserController extends Controller
         }
 
         $users = $queryBuilder->getQuery()->getResult();
-        return array ( "users" => $users );
+        return array ("users" => $users, 'isAdmin' => $this->getUser()->isAdmin());
     }
 
     /**
@@ -89,7 +90,7 @@ class UserController extends Controller
             }
         }
 
-        return array('form' => $form->createView(), 'user' => $user);
+        return array('form' => $form->createView(), 'user' => $user, 'isAdmin' => $user->isAdmin());
     }
 
     /**
@@ -166,6 +167,22 @@ class UserController extends Controller
 
         }
         return array('user' => $user);
+    }
+
+    /**
+     * @Route("/user/{id}/login", requirements={"id" = "\d+"}, name="user.login")
+     * @ParamConverter("loginAsUser", class="SygeforUserBundle:User", options={"id" = "id"})
+     * @param User $loginAsUser
+     * @return RedirectResponse
+     */
+    public function loginAsAction(User $loginAsUser)
+    {
+        if (!$this->getUser()->isAdmin()) {
+            throw new AccessDeniedHttpException('You can\'t do this action');
+        }
+        $token = new UsernamePasswordToken($loginAsUser, null, 'user_db', $loginAsUser->getRoles());
+        $this->container->get('security.context')->setToken($token);
+        return $this->redirect($this->generateUrl('core.index'));
     }
 
 }

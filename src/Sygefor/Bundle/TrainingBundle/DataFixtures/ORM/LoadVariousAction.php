@@ -29,13 +29,31 @@ class LoadVariousAction extends AbstractDataFixture
         $this->autoId = 0;
         $metadata = $manager->getClassMetaData('Sygefor\Bundle\TrainingBundle\Entity\Term\VariousAction');
         $metadata->setIdGeneratorType(ClassMetadata::GENERATOR_TYPE_NONE);
+        $orgs = $manager->getRepository('Sygefor\Bundle\CoreBundle\Entity\Organization')->findAll();
 
-        foreach(array('Formation inter-Urfist', 'Formation dans les laboratoires', 'Atelier', 'Autre action diverse') as $name) {
-            $variousAction = new VariousAction();
-            $variousAction->setId(++$this->autoId);
-            $variousAction->setName($name);
-            $manager->persist($variousAction) ;
+        foreach ($orgs as $org) {
+            foreach(array('Formation inter-Urfist', 'Formation dans les laboratoires', 'Atelier', 'Autre action diverse') as $name) {
+                $variousAction = new VariousAction();
+                $variousAction->setId(++$this->autoId);
+                $variousAction->setName($name);
+                if ($name === "Autre action diverse") {
+                    $variousAction->setMachineName('other');
+                }
+                $variousAction->setOrganization($org);
+                $manager->persist($variousAction) ;
+            }
         }
+
         $manager->flush();
+    }
+
+
+    /**
+     * Get the order of this fixture
+     *
+     * @return integer
+     */
+    function getOrder() {
+        return 1;
     }
 }

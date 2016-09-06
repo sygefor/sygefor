@@ -16,7 +16,7 @@
             <button type="submit" class="btn btn-primary">Enregistrer</button>
             {% if user.id and isAdmin == false %}
                 <a href="{{ path('user.remove', { 'id': user.id }) }}" class="btn btn-default btn-sm btn-danger pull-right"><i class="fa fa-times-circle"></i> Supprimer</a>
-            {% elseif isAdmin %}
+            {% elseif user.id and isAdmin %}
                 <a href="#" title="L'utilisateur est un administrateur et ne peut pas être supprimé" class="btn btn-default btn-sm pull-right"><i class="fa fa-times-circle"></i> Supprimer</a>
             {% endif %}
         </div>

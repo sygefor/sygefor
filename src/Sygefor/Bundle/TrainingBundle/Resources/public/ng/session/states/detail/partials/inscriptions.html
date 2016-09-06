@@ -55,7 +55,7 @@
                     <span ng-if="!inscription.trainee._accessRights.view">{{ inscription.trainee.fullName }}</span>
                 </td>
                 <td>{{ inscription.publicCategory.name }}</td>
-                <td>{{ inscription.institution.name == 'Autre' ? inscription.otherInstitution : inscription.institution.name }}</td>
+                <td>{{ inscription.institution.machineName == 'other' ? inscription.otherInstitution : inscription.institution.name }}</td>
                 <td>
                     <!-- readonly -->
                     <div ng-if="!session._accessRights.edit" class="btn-group dropdown">

@@ -15,6 +15,7 @@ trait PublicCategoryTrait
     /**
      * @var PublicType
      * @ORM\ManyToOne(targetEntity="Sygefor\Bundle\CoreBundle\Entity\Term\PublicType")
+     * @ORM\JoinColumn(nullable=false)
      * @Serializer\Exclude //Serializer exclude is important, we use virtual properties instead (see below)
      */
     protected $publicType;

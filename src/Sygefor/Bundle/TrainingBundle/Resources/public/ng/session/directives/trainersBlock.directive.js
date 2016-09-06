@@ -20,18 +20,18 @@ sygeforApp.directive('trainersBlock', [function() {
              */
             $scope.addTrainer = function () {
                 $dialog.open('trainer.add', {session: $scope.session}).then(function (data){
-                    $scope.session.trainers.push(data.trainer);
+                    $scope.session.participations.push(data.participation);
                 });
             }
 
             /**
              * Remove an associated trainer
              */
-            $scope.removeTrainer = function (trainer) {
-                $dialog.open('trainer.remove', {session: $scope.session, trainer: trainer}).then(function (){
-                    var index = $scope.session.trainers.indexOf(trainer);
+            $scope.removeTrainer = function (participation) {
+                $dialog.open('trainer.remove', {session: $scope.session, participation: participation}).then(function (){
+                    var index = $scope.session.participations.indexOf(participation);
                     if (index > -1) {
-                        $scope.session.trainers.splice(index, 1);
+                        $scope.session.participations.splice(index, 1);
                     }
                 });
             }

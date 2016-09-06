@@ -32,6 +32,8 @@ Sygefor\Bundle\CoreBundle\Entity\Organization:
         groups: [api]
       map:
         groups: [api]
+      traineeRegistrable:
+        groups: [api]
     virtual_properties:
       getFullAddress:
         groups: [api]

@@ -13,7 +13,7 @@
                     <th search-table-th field="training.number">Numéro</th>
                     <th search-table-th field="training.typeLabel.source">Type</th>
                     <th search-table-th field="training.name.source">Intitulé</th>
-                    <th search-table-th field="training.theme.source">Thématique</th>
+                    <th search-table-th field="trainers.fullName">Formateur(s)</th>
                     <th search-table-th field="sessionsCount">Sessions</th>
                     <th search-table-th field="lastSession.dateBegin">Dernière</th>
                     <th search-table-th field="nextSession.dateBegin">Prochaine</th>
@@ -28,7 +28,7 @@
                     <td>{{ item.training.number }}</td>
                     <td>{{ item.training.typeLabel }}</td>
                     <td><a ui-sref="training.detail.view({id: item.id})">{{ item.training.name ? item.training.name : '(Sans titre)' }}</a></td>
-                    <td>{{ item.training.theme }}</td>
+                    <td>{{ item.trainers | joinObjects:'fullName' }}</td>
                     <td>{{ item.sessionsCount }}</td>
                     <td><a ui-sref="session.detail.view({id: item.lastSession.id, training: item.training.id})">{{ item.lastSession.dateBegin|date: 'dd/MM/yyyy' }}</a></td>
                     <td><a ui-sref="session.detail.view({id: item.nextSession.id, training: item.training.id})">{{ item.nextSession.dateBegin|date: 'dd/MM/yyyy' }}</a></td>

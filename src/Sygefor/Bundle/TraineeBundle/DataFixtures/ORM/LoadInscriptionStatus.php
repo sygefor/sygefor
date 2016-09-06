@@ -29,14 +29,18 @@ class LoadInscriptionStatus extends AbstractDataFixture
     /**
      * @param ObjectManager $manager
      * @param $id
+     * @param $organization
      * @param $name
      * @param $status
+     * @param bool $notify
      */
-    public function loadOneEntry(ObjectManager $manager, $id, $name, $status) {
+    public function loadOneEntry(ObjectManager $manager, $id, $name, $status, $notify = false, $machineName = null) {
         $inscriptionStatus = new InscriptionStatus();
         $inscriptionStatus->setId($id);
         $inscriptionStatus->setName($name);
         $inscriptionStatus->setStatus($status);
+        $inscriptionStatus->setNotify($notify);
+        $inscriptionStatus->setMachineName($machineName);
         $manager->persist($inscriptionStatus) ;
     }
 
@@ -51,8 +55,17 @@ class LoadInscriptionStatus extends AbstractDataFixture
         $this->loadOneEntry($manager, 1, "Attente de validation", InscriptionStatus::STATUS_PENDING);
         $this->loadOneEntry($manager, 2, "Liste d'attente", InscriptionStatus::STATUS_WAITING);
         $this->loadOneEntry($manager, 3, "Refusé", InscriptionStatus::STATUS_REJECTED);
-        $this->loadOneEntry($manager, 4, "Accepté", InscriptionStatus::STATUS_ACCEPTED);
-        $this->loadOneEntry($manager, 5, "Désistement", InscriptionStatus::STATUS_REJECTED);
+        $this->loadOneEntry($manager, 4, "Accepté", InscriptionStatus::STATUS_ACCEPTED, 'accept');
+        $this->loadOneEntry($manager, 5, "Désistement", InscriptionStatus::STATUS_REJECTED, true, 'desist');
         $manager->flush();
+    }
+
+    /**
+     * Get the order of this fixture
+     *
+     * @return integer
+     */
+    function getOrder() {
+        return 1;
     }
 }

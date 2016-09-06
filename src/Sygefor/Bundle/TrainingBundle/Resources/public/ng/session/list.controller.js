@@ -92,6 +92,12 @@ sygeforApp.controller('SessionListController', ['$scope', '$state', '$injector',
         'semester' : {
             label: 'Semestre'
         },
+        'collegeSemester' : {
+            label: 'Semestre universitaire'
+        },
+        'collegeYear' : {
+            label: 'Année universitaire'
+        },
         'training.theme.source' : {
             label: 'Thématique'
         },
@@ -107,6 +113,13 @@ sygeforApp.controller('SessionListController', ['$scope', '$state', '$injector',
                 '3': 'Publiques'
             }
         },
+        'displayOnline' : {
+            label: 'Afficher en ligne',
+            values: {
+                'T': 'Oui',
+                'F': 'Non'
+            }
+        },
         'training.name.source' : {
             label: 'Formation'
         },
@@ -114,7 +127,7 @@ sygeforApp.controller('SessionListController', ['$scope', '$state', '$injector',
             label: 'Date',
             type: 'range'
         },
-        'trainers.fullName' : {
+        'participations.trainer.fullName' : {
             label: 'Formateur'
         },
         'promote' : {
