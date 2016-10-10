@@ -59,17 +59,17 @@ function initConfigOptions(){
 	
 	// Set independet default configuration options
 	$defaults = array();
-	$defaults['instanceIdentifier'] = 'SWITCHwayf';
-	$defaults['defaultLanguage'] = 'en'; 
+	$defaults['instanceIdentifier'] = 'wayf';
+	$defaults['defaultLanguage'] = 'fr';
 	$defaults['commonDomain'] = getTopLevelDomain($_SERVER['SERVER_NAME']);
 	$defaults['cookieNamePrefix'] = '';
 	$defaults['cookieSecurity'] = false;
 	$defaults['cookieValidity'] = 100;
-	$defaults['showPermanentSetting'] = false;
+	$defaults['showPermanentSetting'] = true;
 	$defaults['useImprovedDropDownList'] = true;
 	$defaults['disableRemoteLogos'] = false;
-	$defaults['useSAML2Metadata'] = false; 
-	$defaults['SAML2MetaOverLocalConf'] = false;
+	$defaults['useSAML2Metadata'] = true;
+	$defaults['SAML2MetaOverLocalConf'] = true;
 	$defaults['includeLocalConfEntries'] = true;
 	$defaults['enableDSReturnParamCheck'] = true;
 	$defaults['useACURLsForReturnParamCheck'] = false;
@@ -99,7 +99,7 @@ function initConfigOptions(){
 	$defaults['metadataLockFile'] = (substr($_SERVER['PATH'],0,1) == '/') ? '/tmp/wayf_metadata-'.$lockFileName.'.lock' : 'C:\windows\TEMP\wayf_metadata-'.$lockFileName.'.lock';
 	$defaults['WAYFLogFile'] = '/var/log/apache2/wayf.log'; 
 	$defaults['kerberosRedirectURL'] = dirname($_SERVER['SCRIPT_NAME']).'kerberosRedirect.php';
-	$defaults['developmentMode'] = false;
+	$defaults['developmentMode'] = true;
 	
 	// Initialize independent defaults
 	foreach($defaults as $key => $value){
