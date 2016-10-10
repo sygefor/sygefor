@@ -1,0 +1,89 @@
+<div>
+    <div class="mb-1">
+        <!-- filter -->
+        <span><small>Filtrer par statut :</small>
+            <span class="btn-group dropdown">
+                <a href="" class="btn btn-xs btn-default dropdown-toggle" data-toggle="dropdown">
+                    <span class="text-small">{{ filterLabel || 'Tous (' + session.inscriptions.length + ')' }}</span>
+                    <span class="caret"></span>
+                </a>
+                <ul class="dropdown-menu" role="menu">
+                    <li><a href="" ng-click="resetFilter()"><i class="fa fa-check" ng-if="!filter.inscriptionStatus && !filter.presenceStatus"></i> Tous les statuts ({{ session.inscriptions.length }})</a></li>
+                    <li class="divider"></li>
+                    <li ng-repeat="status in status.inscription track by status.id" ng-class="{disabled :status.count == 0}"><a href="" ng-click="filterByStatus('inscription', status)"><i class="fa fa-check" ng-if="filter.inscriptionStatus.id == status.id"></i> {{ status.name }} ({{ status.count }})</a></li>
+                    <li class="divider"></li>
+                    <li ng-repeat="status in status.presence track by status.id" ng-class="{disabled :status.count == 0}"><a href="" ng-click="filterByStatus('presence', status)"><i class="fa fa-check" ng-if="filter.presenceStatus.id == status.id"></i> {{ status.name }} ({{ status.count }})</a></li>
+                </ul>
+            </span>
+        </span>
+
+        <!-- stats -->
+        &nbsp;&nbsp;-&nbsp;&nbsp;<span class="label" ng-class="$root.sessionInscriptionStatsClass(totalAcceptedInscriptions(), session.maximumNumberOfRegistrations)" tooltip="{{ totalAcceptedInscriptions() }} acceptés sur {{ session.maximumNumberOfRegistrations }} places" tooltip-placement="bottom">{{ totalAcceptedInscriptions() }} / {{ session.maximumNumberOfRegistrations }}</span>
+
+        <!-- operation -->
+        <div class="pull-right">
+            <a ng-if="session._accessRights.edit" class="btn btn-xs btn-default" href="" ng-click="addInscription()"><span class="fa fa-plus"></span> Ajouter une inscription</a>
+            <a class="btn btn-fa ng-scope" href="" tooltip="Agrandir la liste" ui-sref="inscription.table({session: session.id})"><span class="fa fa-external-link"></span></a>
+        </div>
+    </div>
+    <div ng-if="!session.inscriptions.length" class="well well-empty well-sm">
+        Il n'y a aucune inscription pour cette session.
+    </div>
+
+    <table ng-if="session.inscriptions.length" class="table table-hover table-search table-condensed">
+        <!--thead>
+            <tr>
+                <th>Date</th>
+                <th>Stagiaire</th>
+                <th>Public</th>
+                <th>Établissement</th>
+                <th>Statut</th>
+            </tr>
+        </thead-->
+        <tbody>
+            <tr ng-repeat="inscription in session.inscriptions | filter:filter | orderBy:'createdAt':true">
+                <td><a title="Voir l'inscription" href="" ui-sref="inscription.detail.view({ id: inscription.id, session: inscription.session.id })">{{ inscription.createdAt|date: 'dd/MM/yyyy' }}</a></td>
+                <td>
+                    <a ng-if="inscription.trainee._accessRights.view" title="Voir le profil du stagiaire" href="" ui-sref="trainee.detail.view({ id: inscription.trainee.id })">{{ inscription.trainee.fullName }}</a>
+                    <span ng-if="!inscription.trainee._accessRights.view">{{ inscription.trainee.fullName }}</span>
+                </td>
+                <td>{{ inscription.publicCategory.name }}</td>
+                <td>{{ inscription.institution.machineName == 'other' ? inscription.otherInstitution : inscription.institution.name }}</td>
+                <td>
+                    <!-- readonly -->
+                    <div ng-if="!session._accessRights.edit" class="btn-group dropdown">
+                        <span ng-if="!inscription.presenceStatus" class="label" ng-class="$root.inscriptionStatusClass(inscription.inscriptionStatus.status)">
+                            {{ inscription.inscriptionStatus.name }}
+                        </span>
+                        <span ng-if="inscription.presenceStatus" class="label" ng-class="$root.presenceStatusClass(inscription.presenceStatus.status)">
+                            {{ inscription.presenceStatus.name }}
+                        </span>
+                    </div>
+
+                    <!-- editable -->
+                    <div ng-if="session._accessRights.edit" class="btn-group dropdown">
+                        <button class="btn btn-xs dropdown-toggle" ng-if="!inscription.presenceStatus" class="label" ng-class="$root.inscriptionStatusClass(inscription.inscriptionStatus.status, 'btn')">
+                            {{ inscription.inscriptionStatus.name }}
+                            <span class="caret"></span>
+                        </button>
+                        <button class="btn btn-xs dropdown-toggle" ng-if="inscription.presenceStatus" class="label" ng-class="$root.presenceStatusClass(inscription.presenceStatus.status, 'btn')">
+                            {{ inscription.presenceStatus.name }}
+                            <span class="caret"></span>
+                        </button>
+                        <ul class="dropdown-menu text-small" role="menu">
+                            <li class="dropdown-header">Statuts d'inscription</li>
+                            <li ng-repeat="status in status.inscription track by status.id" ng-class="{disabled :inscription.inscriptionStatus.id == status.id}"><a href="" ng-click="updateInscriptionStatus(inscription, status)"><i class="fa fa-check" ng-if="inscription.inscriptionStatus.id == status.id"></i> {{ status.name }}</a></li>
+
+                            <li ng-if="inscription.inscriptionStatus.status == 2" class="divider"></li>
+                            <li ng-if="inscription.inscriptionStatus.status == 2" class="dropdown-header">Statuts de présence</li>
+                            <li ng-if="inscription.inscriptionStatus.status == 2" ng-repeat="status in status.presence track by status.id" ng-class="{disabled :inscription.presenceStatus.id == status.id}"><a href="" ng-click="updatePresenceStatus(inscription, status)"><i class="fa fa-check" ng-if="inscription.presenceStatus.id == status.id"></i> {{ status.name }}</a></li>
+
+                            <li ng-if="inscription._accessRights.delete" class="divider"></li>
+                            <li ng-if="inscription._accessRights.delete"><a href="" ng-click="delete(inscription)">Supprimer cette inscription</a></li>
+                        </ul>
+                    </div>
+                </td>
+            </tr>
+        </tbody>
+    </table>
+</div>

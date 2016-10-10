@@ -10,7 +10,7 @@ sygeforApp.controller('ActivityReportController', ['$scope', '$window', '$user',
      */
     $scope.facets = {
         'training.organization.name.source' : {
-            label: 'URFIST'
+            label: 'Centre'
         },
         'year' : {
             label: 'Année'
@@ -26,7 +26,7 @@ sygeforApp.controller('ActivityReportController', ['$scope', '$window', '$user',
     $scope.download = function(format) {
         var url = Routing.generate("report.download", {format: format});
         $window.location.href = url + '?' + serialize($stateParams._rawQuery);
-    }
+    };
 
     /**
      * Serialize js object to querystring
@@ -47,5 +47,4 @@ sygeforApp.controller('ActivityReportController', ['$scope', '$window', '$user',
         }
         return str.join("&");
     }
-
 }]);

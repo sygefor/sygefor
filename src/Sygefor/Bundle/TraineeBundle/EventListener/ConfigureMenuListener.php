@@ -1,22 +1,20 @@
 <?php
+
 /**
  * Created by PhpStorm.
  * User: maxime
  * Date: 20/05/14
- * Time: 11:54
+ * Time: 11:54.
  */
-
 namespace Sygefor\Bundle\TraineeBundle\EventListener;
 
-
 use Sygefor\Bundle\CoreBundle\Event\ConfigureMenuEvent;
+use Symfony\Component\Routing\Router;
 use Symfony\Component\Security\Core\Exception\AuthenticationCredentialsNotFoundException;
 use Symfony\Component\Security\Core\SecurityContext;
-use Symfony\Component\Routing\Router;
 
 /**
- * Class ConfigureMenuListener
- * @package Sygefor\Bundle\TraineeBundle\EventListener
+ * Class ConfigureMenuListener.
  */
 class ConfigureMenuListener
 {
@@ -31,11 +29,11 @@ class ConfigureMenuListener
     private $router;
 
     /**
-     * Construct
+     * Construct.
      */
     public function __construct(SecurityContext $securityContext, Router $router) {
         $this->securityContext = $securityContext;
-        $this->router = $router;
+        $this->router          = $router;
     }
 
     /**
@@ -45,16 +43,11 @@ class ConfigureMenuListener
     {
         $menu = $event->getMenu();
         try {
-            if($this->securityContext->isGranted('VIEW', 'SygeforTraineeBundle:Trainee')) {
+            if($this->securityContext->isGranted('VIEW', 'SygeforTraineeBundle:AbstractTrainee')) {
                 $menu->addChild('trainees', array(
                     'label' => 'Publics',
                     'icon'  => 'group',
-                    'uri' => $this->router->generate('core.index')  . '#/trainee'
-                ));
-                $menu->addChild('inscriptions', array(
-                    'label' => 'Inscriptions',
-                    'icon'  => 'graduation-cap',
-                    'uri' => $this->router->generate('core.index')  . '#/inscription'
+                    'uri'   => $this->router->generate('core.index') . '#/trainee',
                 ));
             }
         } catch(AuthenticationCredentialsNotFoundException $e) {

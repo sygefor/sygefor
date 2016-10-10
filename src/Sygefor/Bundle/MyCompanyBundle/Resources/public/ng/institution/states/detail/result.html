@@ -1,0 +1,6 @@
+<a ui-sref="institution.detail.view({id: result.id})">
+    <label>{{ result.name }}</label>
+    <p class="list-group-item-text">
+        {{ result.institutionType.name ? result.institutionType.name : result.institutionType  }}
+    </p>
+</a>

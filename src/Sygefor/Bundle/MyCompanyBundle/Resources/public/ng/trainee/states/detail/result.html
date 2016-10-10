@@ -1,0 +1,7 @@
+<a ui-sref="trainee.detail.view({id: result.id})">
+    <label>{{ result.fullName }}</label>
+    <p class="list-group-item-text">
+        <span ng-if="result.institution"><i class="fa fa-building"></i> {{ result.institution.name }}</span>
+    </p>
+</a>
+

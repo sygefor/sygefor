@@ -1,9 +1,11 @@
 parameters:
-    front_url:         http://sygefor.reseau-urfist.fr/#
+    front_url:         'https://www.sygefor.dev'
+    front_host:        'sygefor.dev'
+    back_host:         'extranet.sygefor.dev'
     database_driver:   pdo_mysql
     database_host:     127.0.0.1
     database_port:     ~
-    database_name:     symfony
+    database_name:     sygefor3
     database_user:     root
     database_password: ~
 
@@ -12,9 +14,9 @@ parameters:
     mailer_user:        ~
     mailer_password:    ~
     mailer_encryption:  ~
-    mailer_auth_mode:   login
-    mailer_port:        25
-    mailer_from:        sygefor@reseau-urfist.fr
+    mailer_auth_mode:   ~
+    mailer_port:        1025
+    mailer_from:        contact@sygefor.dev
     mailer_from_name:   Sygefor
 
     mailer_local_transport: smtp
@@ -22,8 +24,8 @@ parameters:
     mailer_local_user:      ~
     mailer_local_password:  ~
     mailer_local_encryption: ~
-    mailer_local_auth_mode: login
-    mailer_local_port:      25
+    mailer_local_auth_mode: null
+    mailer_local_port:      1025
 
     locale:            en
     secret:            ThisTokenIsNotSoSecretChangeIt

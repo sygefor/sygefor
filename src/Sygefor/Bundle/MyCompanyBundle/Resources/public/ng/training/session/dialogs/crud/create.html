@@ -1,0 +1,116 @@
+<div class="modal-header">
+    <button type="button" class="close" ng-click="dialog.dismiss()" aria-hidden="true">×</button>
+    <h4 class="modal-title" id="myModalLabel">Créer une session</h4>
+</div>
+
+<form sf-href="session.create({training: dialog.params.training.id})" sf-form="form" json-path="form" on-success="onSuccess(data)" class="form-horizontal" novalidate>
+    <div class="modal-body">
+
+        <div ng-repeat="key in ['name', 'module']">
+            <div class="form-group" ng-if="form.children[key]" ng-class="{'has-error': form.children[key].errors.length }">
+                <label class="col-sm-3 control-label" for="{{ form.children[key].id }}">{{ form.children[key].label }}</label>
+                <div class="col-sm-9">
+                    <span sf-form-widget="form.children[key]" class="form-control"/>
+                    <div ng-if="error.length" ng-if="error.length" ng-repeat="error in form.children[key].errors" class="help-block">{{ error }}</div>
+                </div>
+            </div>
+        </div>
+
+        <div ng-show="form.children['module'] && !form.children['module'].value" class="form-group">
+            <label class="col-sm-3 control-label" for="form.children['newModule'].children.name.id">Nouveau module</label>
+            <div class="col-sm-9">
+                <div class="row">
+                    <span ng-class="{'has-error': form.children['newModule'].children.name.errors.length }" class="col-sm-10">
+                        <input type="text" class="form-control" ng-model="form.children['newModule'].children.name.value" />
+                    </span>
+                    <span class="col-sm-2">
+                        <span title="{{ form.children['newModule'].children.mandatory.label }}" sf-form-widget="form.children['newModule'].children.mandatory" class="form-control"/>
+                    </span>
+                </div>
+                <span ng-class="{'has-error': form.children['newModule'].children.name.errors.length + form.children['newModule'].children.mandatory.errors }">
+                    <div ng-if="error.length" ng-repeat="error in form.children['newModule'].children.name.errors" class="help-block">{{ error }}</div>
+                    <div ng-if="error.length" ng-repeat="error in form.children['newModule'].children.mandatory.errors" class="help-block">{{ error }}</div>
+                </span>
+            </div>
+        </div>
+
+        <div class="form-group">
+            <label class="col-sm-3 control-label" for="form.children.dateBegin.id">Date(s)</label>
+            <div class="col-sm-9">
+                <div class="controls form-inline input-daterange" bs-datepicker bs-datepicker-view-date="{{ $moment().format('YYYY-MM-DD') }}">
+                    <span ng-class="{'has-error': form.children.dateBegin.errors.length }">
+                        <input type="text" class="form-control input-datepicker" ng-model="form.children.dateBegin.value" />
+                    </span>
+                    <label>au</label>
+                    <span ng-class="{'has-error': form.children.dateEnd.errors.length }">
+                        <input type="text" class="form-control input-datepicker" ng-model="form.children.dateEnd.value" />
+                    </span>
+                </div>
+                <span ng-class="{'has-error': form.children.dateBegin.errors.length+form.children.dateEnd.errors }">
+                    <div ng-if="error.length" ng-repeat="error in form.children.dateBegin.errors" class="help-block">{{ error }}</div>
+                    <div ng-if="error.length" ng-repeat="error in form.children.dateEnd.errors" class="help-block">{{ error }}</div>
+                </span>
+            </div>
+        </div>
+
+        <div class="form-group" ng-class="{'has-error': form.children.maximumNumberOfRegistrations.errors.length }">
+            <label class="col-sm-3 control-label" for="{{ form.children.maximumNumberOfRegistrations.id }}">{{ form.children.maximumNumberOfRegistrations.label }}</label>
+            <div class="col-sm-3">
+                <span sf-form-widget="form.children.maximumNumberOfRegistrations" class="form-control"/>
+                <div ng-if="error.length" ng-repeat="error in form.children.maximumNumberOfRegistrations.errors" class="help-block">{{ error }}</div>
+            </div>
+        </div>
+
+        <!-- inscription status -->
+        <!--div class="form-group" ng-init="childReg = form.children.registration" ng-class="{'has-error': childReg.errors.length }">
+            <label class="col-sm-3 control-label" for="{{ childReg.id }}">{{childReg.label }}</label>
+            <div class="col-sm-3">
+                <span sf-form-widget="childReg" class="form-control"/>
+                <div ng-if="error.length" ng-repeat="error in childReg.errors" class="help-block">{{ error }}</div>
+            </div>
+        </div-->
+
+        <div class="form-group" ng-init="childDislayOnline = form.children.displayOnline" ng-class="{'has-error': childDislayOnline.errors.length }">
+            <label class="col-sm-3 control-label" for="{{ childDislayOnline.id }}">{{ childDislayOnline.label }}</label>
+            <div class="col-sm-9">
+                <label ng-repeat="(key,choice) in childDislayOnline.choices">
+                    <input type="radio" name="{{ childDislayOnline.name }}" value="{{ choice.v }}" ng-model="form.children.displayOnline.value"> {{ choice.l }}&nbsp;&nbsp;&nbsp;
+                </label>
+                <div ng-if="error.length" ng-repeat="error in dateBegin.errors" class="help-block">{{ error }}</div>
+            </div>
+        </div>
+
+
+        <div class="form-group" ng-init="childReg = form.children.registration" ng-class="{'has-error': childReg.errors.length }">
+            <label class="col-sm-3 control-label" for="{{ childReg.id }}">{{ childReg.label }}</label>
+            <div class="col-sm-9">
+                <div ng-repeat="(key,choice) in childReg.choices">
+                    <label>
+                        <input type="radio" name="{{ childReg.name }}" value="{{ choice.v }}" ng-model="form.children.registration.value"> {{ choice.l }}
+                        <div class="help-block" ng-if="choice.v == '0'">Les inscriptions ne sont pas gérées.</div>
+                        <div class="help-block" ng-if="choice.v == '1'">Les inscriptions sont gérées mais fermées au public.</div>
+                        <div class="help-block" ng-if="choice.v == '2'">Les inscriptions sont gérées et accessibles à un public restreint.</div>
+                        <div class="help-block" ng-if="choice.v == '3'">Les inscriptions sont gérées et accessibles publiquement.</div>
+                    </label>
+                </div>
+                <div ng-if="error.length" ng-repeat="error in childReg.errors" class="help-block">{{ error }}</div>
+            </div>
+        </div>
+
+        <div ng-repeat="key in ['dayNumber', 'hourNumber']">
+            <div class="form-group" ng-if="form.children[key]" ng-class="{'has-error': form.children[key].errors.length }">
+                <label class="col-sm-3 control-label" for="{{ form.children[key].id }}">{{ form.children[key].label }}</label>
+                <div class="col-sm-9">
+                    <span sf-form-widget="form.children[key]" class="form-control"/>
+                    <div ng-if="error.length" ng-if="error.length" ng-repeat="error in form.children[key].errors" class="help-block">{{ error }}</div>
+                </div>
+            </div>
+        </div>
+
+
+    </div>
+    <div class="modal-footer">
+        <a class="btn btn-default" ng-click="dialog.dismiss()">Annuler</a>
+        <input class="btn btn-primary" type="submit" value="Enregistrer" />
+    </div>
+</form>

@@ -7,8 +7,7 @@ use Symfony\Component\DependencyInjection\ContainerBuilder;
 use Symfony\Component\HttpKernel\Bundle\Bundle;
 
 /**
- * Class SygeforTrainingBundle
- * @package Sygefor\Bundle\TrainingBundle
+ * Class SygeforTrainingBundle.
  */
 class SygeforTrainingBundle extends Bundle
 {

@@ -1,0 +1,15 @@
+services:
+    # taxonomy forms
+    sygefor_trainee.form.type.instription_status:
+        class: Sygefor\Bundle\InscriptionBundle\Form\InscriptionStatusVocabularyType
+        arguments:
+            - "@security.context"
+        tags:
+            - { name: form.type, alias: inscriptionstatusvocabulary }
+
+    sygefor_trainee.form.type.presence_status:
+            class: Sygefor\Bundle\InscriptionBundle\Form\PresenceStatusVocabularyType
+            arguments:
+                - "@security.context"
+            tags:
+                - { name: form.type, alias: presencestatusvocabulary }

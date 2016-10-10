@@ -1,0 +1,20 @@
+services:
+    # external link menu items
+    sygefor_mycompany.configure_menu_listener:
+        class: Sygefor\Bundle\MyCompanyBundle\EventListener\ConfigureMenuListener
+        arguments:
+            - "@security.context"
+            - "@router"
+            - "@doctrine.orm.entity_manager"
+        tags:
+            - { name: kernel.event_listener, event: sygefor_core.menu_configure, method: onMenuConfigure }
+            - { name: kernel.event_listener, event: sygefor_core.menu_alter, method: onAlterConfigure }
+
+    # orm listeners
+    sygefor_mycompany.profesionnal_situation.orm.listener:
+        class: Sygefor\Bundle\MyCompanyBundle\Listener\TraineeInscriptionListener
+        tags:
+            - { name: doctrine.event_subscriber, connection: default }
+
+    sygefor_mycompany.unity_provider:
+        class: Sygefor\Bundle\MyCompanyBundle\Provider\UnityProvider

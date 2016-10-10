@@ -1,0 +1,33 @@
+parameters:
+    sygefor_training.taxonomy.group: "Formation"
+
+services:
+    sygefor_training.vocabulary_training_theme:
+        class:        Sygefor\Bundle\TrainingBundle\Entity\Training\Term\Theme
+        tags:
+            - { name: sygefor_core.vocabulary_provider, group: "%sygefor_training.taxonomy.group%" }
+
+    sygefor_training.vocabulary_session_place:
+        class:        Sygefor\Bundle\TrainingBundle\Entity\Session\Term\Place
+        tags:
+            - { name: sygefor_core.vocabulary_provider, group: "%sygefor_training.taxonomy.group%" }
+
+    sygefor_training.vocabulary_session_type:
+        class:        Sygefor\Bundle\TrainingBundle\Entity\Session\Term\SessionType
+        tags:
+            - { name: sygefor_core.vocabulary_provider, group: "%sygefor_training.taxonomy.group%" }
+
+    sygefor_training.vocabulary_training_supervisor:
+        class:        Sygefor\Bundle\TrainingBundle\Entity\Training\Term\Supervisor
+        tags:
+            - { name: sygefor_core.vocabulary_provider, group: "%sygefor_training.taxonomy.group%" }
+
+    sygefor_training.vocabulary_training_tag:
+        class:        Sygefor\Bundle\TrainingBundle\Entity\Training\Term\Tag
+        tags:
+            - { name: sygefor_core.vocabulary_provider, group: "%sygefor_training.taxonomy.group%" }
+
+    sygefor_training.vocabulary_training_category:
+        class:        Sygefor\Bundle\TrainingBundle\Entity\Training\Term\TrainingCategory
+        tags:
+            - { name: sygefor_core.vocabulary_provider, group: "%sygefor_training.taxonomy.group%" }

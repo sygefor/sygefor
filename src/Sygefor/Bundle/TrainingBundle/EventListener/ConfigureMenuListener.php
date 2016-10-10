@@ -1,10 +1,10 @@
 <?php
+
 /**
- * Auteur: Blaise de Carné - blaise@concretis.com
+ * Auteur: Blaise de Carné - blaise@concretis.com.
  */
 namespace Sygefor\Bundle\TrainingBundle\EventListener;
 
-use Knp\Menu\MenuItem;
 use Sygefor\Bundle\CoreBundle\Event\ConfigureMenuEvent;
 use Sygefor\Bundle\TrainingBundle\Registry\TrainingTypeRegistry;
 use Symfony\Component\Routing\Router;
@@ -12,8 +12,7 @@ use Symfony\Component\Security\Core\Exception\AuthenticationCredentialsNotFoundE
 use Symfony\Component\Security\Core\SecurityContext;
 
 /**
- * Class ConfigureMenuListener
- * @package Sygefor\Bundle\TrainingBundle\EventListener
+ * Class ConfigureMenuListener.
  */
 class ConfigureMenuListener
 {
@@ -33,12 +32,12 @@ class ConfigureMenuListener
     private $registry;
 
     /**
-     * Construct
+     * Construct.
      */
     public function __construct(SecurityContext $securityContext, Router $router, TrainingTypeRegistry $registry) {
         $this->securityContext = $securityContext;
-        $this->router = $router;
-        $this->registry = $registry;
+        $this->router          = $router;
+        $this->registry        = $registry;
     }
 
     /**
@@ -49,23 +48,23 @@ class ConfigureMenuListener
         $menu = $event->getMenu();
 
         try {
-            if($this->securityContext->isGranted('VIEW', 'SygeforTrainingBundle:Training')) {
+            if($this->securityContext->isGranted('VIEW', 'SygeforTrainingBundle:Training\AbstractTraining')) {
                 $item = $menu->addChild('trainings', array(
                     'label' => 'Événements',
                     'icon'  => 'calendar',
-                    'uri' => $this->router->generate('core.index')  . '#/training'
+                    'uri'   => $this->router->generate('core.index') . '#/training',
                 ));
 
                 foreach($this->registry->getTypes() as $key => $type) {
                     $item->addChild('trainings.' . $key, array(
                         'label' => $type['label'],
-                        'uri' => $this->router->generate('core.index')  . '#/training?type='.$key
+                        'uri'   => $this->router->generate('core.index') . '#/training?type=' . $key,
                     ));
                 }
 
                 $item->addChild('sessions', array(
-                    'label' => "Toutes les sessions",
-                    'uri' => $this->router->generate('core.index')  . '#/training/session'
+                    'label' => 'Toutes les sessions',
+                    'uri'   => $this->router->generate('core.index') . '#/training/session',
                 ))->setAttribute('divider_prepend', true);
 
             }

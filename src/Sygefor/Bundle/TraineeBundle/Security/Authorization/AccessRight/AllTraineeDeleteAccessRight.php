@@ -1,14 +1,14 @@
 <?php
+
 /**
  * Created by PhpStorm.
  * User: maxime
  * Date: 20/03/14
- * Time: 16:46
+ * Time: 16:46.
  */
-
 namespace Sygefor\Bundle\TraineeBundle\Security\Authorization\AccessRight;
 
-use Sygefor\Bundle\UserBundle\AccessRight\AbstractAccessRight;
+use Sygefor\Bundle\CoreBundle\AccessRight\AbstractAccessRight;
 use Symfony\Component\Security\Core\Authentication\Token\TokenInterface;
 
 class AllTraineeDeleteAccessRight extends AbstractAccessRight
@@ -18,18 +18,19 @@ class AllTraineeDeleteAccessRight extends AbstractAccessRight
      */
     public function getLabel()
     {
-        return 'Supprimer les stagiaires de toutes les URFIST';
+        return 'Supprimer les stagiaires de tous les centres';
     }
 
     /**
      * Checks if the access right supports the given class.
      *
      * @param string
-     * @return Boolean
+     *
+     * @return bool
      */
     public function supportsClass($class)
     {
-        if ($class == 'Sygefor\Bundle\TraineeBundle\Entity\Trainee') {
+        if ($class === 'Sygefor\Bundle\TraineeBundle\Entity\AbstractTrainee') {
             return true;
         }
     }
@@ -39,7 +40,8 @@ class AllTraineeDeleteAccessRight extends AbstractAccessRight
      */
     public function isGranted(TokenInterface $token, $object = null, $attribute)
     {
-        if ($attribute != 'DELETE') return false;
+        if ($attribute !== 'DELETE') return false;
+
         return true;
     }
 }

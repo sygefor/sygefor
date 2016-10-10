@@ -1,27 +1,32 @@
 /**
  * Symfony2 form
  */
-sygeforApp.directive('sfForm', ['$http', function($http)
-{
+sygeforApp.directive('sfForm', ['$http', function($http) {
     /**
      * Extract data from a FormView
      * This function is recursive
-     * @param params
+     * @param formView
      */
     var extractData = function(formView) {
         var name = formView.name;
         var data = {};
 
-        if(formView.children) {
+        if (formView.children) {
             // if the element has children, get the data from them
             for(var key in formView.children) {
                 angular.extend(data, extractData(formView.children[key]));
             }
-        } else {
-            if(typeof formView.checked != "undefined") {
-                // get the data from the checked property
-                data = formView.checked;
-            } else {
+        }
+        else {
+            if (typeof formView.checked != "undefined") {
+                if (typeof formView.value === "string") {
+                    data = formView.checked;
+                }
+                else {
+                    data = formView.value;
+                }
+            }
+            else {
                 // get the data from the value property
                 data = formView.value;
             }
@@ -31,7 +36,7 @@ sygeforApp.directive('sfForm', ['$http', function($http)
         obj[name] = data;
 
         return obj;
-    }
+    };
 
     /**
      * directive return
@@ -42,16 +47,10 @@ sygeforApp.directive('sfForm', ['$http', function($http)
         scope:{
             "form": "=sfForm",
             "onSuccess": "&",
-            "onError": "&"
+            "onError": "&",
+            "onPreSubmit": "&"
         },
         link: function(scope, element, attrs) {
-
-            /*if(!scope.form && attrs.action) {
-                $http.get(attrs.action).success(function(data, status, headers, config) {
-                    scope.form = attrs.jsonPath ? data[attrs.jsonPath] : data;
-                })
-            }*/
-
             /**
              * Process the form
              */
@@ -59,6 +58,11 @@ sygeforApp.directive('sfForm', ['$http', function($http)
 
                 // build the post array
                 var data = extractData(scope.form);
+
+                // calling controller presubmit if it want to manage datas before submition
+                if (typeof scope.onPreSubmit == 'function') {
+                    scope.onPreSubmit({data: data});
+                }
 
                 // send the request
                 $http.post(element.attr('action'), data).
@@ -75,7 +79,7 @@ sygeforApp.directive('sfForm', ['$http', function($http)
                     error(function(data, status, headers, config) {
                         scope.onError({data: data, status: status , headers: headers, config: config});
                     });
-            }
+            };
 
             /**
              * on form submit, build the query
@@ -98,7 +102,8 @@ sygeforApp.directive('sfFormWidget', ['$compile', function($compile) {
         text: "<input type='text'>",
         textarea: "<textarea></textarea>",
         choice: "<select ng-options=\"choice.v+'' as choice.l for choice in element.choices\" ng-multiple=\"element.multiple\"></select>", // need to force value to string to be compatible
-        date: "<input type='text' bs-datepicker>"
+        date: "<input type='text' bs-datepicker>",
+        time: "<input type='time'>"
     };
 
     return {
@@ -107,8 +112,7 @@ sygeforApp.directive('sfFormWidget', ['$compile', function($compile) {
         scope: {
             element:'=sfFormWidget'
         },
-        link: function(scope, element, attrs, formEltCtrl)
-        {
+        link: function(scope, element, attrs) {
             /**
              * update
              */
@@ -130,6 +134,9 @@ sygeforApp.directive('sfFormWidget', ['$compile', function($compile) {
                 elem.attr('ng-model', 'element.value');
                 elem.attr('id', '{{ element.id }}');
                 elem.attr('name', '{{ element.full_name }}');
+                if (type === "checkbox") {
+                    elem.attr('ng-checked', 'element.checked');
+                }
 
                 // required
                 if(elt.required) {
@@ -145,19 +152,25 @@ sygeforApp.directive('sfFormWidget', ['$compile', function($compile) {
 
                 // get the attrs from the markup to add it to the new element
                 for (attr in attrs.$attr) {
-                    if(attrs.hasOwnProperty(attr)){
-                        elem.attr(attr, attrs[attr]);
+                    if (attrs.hasOwnProperty(attr)){
+                        // prefer not compiled attribute
+                        if (attrs.$attr[attr]) {
+                            elem.attr(attrs.$attr[attr], attrs[attr]);
+                        }
+                        else {
+                            elem.attr(attr, attrs[attr]);
+                        }
                     }
                 }
 
                 // replace the current element
                 element.replaceWith($compile(elem)(scope));
-            }
+            };
 
             /**
              * watch element
              */
-            scope.$watch('element', function(elt) {
+            scope.$watch('element', function() {
                 update();
             });
         }

@@ -1,0 +1,22 @@
+.internship {
+  & .session__type .label {
+    background-color: $internship-color;
+  }
+}
+.training-detail-view {
+  h4 {
+    margin-top: $padding-large-vertical * 2;
+  }
+
+  .list-inline.training-detail-info, .panel-body {
+    line-height: 22px;
+  }
+
+  .panel-group {
+    margin-bottom: 0;
+
+    &last-child {
+      margin-bottom: 20px;
+    }
+  }
+}

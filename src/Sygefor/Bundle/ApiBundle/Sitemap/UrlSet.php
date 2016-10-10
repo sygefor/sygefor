@@ -1,4 +1,5 @@
 <?php
+
 namespace Sygefor\Bundle\ApiBundle\Sitemap;
 
 use JMS\Serializer\Annotation as Serializer;
@@ -22,7 +23,7 @@ class UrlSet
      * @param Url $url
      */
     public function addUrl($url) {
-        if(!$url instanceof Url) {
+        if( ! $url instanceof Url) {
             $url = new Url($url);
         }
         $this->urls[] = $url;

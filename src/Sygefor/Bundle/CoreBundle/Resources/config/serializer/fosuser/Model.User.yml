@@ -1,0 +1,7 @@
+FOS\UserBundle\Entity\User:
+    exclusion_policy: NONE
+    properties:
+        password:
+            exclude: true
+        salt:
+            exclude: true

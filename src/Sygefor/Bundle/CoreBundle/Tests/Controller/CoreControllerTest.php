@@ -1,17 +1,17 @@
 <?php
+
 namespace Sygefor\Bundle\CoreBundle\Tests\Controller;
 
 use Sygefor\Bundle\CoreBundle\Test\WebTestCase;
 use Symfony\Component\HttpFoundation\Response;
 
 /**
- * Class DefaultControllerTest
- * @package Sygefor\Bundle\CoreBundle\Tests\Controller
+ * Class DefaultControllerTest.
  */
-class DefaultControllerTest extends WebTestCase
+class CoreControllerTest extends WebTestCase
 {
     /**
-     * testIndex
+     * testIndex.
      */
     public function testIndex()
     {
@@ -23,11 +23,11 @@ class DefaultControllerTest extends WebTestCase
 
         $this->loginAsUser();
         $this->getRequest($url);
-        $this->assertContentContains("<div ui-view></div>");
+        $this->assertContentContains('<div ui-view></div>');
     }
 
     /**
-     * testSearch
+     * testSearch.
      */
     public function testSearch()
     {
@@ -45,18 +45,18 @@ class DefaultControllerTest extends WebTestCase
     }
 
     /**
-     * testEntity
+     * testEntity.
      */
     public function testEntity()
     {
         // get one training
         $repository = $this->getEntityManager()->getRepository('SygeforTrainingBundle:Training');
-        $training = $repository->findOneBy(array());
+        $training   = $repository->findOneBy(array());
 
         // build url
         $url = $this->generateUrl('core.entity', array(
-            'class' => 'SygeforTrainingBundle:Training',
-            'id' => $training->getId(),
+            'class' => 'SygeforTrainingBundle:Training\AbstractTraining',
+            'id'    => $training->getId(),
         ));
 
         // redirect to login
@@ -70,11 +70,11 @@ class DefaultControllerTest extends WebTestCase
 
         // temp user with right access
         $organization = $this->getEntityManager()->find('SygeforCoreBundle:Organization', $training->getOrganization()->getId());
-        $this->createTempUser("user", array('sygefor_training.rights.training.own'), array('organization' => $organization));
-        $this->loginAs("user");
+        $this->createTempUser('user', array('sygefor_training.rights.training.own'), array('organization' => $organization));
+        $this->loginAs('user');
         $this->jsonRequest('GET', $url);
         $this->assertResponseSuccess();
         $response = $this->getResponseJson();
-        $this->assertEquals($training->getName(), $response->name);
+        $this->assertSame($training->getName(), $response->name);
     }
 }

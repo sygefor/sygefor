@@ -1,21 +1,19 @@
 <?php
+
 namespace Sygefor\Bundle\ApiBundle\Command;
 
 use Symfony\Bundle\FrameworkBundle\Command\ContainerAwareCommand;
-use Symfony\Component\Console\Input\InputArgument;
-use Symfony\Component\Console\Input\InputOption;
 use Symfony\Component\Console\Input\InputInterface;
+use Symfony\Component\Console\Input\InputOption;
 use Symfony\Component\Console\Output\OutputInterface;
 
-
 /**
- * Class CreateClientCommand
- * @package Sygefor\Bundle\ApiBundle\Command
+ * Class CreateClientCommand.
  */
 class CreateClientCommand extends ContainerAwareCommand
 {
     /**
-     * configuration
+     * configuration.
      */
     protected function configure()
     {
@@ -47,13 +45,13 @@ EOT
     }
 
     /**
-     * @param InputInterface $input
+     * @param InputInterface  $input
      * @param OutputInterface $output
      */
     protected function execute(InputInterface $input, OutputInterface $output)
     {
         $clientManager = $this->getContainer()->get('fos_oauth_server.client_manager.default');
-        $client = $clientManager->createClient();
+        $client        = $clientManager->createClient();
         $client->setRedirectUris($input->getOption('redirect-uri'));
         $client->setAllowedGrantTypes($input->getOption('grant-type'));
         $clientManager->updateClient($client);

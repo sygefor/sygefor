@@ -1,0 +1,75 @@
+<form sf-xeditable-form="form" sf-href='trainer.view({id: trainer.id})' on-success="onSuccess(data)">
+    <div class="row">
+        <div class="col-md-8">
+            <div class="btn-group pull-right">
+                <a class="btn btn-fa" href="" tooltip="Changer le centre de rattachement" ng-click="changeOrganization()"><span class="fa fa-university"></span></a>
+                   <!--ng-if="$user.hasAccessRight('sygefor_trainer.rights.trainer.all.update')" -->
+
+                <a class="btn btn-fa" href="" tooltip="Supprimer" ng-if="trainer._accessRights.delete" ng-click="delete()"><span class="fa fa-trash-o"></span></a>
+            </div>
+
+            <div class="pre-title">Enregistré le {{ trainer.createdAt|date: 'dd/MM/yyyy' }} - {{ trainer.organization.name }}</div>
+
+            <h2>{{ trainer.fullName }}</h2>
+            <h3><span>Informations personnelles</span></h3>
+            <hr>
+            <div class="row mb-1">
+                <div class="col-lg-6">
+                    <ul class="summary">
+                        <li><label>Nom</label> <span sf-xeditable="form.children.lastName">{{ trainer.lastName }}</span></li>
+                        <li><label>Prénom</label> <span sf-xeditable="form.children.firstName">{{ trainer.firstName }}</span></li>
+                        <li><label>Email</label> <span sf-xeditable="form.children.email">{{ trainer.email }}</span></li>
+                        <li><label>Téléphone</label> <span sf-xeditable="form.children.phoneNumber">{{ trainer.phoneNumber }}</span></li>
+                        <li><label>Site web</label> <span sf-xeditable="form.children.website">{{ trainer.website }}</span></li>
+                        <li><label>Publié sur le web</label>  <span sf-xeditable="form.children.isPublic">{{ trainer.isPublic ? 'Oui' : 'Non' }}</span></li>
+                        <li title="Autoriser l'envoie de courriels pour les stagiaires"><label>Autoriser les courriels</label> <span sf-xeditable="form.children.isAllowSendMail">{{ trainer.isAllowSendMail === true || trainer.isAllowSendMail === undefined ? 'Oui' : 'Non' }}</span></li>
+                    </ul>
+                </div>
+                <div class="col-lg-6">
+                    <ul class="summary">
+                        <li><label>Etablissement</label> <span sf-xeditable="form.children.institution">{{ trainer.institution.name }}</span></li>
+                        <li><label>Formateur interne</label> <span sf-xeditable="form.children.isOrganization">{{ trainer.isOrganization ? 'Oui' : 'Non' }}</span></li>
+                        <li><label>Service</label> <span sf-xeditable="form.children.service">{{ trainer.service }}</span></li>
+                        <li><label>Fonction, statut</label>  <span sf-xeditable="form.children.status">{{ trainer.status }}</span></li>
+                        <li><label>Archivé</label> <span sf-xeditable="form.children.isArchived">{{ trainer.isArchived ? 'Oui' : 'Non' }}</span></li>
+                    </ul>
+                </div>
+            </div>
+
+            <h3>Coordonnées</h3>
+            <hr>
+            <div class="row mb-1">
+                <div class="col-lg-6">
+                    <ul class="summary">
+                        <li><label>Type d'adresse</label> <span sf-xeditable="form.children.addressType" data-source="[{value: 0, text: 'Personnelle'}, {value: 1, text: 'Professionnelle'}]">{{ trainer.addressType ? 'Professionnelle' : 'Personnelle'}} </span></li>
+                        <li><label>Adresse</label> <span sf-xeditable="form.children.address" data-type="textarea">{{ trainer.address }}</span></li>
+                        <li><label>Code postal</label> <span sf-xeditable="form.children.zip">{{ trainer.zip }}</span></li>
+                        <li><label>Ville</label> <span sf-xeditable="form.children.city">{{ trainer.city }}</span></li>
+                    </ul>
+                </div>
+            </div>
+
+            <div class="row">
+                <div class="col-lg-12">
+                    <h3><span>Observations</span></h3><hr>
+                    <div class="row">
+                        <div class="col-lg-10">
+                            <p><span sf-xeditable="form.children.observations" data-type="textarea">{{ trainer.observations }}</span></p>
+
+                        </div>
+                    </div>
+
+                    <!-- Emails -->
+                    <div entity-emails trainer="trainer.id"></div>
+                </div>
+            </div>
+        </div>
+
+        <div class="col-md-4 sidebar">
+            <!--
+            PARTICIPATIONS
+            -->
+            <div participations-block="trainer"></div>
+        </div>
+    </div>
+</form>

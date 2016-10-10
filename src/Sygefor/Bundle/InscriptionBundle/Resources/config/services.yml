@@ -1,0 +1,37 @@
+services:
+    # orm listeners
+    sygefor_inscription.inscription.orm.listener:
+        class: Sygefor\Bundle\InscriptionBundle\Listener\InscriptionListener
+        arguments:
+            - "@service_container"
+        tags:
+            - { name: doctrine.event_subscriber, connection: default }
+    sygefor_inscription.profesionnal_situation.orm.listener:
+        class: Sygefor\Bundle\InscriptionBundle\Listener\TraineeInscriptionListener
+        tags:
+            - { name: doctrine.event_subscriber, connection: default }
+
+    # serializer
+    sygefor_inscription.serializer.inscription.event_subscriber:
+        class: Sygefor\Bundle\InscriptionBundle\Serializer\EventSubscriber\InscriptionEventSubscriber
+        tags:
+            - { name: jms_serializer.event_subscriber }
+
+    #batch operation
+    sygefor_inscription.batch.inscription_status_change:
+        class: Sygefor\Bundle\InscriptionBundle\BatchOperations\InscriptionStatusChangeBatchOperation
+        arguments:
+            - "@doctrine.orm.entity_manager"
+        calls:
+            - [ setContainer, [ "@service_container" ] ]
+        tags:
+            - {name: sygefor_core.batch_operation_provider}
+
+    #inscription menu
+    sygefor_inscription.configure_menu_listener:
+        class: Sygefor\Bundle\InscriptionBundle\EventListener\ConfigureMenuListener
+        arguments:
+            - "@security.context"
+            - "@router"
+        tags:
+            - { name: kernel.event_listener, event: sygefor_core.menu_configure, method: onMenuConfigure }

@@ -1,14 +1,18 @@
 <?php
+
 namespace Sygefor\Bundle\TraineeBundle\Entity\Term;
 
-use Sygefor\Bundle\ListBundle\Entity\Term\PublipostTemplate;
-use Sygefor\Bundle\TaxonomyBundle\Entity\AbstractTerm;
-use Sygefor\Bundle\TaxonomyBundle\Vocabulary\VocabularyInterface;
-use Symfony\Component\Intl\Tests\Locale\AbstractLocaleTest;
 use Doctrine\ORM\Mapping as ORM;
+use Sygefor\Bundle\CoreBundle\Entity\Term\PublipostTemplate;
+use Sygefor\Bundle\CoreBundle\Entity\Term\AbstractTerm;
+use Sygefor\Bundle\CoreBundle\Vocabulary\VocabularyInterface;
+use Sygefor\Bundle\InscriptionBundle\Entity\Term\InscriptionStatus;
+use Sygefor\Bundle\InscriptionBundle\Entity\Term\PresenceStatus;
+use Sygefor\Bundle\TraineeBundle\Form\EmailTemplateVocabularyType;
 
 /**
- * Class EmailTemplates
+ * Class EmailTemplates.
+ *
  * @ORM\Table(name="trainee_email_template")
  * @ORM\Entity
  */
@@ -16,39 +20,43 @@ class EmailTemplate extends AbstractTerm implements VocabularyInterface
 {
     /**
      * @ORM\Column(name="subject", type="string", length=255, nullable=false)
-     * @var String
+     *
+     * @var string
      */
     private $subject;
 
     /**
      * @ORM\Column(name="body", type="text", nullable=false)
-     * @var String
+     *
+     * @var string
      */
     private $body;
 
     /**
-     * @ORM\ManyToOne(targetEntity="InscriptionStatus")
-     * @var InscriptionStatus $inscriptionStatus
+     * @ORM\ManyToOne(targetEntity="Sygefor\Bundle\InscriptionBundle\Entity\Term\InscriptionStatus")
+     *
+     * @var InscriptionStatus
      */
     protected $inscriptionStatus;
 
     /**
-     * @ORM\ManyToOne(targetEntity="PresenceStatus")
+     * @ORM\ManyToOne(targetEntity="Sygefor\Bundle\InscriptionBundle\Entity\Term\PresenceStatus")
      */
     protected $presenceStatus;
 
     /**
-     * @ORM\ManyToMany(targetEntity="Sygefor\Bundle\ListBundle\Entity\Term\PublipostTemplate")
+     * @ORM\ManyToMany(targetEntity="Sygefor\Bundle\CoreBundle\Entity\Term\PublipostTemplate")
      * @ORM\JoinTable(name="email_templates__publipost_templates",
      *      joinColumns={@ORM\JoinColumn(name="email_template_id", referencedColumnName="id")},
      *      inverseJoinColumns={@ORM\JoinColumn(name="publipost_template_id", referencedColumnName="id")}
      * )
+     *
      * @var PublipostTemplate
      */
     protected $attachmentTemplates;
 
     /**
-     * @param \Sygefor\Bundle\ListBundle\Entity\Term\PublipostTemplate $attachmentTemplates
+     * @param \Sygefor\Bundle\CoreBundle\Entity\Term\PublipostTemplate $attachmentTemplates
      */
     public function setAttachmentTemplates($attachmentTemplates)
     {
@@ -56,7 +64,7 @@ class EmailTemplate extends AbstractTerm implements VocabularyInterface
     }
 
     /**
-     * @return \Sygefor\Bundle\ListBundle\Entity\Term\PublipostTemplate
+     * @return \Sygefor\Bundle\CoreBundle\Entity\Term\PublipostTemplate
      */
     public function getAttachmentTemplates()
     {
@@ -68,7 +76,7 @@ class EmailTemplate extends AbstractTerm implements VocabularyInterface
      */
     public function getVocabularyName()
     {
-        return 'Modèles d\'emails stagiaires' ;
+        return 'Modèles d\'emails stagiaires';
     }
 
     /**
@@ -136,12 +144,13 @@ class EmailTemplate extends AbstractTerm implements VocabularyInterface
     }
 
     /**
-     * returns the form type name for template edition
+     * returns the form type name for template edition.
+     *
      * @return string
      */
     public static function getFormType()
     {
-        return 'emailtemplatevocabulary';
+        return EmailTemplateVocabularyType::class;
     }
 
     public static function getVocabularyStatus()

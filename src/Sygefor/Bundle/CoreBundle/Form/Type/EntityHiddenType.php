@@ -1,19 +1,17 @@
 <?php
+
 /**
  * Created by PhpStorm.
  * User: maxime
  * Date: 25/06/14
- * Time: 16:48
+ * Time: 16:48.
  */
-
 namespace Sygefor\Bundle\CoreBundle\Form\Type;
 
-
 use Doctrine\Common\Persistence\ObjectManager;
-
-
 use Sygefor\Bundle\CoreBundle\Form\DataTransformer\EntityToIdTransformer;
 use Symfony\Component\Form\AbstractType;
+use Symfony\Component\Form\Extension\Core\Type\HiddenType;
 use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Component\OptionsResolver\Exception\MissingOptionsException;
 use Symfony\Component\OptionsResolver\OptionsResolverInterface;
@@ -35,9 +33,10 @@ class EntityHiddenType extends AbstractType
 
     public function buildForm(FormBuilderInterface $builder, array $options)
     {
-        if($options['class'] === null) {
+        if ($options['class'] === null) {
             throw new MissingOptionsException('Missing required class option ');
-        } else {
+        }
+        else {
             $transformer = new EntityToIdTransformer($this->om);
             $transformer->setEntityClass($options['class']);
             $builder->addViewTransformer($transformer);
@@ -49,19 +48,13 @@ class EntityHiddenType extends AbstractType
         $resolver->setDefaults(
             array(
                 'class' => null,
-                'error_bubbling' => false
+                'error_bubbling' => false,
             )
         );
     }
 
-    public function getName()
-    {
-        return 'entity_hidden';
-    }
-
     public function getParent()
     {
-        return 'hidden';
+        return HiddenType::class;
     }
-
-} 
+}

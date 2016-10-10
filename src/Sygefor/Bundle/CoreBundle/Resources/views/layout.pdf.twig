@@ -3,10 +3,10 @@
     <link href="{{ app.request.getSchemeAndHttpHost() ~ asset('build/pdf.css') }}" rel="stylesheet" type="text/css" />
     {% block head %}{% endblock %}
 </head>
-<body class="urfist-{{ organization.code }}">
+<body class="organization-{{ organization.code }}">
     <div class="row">
         <div class="col-xs-7">
-            <img src="{{ app.request.getSchemeAndHttpHost() ~ asset('img/urfist/' ~ organization.code ~ '/logo.png') }}" />
+            <img src="{{ app.request.getSchemeAndHttpHost() ~ asset('img/organization/' ~ organization.code ~ '/logo.png') }}" />
         </div>
         <div class="col-xs-5">
             <strong>{{ organization.name }}</strong><br>

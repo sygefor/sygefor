@@ -1,0 +1,55 @@
+<div class="block block-module-sessions">
+    <div class="block-title">
+        <div class="full-width">
+            <a ui-sref="session.table({training: training.id})" class="btn btn-link h4"><span class="fa fa-calendar-o"></span>Sessions / module</a>
+            <div class="pull-right">
+                <a ng-if="training._accessRights.edit" class="btn btn-fa btn-sm" href="" tooltip="Ajouter une session" ng-click="addSession()"><span class="fa fa-plus"></span></a>
+                <span class="badge" tooltip="{{ training.sessions.length}} session(s)">{{ training.sessions.length}}</span>
+            </div>
+        </div>
+    </div>
+    <div class="block-body">
+        <!-- display sessions without module -->
+        <div ng-if="sessionsWithoutModule.length > 0">
+            <div class="text-muted">Session(s) sans module</div>
+            <ul class="list-circle">
+                <li ng-repeat="session in sessionsWithoutModule | orderBy:'dateBegin':true" ng-class="{past: $moment(session.dateBegin) < $moment()}">
+                    <a ui-sref="session.detail.view({training: training.id, id: session.id})">{{ session.dateBegin | date:'EEEE d MMMM y' }} - {{ session.name }}</a>
+
+                    <!-- stats -->
+                    &nbsp;&nbsp;
+                    <span registration-label="session"></span>
+
+                    <div class="pull-right">
+                        <a registration-stats-label="session" class="label-lg" tooltip-placement="left"></a>
+                    </div>
+                </li>
+            </ul>
+        </div>
+
+        <!--display module sessions-->
+        <div ng-repeat="module in training.modules | orderBy: 'name' : false">
+            <a tooltip="{{ module.name + (module.mandatory ? ' obligatoire' : ' non obligatoire') }}" ng-if="training._accessRights.edit" href="" class="text-muted" ng-click="editModule(module)">
+                {{ module.name }}
+                <span class="fa" ng-class="{'fa-check-square-o': module.mandatory, 'fa-square-o': !module.mandatory}"></span>
+            </a>
+            <div tooltip="{{ module.name + (module.mandatory ? ' obligatoire' : ' non obligatoire') }}" ng-if="!training._accessRights.edit" class="text-muted">
+                {{ module.name }}
+                <span class="fa" ng-class="{'fa-check-square-o': module.mandatory, 'fa-square-o': !module.mandatory}"></span>
+            </div>
+            <ul class="list-circle">
+                <li ng-repeat="session in module.sessions | orderBy:'dateBegin':true" ng-class="{past: $moment(session.dateBegin) < $moment()}">
+                    <a ui-sref="session.detail.view({training: training.id, id: session.id})">{{ session.dateBegin | date:'EEEE d MMMM y' }} - {{ session.name }}</a>
+
+                    <!-- stats -->
+                    &nbsp;&nbsp;
+                    <span registration-label="session"></span>
+
+                    <div class="pull-right">
+                        <a registration-stats-label="session" class="label-lg" tooltip-placement="left"></a>
+                    </div>
+                </li>
+            </ul>
+        </div>
+    </div>
+</div>

@@ -3,15 +3,15 @@ fos_elastica:
         default:
             servers:
                 -
-                    host: %elasticsearch_host%
-                    port: %elasticsearch_port%
+                    host: "%elasticsearch_host%"
+                    port: "%elasticsearch_port%"
                     logger: null
                     headers: null
 #    serializer: ~
     indexes:
         sygefor3:
             client: default
-            index_name: %elasticsearch_prefix%sygefor3
+            index_name: "%elasticsearch_prefix%sygefor3"
             settings:
                 index:
                     analysis:
@@ -58,7 +58,7 @@ fos_elastica:
                                         source: { type: string, index: not_analyzed }
                     persistence:
                         driver: orm # orm, mongodb, propel are available
-                        model: Sygefor\Bundle\UserBundle\Entity\User
+                        model: Sygefor\Bundle\CoreBundle\Entity\User\User
                         provider: ~
                         listener: ~
 
@@ -75,7 +75,7 @@ fos_elastica:
                                 source: { type: string, index: not_analyzed }
                         organization:
                             _include: user.organization
-                        number: { index: analyzed }
+                        number: { index: not_analyzed }
                         serial: { index: analyzed }
                         theme:
                             type: string
@@ -90,23 +90,23 @@ fos_elastica:
                             boost: 5
                             fields:
                                 source: { type: string, index: not_analyzed }
-                        objectives: { boost: 3 }
                         program: { boost: 3 }
+                        description: { boost: 3 }
+                        teachingMethods: { boost: 3 }
                         interventionType: { index: not_analyzed }
-                        externInitiative: { index: not_analyzed }
-                        supervisors:
-                            type: object
-                            properties:
-                                id: { index: not_analyzed }
-                                fullName: { index: not_analyzed }
-                        resources: ~
+                        externalInitiative: { index: not_analyzed }
+                        category:
+                            type: string
+                            fields:
+                                source: { type: string, index: not_analyzed }
                         comments: ~
                         sessions:
                             type: nested
                             include_in_parent: true,
                             properties:
                                 _include: { type: session, exclude: ['training'] }
-                        tp: { index: not_analyzed }
+                        firstSessionPeriodSemester: { type: integer, index: not_analyzed }
+                        firstSessionPeriodYear: { type: integer, index: not_analyzed }
                         # ---
                         # internship
                         # ---
@@ -114,80 +114,14 @@ fos_elastica:
                             type: string
                             fields:
                                 source: { type: string, index: not_analyzed }
-                        prerequisite: ~
-                        firstSessionPeriodSemester: { type: integer, index: not_analyzed }
-                        firstSessionPeriodYear: { type: integer, index: not_analyzed }
-                        # ---
-                        # training course
-                        # ---
-                        institution:
-                            type: string
-                            fields:
-                                source: { type: string, index: not_analyzed }
-                        context: ~
-                        teachingCursus:
-                            type: string
-                            fields:
-                                source: { type: string, index: not_analyzed }
-                        otherCursus: ~
-                        disciplinary:
-                            type: string
-                            fields:
-                                source: { type: string, index: not_analyzed }
-                        evaluation: ~
-                        # ---
-                        # doctoral training
-                        # ---
-                        collegeYear: { index: not_analyzed }
-                        collegeSemester: { type: integer, index: not_analyzed }
-                        doctoralYears:
-                            type: string
-                            fields:
-                                source: { type: string, index: not_analyzed }
-                        doctoralSchools:
-                            type: string
-                            fields:
-                                source: { type: string, index: not_analyzed }
-                        doctoralPartner:
-                            type: string
-                            fields:
-                                source: { type: string, index: not_analyzed }
-                        pedagogicPartner:
-                            type: string
-                            fields:
-                                source: { type: string, index: not_analyzed }
-                        applicantOrganism:
-                            type: string
-                            fields:
-                                source: { type: string, index: not_analyzed }
-                        otherPartner: { type: string, index: not_analyzed }
-                        ects: { type: integer, index: not_analyzed }
-                        # ---
-                        # diverse training
-                        # ---
-                        variousAction:
-                            type: string
-                            fields:
-                                source: { type: string, index: not_analyzed }
-                        # publicTypes already from internship
-                        organism: { index: analyzed }
-                        agreement: { index: not_analyzed }
                         # ---
                         # meeting
                         # ---
-                        eventType:
-                            type: string
-                            fields:
-                                source: { type: string, index: not_analyzed }
-                        eventKind:
-                            type: string
-                            fields:
-                                source: { type: string, index: not_analyzed }
                         partners: { index: analyzed }
                         national: { index: not_analyzed }
                     persistence:
                         driver: orm # orm, mongodb, propel are available
-                        model: Sygefor\Bundle\TrainingBundle\Entity\Training
+                        model: Sygefor\Bundle\TrainingBundle\Entity\Training\AbstractTraining
                         provider: ~
                         listener: ~
 
@@ -201,17 +135,25 @@ fos_elastica:
                             type: object
                             properties:
                                 _include: { type: training, exclude: 'sessions' }
+                        name:
+                            type: string
+                            boost: 3
+                            fields:
+                                autocomplete: { type: string, index: analyzed, analyzer: autocomplete }
+                                source: { type: string, index: not_analyzed }
+                        module:
+                            type: string
+                            fields:
+                                source: { type: string, index: not_analyzed }
                         dateBegin: { type: date, index: not_analyzed }
                         dateEnd: { type: date, index: not_analyzed }
+                        hourNumber: { type: integer, index: not_analyzed }
+                        dayNumber: { type: integer, index: not_analyzed }
+                        schedule: { type: string, index: not_analyzed }
                         year: { type: integer, index: not_analyzed }
                         semester: { type: integer, index: not_analyzed }
                         semesterLabel: { index: not_analyzed }
-                        collegeYear: { index: not_analyzed }
-                        collegeSemester: { type: integer, index: not_analyzed }
                         limitRegistrationDate: { type: date, index: not_analyzed }
-                        hourDuration:
-                            type: integer
-                            index: not_analyzed
                         price: { index: not_analyzed }
                         numberOfRegistrations:
                             _private: true
@@ -231,33 +173,9 @@ fos_elastica:
                             type: string
                             fields:
                                 source: { type: string, index: not_analyzed }
-                        schedule: { index: not_analyzed }
                         registration: { index: not_analyzed }
+                        status: { index: not_analyzed }
                         displayOnline: { type: boolean }
-                        networkTrainerCost:
-                            type: float
-                            index: not_analyzed
-                        externTrainerCost:
-                            type: float
-                            index: not_analyzed
-                        externTrainerConsideration: { index: not_analyzed }
-                        reprographyCost:
-                            type: float
-                            index: not_analyzed
-                        otherCost: { index: not_analyzed }
-                        totalCost:
-                            type: float
-                            index: not_analyzed
-                        subscriptionRightTaking:
-                            type: float
-                            index: not_analyzed
-                        otherTaking:
-                            type: float
-                            index: not_analyzed
-                        totalTaking:
-                            type: float
-                            index: not_analyzed
-                        observations: { index: not_analyzed }
                         inscriptionStats:
                             _private: true
                             type: object
@@ -282,13 +200,13 @@ fos_elastica:
                             type: nested
                             include_in_parent: true
                             properties:
-                                isUrfist: { type: boolean, index: not_analyzed }
+                                isOrganization: { type: boolean, index: not_analyzed }
                                 isLocal: { type: boolean, index: not_analyzed }
                                 trainer:
                                     type: object
                                     properties:
                                       id: { index: not_analyzed }
-                                      isUrfist: { index: not_analyzed }
+                                      isOrganization: { index: not_analyzed }
                                       fullName: { index: not_analyzed }
                         promote: { index: not_analyzed }
                         participantsStats:
@@ -296,16 +214,12 @@ fos_elastica:
                             type: nested
                             include_in_parent: true
                             properties:
-                                publicCategory: { index: not_analyzed }
-                                legacyPublicCategory: { index: not_analyzed }
-                                professionalSituation: { index: not_analyzed }
-                                disciplinary: { index: not_analyzed }
-                                disciplinaryDomain: { index: not_analyzed }
+                                publicType: { index: not_analyzed }
                                 geographicOrigin: { index: not_analyzed }
                                 count: { type: integer, index: not_analyzed }
                     persistence:
                         driver: orm # orm, mongodb, propel are available
-                        model: Sygefor\Bundle\TrainingBundle\Entity\Session
+                        model: Sygefor\Bundle\TrainingBundle\Entity\Session\AbstractSession
                         provider: ~
                         listener: ~
                         model_to_elastica_transformer:
@@ -318,8 +232,6 @@ fos_elastica:
                     mappings:
                         year: { type: integer, index: not_analyzed }
                         semester: { type: integer, index: not_analyzed }
-                        collegeYear: { index: not_analyzed }
-                        collegeSemester: { type: integer, index: not_analyzed }
                         training:
                             type: object
                             properties:
@@ -369,13 +281,8 @@ fos_elastica:
                                 source: { type: string, index: not_analyzed }
                         organization:
                             _include: user.organization
-                        publicCategory:
-                            type: string
-                            fields:
-                                source: { type: string, index: not_analyzed }
-                        isPaying:
-                            type: boolean
-                        professionalSituation:
+                        publicType:
+                            index: not_analyzed
                             type: string
                             fields:
                                 source: { type: string, index: not_analyzed }
@@ -387,29 +294,29 @@ fos_elastica:
                                     type: string
                                     fields:
                                         source: { type: string, index: not_analyzed }
-                        otherInstitution: ~
-                        disciplinaryDomain:
+                                code: { type: string, index: not_analyzed }
+                                trainingCorrespondents:
+                                    type: object
+                                    properties:
+                                        email: { type: string, index: not_analyzed }
+                        publicType:
+                            index: not_analyzed
                             type: string
                             fields:
                                 source: { type: string, index: not_analyzed }
-                        disciplinary:
-                            type: string
-                            fields:
-                                source: { type: string, index: not_analyzed }
-                        teachingCursus:
-                            type: string
-                            fields:
-                                source: { type: string, index: not_analyzed }
+                        isPaying:
+                            type: boolean
+                        isActive:
+                            type: boolean
                         zip: ~
                         city: ~
+                        createdAt: { type: date, index: not_analyzed }
                         data:
                             type: object
                         createdAt: { index: not_analyzed, type: date }
-                        duplicatesList:
-                            type: integer
                     persistence:
                         driver: orm # orm, mongodb, propel are available
-                        model: Sygefor\Bundle\TraineeBundle\Entity\Trainee
+                        model: Sygefor\Bundle\TraineeBundle\Entity\AbstractTrainee
                         provider: ~
                         listener: ~
 
@@ -445,29 +352,23 @@ fos_elastica:
                                     type: string
                                     fields:
                                         source: { type: string, index: not_analyzed }
+                        typology:
+                            index: not_analyzed
+                            type: string
+                        price: ~
                         institution:
                             _include: trainee.institution
-                        isPaying:
-                            type: boolean
-                        publicCategory:
-                            _include: trainee.publicCategory
-                        professionalSituation:
-                            _include: trainee.professionalSituation
-                        disciplinaryDomain:
-                            _include: trainee.disciplinaryDomain
-                        disciplinary:
-                            _include: trainee.disciplinary
-                        teachingCursus:
-                            _include: trainee.teachingCursus
-                        service: ~
+                        publicType:
+                            _include: trainee.publicType
                         zip: ~
                         city: ~
                         createdAt: { index: not_analyzed, type: date }
+                        lastEmailDate: { index: not_analyzed, type: date }
                         zoneCompetence: { index: not_analyzed }
                         inscriptionStatusUpdatedAt: { index: not_analyzed, type: date }
                     persistence:
                         driver: orm # orm, mongodb, propel are available
-                        model: Sygefor\Bundle\TraineeBundle\Entity\Inscription
+                        model: Sygefor\Bundle\InscriptionBundle\Entity\AbstractInscription
                         provider: ~
                         listener: ~
 
@@ -494,7 +395,11 @@ fos_elastica:
                                 source: { type: string, index: not_analyzed }
                         organization:
                             _include: user.organization
-                        isUrfist:
+                        trainerType:
+                            type: string
+                            fields:
+                                source: { type: string, index: not_analyzed }
+                        isOrganization:
                             type: boolean
                         isAllowSendMail:
                             type: boolean
@@ -512,15 +417,11 @@ fos_elastica:
                         status: ~
                         responsabilities: ~
                         website: ~
-                        competenceFields:
-                            type: string
-                            fields:
-                                source: { type: string, index: not_analyzed }
                         observations: ~
                         createdAt: { index: not_analyzed }
                     persistence:
                         driver: orm # orm, mongodb, propel are available
-                        model: Sygefor\Bundle\TrainerBundle\Entity\Trainer
+                        model: Sygefor\Bundle\TrainerBundle\Entity\AbstractTrainer
                         provider: ~
                         listener: ~
 
@@ -533,14 +434,17 @@ fos_elastica:
                             type: object
                             properties:
                                 id: { index: not_analyzed }
+                                dateBegin: { type: date, index: not_analyzed }
                                 training:
                                     type: object
                                     properties:
                                         id: { index: not_analyzed }
+                                        name: { index: not_analyzed }
                                         organization:
                                             type: object
                                             properties:
                                                 id: { index: not_analyzed }
+                                        typeLabel: { index: not_analyzed }
                         trainer:
                             type: object
                             properties:
@@ -550,15 +454,16 @@ fos_elastica:
                             type: object
                             properties:
                                 id: { index: not_analyzed }
-                        localIsUrfist:
+                        isOrganization:
                             type: boolean
-                        notLocalIsUrfist:
+                        IsLocal:
                             type: boolean
                     persistence:
                         driver: orm # orm, mongodb, propel are available
-                        model: Sygefor\Bundle\TrainerBundle\Entity\Participation
+                        model: Sygefor\Bundle\TrainingBundle\Entity\Session\AbstractParticipation
                         provider: ~
                         listener: ~
+
                 # ---------
                 # EMAIL
                 # ---------
@@ -619,6 +524,31 @@ fos_elastica:
                         sendAt: { type: date, index: not_analyzed }
                   persistence:
                       driver: orm # orm, mongodb, propel are available
-                      model: Sygefor\Bundle\ListBundle\Entity\Email
+                      model: Sygefor\Bundle\CoreBundle\Entity\Email
+                      provider: ~
+                      listener: ~
+
+                # ---------
+                # INSTITUTION
+                # ---------
+                institution:
+                  mappings:
+                        id: { index: not_analyzed }
+                        organization:
+                            _include: user.organization
+                        name:
+                            type: string
+                            fields:
+                                source: { type: string, index: not_analyzed }
+                        code: { type: string, index: not_analyzed }
+                        laboratory: { type: string, index: not_analyzed }
+                        zip: { type: string, index: not_analyzed }
+                        city:
+                            type: string
+                            fields:
+                                source: { type: string, index: not_analyzed }
+                  persistence:
+                      driver: orm # orm, mongodb, propel are available
+                      model: Sygefor\Bundle\InstitutionBundle\Entity\AbstractInstitution
                       provider: ~
                       listener: ~

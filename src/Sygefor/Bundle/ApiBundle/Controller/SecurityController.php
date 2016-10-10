@@ -2,17 +2,11 @@
 
 namespace Sygefor\Bundle\ApiBundle\Controller;
 
-use FOS\OAuthServerBundle\Controller\TokenController;
-use FOS\OAuthServerBundle\Entity\ClientManager;
-use OAuth2\OAuth2;
-use OAuth2\OAuth2ServerException;
 use Symfony\Bundle\FrameworkBundle\Controller\Controller;
+use Symfony\Component\HttpFoundation\Request;
+use Symfony\Component\Security\Core\SecurityContext;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Template;
-use Symfony\Component\HttpFoundation\RedirectResponse;
-use Symfony\Component\HttpFoundation\Request;
-use Symfony\Component\HttpKernel\Client;
-use Symfony\Component\Security\Core\SecurityContext;
 
 class SecurityController extends Controller
 {

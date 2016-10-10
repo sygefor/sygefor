@@ -1,15 +1,15 @@
 <?php
+
 namespace Sygefor\Bundle\TrainingBundle\Transformer;
 
 use Doctrine\ORM\EntityManager;
 use Elastica\Document;
-use Sygefor\Bundle\ElasticaBundle\Transformer\ModelToElasticaTransformer;
-use Sygefor\Bundle\TrainingBundle\Entity\Session;
+use Sygefor\Bundle\CoreBundle\Transformer\ModelToElasticaTransformer;
+use Sygefor\Bundle\TrainingBundle\Entity\Session\AbstractSession;
 use Symfony\Component\DependencyInjection\Container;
 
 /**
- * Class SessionToElasticaTransformer
- * @package Sygefor\Bundle\TrainingBundle\Transformer
+ * Class SessionToElasticaTransformer.
  */
 class SessionToElasticaTransformer extends ModelToElasticaTransformer
 {
@@ -20,7 +20,7 @@ class SessionToElasticaTransformer extends ModelToElasticaTransformer
 
     /**
      * @param Container $container
-     * @param array $options
+     * @param array     $options
      */
     public function __construct(Container $container, $options = array())
     {
@@ -29,52 +29,50 @@ class SessionToElasticaTransformer extends ModelToElasticaTransformer
     }
 
     /**
-     * @param Session $session
-     * @param array $fields
+     * @param AbstractSession $session
+     * @param array   $fields
+     *
      * @return Document
      */
     function transform($session, array $fields)
     {
         $document = parent::transform($session, $fields);
 
-        /**
+        /*
          * Add inscriptionStats
          */
-        if($session instanceof Session) {
+        if($session instanceof AbstractSession) {
             /** @var EntityManager $em */
-            $em = $this->container->get('doctrine')->getManager();
+            $em    = $this->container->get('doctrine')->getManager();
             $stats = array();
-            if($session->getRegistration() > Session::REGISTRATION_DEACTIVATED) {
+            if($session->getRegistration() > AbstractSession::REGISTRATION_DEACTIVATED) {
                 $query = $em
-                  ->createQuery('SELECT s, count(i) FROM SygeforTraineeBundle:Term\\InscriptionStatus s
-                    JOIN SygeforTraineeBundle:Inscription i WITH i.inscriptionStatus = s
+                  ->createQuery('SELECT s, count(i) FROM SygeforInscriptionBundle:Term\\InscriptionStatus s
+                    JOIN SygeforInscriptionBundle:AbstractInscription i WITH i.inscriptionStatus = s
                     WHERE i.session = :session
                     GROUP BY s.id')
-                  ->setParameter("session", $session);
+                  ->setParameter('session', $session);
 
                 $result = $query->getResult();
                 foreach($result as $status) {
                     $stats[] = array(
-                      'id' => $status[0]->getId(),
-                      'name' => $status[0]->getName(),
+                      'id'     => $status[0]->getId(),
+                      'name'   => $status[0]->getName(),
                       'status' => $status[0]->getStatus(),
-                      'count' => (int)$status[1]
+                      'count'  => (int) $status[1],
                     );
                 }
             }
             $document->set('inscriptionStats', $stats);
 
-            /**
+            /*
              * HACK
              * ActivityReport : replace null by "Autre"
              */
-            if($session instanceof Session) {
+            if($session instanceof AbstractSession) {
                 $stats = $document->get('participantsStats');
                 foreach($stats as $key => $stat) {
-                    if(!$stat['disciplinaryDomain']) {
-                        $stats[$key]['disciplinaryDomain'] = 'Autre';
-                    }
-                    if(!$stat['geographicOrigin']) {
+                    if( ! $stat['geographicOrigin']) {
                         $stats[$key]['geographicOrigin'] = 'Autre';
                     }
                 }

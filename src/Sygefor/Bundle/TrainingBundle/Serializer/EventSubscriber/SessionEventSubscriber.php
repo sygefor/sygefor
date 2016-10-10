@@ -1,22 +1,14 @@
 <?php
+
 namespace Sygefor\Bundle\TrainingBundle\Serializer\EventSubscriber;
 
-use JMS\Serializer\Context;
 use JMS\Serializer\EventDispatcher\EventSubscriberInterface;
 use JMS\Serializer\EventDispatcher\ObjectEvent;
-use JMS\Serializer\EventDispatcher\PreSerializeEvent;
 use JMS\Serializer\Exception\InvalidArgumentException;
-use Sygefor\Bundle\TraineeBundle\Entity\Inscription;
-use Sygefor\Bundle\TraineeBundle\Entity\Trainee;
-use Sygefor\Bundle\TrainingBundle\Entity\Session;
-use Sygefor\Bundle\TrainingBundle\Entity\Training;
-use Sygefor\Bundle\UserBundle\AccessRight\SerializedAccessRights;
-use Symfony\Component\Security\Core\SecurityContext;
+use Sygefor\Bundle\TrainingBundle\Entity\Session\AbstractSession;
 
 /**
- * Session serialization event subscriber
- *
- * @package Sygefor\Bundle\UserBundle\Listener
+ * Session serialization event subscriber.
  */
 class SessionEventSubscriber implements EventSubscriberInterface
 {
@@ -34,17 +26,17 @@ class SessionEventSubscriber implements EventSubscriberInterface
     }
 
     /**
-     * @inheritdoc
+     * {@inheritdoc}
      */
     static public function getSubscribedEvents()
     {
         return array(
-            array('event' => 'serializer.post_serialize', 'method' => 'onPostSerialize')
+            array('event' => 'serializer.post_serialize', 'method' => 'onPostSerialize'),
         );
     }
 
     /**
-     * On post serialize, add session URL
+     * On post serialize, add session URL.
      *
      * @param ObjectEvent $event
      */
@@ -53,7 +45,7 @@ class SessionEventSubscriber implements EventSubscriberInterface
         $apiSerialization = false;
         // do not set public and private URLS across the API
         $groups = $event->getContext()->attributes->get('groups');
-        $groups = (array)$groups->getOrElse(array());
+        $groups = (array) $groups->getOrElse(array());
         foreach  ($groups as $group) {
             if (strstr($group, 'api')) {
                 $apiSerialization = true;
@@ -62,15 +54,11 @@ class SessionEventSubscriber implements EventSubscriberInterface
         }
 
         $session = $event->getObject();
-        if($session instanceof Session && $session->getTraining() !== null) {
+        if ($session instanceof AbstractSession && $session->getTraining() !== null) {
             try {
-                $publicUrl = $this->container->getParameter('front_url') . '/training/' . $session->getTraining()->getId() . '/' . $session->getId();
-                $event->getVisitor()->addData('publicUrl', $publicUrl);
-                if ($session->getRegistration() === Session::REGISTRATION_PRIVATE && !$apiSerialization) {
-                    // URL permitting to register a private session
-                    $event->getVisitor()->addData('privateUrl', $publicUrl  . '/' . md5($session->getId() + $session->getTraining()->getId()));
-                }
-            } catch(InvalidArgumentException $e) {
+                $event->getVisitor()->addData('frontUrl', $session->getFrontUrl($this->container->getParameter('front_url'), $apiSerialization));
+            }
+            catch(InvalidArgumentException $e) {
                 // nothing to do
             }
         }

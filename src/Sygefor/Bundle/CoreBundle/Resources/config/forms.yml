@@ -1,0 +1,47 @@
+services:
+    sygefor_core.form.type.vocabulary:
+        class: Sygefor\Bundle\CoreBundle\Form\Type\VocabularyType
+        arguments:
+            - "@security.context"
+            - "@sygefor_core.access_right_registry"
+            - "@doctrine.orm.entity_manager"
+        tags:
+            - { name: form.type, alias: vocabulary }
+
+    sygefor_trainee.form.type.publipost_template_vocabulary:
+        class: Sygefor\Bundle\CoreBundle\Form\Type\PublipostTemplateVocabularyType
+        arguments:
+            - "@security.context"
+            - "@sygefor_core.access_right_registry"
+            - "@doctrine.orm.entity_manager"
+        calls:
+            - [ setHRPAFactory, [ "@sygefor_core.human_readable_property_accessor_factory" ] ]
+        tags:
+            - { name: form.type, alias: publiposttemplatevocabulary }
+
+    sygefor_core.form.type.entity_tags:
+        class: Sygefor\Bundle\CoreBundle\Form\Type\EntityTagsType
+        arguments: ["@doctrine"]
+        tags:
+            - { name: form.type, alias: entity_tags }
+
+    sygefor_core.form.type.entity_hidden:
+        class:      Sygefor\Bundle\CoreBundle\Form\Type\EntityHiddenType
+        arguments:
+            - @Doctrine.orm.entity_manager
+        tags:
+            - { name: form.type, alias: entity_hidden }
+
+    sygefor_core.form.type.access_rights:
+        class:      Sygefor\Bundle\CoreBundle\Form\Type\AccessRightType
+        arguments:
+            - "@sygefor_core.access_right_registry"
+        tags:
+            - { name: form.type, alias: access_rights }
+
+    sygefor_core.form.type.user:
+        class:      Sygefor\Bundle\CoreBundle\Form\Type\UserType
+        arguments:
+            - "@sygefor_core.access_right_registry"
+        tags:
+            - { name: form.type, alias: user }

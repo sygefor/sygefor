@@ -1,0 +1,65 @@
+<!DOCTYPE html>
+<!--[if lt IE 7]>
+<html class="no-js lt-ie9 lt-ie8 lt-ie7"> <![endif]-->
+<!--[if IE 7]>
+<html class="no-js lt-ie9 lt-ie8"> <![endif]-->
+<!--[if IE 8]>
+<html class="no-js lt-ie9"> <![endif]-->
+<!--[if gt IE 8]><!-->
+<html class="no-js" xmlns="http://www.w3.org/1999/html">
+<!--<![endif]-->
+<head>
+    <meta charset="UTF-8"/>
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>{% block title %}Sygefor{% endblock %}</title>
+    <link rel="stylesheet" href="{{ asset('build/front.css') }}"/>
+    <!-- page styles -->
+    {% block stylesheets %}{% endblock %}
+    <!-- global scripts -->
+    <script src="{{ asset('build/front.js') }}"></script>
+    <script type="application/javascript">
+        (function($) {
+            $(document).ready(function() {
+                jQuery.cookieBar({
+                    'message': "Cette plateforme utilise des cookies pour vous assurer la meilleure expérience de visite possible.",
+                    'acceptText': "Je comprends"
+                });
+            });
+        })(jQuery);
+    </script>
+    <!-- page scripts -->
+    {% block javascripts %}{% endblock %}
+    <link rel="icon" type="image/x-icon" href="{{ asset('favicon.ico') }}"/>
+</head>
+<body class="body">
+
+    <!-- header -->
+    {% include '@SygeforFront/header.html.twig' %}
+
+    <!-- content -->
+    <div class="content">
+
+        {% block header %}{% endblock %}
+        {% block breadcrumbs %} {% endblock %}
+
+        <!-- flashes -->
+        {% block flashes %}
+            {% from 'MopaBootstrapBundle::flash.html.twig' import session_flash %}
+            {% if app.session.flashbag.peekAll|length > 0 %}
+                <div class="container flashes">
+                    <div class="row">
+                        <div class="col-sm-12">
+                            {{ session_flash() }}
+                        </div>
+                    </div>
+                </div>
+            {% endif %}
+        {% endblock flashes %}
+
+        {% block body %}{% endblock %}
+    </div>
+
+    <!-- footer -->
+    {% include '@SygeforFront/footer.html.twig' %}
+</body>
+</html>

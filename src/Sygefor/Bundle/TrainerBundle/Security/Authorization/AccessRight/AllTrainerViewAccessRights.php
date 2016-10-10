@@ -1,13 +1,14 @@
 <?php
+
 /**
  * Created by PhpStorm.
  * User: maxime
  * Date: 17/07/14
- * Time: 11:51
+ * Time: 11:51.
  */
 namespace Sygefor\Bundle\TrainerBundle\Security\Authorization\AccessRight;
 
-use Sygefor\Bundle\UserBundle\AccessRight\AbstractAccessRight;
+use Sygefor\Bundle\CoreBundle\AccessRight\AbstractAccessRight;
 use Symfony\Component\Security\Core\Authentication\Token\TokenInterface;
 
 class AllTrainerViewAccessRights extends AbstractAccessRight
@@ -17,20 +18,22 @@ class AllTrainerViewAccessRights extends AbstractAccessRight
      */
     public function getLabel()
     {
-        return 'Voir les formateurs de toutes les URFIST';
+        return 'Voir les formateurs de tous les centres';
     }
 
     /**
      * Checks if the access right supports the given class.
      *
      * @param string
-     * @return Boolean
+     *
+     * @return bool
      */
     public function supportsClass($class)
     {
-        if ($class == 'Sygefor\Bundle\TrainerBundle\Entity\Trainer') {
+        if ($class === 'Sygefor\Bundle\TrainerBundle\Entity\AbstractTrainer') {
             return true;
         }
+
         return false;
     }
 
@@ -39,7 +42,8 @@ class AllTrainerViewAccessRights extends AbstractAccessRight
      */
     public function isGranted(TokenInterface $token, $object = null, $attribute)
     {
-        if ($attribute != 'VIEW') return false;
+        if ($attribute !== 'VIEW') return false;
+
         return true;
     }
-} 
+}

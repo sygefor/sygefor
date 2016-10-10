@@ -34,7 +34,7 @@ class PublicTypeGeographicOriginStatsAggregation extends Nested
         $origin->addAggregation($sum);
 
         // sum by publicCategory
-        $category = new Terms('publicCategory');
+        $category = new Terms('publicType');
         $category->setField($category->getName());
         $category->addAggregation($sum);
         $category->addAggregation($origin);

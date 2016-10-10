@@ -1,4 +1,5 @@
 <?php
+
 namespace Sygefor\Bundle\ActivityReportBundle\Report;
 
 use Elastica\Aggregation\AbstractAggregation;

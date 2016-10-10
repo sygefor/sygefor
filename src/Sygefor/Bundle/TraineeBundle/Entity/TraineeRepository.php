@@ -1,7 +1,7 @@
 <?php
+
 namespace Sygefor\Bundle\TraineeBundle\Entity;
 
-use Doctrine\Common\Persistence\ObjectRepository;
 use Doctrine\ORM\EntityRepository;
 use Doctrine\ORM\NoResultException;
 use Symfony\Component\Security\Core\Exception\UnsupportedUserException;
@@ -10,16 +10,18 @@ use Symfony\Component\Security\Core\User\UserInterface;
 use Symfony\Component\Security\Core\User\UserProviderInterface;
 
 /**
- * Class TraineeRepository
- * @package Sygefor\Bundle\TraineeBundle\Entity
+ * Class TraineeRepository.
+ *
  * @see http://symfony.com/fr/doc/current/cookbook/security/entity_provider.html
  */
 class TraineeRepository extends EntityRepository implements UserProviderInterface
 {
     /**
      * @param string $email
-     * @return mixed
+     *
      * @throws UsernameNotFoundException
+     *
+     * @return mixed
      */
     public function loadUserByUsername($email)
     {
@@ -44,13 +46,15 @@ class TraineeRepository extends EntityRepository implements UserProviderInterfac
 
     /**
      * @param UserInterface $user
-     * @return object
+     *
      * @throws UnsupportedUserException
+     *
+     * @return object
      */
     public function refreshUser(UserInterface $user)
     {
         $class = get_class($user);
-        if (!$this->supportsClass($class)) {
+        if ( ! $this->supportsClass($class)) {
             throw new UnsupportedUserException(
                 sprintf(
                     'Instances of "%s" are not supported.',
@@ -64,6 +68,7 @@ class TraineeRepository extends EntityRepository implements UserProviderInterfac
 
     /**
      * @param string $class
+     *
      * @return bool
      */
     public function supportsClass($class)
@@ -72,15 +77,18 @@ class TraineeRepository extends EntityRepository implements UserProviderInterfac
     }
 
     /**
-     * Generate a password
+     * Generate a password.
+     *
      * @param int $length
+     *
      * @return string
      */
-    public static function generatePassword($length = 8) {
+    public static function generatePassword($length = 8)
+    {
         $chars = 'abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789';
         $count = mb_strlen($chars);
 
-        for ($i = 0, $result = ''; $i < $length; $i++) {
+        for ($i = 0, $result = ''; $i < $length; ++$i) {
             $index = rand(0, $count - 1);
             $result .= mb_substr($chars, $index, 1);
         }

@@ -1,0 +1,56 @@
+services:
+    # batch operations registry
+    sygefor_core.batch_operation_registry: # todo blaise : rename to sygefor_core.batch_registry
+        class:  Sygefor\Bundle\CoreBundle\BatchOperation\BatchOperationRegistry
+
+    # batch operations decorators
+    sygefor_core.batch.convert_type:
+        class: Sygefor\Bundle\CoreBundle\BatchOperations\ConvertTypeBatchOperation
+        abstract: true
+        arguments:
+            - "@security.context"
+            - "@sygefor_training.type.registry"
+            - "@sygefor_training.semestered.search"
+            - "@fos_elastica.client"
+            - "@fos_elastica.index"
+            - "@fos_elastica.index.sygefor3.semestered_training"
+
+    # batch operations decorators
+    sygefor_core.batch.csv:
+        class: Sygefor\Bundle\CoreBundle\BatchOperations\CSVBatchOperation
+        abstract: true
+        arguments:
+            - "@security.context"
+
+    sygefor_core.batch.publipost:
+        class: Sygefor\Bundle\CoreBundle\BatchOperations\MailingBatchOperation
+        abstract: true
+        arguments:
+            - "@security.context"
+        calls:
+            - [ setContainer, [ "@service_container" ] ]
+
+    sygefor_core.batch.pdf:
+        class: Sygefor\Bundle\CoreBundle\BatchOperations\PDFBatchOperation
+        abstract: true
+        arguments:
+            - "@knp_snappy.pdf"
+            - "@templating"
+            - "@security.context"
+            - "@kernel"
+
+    sygefor_core.batch.email:
+          class: Sygefor\Bundle\CoreBundle\BatchOperations\EmailingBatchOperation
+          arguments:
+              - "@security.context"
+          calls:
+              - [ setContainer, [ "@service_container" ] ]
+          tags:
+              - {name: sygefor_core.batch_operation_provider}
+
+    # property accessor factory
+    sygefor_core.human_readable_property_accessor_factory:
+        class: Sygefor\Bundle\CoreBundle\HumanReadablePropertyAccessor\HumanReadablePropertyAccessorFactory
+        arguments:
+            - "@doctrine.orm.entity_manager"
+        # setTermCatalog called by the compilation

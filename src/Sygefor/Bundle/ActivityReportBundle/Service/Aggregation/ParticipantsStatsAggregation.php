@@ -29,7 +29,7 @@ class ParticipantsStatsAggregation extends AbstractTrainingTypeAggregation
         $sum->setField('count');
 
         // sum by public type
-        $public = new Terms('publicCategory');
+        $public = new Terms('publicType');
         $public->setField($public->getName());
         $public->addAggregation($sum);
 

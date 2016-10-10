@@ -30,16 +30,16 @@ doctrine:
                 mappings:
                     vocabulary_fixtures:
                         type: annotation
-                        prefix: Sygefor\Bundle\TaxonomyBundle\Tests\Entity
-                        dir: "%kernel.root_dir%/../src/Sygefor/Bundle/TaxonomyBundle/Tests/Entity"
+                        prefix: Sygefor\Bundle\CoreBundle\Tests\Entity
+                        dir: "%kernel.root_dir%/../src/Sygefor/Bundle/CoreBundle/Tests/Entity"
                         is_bundle: false
 
 services:
-    sygefor_taxonomy.vocabulary_local:
-        class:        Sygefor\Bundle\TaxonomyBundle\Tests\Entity\MyOrganizationVocabulary
+    sygefor_core.vocabulary_local:
+        class:        Sygefor\Bundle\CoreBundle\Tests\Entity\MyOrganizationVocabulary
         tags:
-            - { name: sygefor_taxonomy.vocabulary_provider, group: "GROUPE Vocabulaire 1" }
-    sygefor_taxonomy.vocabulary_national:
-        class:        Sygefor\Bundle\TaxonomyBundle\Tests\Entity\MyNationalVocabulary
+            - { name: sygefor_core.vocabulary_provider, group: "GROUPE Vocabulaire 1" }
+    sygefor_core.vocabulary_national:
+        class:        Sygefor\Bundle\CoreBundle\Tests\Entity\MyNationalVocabulary
         tags:
-            - { name: sygefor_taxonomy.vocabulary_provider, group: "GROUPE Vocabulaire 2" }
+            - { name: sygefor_core.vocabulary_provider, group: "GROUPE Vocabulaire 2" }

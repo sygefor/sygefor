@@ -1,0 +1,35 @@
+services:
+    #inscription voters
+    sygefor_inscription.rights.inscription.own.view:
+        class: Sygefor\Bundle\InscriptionBundle\Security\Authorization\AccessRight\OwnInscriptionViewAccessRight
+        tags:
+            - { name: sygefor_core.right_provider, group: "Inscriptions" }
+    sygefor_inscription.rights.inscription.own.create:
+        class: Sygefor\Bundle\InscriptionBundle\Security\Authorization\AccessRight\OwnInscriptionCreateAccessRight
+        tags:
+            - { name: sygefor_core.right_provider, group: "Inscriptions" }
+    sygefor_inscription.rights.inscription.own.update:
+        class: Sygefor\Bundle\InscriptionBundle\Security\Authorization\AccessRight\OwnInscriptionUpdateAccessRight
+        tags:
+            - { name: sygefor_core.right_provider, group: "Inscriptions" }
+    sygefor_inscription.rights.inscription.own.delete:
+        class: Sygefor\Bundle\InscriptionBundle\Security\Authorization\AccessRight\OwnInscriptionDeleteAccessRight
+        tags:
+            - { name: sygefor_core.right_provider, group: "Inscriptions" }
+
+    sygefor_inscription.rights.inscription.all.view:
+        class: Sygefor\Bundle\InscriptionBundle\Security\Authorization\AccessRight\AllInscriptionViewAccessRight
+        tags:
+            - { name: sygefor_core.right_provider, group: "Inscriptions" }
+    sygefor_inscription.rights.inscription.all.create:
+        class: Sygefor\Bundle\InscriptionBundle\Security\Authorization\AccessRight\AllInscriptionCreateAccessRight
+        tags:
+            - { name: sygefor_core.right_provider, group: "Inscriptions" }
+    sygefor_inscription.rights.inscription.all.update:
+        class: Sygefor\Bundle\InscriptionBundle\Security\Authorization\AccessRight\AllInscriptionUpdateAccessRight
+        tags:
+            - { name: sygefor_core.right_provider, group: "Inscriptions" }
+    sygefor_inscription.rights.inscription.all.delete:
+        class: Sygefor\Bundle\InscriptionBundle\Security\Authorization\AccessRight\AllInscriptionDeleteAccessRight
+        tags:
+            - { name: sygefor_core.right_provider, group: "Inscriptions" }

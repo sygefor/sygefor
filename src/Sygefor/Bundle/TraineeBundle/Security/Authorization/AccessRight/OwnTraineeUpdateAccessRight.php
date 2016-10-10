@@ -1,16 +1,15 @@
 <?php
+
 /**
  * Created by PhpStorm.
  * User: maxime
  * Date: 20/03/14
- * Time: 15:42
+ * Time: 15:42.
  */
-
 namespace Sygefor\Bundle\TraineeBundle\Security\Authorization\AccessRight;
 
-use Sygefor\Bundle\UserBundle\AccessRight\AbstractAccessRight;
+use Sygefor\Bundle\CoreBundle\AccessRight\AbstractAccessRight;
 use Symfony\Component\Security\Core\Authentication\Token\TokenInterface;
-use Symfony\Component\Security\Core\Authorization\Voter\VoterInterface;
 
 class OwnTraineeUpdateAccessRight extends AbstractAccessRight
 {
@@ -19,18 +18,19 @@ class OwnTraineeUpdateAccessRight extends AbstractAccessRight
      */
     public function getLabel()
     {
-        return "Modifier les stagiaires de sa propre URFIST";
+        return 'Modifier les stagiaires de son propre centre';
     }
 
     /**
      * Checks if the access right supports the given class.
      *
      * @param string
-     * @return Boolean
+     *
+     * @return bool
      */
     public function supportsClass($class)
     {
-        if ($class == 'Sygefor\Bundle\TraineeBundle\Entity\Trainee') {
+        if ($class === 'Sygefor\Bundle\TraineeBundle\Entity\AbstractTrainee') {
             return true;
         }
     }
@@ -40,9 +40,9 @@ class OwnTraineeUpdateAccessRight extends AbstractAccessRight
      */
     public function isGranted(TokenInterface $token, $object = null, $attribute)
     {
-        if ($attribute != 'EDIT') return false;
+        if ($attribute !== 'EDIT') return false;
         if ($object) {
-            return ($object->getOrganization() == $token->getUser()->getOrganization());
+            return $object->getOrganization() === $token->getUser()->getOrganization();
         } else {
             return true;
         }

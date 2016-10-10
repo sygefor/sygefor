@@ -1,4 +1,5 @@
 <?php
+
 namespace Sygefor\Bundle\CoreBundle\Tests\Search;
 
 use Elastica\Client;
@@ -6,14 +7,11 @@ use Elastica\Filter\Exists;
 use Elastica\Index;
 use Elastica\Response;
 use Elastica\ResultSet;
-use Elastica\Type;
 use Sygefor\Bundle\CoreBundle\Search\SearchService;
-use Sygefor\Bundle\CoreBundle\Search\SearchServiceInterface;
 use Symfony\Component\HttpFoundation\Request;
 
 /**
- * Class SearchServiceTest
- * @package Sygefor\Bundle\CoreBundle\Tests\Search
+ * Class SearchServiceTest.
  */
 class SearchServiceTest extends \PHPUnit_Framework_TestCase
 {
@@ -27,8 +25,8 @@ class SearchServiceTest extends \PHPUnit_Framework_TestCase
      */
     public function setUp()
     {
-        $client = new Client();
-        $this->index = new Index($client, "test");
+        $client      = new Client();
+        $this->index = new Index($client, 'test');
     }
 
     /**
@@ -125,13 +123,13 @@ class SearchServiceTest extends \PHPUnit_Framework_TestCase
     public function testSetSize()
     {
         $search = $this->getSearch();
-        $this->assertEquals(10, $search->getSize());
+        $this->assertSame(10, $search->getSize());
         $search->setSize(30);
-        $this->assertEquals(30, $search->getSize());
+        $this->assertSame(30, $search->getSize());
         $search->setSize(150);
-        $this->assertEquals(150, $search->getSize());
+        $this->assertSame(150, $search->getSize());
         $search->setSize(null);
-        $this->assertEquals(10, $search->getSize());
+        $this->assertSame(10, $search->getSize());
     }
 
     /**
@@ -140,15 +138,15 @@ class SearchServiceTest extends \PHPUnit_Framework_TestCase
     public function testSetPage()
     {
         $search = $this->getSearch();
-        $this->assertEquals(1, $search->getPage());
+        $this->assertSame(1, $search->getPage());
 
         $search->setPage(3);
-        $this->assertEquals(3, $search->getPage());
-        $this->assertEquals(20, $search->getQuery()->getParam('from'));
+        $this->assertSame(3, $search->getPage());
+        $this->assertSame(20, $search->getQuery()->getParam('from'));
 
         $search->setSize(20);
-        $this->assertEquals(3, $search->getPage());
-        $this->assertEquals(40, $search->getQuery()->getParam('from'));
+        $this->assertSame(3, $search->getPage());
+        $this->assertSame(40, $search->getQuery()->getParam('from'));
     }
 
     /**
@@ -156,7 +154,7 @@ class SearchServiceTest extends \PHPUnit_Framework_TestCase
      */
     public function testHandleRequest($method, $data, $expected)
     {
-        $search = $this->getSearch();
+        $search  = $this->getSearch();
         $request = Request::create('http://localhost', $method, $data);
         $search->handleRequest($request);
         $this->assertArrayEqualsJsonString($expected, $search->getQuery()->toArray());
@@ -183,65 +181,66 @@ class SearchServiceTest extends \PHPUnit_Framework_TestCase
     public function testSearch()
     {
         // setup
-        $client = new Client();
-        $index = $this->getMock('Elastica\Index', array('createSearch'), array($client, 'test'));
+        $client   = new Client();
+        $index    = $this->getMock('Elastica\Index', array('createSearch'), array($client, 'test'));
         $essearch = $this->getMock('Elastica\Search', array('search'), array($client));
 
         $response = array(
-            "hits" => array(
-                "total" => 2,
-                "pageSize" => 10,
-                "hits" => array(
-                    array("_id" => 1, "_type" => "type1", "_source" => array("name" => "foo")),
-                    array("_id" => 2, "_type" => "type2", "_source" => array("name" => "bar"))
-                )
+            'hits' => array(
+                'total'    => 2,
+                'pageSize' => 10,
+                'hits'     => array(
+                    array('_id' => 1, '_type' => 'type1', '_source' => array('name' => 'foo')),
+                    array('_id' => 2, '_type' => 'type2', '_source' => array('name' => 'bar')),
+                ),
             ),
-            "facets" => array(
-                "facet1" => array("_type" => "terms")
-            )
+            'facets' => array(
+                'facet1' => array('_type' => 'terms'),
+            ),
         );
-        $search = new SearchService($index);
+        $search    = new SearchService($index);
         $resultSet = new ResultSet(new Response(json_encode($response)), $search->getQuery());
 
         $index->expects($this->once())->method('createSearch')->will($this->returnValue($essearch));
         $essearch->expects($this->once())->method('search')->will($this->returnValue($resultSet));
 
         $expected = array(
-            "total" => 2,
-            "pageSize" => 10,
-            "items" => array(
+            'total'    => 2,
+            'pageSize' => 10,
+            'items'    => array(
                 array(
-                    "id" => 1,
-                    "_type" => "type1",
-                    "name" => "foo"
+                    'id'    => 1,
+                    '_type' => 'type1',
+                    'name'  => 'foo',
                 ),
                 array(
-                    "id" => 2,
-                    "_type" => "type2",
-                    "name" => "bar"
-                )
+                    'id'    => 2,
+                    '_type' => 'type2',
+                    'name'  => 'bar',
+                ),
             ),
-            "facets" => array(
-                "facet1" => array("_type" => "terms")
-            )
+            'facets' => array(
+                'facet1' => array('_type' => 'terms'),
+            ),
         );
 
         // test
         $response = $search->search();
-        $this->assertEquals($expected, $response);
+        $this->assertSame($expected, $response);
     }
 
     /**
      * @param $expectedJson
      * @param $actualArray
      * @param string $message
+     *
      * @throws \PHPUnit_Framework_ExpectationFailedException
      */
     protected function assertArrayEqualsJsonString($expectedJson, $actualArray, $message = '') {
         try {
             $this->assertJsonStringEqualsJsonString($expectedJson, json_encode($actualArray), $message);
         } catch(\PHPUnit_Framework_ExpectationFailedException $e) {
-            $message = $e->getMessage().". Actual JSON : " . json_encode($actualArray);
+            $message = $e->getMessage() . '. Actual JSON : ' . json_encode($actualArray);
             throw new \PHPUnit_Framework_ExpectationFailedException($message);
         }
     }

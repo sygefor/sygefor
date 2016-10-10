@@ -1,24 +1,21 @@
 <?php
+
 /**
  * Created by PhpStorm.
  * User: maxime
  * Date: 23/04/14
- * Time: 17:00
+ * Time: 17:00.
  */
 namespace Sygefor\Bundle\TrainingBundle\Tests\Model;
 
-use Doctrine\Common\Collections\ArrayCollection;
 use Sygefor\Bundle\CoreBundle\Entity\Organization;
 use Sygefor\Bundle\CoreBundle\Test\WebTestCase;
-use Sygefor\Bundle\TrainingBundle\Entity\DiverseTraining;
-use Sygefor\Bundle\TrainingBundle\Entity\Session;
-use Sygefor\Bundle\TrainingBundle\Entity\Training;
+use Sygefor\Bundle\TrainingBundle\Entity\Session\Session;
+use Sygefor\Bundle\TrainingBundle\Entity\Training\AbstractTraining;
 use Sygefor\Bundle\TrainingBundle\Model\SemesteredTraining;
-use Symfony\Component\Form\Util\OrderedHashMap;
 
 class SemesteredTrainingTest extends WebTestCase
 {
-
     protected function setUp()
     {
         //die();
@@ -29,15 +26,15 @@ class SemesteredTrainingTest extends WebTestCase
     /**
      * @dataProvider getSessionsList
      */
-    public function testSemesteredTrainingStoresSessions($training, $year,$semester, $count, $id)
+    public function testSemesteredTrainingStoresSessions($training, $year, $semester, $count, $id)
     {
         $semesteredTraining = new SemesteredTraining($year, $semester, $training);
         //$semesteredTraining->setSessions($sessions);
 
         $sessionsCount = $semesteredTraining->getSessionsCount();
 
-        $this->assertEquals($count, $sessionsCount);
-        $this->assertEquals($id, $semesteredTraining->getId());
+        $this->assertSame($count, $sessionsCount);
+        $this->assertSame($id, $semesteredTraining->getId());
     }
 
     /**
@@ -47,7 +44,7 @@ class SemesteredTrainingTest extends WebTestCase
     {
         $semtrains = SemesteredTraining::getSemesteredTrainingsForTraining($training);
 
-        $this->assertEquals(count ($semtrains), $count);
+        $this->assertSame(count($semtrains), $count);
     }
 
     /**
@@ -57,15 +54,14 @@ class SemesteredTrainingTest extends WebTestCase
     {
 
         $semtrains = SemesteredTraining::getSemesteredTrainingsForTraining($train);
-        $semtrain = $semtrains[0];
+        $semtrain  = $semtrains[0];
 
-        $this->assertEquals($sessIds[0], $semtrain->getLastSession()->getId());
-        $this->assertEquals($sessIds[1], $semtrain->getNextSession()->getId());
+        $this->assertSame($sessIds[0], $semtrain->getLastSession()->getId());
+        $this->assertSame($sessIds[1], $semtrain->getNextSession()->getId());
     }
 
     /**
-     * ??dataProvider getTrainingsAndSessions
-     *
+     * ??dataProvider getTrainingsAndSessions.
      */
 //    public function testGetSemesteredTrainingByIds($trainingsAndSessions)
 //    {
@@ -78,9 +74,10 @@ class SemesteredTrainingTest extends WebTestCase
 //    }
 
     /**
-     * @param Training $training
+     * @param Training  $training
      * @param \DateTime $date
-     * @param null $id
+     * @param null      $id
+     *
      * @return \PHPUnit_Framework_MockObject_MockObject
      */
     private function getMockedSession(Training $training, \DateTime $date, $id = null)
@@ -94,7 +91,7 @@ class SemesteredTrainingTest extends WebTestCase
             ->method('getDateBegin')
             ->will($this->returnValue($date));
 
-        if ($id != null) {
+        if ($id !== null) {
             $session->expects($this->any())
                 ->method('getId')
                 ->will($this->returnValue($id));
@@ -106,17 +103,18 @@ class SemesteredTrainingTest extends WebTestCase
     /**
      * @param $id
      * @param $sessionsDates
+     *
      * @return \PHPUnit_Framework_MockObject_MockObject
      */
     private function getMockedTraining($id, $sessionsDates)
     {
-        $training = $this->getMock('Sygefor\Bundle\TrainingBundle\Entity\Training');
+        $training = $this->getMock('Sygefor\Bundle\TrainingBundle\Entity\Training\AbstractTraining');
         $training->expects($this->any())
             ->method('getId')
             ->will($this->returnValue($id));
 
         $sessions = array();
-        foreach ($sessionsDates as $id =>$date) {
+        foreach ($sessionsDates as $id => $date) {
             $tmpSession = $this->getMockedSession($training, $date, $id);
             $sessions[] = $tmpSession;
         }
@@ -129,7 +127,7 @@ class SemesteredTrainingTest extends WebTestCase
     }
 
     /**
-     * used as dataprovider
+     * used as dataprovider.
      */
     public function getSessionsList()
     {
@@ -138,8 +136,8 @@ class SemesteredTrainingTest extends WebTestCase
         $fooDateSession2 = new \DateTime('2012-04-08');
         $barDateSession1 = new \DateTime('2009-11-11');
         $barDateSession2 = new \DateTime('2012-04-04');
-        $fooTrain = $this->getMockedTraining('foo', array($fooDateSession1, $fooDateSession2));
-        $barTrain = $this->getMockedTraining('bar', array($barDateSession1, $barDateSession2));
+        $fooTrain        = $this->getMockedTraining('foo', array($fooDateSession1, $fooDateSession2));
+        $barTrain        = $this->getMockedTraining('bar', array($barDateSession1, $barDateSession2));
 
         return array(
             array($fooTrain, 2009, 2, 1, 'foo_2009_2'),
@@ -148,10 +146,9 @@ class SemesteredTrainingTest extends WebTestCase
         );
     }
 
-
     /**
      * sends training and sessions
-     * used as dataprovider
+     * used as dataprovider.
      */
     public function getTrainingsAndSessions()
     {
@@ -236,9 +233,8 @@ class SemesteredTrainingTest extends WebTestCase
         );
     }
 
-
     /**
-     * used as dataprovider
+     * used as dataprovider.
      */
     public function getTrainingWithSessions()
     {
@@ -247,8 +243,8 @@ class SemesteredTrainingTest extends WebTestCase
         $fooDateSession2 = new \DateTime('2012-04-08');
         $barDateSession1 = new \DateTime('2009-11-11');
         $barDateSession2 = new \DateTime('2012-04-04');
-        $fooTrain = $this->getMockedTraining('foo', array($fooDateSession1, $fooDateSession2));
-        $barTrain = $this->getMockedTraining('bar', array($barDateSession1, $barDateSession2));
+        $fooTrain        = $this->getMockedTraining('foo', array($fooDateSession1, $fooDateSession2));
+        $barTrain        = $this->getMockedTraining('bar', array($barDateSession1, $barDateSession2));
 
         return array(
             array($fooTrain, 2),
@@ -258,7 +254,7 @@ class SemesteredTrainingTest extends WebTestCase
     }
 
     /**
-     * used as dataprovider
+     * used as dataprovider.
      */
     public function getTrainingWithSessionsUsingDatesBeforeAfter()
     {
@@ -271,7 +267,7 @@ class SemesteredTrainingTest extends WebTestCase
         $train = $this->getMockedTraining('footrain', array('foosess' => $date1, 'barsess' => $date2));
 
         return array(
-            array($d[0], $d[1], $train, array ( 'foosess','barsess' )),
+            array($d[0], $d[1], $train, array('foosess', 'barsess')),
         );
     }
 

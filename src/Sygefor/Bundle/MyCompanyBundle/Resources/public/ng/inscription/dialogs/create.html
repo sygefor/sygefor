@@ -1,0 +1,33 @@
+<div class="modal-header">
+    <button type="button" class="close" ng-click="dialog.dismiss()" aria-hidden="true">×</button>
+    <h4 class="modal-title"><i class="fa fa-graduation-cap"></i> Ajouter une inscription</h4>
+</div>
+
+<form sf-href="inscription.create({session: dialog.params.session.id})" sf-form="form" json-path="form" on-success="onSuccess(data)" class="form-horizontal" novalidate>
+    <div class="modal-body">
+        <div class="form-group" ng-class="{'has-error': form.children.trainee.errors.length }">
+            <label class="col-sm-3 control-label" for="{{ form.children.trainee.id }}">{{ form.children.trainee.label }}</label>
+            <div class="col-sm-9">
+               <div class="input-group" ng-if="userCanAddTrainee()">
+                   <input placeholder="Cliquez pour rechercher un stagiaire..." type="text" typeahead-template-url="mycompanybundle/inscription/dialogs/typeahead-trainee.html" required="required" typeahead-wait-ms="200" typeahead="choice as choice.label for choice in getTraineeList($viewValue)" typeahead-editable="false" class="form-control" typeahead-on-select="setTrainee($item)" ng-model="$parent.selectedTrainee" />
+                    <span class="input-group-btn">
+                        <button tooltip="Créer un nouveau stagiaire" tooltip-placement="bottom" class="btn btn-default" ng-click="createUser()" type="button"><i class="fa fa-plus"></i></button>
+                    </span>
+               </div>
+               <input placeholder="Cliquez pour rechercher un stagiaire..." ng-if="!userCanAddTrainee()" type="text" typeahead-template-url="mycompanybundle/inscription/dialogs/typeahead-trainee.html" required="required" typeahead-wait-ms="200" typeahead="choice as choice.label for choice in getTraineeList($viewValue)" typeahead-editable="false" class="form-control" typeahead-on-select="setTrainee($item)" ng-model="$parent.selectedTrainee" />
+                   <div ng-if="error.length" ng-repeat="error in form.children.trainee.errors" class="help-block">{{ error }}</div>
+            </div>
+        </div>
+        <div class="form-group" ng-class="{'has-error': form.children.inscriptionStatus.errors.length }">
+            <label class="col-sm-3 control-label" for="{{ form.children.inscriptionStatus.id }}">{{ form.children.inscriptionStatus.label }}</label>
+            <div class="col-sm-9">
+                <span sf-form-widget="form.children.inscriptionStatus" class="form-control"/>
+                <div ng-if="error.length" ng-repeat="error in form.children.inscriptionStatus.errors" class="help-block">{{ error }}</div>
+            </div>
+        </div>
+    </div>
+    <div class="modal-footer">
+        <a class="btn btn-default" ng-click="dialog.dismiss()">Annuler</a>
+        <input class="btn btn-primary" type="submit" value="Ajouter" />
+    </div>
+</form>

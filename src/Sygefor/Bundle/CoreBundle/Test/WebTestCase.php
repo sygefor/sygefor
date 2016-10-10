@@ -1,24 +1,20 @@
 <?php
+
 namespace Sygefor\Bundle\CoreBundle\Test;
 
 use Doctrine\Common\DataFixtures\FixtureInterface;
 use Doctrine\ORM\EntityManager;
 use Doctrine\ORM\EntityNotFoundException;
 use Doctrine\ORM\EntityRepository;
-use Sygefor\Bundle\UserBundle\Entity\Group;
-use Sygefor\Bundle\UserBundle\Entity\User;
-use Sygefor\Bundle\UserBundle\Entity\UserRepository;
+use Sygefor\Bundle\CoreBundle\Entity\User\User;
 use Symfony\Bundle\FrameworkBundle\Test\WebTestCase as BaseWebTestCase;
 use Symfony\Component\BrowserKit\Client;
 use Symfony\Component\BrowserKit\Cookie;
-use Symfony\Component\HttpFoundation\Response;
-use Symfony\Component\HttpFoundation\Session\Session;
 use Symfony\Component\PropertyAccess\PropertyAccess;
 use Symfony\Component\Security\Core\Authentication\Token\UsernamePasswordToken;
 
 /**
- * Class WebTestCase
- * @package Sygefor\Bundle\CoreBundle\Tests\Controller
+ * Class WebTestCase.
  */
 class WebTestCase extends BaseWebTestCase
 {
@@ -33,7 +29,7 @@ class WebTestCase extends BaseWebTestCase
     protected $tempEntities = array();
 
     /**
-     * setUp
+     * setUp.
      */
     protected function setUp()
     {
@@ -43,17 +39,20 @@ class WebTestCase extends BaseWebTestCase
 
     /**
      * tearDown
-     * Delete temporary entities
+     * Delete temporary entities.
      */
     protected function tearDown()
     {
-        if($this->tempEntities) {
+        if ($this->tempEntities) {
             $em = $this->getEntityManager();
-            foreach($this->tempEntities as $entity) {
+            foreach ($this->tempEntities as $entity) {
                 try {
                     $entity = $em->merge($entity);
                     $em->remove($entity);
-                } catch(EntityNotFoundException $e) {}
+                }
+                catch (EntityNotFoundException $e) {
+
+                }
             }
             $em->flush();
         }
@@ -61,7 +60,7 @@ class WebTestCase extends BaseWebTestCase
     }
 
     /**
-     * generateUrl
+     * generateUrl.
      */
     protected function generateUrl($route, $params = array())
     {
@@ -69,13 +68,13 @@ class WebTestCase extends BaseWebTestCase
     }
 
     /**
-     * createTempUser
+     * createTempUser.
      */
     protected function createTempUser($username, $accessRights = array(), $properties = array())
     {
         $em = $this->getEntityManager();
-        $user = $em->getRepository('SygeforUserBundle:User')->findOneByUsername($username);
-        if($user) {
+        $user = $em->getRepository('SygeforCoreBundle:User')->findOneByUsername($username);
+        if ($user) {
             $em->remove($user);
             $em->flush();
         }
@@ -86,42 +85,39 @@ class WebTestCase extends BaseWebTestCase
         $user->setPassword($username);
         $user->setOrganization($em->getRepository('SygeforCoreBundle:Organization')->findOneBy(array()));
 
-        if($properties) {
+        if ($properties) {
             $accessor = PropertyAccess::createPropertyAccessor();
-            foreach($properties as $path => $value) {
+            foreach ($properties as $path => $value) {
                 $accessor->setValue($user, $path, $value);
             }
         }
 
-        $group = $em->getRepository('SygeforUserBundle:Group')->findOneByName($username . '_group');
-        if($group) {
+        $group = $em->getRepository('SygeforCoreBundle:Group')->findOneByName($username . '_group');
+        if ($group) {
             $em->remove($group);
             $em->flush();
         }
-        $group = new Group($username . '_group');
-        $group->setRights($accessRights);
-        $user->addGroup($group);
-        $this->getEntityManager()->persist($group);
+
         $this->getEntityManager()->persist($user);
         $this->getEntityManager()->flush();
-        array_push($this->tempEntities, $user, $group);
+        array_push($this->tempEntities, $user);
 
         return $user;
     }
 
     /**
-     * loginAs
+     * loginAs.
      */
     protected function loginAs($user)
     {
-        if(is_string($user)) {
-            $repository = $this->getEntityManager()->getRepository('SygeforUserBundle:User');
+        if (is_string($user)) {
+            $repository = $this->getEntityManager()->getRepository('SygeforCoreBundle:User');
             $user = $repository->findOneByUsername($user);
         }
         $session = $this->client->getContainer()->get('session');
         $firewall = 'main';
         $token = new UsernamePasswordToken($user, null, $firewall, $user->getRoles());
-        $session->set('_security_'.$firewall, serialize($token));
+        $session->set('_security_' . $firewall, serialize($token));
         $session->save();
 
         $cookie = new Cookie($session->getName(), $session->getId());
@@ -129,7 +125,8 @@ class WebTestCase extends BaseWebTestCase
     }
 
     /**
-     * loginWithRole
+     * loginWithRole.
+     *
      * @param array $roles
      */
     protected function loginWithRoles(array $roles)
@@ -137,7 +134,7 @@ class WebTestCase extends BaseWebTestCase
         $session = $this->client->getContainer()->get('session');
         $firewall = 'main';
         $token = new UsernamePasswordToken('user', 'user', $firewall, $roles);
-        $session->set('_security_'.$firewall, serialize($token));
+        $session->set('_security_' . $firewall, serialize($token));
         $session->save();
 
         $cookie = new Cookie($session->getName(), $session->getId());
@@ -145,7 +142,7 @@ class WebTestCase extends BaseWebTestCase
     }
 
     /**
-     * loginAsUser
+     * loginAsUser.
      */
     protected function loginAsUser()
     {
@@ -153,16 +150,17 @@ class WebTestCase extends BaseWebTestCase
     }
 
     /**
-     * extractCsrfToken
+     * extractCsrfToken.
      */
     protected function extractCsrfToken($crawler, $field)
     {
         $extract = $crawler->filter('input[name="' . $field . '"]')->extract(array('value'));
+
         return $extract[0];
     }
 
     /**
-     * postData
+     * postData.
      */
     protected function postData($uri, $data)
     {
@@ -170,7 +168,7 @@ class WebTestCase extends BaseWebTestCase
     }
 
     /**
-     * getRequest
+     * getRequest.
      */
     protected function getRequest($url, $data = array())
     {
@@ -178,7 +176,7 @@ class WebTestCase extends BaseWebTestCase
     }
 
     /**
-     * jsonRequest
+     * jsonRequest.
      */
     protected function jsonRequest($method, $url, array $parameters = array())
     {
@@ -189,7 +187,7 @@ class WebTestCase extends BaseWebTestCase
     }
 
     /**
-     * getContent
+     * getContent.
      */
     protected function getResponseContent()
     {
@@ -197,16 +195,18 @@ class WebTestCase extends BaseWebTestCase
     }
 
     /**
-     * getJsonContent
+     * getJsonContent.
      */
     protected function getResponseJson()
     {
         self::assertJson($this->client->getResponse()->getContent());
+
         return json_decode($this->client->getResponse()->getContent());
     }
 
     /**
-     * getEntityManager
+     * getEntityManager.
+     *
      * @return EntityManager
      */
     protected function getEntityManager()
@@ -215,8 +215,10 @@ class WebTestCase extends BaseWebTestCase
     }
 
     /**
-     * getRepository
+     * getRepository.
+     *
      * @param string $entityName
+     *
      * @return EntityRepository
      */
     protected function getRepository($entityName)
@@ -225,7 +227,7 @@ class WebTestCase extends BaseWebTestCase
     }
 
     /**
-     * loadFixture
+     * loadFixture.
      */
     protected function loadFixture(FixtureInterface $fixture)
     {
@@ -233,15 +235,15 @@ class WebTestCase extends BaseWebTestCase
     }
 
     /**
-     * assertResponseSuccess
+     * assertResponseSuccess.
      */
     protected function assertResponseSuccess($expected = true, $message = '')
     {
-       self::assertThat($this->client->getResponse()->isSuccessful(), $expected ? self::isTrue(): self::isFalse(), $message);
+        self::assertThat($this->client->getResponse()->isSuccessful(), $expected ? self::isTrue() : self::isFalse(), $message);
     }
 
     /**
-     * assertResponseCode
+     * assertResponseCode.
      */
     protected function assertResponseCode($code, $message = '')
     {
@@ -249,23 +251,23 @@ class WebTestCase extends BaseWebTestCase
     }
 
     /**
-     * assertResponseRedirect
+     * assertResponseRedirect.
      */
     protected function assertResponseRedirect($expected = true, $location = null, $message = '')
     {
-       self::assertThat($this->client->getResponse()->isRedirect($location), $expected ? self::isTrue(): self::isFalse(), $message);
+        self::assertThat($this->client->getResponse()->isRedirect($location), $expected ? self::isTrue() : self::isFalse(), $message);
     }
 
     /**
-     * assertContentContains
+     * assertContentContains.
      */
-    protected function assertContentContains($needle, $message = '', $ignoreCase = FALSE, $checkForObjectIdentity = TRUE)
+    protected function assertContentContains($needle, $message = '', $ignoreCase = false, $checkForObjectIdentity = true)
     {
         self::assertContains($needle, $this->client->getResponse()->getContent(), $message, $ignoreCase, $checkForObjectIdentity);
     }
 
     /**
-     * assertContentContains
+     * assertContentContains.
      */
     protected function assertContentIsJson($message = '')
     {
@@ -273,7 +275,7 @@ class WebTestCase extends BaseWebTestCase
     }
 
     /**
-     * assertResponseRedirectToLogin
+     * assertResponseRedirectToLogin.
      */
     protected function assertResponseRedirectToLogin($expected = true)
     {

@@ -1,6 +1,7 @@
 <?php
+
 /**
- * Auteur: Blaise de Carné - blaise@concretis.com
+ * Auteur: Blaise de Carné - blaise@concretis.com.
  */
 namespace Sygefor\Bundle\CoreBundle\Event;
 
@@ -9,12 +10,12 @@ use Knp\Menu\ItemInterface;
 use Symfony\Component\EventDispatcher\Event;
 
 /**
- * Class ConfigureMenuEvent
- * @package Sygefor\Bundle\CoreBundle\Event
+ * Class ConfigureMenuEvent.
  */
 class ConfigureMenuEvent extends Event
 {
     const CONFIGURE = 'sygefor_core.menu_configure';
+    const ALTER     = 'sygefor_core.menu_alter';
 
     /**
      * @var \Knp\Menu\FactoryInterface
@@ -27,12 +28,12 @@ class ConfigureMenuEvent extends Event
 
     /**
      * @param \Knp\Menu\FactoryInterface $factory
-     * @param \Knp\Menu\ItemInterface $menu
+     * @param \Knp\Menu\ItemInterface    $menu
      */
     public function __construct(FactoryInterface $factory, ItemInterface $menu)
     {
         $this->factory = $factory;
-        $this->menu = $menu;
+        $this->menu    = $menu;
     }
 
     /**

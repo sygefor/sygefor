@@ -9,52 +9,14 @@ security:
 
     encoders:
         FOS\UserBundle\Model\UserInterface: sha512
-        Sygefor\Bundle\TraineeBundle\Entity\Trainee: sha512
+        Sygefor\Bundle\MyCompanyBundle\Entity\Trainee: sha512
 
     firewalls:
         # ---
-        # OAuth
-        # ---
-        oauth_authorize:
-            pattern:    ^/oauth/v2/auth
-            form_login:
-                provider: trainees
-                check_path: api.oauth.auth_login_check
-                login_path: api.oauth.auth_login
-            anonymous: true
-        oauth_token:
-            pattern:    ^/oauth/v2/token
-            security:   false
-        # ---
-        # Shibboleth
-        # ---
-        shibboleth:
-            #shibboleth authentification
-            pattern:    ^/api/shibboleth
-            shibboleth: ~
-            logout:
-                path: /api/shibboleth/logout
-                target: /
-                success_handler: security.logout.handler.shibboleth
-            provider: shibboleth
-        shibboleth_register:
-            # needed to get the shibboleth session during registration
-            pattern:    ^/api/account/register
-            shibboleth: ~
-            provider: shibboleth
-            anonymous: true
-        # ---
-        # API
-        # ---
-        api:
-            pattern:    ^/api
-            fos_oauth:  true
-            stateless:  true
-            anonymous:  true
-        # ---
-        # Main
+        # Back FOS User
         # ---
         main:
+            host: "%back_host%"
             pattern: ^/
             form_login:
                 provider: fos_userbundle
@@ -63,20 +25,73 @@ security:
                 default_target_path: /
                 target_path_parameter: _target_path
                 use_referer: false
+#            remember_me:
+#                key:      "%secret%"
+#                lifetime: 86400 # in seconds
+#                path:     /
+#                domain:   ~
             logout:       true
             anonymous:    true
 
+        # ---
+        # OAuth authentication
+        # ---
+#        oauth_authorize:
+#            host: "%front_host%"
+#            pattern:    ^/oauth/v2/auth
+#            form_login:
+#                provider: trainees
+#                check_path: api.oauth.auth_login_check
+#                login_path: api.oauth.auth_login
+#            anonymous: true
+#        oauth_token:
+#            pattern:    ^/oauth/v2/token
+#            security:   false
+
+        # ---
+        # Shibboleth
+        # ---
+        front:
+            host: "%front_host%"
+            pattern: ^/|^/account/register
+            shibboleth: ~
+            provider: shibboleth
+            logout:
+                path: /api/shibboleth/logout
+                target: /
+                success_handler: security.logout.handler.shibboleth
+            anonymous: ~
+        shibboleth:
+            host: "%front_host%"
+            pattern: ^/api/shibboleth|^/account|^/training/inscription
+            shibboleth: ~
+            provider: shibboleth
+            logout:
+                path: /api/shibboleth/logout
+                target: /
+                success_handler: security.logout.handler.shibboleth
+            anonymous: false
+
+        # ---
+        # API
+        # ---
+        api:
+            host: "%front_host%"
+            pattern:    ^/api
+#            fos_oauth:  true
+            stateless:  true
+            anonymous:  ~
+
     access_control:
-        - { path: ^/api, roles: IS_AUTHENTICATED_ANONYMOUSLY }
-        - { path: ^/login$, role: IS_AUTHENTICATED_ANONYMOUSLY }
-        - { path: ^/oauth, role: IS_AUTHENTICATED_ANONYMOUSLY }
-        - { path: ^/, role: IS_AUTHENTICATED_FULLY }
+        # Back
+        - { host: "%back_host%", path: ^/login$, role: IS_AUTHENTICATED_ANONYMOUSLY }
+        - { host: "%back_host%", path: ^/, role: IS_AUTHENTICATED_FULLY }
 
     role_hierarchy:
+        ROLE_TRAINEE:       ROLE_USER
         ROLE_EDITEUR:       ROLE_USER
         ROLE_GESTIONNAIRE:  ROLE_USER
         ROLE_ADMIN:         ROLE_USER
-        ROLE_SUPER_ADMIN:   ROLE_ADMIN
 
 # OAuth Configuration
 fos_oauth_server:
@@ -95,7 +110,7 @@ fos_oauth_server:
 #Schibboleth
 shibboleth:
     handler_path: /Shibboleth.sso
-    secured_handler: true
+    secured_handler: true # https
     session_initiator_path: /Login
     username_attribute: mail
     use_headers: true
@@ -110,8 +125,8 @@ shibboleth:
             header: eppn
         facsimileTelephoneNumber:
             header: facsimileTelephoneNumber
-        givenName:
-            header: givenName
+        firstName:
+            header: firstName
         givenName:
             header: givenName
         mail:
@@ -172,16 +187,3 @@ nelmio_cors:
         expose_headers: []
         max_age: 0
         hosts: []
-    paths:
-        '^/api/':
-            allow_origin: ['*']
-#            allow_headers: ['X-Custom-Auth']
-#            allow_methods: ['POST', 'PUT', 'GET', 'DELETE']
-            allow_headers: ['*']
-            allow_methods: ['POST', 'PUT', 'GET', 'DELETE']
-            max_age: 3600
-        '^/oauth/':
-            allow_origin: ['*']
-            allow_headers: ['*']
-            allow_methods: ['POST', 'PUT', 'GET', 'DELETE']
-            max_age: 3600

@@ -1,5 +1,6 @@
 parameters:
     jms_serializer.cache_naming_strategy.class: JMS\Serializer\Naming\IdenticalPropertyNamingStrategy
+    sygefor_core.vocabulary_registry.class: Sygefor\Bundle\CoreBundle\Vocabulary\VocabularyRegistry
 
 services:
     sygefor_core.menu_builder:
@@ -19,7 +20,7 @@ services:
 
     sygefor_core.search:
         class: Sygefor\Bundle\CoreBundle\Search\SearchService
-        arguments: [@fos_elastica.index]
+        arguments: ["@fos_elastica.index"]
 
     sygefor.search:
         alias: sygefor_core.search
@@ -29,21 +30,37 @@ services:
         tags:
             - { name: jms_serializer.subscribing_handler }
 
-    #form type
-    sygefor_core.form.type.entity_hidden:
-        class:      Sygefor\Bundle\CoreBundle\Form\Type\EntityHiddenType
-        arguments:
-            - @Doctrine.orm.entity_manager
+    sygefor_core.serializer.handler.form_errors:
+        class: Sygefor\Bundle\CoreBundle\Serializer\Handler\FormErrorIteratorHandler
         tags:
-            - { name: form.type, alias: entity_hidden }
+            - { name: jms_serializer.subscribing_handler }
+
+    #listener
+    sygefor_core.organization_changed.orm.listener:
+        class: Sygefor\Bundle\CoreBundle\Listener\OrganizationChangedListener
+        tags:
+            - { name: doctrine.event_subscriber, connection: default }
+    sygefor_core.tree_trait_listener:
+        class: Sygefor\Bundle\CoreBundle\Listener\TreeTraitListener
+        tags:
+            - { name: doctrine.event_subscriber, connection: default }
 
     # taxonomy
-    sygefor_core.vocabulary_publictype:
-        class:        Sygefor\Bundle\CoreBundle\Entity\Term\PublicType
-        tags:
-            - { name: sygefor_taxonomy.vocabulary_provider, group: "Général" }
+    sygefor_core.vocabulary_registry:
+        class: "%sygefor_core.vocabulary_registry.class%"
 
-    sygefor_core.vocabulary_disciplinary:
-        class:        Sygefor\Bundle\CoreBundle\Entity\Term\Disciplinary
+    # menu
+    sygefor_core.configure_menu_listener:
+        class: Sygefor\Bundle\CoreBundle\EventListener\ConfigureMenuListener
+        arguments:
+            - "@security.context"
         tags:
-            - { name: sygefor_taxonomy.vocabulary_provider, group: "Général" }
+            - { name: kernel.event_listener, event: sygefor_core.menu_configure, method: onMenuConfigure }
+
+    #serialization
+    sygefor_core.serializer.access_rights.event_subscriber:
+        class: Sygefor\Bundle\CoreBundle\Serializer\EventSubscriber\AccessRightsEventSubscriber
+        arguments:
+            - "@security.context"
+        tags:
+            - { name: jms_serializer.event_subscriber }

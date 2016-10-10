@@ -1,8 +1,9 @@
 <?php
+
 namespace Sygefor\Bundle\ApiBundle\Entity;
 
-use FOS\OAuthServerBundle\Entity\RefreshToken as BaseRefreshToken;
 use Doctrine\ORM\Mapping as ORM;
+use FOS\OAuthServerBundle\Entity\RefreshToken as BaseRefreshToken;
 
 /**
  * @ORM\Entity
@@ -23,7 +24,7 @@ class RefreshToken extends BaseRefreshToken
     protected $client;
 
     /**
-     * @ORM\ManyToOne(targetEntity="Sygefor\Bundle\TraineeBundle\Entity\Trainee")
+     * @ORM\ManyToOne(targetEntity="Sygefor\Bundle\TraineeBundle\Entity\AbstractTrainee")
      * @ORM\JoinColumn(onDelete="cascade")
      */
     protected $user;

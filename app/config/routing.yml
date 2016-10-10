@@ -1,55 +1,66 @@
-sygefor_lhoe:
-    resource: "@SygeforLheoBundle/Controller/"
-    type:     annotation
-    prefix:   /
-
 sygefor_core:
     resource: "@SygeforCoreBundle/Controller/"
     type:     annotation
+    host:     "%back_host%"
     prefix:   /
 
-sygefor_list:
-    resource: "@SygeforListBundle/Controller/"
+sygefor_inscription:
+    resource: "@SygeforInscriptionBundle/Controller/"
     type:     annotation
+    host:     "%back_host%"
     prefix:   /
 
-sygefor_taxonomy:
-    resource: "@SygeforTaxonomyBundle/Controller/"
+sygefor_institution:
+    resource: "@SygeforInstitutionBundle/Controller/"
     type:     annotation
-    prefix:   /
-
-sygefor_training:
-    resource: "@SygeforTrainingBundle/Controller/"
-    type:     annotation
+    host:     "%back_host%"
     prefix:   /
 
 sygefor_trainee:
     resource: "@SygeforTraineeBundle/Controller/"
     type:     annotation
+    host:     "%back_host%"
     prefix:   /
 
 sygefor_trainer:
     resource: "@SygeforTrainerBundle/Controller/"
     type:     annotation
+    host:     "%back_host%"
     prefix:   /
 
-sygefor_user:
-    resource: "@SygeforUserBundle/Controller/"
+sygefor_training:
+    resource: "@SygeforTrainingBundle/Controller/"
     type:     annotation
-    prefix:   /admin
+    host:     "%back_host%"
+    prefix:   /
 
-sygefor_api:
-    resource: "@SygeforApiBundle/Controller/"
+sygefor_myCompany:
+    resource: "@SygeforMyCompanyBundle/Controller/"
+    host:     "%back_host%"
     type:     annotation
     prefix:   /
 
 sygefor_activity_report:
     resource: "@SygeforActivityReportBundle/Controller/"
     type:     annotation
+    host:     "%back_host%"
+    prefix:   /
+
+sygefor_api:
+    resource: "@SygeforApiBundle/Controller/"
+    type:     annotation
+    host:     "%front_host%"
+    prefix:   /
+
+sygefor_front:
+    resource: "@SygeforFrontBundle/Controller/"
+    type:     annotation
+    host:     "%front_host%"
     prefix:   /
 
 shibboleth_logout:
-    path:   /api/shibboleth/logout
+    path:   /shibboleth/logout
+    host:     "%front_host%"
 
 fos_user_security:
     resource: "@FOSUserBundle/Resources/config/routing/security.xml"
@@ -74,7 +85,9 @@ fos_js_routing:
     resource: "@FOSJsRoutingBundle/Resources/config/routing/routing.xml"
 
 fos_oauth_server_token:
+    host:     "%front_host%"
     resource: "@FOSOAuthServerBundle/Resources/config/routing/token.xml"
 
 fos_oauth_server_authorize:
+    host:     "%front_host%"
     resource: "@FOSOAuthServerBundle/Resources/config/routing/authorize.xml"

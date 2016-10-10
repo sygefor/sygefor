@@ -1,24 +1,23 @@
 <?php
-/**
- * Auteur: Blaise de Carné - blaise@concretis.com
- */
 
+/**
+ * Auteur: Blaise de Carné - blaise@concretis.com.
+ */
 namespace Sygefor\Bundle\CoreBundle\Tests\Event;
 
 use Sygefor\Bundle\CoreBundle\Event\ConfigureMenuEvent;
 
 /**
- * Class ConfigureMenuEventTest
- * @package Sygefor\Bundle\CoreBundle\Tests\Event
+ * Class ConfigureMenuEventTest.
  */
 class ConfigureMenuEventTest extends \PHPUnit_Framework_TestCase
 {
     public function testConstructor()
     {
         $factory = $this->getMock('Knp\Menu\FactoryInterface');
-        $menu = $this->getMock('Knp\Menu\ItemInterface');
-        $event = new ConfigureMenuEvent($factory, $menu);
-        $this->assertEquals($factory, $event->getFactory());
-        $this->assertEquals($menu, $event->getMenu());
+        $menu    = $this->getMock('Knp\Menu\ItemInterface');
+        $event   = new ConfigureMenuEvent($factory, $menu);
+        $this->assertSame($factory, $event->getFactory());
+        $this->assertSame($menu, $event->getMenu());
     }
 }

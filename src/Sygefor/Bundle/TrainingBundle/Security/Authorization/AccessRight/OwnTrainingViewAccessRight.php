@@ -1,16 +1,15 @@
 <?php
+
 /**
  * Created by PhpStorm.
  * User: maxime
  * Date: 20/03/14
- * Time: 15:42
+ * Time: 15:42.
  */
-
 namespace Sygefor\Bundle\TrainingBundle\Security\Authorization\AccessRight;
 
-use Sygefor\Bundle\UserBundle\AccessRight\AbstractAccessRight;
+use Sygefor\Bundle\CoreBundle\AccessRight\AbstractAccessRight;
 use Symfony\Component\Security\Core\Authentication\Token\TokenInterface;
-use Symfony\Component\Security\Core\Authorization\Voter\VoterInterface;
 
 class OwnTrainingViewAccessRight extends AbstractAccessRight
 {
@@ -19,26 +18,28 @@ class OwnTrainingViewAccessRight extends AbstractAccessRight
      */
     public function getLabel()
     {
-        return "Voir les formations de sa propre URFIST";
+        return 'Voir les formations de son propre centre';
     }
 
     /**
      * Checks if the access right supports the given class.
      *
      * @param string
-     * @return Boolean
+     *
+     * @return bool
      */
     public function supportsClass($class)
     {
-        if ($class == 'Sygefor\Bundle\TrainingBundle\Entity\Training'
-            || $class == 'Sygefor\Bundle\TrainingBundle\Entity\Session'
-            || $class == 'Sygefor\Bundle\TrainingBundle\Model\SemesteredTraining'
+        if ($class === 'Sygefor\Bundle\TrainingBundle\Entity\Training\AbstractTraining'
+            || $class === 'Sygefor\Bundle\TrainingBundle\Entity\Session\AbstractSession'
+            || $class === 'Sygefor\Bundle\TrainingBundle\Model\SemesteredTraining'
         ) {
             return true;
         }
         try {
             $refl = new \ReflectionClass($class);
-            return $refl ? $refl->isSubclassOf('Sygefor\Bundle\TrainingBundle\Entity\Training') : false;
+
+            return $refl ? $refl->isSubclassOf('Sygefor\Bundle\TrainingBundle\Entity\Training\AbstractTraining') : false;
         } catch (\ReflectionException $re){
             return false;
         }
@@ -49,13 +50,13 @@ class OwnTrainingViewAccessRight extends AbstractAccessRight
      */
     public function isGranted(TokenInterface $token, $object = null, $attribute)
     {
-        if ($attribute != 'VIEW') return false;
+        if ($attribute !== 'VIEW') return false;
 
         if ($object) {
             if (method_exists($object, 'getOrganization')) {
-                return ($object->getOrganization() == $token->getUser()->getOrganization());
+                return $object->getOrganization() === $token->getUser()->getOrganization();
             } else {
-                return ($object->getTraining()->getOrganization() == $token->getUser()->getOrganization());
+                return $object->getTraining()->getOrganization() === $token->getUser()->getOrganization();
             }
         } else {
             return true;

@@ -1,13 +1,12 @@
 <?php
+
 /**
  * Created by PhpStorm.
  * User: maxime
  * Date: 25/06/14
- * Time: 15:02
+ * Time: 15:02.
  */
-
 namespace Sygefor\Bundle\CoreBundle\Form\DataTransformer;
-
 
 use Doctrine\Common\Persistence\ObjectManager;
 use Doctrine\ORM\EntityRepository;
@@ -15,8 +14,7 @@ use Symfony\Component\Form\DataTransformerInterface;
 use Symfony\Component\Form\Exception\TransformationFailedException;
 
 /**
- * Class ObjectToIdTransformer
- * @package Sygefor\Bundle\TraineeBundle\Form\DataTransformer
+ * Class ObjectToIdTransformer.
  */
 class EntityToIdTransformer implements DataTransformerInterface
 {
@@ -24,7 +22,6 @@ class EntityToIdTransformer implements DataTransformerInterface
     private $om;
     private $entityClass;
     private $entityRepository;
-
 
     /**
      * @param ObjectManager $om
@@ -36,14 +33,17 @@ class EntityToIdTransformer implements DataTransformerInterface
 
     /**
      * @param $entity
-     * @return mixed
+     *
      * @throws TransformationFailedException
+     *
+     * @return mixed
      */
     public function transform($entity)
     {
-        if (null === $entity || '' === $entity ) {
-            return null;
+        if (null === $entity || '' === $entity) {
+            return;
         }
+
         return $entity->getId();
     }
 
@@ -67,14 +67,14 @@ class EntityToIdTransformer implements DataTransformerInterface
      *
      * @param mixed $id The value in the transformed representation
      *
-     * @return mixed The value in the original representation
-     *
      * @throws TransformationFailedException When the transformation fails.
+     *
+     * @return mixed The value in the original representation
      */
     public function reverseTransform($id)
     {
         if (!$id) {
-            return null;
+            return;
         }
 
         $object = $this->om->getRepository($this->entityClass)->find($id);
@@ -105,5 +105,4 @@ class EntityToIdTransformer implements DataTransformerInterface
     {
         $this->entityRepository = $entityRepository;
     }
-
-} 
+}

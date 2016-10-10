@@ -1,0 +1,13 @@
+parameters:
+    sygefor_core.taxonomy.group: "Sygefor3"
+
+services:
+    sygefor_core.vocabulary_title:
+        class:        Sygefor\Bundle\CoreBundle\Entity\PersonTrait\Term\Title
+        tags:
+            - { name: sygefor_core.vocabulary_provider, group: "%sygefor_core.taxonomy.group%" }
+
+    sygefor_core.vocabulary_publipost_template:
+        class:        Sygefor\Bundle\CoreBundle\Entity\Term\PublipostTemplate
+        tags:
+            - { name: sygefor_core.vocabulary_provider, group: "%sygefor_core.taxonomy.group%" }

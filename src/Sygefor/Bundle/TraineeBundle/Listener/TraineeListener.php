@@ -1,23 +1,19 @@
 <?php
+
 namespace Sygefor\Bundle\TraineeBundle\Listener;
 
 use Doctrine\Common\EventSubscriber;
 use Doctrine\ORM\Event\LifecycleEventArgs;
 use Doctrine\ORM\Event\LoadClassMetadataEventArgs;
 use Doctrine\ORM\Events;
-use Doctrine\ORM\Mapping\ClassMetadata;
-use Sygefor\Bundle\TraineeBundle\Entity\Inscription;
-use Sygefor\Bundle\TraineeBundle\Entity\Trainee;
-use Sygefor\Bundle\TraineeBundle\Entity\TraineeRepository;
+use Sygefor\Bundle\TraineeBundle\Entity\AbstractTrainee;
 use Symfony\Component\DependencyInjection\Container;
 
 /**
  * This listener :
  *  - manipulate metadata
  *  - encode and save the password if a new plain password has been set
- *  - generate new password and send credentials to the trainee if the property sendCredentialsEmail has been set to true
- *
- * @package Sygefor\Bundle\TraineeBundle\Listener
+ *  - generate new password and send credentials to the trainee if the property sendCredentialsEmail has been set to true.
  */
 class TraineeListener implements EventSubscriber
 {
@@ -37,21 +33,22 @@ class TraineeListener implements EventSubscriber
      */
     public function getSubscribedEvents()
     {
-        return [
+        return array(
           Events::prePersist,
           Events::preUpdate,
           Events::postPersist,
           Events::postUpdate,
-          Events::loadClassMetadata
-        ];
+          Events::loadClassMetadata,
+        );
     }
 
     /**
      * preProcess
-     * Encode the new password
+     * Encode the new password.
      */
-    public function preProcess($trainee, $new = false) {
-        if($trainee instanceof Trainee && $trainee->getPlainPassword()) {
+    public function preProcess($trainee, $new = false)
+    {
+        if ($trainee instanceof AbstractTrainee && $trainee->getPlainPassword()) {
             $factory = $this->container->get('security.encoder_factory');
             $encoder = $factory->getEncoder($trainee);
             $trainee->setPassword($encoder->encodePassword($trainee->getPlainPassword(), $trainee->getSalt()));
@@ -59,23 +56,28 @@ class TraineeListener implements EventSubscriber
     }
 
     /**
+     * @param $trainee
+     * @param boolean $new
+     *
      * postProcess
-     * Send credentials to the trainee
+     * Send credentials to the trainee.
+     *
      */
-    public function postProcess($trainee, $new = false) {
-        if($trainee instanceof Trainee && $trainee->getPlainPassword()) {
+    public function postProcess($trainee, $new = false)
+    {
+        if ($trainee instanceof AbstractTrainee && $trainee->getPlainPassword()) {
             // send some mails to the trainee
-            if($trainee->isSendCredentialsMail()) {
+            if ($trainee->isSendCredentialsMail()) {
                 $this->sendCredentialsMail($trainee, $new);
             }
-            if($trainee->getSendActivationMail()) {
+            if ($trainee->getSendActivationMail()) {
                 $this->sendActivationMail($trainee, $new);
             }
         }
     }
 
     /**
-     * prePersist
+     * prePersist.
      */
     public function prePersist(LifecycleEventArgs $eventArgs)
     {
@@ -83,7 +85,7 @@ class TraineeListener implements EventSubscriber
     }
 
     /**
-     * preUpdate
+     * preUpdate.
      */
     public function preUpdate(LifecycleEventArgs $eventArgs)
     {
@@ -91,7 +93,7 @@ class TraineeListener implements EventSubscriber
     }
 
     /**
-     * postPersist
+     * postPersist.
      */
     public function postPersist(LifecycleEventArgs $eventArgs)
     {
@@ -99,7 +101,7 @@ class TraineeListener implements EventSubscriber
     }
 
     /**
-     * postUpdate
+     * postUpdate.
      */
     public function postUpdate(LifecycleEventArgs $eventArgs)
     {
@@ -108,31 +110,31 @@ class TraineeListener implements EventSubscriber
 
     /**
      * loadClassMetadata
-     * email field is not nullable
+     * email field is not nullable.
      */
     public function loadClassMetadata(LoadClassMetadataEventArgs $eventArgs) {
         $classMetadata = $eventArgs->getClassMetadata();
-        $class = $classMetadata->getName();
-        if($class == 'Sygefor\Bundle\TraineeBundle\Entity\Trainee') {
+        $class         = $classMetadata->getName();
+        if($class === 'Sygefor\Bundle\TraineeBundle\Entity\AbstractTrainee') {
             $classMetadata->fieldMappings['email']['nullable'] = false;
         }
     }
 
     /**
-     * sendMail
+     * sendMail.
      */
-    protected function sendCredentialsMail(Trainee $trainee, $new)
+    protected function sendCredentialsMail(AbstractTrainee $trainee, $new)
     {
         // prepare the body
         $parameters = array(
-          'trainee' => $trainee,
+          'trainee'  => $trainee,
           'password' => $trainee->getPlainPassword(),
-          'new' => $new,
-          'url' => $this->container->getParameter('front_url')
+          'new'      => $new,
+          'url'      => $this->container->getParameter('front_url'),
         );
 
         $template = 'welcome.txt.twig';
-        if($trainee->getShibbolethPersistentId()) {
+        if ($trainee->getShibbolethPersistentId()) {
             // if shibboleth, send special message
             $template = 'welcome.shibboleth.txt.twig';
         }
@@ -143,29 +145,28 @@ class TraineeListener implements EventSubscriber
         $message = \Swift_Message::newInstance()
           ->setFrom($this->container->getParameter('mailer_from'), $trainee->getOrganization()->getName())
           ->setReplyTo($trainee->getOrganization()->getEmail())
-          ->setSubject("Bienvenue sur SYGEFOR !")
+          ->setSubject('Bienvenue sur SYGEFOR !')
           ->setTo($trainee->getEmail())
-          ->setBody($body)
-        ;
+          ->setBody($body);
         $this->container->get('swiftmailer.mailer.local')->send($message);
         $trainee->setSendCredentialsMail(false);
     }
 
     /**
-     * sendMail
+     * sendMail.
      */
-    protected function sendActivationMail(Trainee $trainee, $new)
+    protected function sendActivationMail(AbstractTrainee $trainee, $new)
     {
         $options = $trainee->getSendActivationMail();
 
         // generate token & url
-        $token = hash('sha256', $trainee->getId());
+        $token  = hash('sha256', $trainee->getId());
         $params = array(
-          'id' => $trainee->getId(),
+          'id'    => $trainee->getId(),
           'token' => $token,
-          'email' => $trainee->getEmail()
+          'email' => $trainee->getEmail(),
         );
-        if(!empty($options['redirect'])) {
+        if( ! empty($options['redirect'])) {
             $params['redirect'] = $options['redirect'];
         }
         $url = $this->container->get('router')->generate('api.account.activate', $params, true);
@@ -173,8 +174,8 @@ class TraineeListener implements EventSubscriber
         // prepare the body
         $parameters = array(
           'trainee' => $trainee,
-          'new' => $new,
-          'url' => $url
+          'new'     => $new,
+          'url'     => $url,
         );
 
         // generate body
@@ -184,10 +185,9 @@ class TraineeListener implements EventSubscriber
         $message = \Swift_Message::newInstance()
           ->setFrom($this->container->getParameter('mailer_from'), $trainee->getOrganization()->getName())
           ->setReplyTo($trainee->getOrganization()->getEmail())
-          ->setSubject("SYGEFOR : Activation de votre compte")
+          ->setSubject('SYGEFOR : Activation de votre compte')
           ->setTo($trainee->getEmail())
-          ->setBody($body)
-        ;
+          ->setBody($body);
 
         $this->container->get('swiftmailer.mailer.local')->send($message);
         $trainee->setSendActivationMail(false);

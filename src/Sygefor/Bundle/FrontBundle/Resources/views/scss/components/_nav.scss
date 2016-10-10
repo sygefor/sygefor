@@ -1,0 +1,19 @@
+.navbar {
+  margin-bottom: 0;
+
+  .navbar-collapse {
+    padding-left: 0;
+    padding-right: 0;
+  }
+
+  ul.nav {
+    @media (max-width: $screen-sm-min) {
+      margin: 10px;
+    }
+  }
+}
+
+.nav.nav-tabs {
+  margin-bottom: $padding-large-vertical;
+  border-bottom: inherit;
+}

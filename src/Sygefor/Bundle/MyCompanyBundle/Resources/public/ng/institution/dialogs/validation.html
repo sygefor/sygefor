@@ -1,0 +1,13 @@
+<div class="modal-header">
+    <button type="button" class="close" ng-click="dialog.dismiss()" aria-hidden="true">×</button>
+    <h4 class="modal-title"><i class="fa fa-warning"></i> Change la validation</h4>
+</div>
+<div class="modal-body center-block">
+    <div class="alert alert-danger" role="alert">
+        Êtes-vous certain de vouloir {{ dialog.params.institution.validated ? 'invalider' : 'valider' }} l'établissement <strong>{{ dialog.params.institution.name }}</strong> ?
+    </div>
+</div>
+<div class="modal-footer">
+    <a class="btn btn-default" ng-click="dialog.dismiss()">Annuler</a>
+    <a class="btn btn-primary" ng-click="ok()">Valider</a>
+</div>

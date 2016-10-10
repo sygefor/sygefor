@@ -19,8 +19,8 @@
         <tr>
             <td>{% if training.name is defined %}{{ training.name }}{% endif %}</td>
             <td>{% if training.sessions is defined %}{{ training.sessions }}{% endif %}</td>
-            <td class="text-right">{% if training.hourDuration is defined %}{{ training.hourDuration }}{% endif %}</td>
-            <td>{% if training.isUrfist|default is not empty %}URFIST{% else %}Extérieur{% endif %}</td>
+            <td class="text-right">{% if training.hourNumber is defined %}{{ training.hourNumber }}{% endif %}</td>
+            <td>{% if training.isOrganization|default is not empty %}URFIST{% else %}Extérieur{% endif %}</td>
             <td>{% if training.theme is defined %}{{ training.theme }}{% endif %}</td>
             <td>{% if training.interventionType is defined %}{{ training.interventionType }}{% endif %}</td>
             <td>{% if training.publicTypes is defined %}{{ training.publicTypes | join(', ') }}{% endif %}</td>

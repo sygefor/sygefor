@@ -1,0 +1,25 @@
+<div ng-if="items.length">
+    <table class="table table-hover table-search table-condensed">
+        <thead>
+        <tr>
+            <th>Date</th>
+            <th>Stagiaire</th>
+            <th>Session</th>
+            <th>Type de personnel</th>
+            <th>Inscription</th>
+        </tr>
+        </thead>
+        <tbody>
+            <tr ng-repeat="item in items">
+                <td><a href="" ui-sref="inscription.detail.view({ id: item.id, session: item.session.id })" ui-sref-widget-opts>{{ item.createdAt|date: 'dd/MM/yyyy' }}</a></td>
+                <td><a href="" ui-sref="trainee.detail.view({ id: item.trainee.id })">{{ item.trainee.fullName }}</a></td>
+                <td><a href="" ui-sref="session.detail.view({ id: item.session.id, training: item.session.training.id })">{{ item.session.dateBegin|date: 'dd/MM/yyyy' }} - {{ item.session.training.name }}</a></td>
+                <td>{{ item.trainee.publicCategory }}</td>
+                <td><span class="label" ng-class="$root.inscriptionStatusClass(item.inscriptionStatus.status)">{{ item.inscriptionStatus.name }}</span></td>
+            </tr>
+        </tbody>
+    </table>
+    <pagination ng-if="search.result.total > search.query.size" total-items="search.result.total" items-per-page="search.query.size" ng-model="search.query.page" class="pagination-sm" max-size="5" previous-text="&lsaquo;" next-text="&rsaquo;"></pagination>
+</div>
+
+<div class="widget-empty-msg" ng-if="!items.length && !loading">{{ options.emptymsg || 'Aucune inscription dans cette liste' }}</div>

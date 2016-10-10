@@ -2,8 +2,8 @@
 
 namespace Sygefor\Bundle\ApiBundle\Entity;
 
-use FOS\OAuthServerBundle\Entity\AuthCode as BaseAuthCode;
 use Doctrine\ORM\Mapping as ORM;
+use FOS\OAuthServerBundle\Entity\AuthCode as BaseAuthCode;
 
 /**
  * @ORM\Entity
@@ -24,7 +24,7 @@ class AuthCode extends BaseAuthCode
     protected $client;
 
     /**
-     * @ORM\ManyToOne(targetEntity="Sygefor\Bundle\TraineeBundle\Entity\Trainee")
+     * @ORM\ManyToOne(targetEntity="Sygefor\Bundle\TraineeBundle\Entity\AbstractTrainee")
      * @ORM\JoinColumn(onDelete="cascade")
      */
     protected $user;

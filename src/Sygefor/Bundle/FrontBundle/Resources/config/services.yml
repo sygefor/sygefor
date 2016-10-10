@@ -1,0 +1,24 @@
+services:
+    twig.extension.text:
+            class: Twig_Extensions_Extension_Text
+            tags:
+                - { name: twig.extension }
+
+    twig.extension.date:
+            class: Twig_Extensions_Extension_Date
+            arguments:
+                - "@translator.default"
+            tags:
+                - { name: twig.extension }
+
+    sygefor_front.twig_extension.order_by:
+            class: Sygefor\Bundle\FrontBundle\Twig\OrderBy
+            public: false
+            tags:
+                - { name: twig.extension }
+
+    sygefor_front.twig_extension.session_status_label:
+            class: Sygefor\Bundle\FrontBundle\Twig\SessionStatusLabel
+            public: false
+            tags:
+                - { name: twig.extension }

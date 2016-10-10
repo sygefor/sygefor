@@ -4,43 +4,45 @@
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <title>{{ training.name }}</title>
-    <link href='http://fonts.googleapis.com/css?family=Open+Sans:400,300,600' rel='stylesheet' type='text/css'>
+    <link href='https://fonts.googleapis.com/css?family=Open+Sans:400,300,600' rel='stylesheet' type='text/css'>
     <link href="{{ link }}\build\styles.css" rel="stylesheet" type='text/css'>
 </head>
 <body style="background-color: white">
     <div class="pre-title">{{ training.typeLabel }} n°{{ training.id }} -  {{ training.organization.name }}</div>
     <h2><span>{{ training.name }}</span></h2>
     <div class="infos">
-        <div><span>{{ training.theme.name }}</span></div>
-        <div><span>{{  training.tags|join('name') }}</span></div>
+        <div><span>Thème : </span> <span>{{ training.theme.name }}</span></div>
+        {% if training.areas.count > 0 %}
+            <div><span>Domaines : </span> <span>{{ training.areas | join('name') }}</span></div>
+        {% endif %}
     </div>
-
-    <h3><span>Objectifs</span></h3>
-    <p><span class="text-justify">{{ training.objectives|nl2br }}</span></p>
 
     <h3><span>Contenu du programme</span></h3>
     <p><span class="text-justify">{{ training.program|nl2br }}</span></p>
 
-    <h3><span>Ressources</span></h3>
-    <p><span class="text-justify">{{ training.resources|nl2br }}</span></p>
+    <h3><span>Description</span></h3>
+    <p><span class="text-justify">{{ training.description|nl2br }}</span></p>
+
+    <h3><span>Méthodes pédagogiques</span></h3>
+    <p><span class="text-justify">{{ training.teachingMethods|nl2br }}</span></p>
 
     <h3><span>Action : {{ training.typeLabel }}</span></h3>
     <div class="row">
         <div class="col-md-6">
             <ul class="summary">
-                {% if training.publicTypes is not null %}
-                    <li><label>Publics prioritaires</label> <span>{{ training.publicTypes | join('name') }}</span></li>
-                {% endif %}
-                <li><label>Prérequis</label> <span>{{ training.prerequisite }}</span></li>
-                <li><label>Type d'intervention</label> <span>{{ training.interventionType }}</span></li>
+                <li><label>Public</label> <span>{{ training.publicType }}</span></li>
+                <li><label>Catégorie</label> <span>{{ training.category }}</span></li>
+                <li><label>Prérequis</label> <span>{{ training.prerequisites }}</span></li>
             </ul>
         </div>
         <div class="col-md-6">
             <ul class="summary">
-                <li><label>Initiative externe</label> <span>{{ training.externInitiative ? 'Oui' : 'Non' }}</span></li>
+                <li><label>Initiative extérieure</label> <span>{{ training.externalInitiative ? 'Oui' : 'Non' }}</span></li>
+                <li><label>Type d'intervention</label> <span>{{ training.interventionType }}</span></li>
+                <li><label>Tarifs</label> <span>{{ training.prices }}</span></li>
                 <li><label>Responsable pédagogique</label>
-                    {% if training.supervisors is not null %}
-                    <span>{{ training.supervisors | join('fullName') }}</span>
+                    {% if training.supervisor is not null %}
+                    <span>{{ training.supervisor.fullName }}</span>
                     {% endif %}
                 </li>
                 <li><label>1<sup>ère</sup> session : </label>

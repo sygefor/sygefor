@@ -1,0 +1,10 @@
+.form-horizontal .control-label {
+  text-align: left;
+}
+
+.well {
+  .form-group, .btn {
+    margin-top: $padding-small-horizontal;
+    margin-bottom: $padding-small-horizontal;
+  }
+}

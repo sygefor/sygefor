@@ -1,49 +1,44 @@
 <?php
+
 /**
  * Class used to create objects
  * Created by PhpStorm.
  * User: maxime
  * Date: 16/04/14
- * Time: 11:13
+ * Time: 11:13.
  */
-
 namespace Sygefor\Bundle\TrainingBundle\Model;
-
 
 use Doctrine\ORM\EntityManager;
 use Doctrine\ORM\Query\Expr\Join;
-use Sygefor\Bundle\TrainingBundle\Entity\Meeting;
-use Sygefor\Bundle\TrainingBundle\Entity\Session;
-use Sygefor\Bundle\TrainingBundle\Entity\Training;
-use Symfony\Component\Validator\Constraints\DateTime;
+use Sygefor\Bundle\TrainingBundle\Entity\Session\AbstractSession;
+use Sygefor\Bundle\TrainingBundle\Entity\Training\AbstractTraining;
 
 class SemesteredTraining
 {
-
     /**
-     * @var integer $year
+     * @var int
      */
     private $year;
 
     /**
-     * @var integer $semester
+     * @var int
      */
     private $semester;
 
     /**
-     * @var Training $training
+     * @var AbstractTraining
      */
     private $training;
 
     /**
-     * @var Session[] $session
+     * @var AbstractSession[]
      */
     private $sessions;
 
-
     public function __construct($year, $semester, $training, $sessions = null)
     {
-        $this->year = $year;
+        $this->year     = $year;
         $this->semester = $semester;
         $this->training = $training;
         $this->setSessions($sessions);
@@ -67,39 +62,11 @@ class SemesteredTraining
     }
 
     /**
-     * Return doctoral training college year for elastica filter
-     * @return string
-     */
-    public function getCollegeYear()
-    {
-        if ($this->training->getType() === "doctoral_training") {
-            if ($this->getSemester() < 2) {
-                return strval($this->getYear() - 1) . "-" . strval($this->getYear());
-            } else {
-                return strval($this->getYear()) . "-" . strval($this->getYear() + 1);
-            }
-        }
-        return null;
-    }
-
-    /**
-     * Return doctoral training college semester for elastica filter
-     * @return string
-     */
-    public function getCollegeSemester()
-    {
-        if ($this->training->getType() === "doctoral_training") {
-            return $this->getSemester() === 1 ? 2 : 1;
-        }
-        return null;
-    }
-
-    /**
      * @param array $sessions
      */
     public function setSessions($sessions = null)
     {
-        if (is_array($sessions) && !empty($sessions)) {
+        if (is_array($sessions) && ! empty($sessions)) {
             $this->sessions = $sessions;
             $this->orderSessions();
         } else {
@@ -152,15 +119,15 @@ class SemesteredTraining
      */
     public function getId()
     {
-        return $this->training->getId().'_'.$this->getYear().'_'.$this->getSemester();
+        return $this->training->getId() . '_' . $this->getYear() . '_' . $this->getSemester();
     }
 
     /**
-     * @return Session
+     * @return AbstractSession
      */
     public function getLastSession()
     {
-        if (empty ($this->sessions)) return null;
+        if (empty($this->sessions)) return;
         $now = new \DateTime();
 
         $result = null;
@@ -169,18 +136,19 @@ class SemesteredTraining
             $dif = $now->getTimestamp() - $session->getDateBegin()->getTimeStamp();
             if (($dif > 0) && ($dif < $maxdif)) {
                 $result = $session;
-                $maxdif = $dif ;
+                $maxdif = $dif;
             }
         }
+
         return $result;
     }
 
     /**
-     * @return Session
+     * @return AbstractSession
      */
     public function getNextSession()
     {
-        if (empty ($this->sessions)) return null;
+        if (empty($this->sessions)) return;
         $now = new \DateTime();
 
         $result = null;
@@ -189,26 +157,27 @@ class SemesteredTraining
             $dif = $session->getDateBegin()->getTimestamp() - $now->getTimeStamp();
             if (($dif > 0) && ($dif < $maxdif)) {
                 $result = $session;
-                $maxdif = $dif ;
+                $maxdif = $dif;
             }
         }
-
 
         return $result;
     }
 
     /**
-     * Returns the number of sessions belonging to semesteredtraining
+     * Returns the number of sessions belonging to semesteredtraining.
+     *
      * @return int
      */
     public function getSessionsCount()
     {
         if (empty($this->sessions)) return 0;
-        return count ($this->sessions);
+
+        return count($this->sessions);
     }
 
     /**
-     * sets the sessions list given the current objects training and year/semester values
+     * sets the sessions list given the current objects training and year/semester values.
      */
     private function setSessionsFromTrainingAndDate()
     {
@@ -216,15 +185,15 @@ class SemesteredTraining
         $sessions = $this->training->getSessions();
 
         $tmpSessions = array();
-        if (!empty ($sessions)) {
+        if ( ! empty($sessions)) {
             foreach ($sessions as $session) {
                 /** @var \DateTime $date */
                 $date = $session->getDateBegin();
 
-                $year = $date->format('Y');
+                $year     = $date->format('Y');
                 $semester = ($date->format('m') <= 6) ? 1 : 2;
 
-                if ($year == $this->year && $semester == $this->semester) {
+                if ($year === $this->year && $semester === $this->semester) {
                     $tmpSessions [] = $session;
                 }
             }
@@ -235,16 +204,21 @@ class SemesteredTraining
     }
 
     /**
-     * Get array of trainer
+     * Get array of trainer.
+     *
      * @return array
      */
     public function getTrainers()
     {
         $trainers = array();
-        foreach ($this->sessions as $session) {
-            foreach ($session->getParticipations() as $participation) {
-                // do not add several times the same trainer
-                $trainers[$participation->getTrainer()->getId()] = $participation->getTrainer();
+        if ($this->sessions) {
+            foreach ($this->sessions as $session) {
+                if ($session->getParticipations() && $session->getParticipations()->count() > 0) {
+                    foreach ($session->getParticipations() as $participation) {
+                        // do not add several times the same trainer
+                        $trainers[$participation->getTrainer()->getId()] = $participation->getTrainer();
+                    }
+                }
             }
         }
 
@@ -253,25 +227,27 @@ class SemesteredTraining
 
     /**
      * builds and returns SemesteredTraining objects array corresponding to Training object.
-     * @param Training $training
+     *
+     * @param AbstractTraining $training
+     *
      * @return array
      */
-    public static function getSemesteredTrainingsForTraining(Training $training)
+    public static function getSemesteredTrainingsForTraining(AbstractTraining $training)
     {
-        /** @var Session[] $sessions */
+        /** @var AbstractSession[] $sessions */
         $sessions = $training->getSessions();
 
         //sorting sessions per year/semester
         $orderedSessions = array();
-        if ( count ($sessions) != 0 ){
+        if ( count($sessions) !== 0 ){
 
             foreach($sessions as $session) {
                 //if (!$session ){die();}
                 /** @var \DateTime $date */
                 $date = $session->getDateBegin();
 
-                $year = $date->format('Y');
-                $semester = ( $date->format('m') <= 6 ) ? 1 : 2 ;
+                $year     = $date->format('Y');
+                $semester = ( $date->format('m') <= 6 ) ? 1 : 2;
 
                 if (!isset($orderedSessions[$year])) {
                     $orderedSessions[$year] = array();
@@ -280,36 +256,39 @@ class SemesteredTraining
                 if (!isset($orderedSessions[$year][$semester])) {
                     $orderedSessions[$year][$semester] = array();
                 }
-                $orderedSessions[$year][$semester] []= $session;
+                $orderedSessions[$year][$semester] [] = $session;
             }
 
-            $semTrainings= array ();
+            $semTrainings = array();
 
             //SemesteredTrainings objects are built around each sessions list
             foreach ($orderedSessions as $year => $semesters) {
                 foreach ($semesters as $sem => $sessions) {
-                    $tempSemTraining = new SemesteredTraining($year, $sem, $training);
+                    $tempSemTraining = new self($year, $sem, $training);
                     $tempSemTraining->setSessions($sessions);
 
                     $semTrainings [] = $tempSemTraining;
                 }
             }
+
             return $semTrainings;
-        } else { // no session found : we build a single semestered training on first session year/semester.
-            $year = $training->getFirstSessionPeriodYear();
+        }
+        else { // no session found : we build a single semestered training on first session year/semester.
+            $year     = $training->getFirstSessionPeriodYear();
             $semester = $training->getFirstSessionPeriodSemester();
 
-            $semTraining = new SemesteredTraining($year, $semester, $training, array() );
+            $semTraining = new self($year, $semester, $training, array() );
 
-            return array ($semTraining) ;
+            return array($semTraining);
         }
     }
 
     /**
-     * Return an array of training and remove duplicates from semestered training list
-     * @param array $idList
+     * Return an array of training and remove duplicates from semestered training list.
+     *
+     * @param array         $idList
      * @param EntityManager $em
-     * @param array $excludedTypes
+     * @param array         $excludedTypes
      */
     public static function getTrainingsByIds(array $idList, EntityManager $em, $excludedTypes)
     {
@@ -319,12 +298,12 @@ class SemesteredTraining
         }
         $arrayIds = array_unique($arrayIds);
 
-        $allEntities = $em->getRepository('SygeforTrainingBundle:Training')
-            ->findBy(array("id" => $arrayIds));
+        $allEntities = $em->getRepository('SygeforTrainingBundle:Training\AbstractTraining')
+            ->findBy(array('id' => $arrayIds));
 
         $notMeetingEntities = array();
         foreach ($allEntities as $entity) {
-            if (!in_array($entity->getType(), $excludedTypes)) {
+            if (!in_array($entity->getType(), $excludedTypes, true)) {
                 $notMeetingEntities[] = $entity;
             }
         }
@@ -334,8 +313,10 @@ class SemesteredTraining
 
     /**
      * Returns an array of semestered trainings corresponding to given list of ids.
-     * @param array $idList
+     *
+     * @param array         $idList
      * @param EntityManager $em
+     *
      * @return SemesteredTraining[]
      */
     public static function getSemesteredTrainingsByIds(array $idList, EntityManager $em)
@@ -343,8 +324,8 @@ class SemesteredTraining
         //building DQL query to get needed sessions objects
         $qb = $em->createQueryBuilder()
             ->select('s')
-            ->from('SygeforTrainingBundle:Training', 't')
-                ->leftJoin('SygeforTrainingBundle:Session', 's', Join::WITH, 't = s.training');
+            ->from('SygeforTrainingBundle:Training\AbstractTraining', 't')
+                ->leftJoin('SygeforTrainingBundle:Session\AbstractSession', 's', Join::WITH, 't = s.training');
 
         $paramCount = 0;
         $parameters = array();
@@ -352,17 +333,17 @@ class SemesteredTraining
             //var_dump($tId);
             $params = explode('_', $tId);
 
-            if (count($params) == 3) {
-                $dateFrom = ($params[2] == 2) ? $params[1] . '-01-07 00:00:00' : $params[1] . '-01-01 00:00:00';
-                $dateTo = ($params[2] == 2) ? $params[1] . '-31-12 23:59:59' : $params[1] . '-30-06 23:59:59';
+            if (count($params) === 3) {
+                $dateFrom = ($params[2] === 2) ? $params[1] . '-01-07 00:00:00' : $params[1] . '-01-01 00:00:00';
+                $dateTo   = ($params[2] === 2) ? $params[1] . '-31-12 23:59:59' : $params[1] . '-30-06 23:59:59';
 
                 $qb->orWhere('( t.id = :id' . $paramCount . ' AND s.dateBegin < :dateTo' . $paramCount . ' AND s.dateBegin > :dateFrom' . $paramCount . ')');
                 $parameters = array_merge($parameters, array(
-                    'id' . $paramCount => $params[0],
-                    'dateTo' . $paramCount => $dateTo,
-                    'dateFrom' . $paramCount => $dateFrom
+                    'id' . $paramCount       => $params[0],
+                    'dateTo' . $paramCount   => $dateTo,
+                    'dateFrom' . $paramCount => $dateFrom,
                 ));
-                $paramCount++;
+                ++$paramCount;
             }
         }
 
@@ -373,16 +354,16 @@ class SemesteredTraining
         //objects are grouped by training / year / semester
         $sessions = array();
         foreach ($tmpArray as $re) {
-            if (!empty ($re)) {
-                $ys = SemesteredTraining::getYearAndSemesterFromDate($re->getDateBegin());
+            if ( ! empty($re)) {
+                $ys  = self::getYearAndSemesterFromDate($re->getDateBegin());
                 $tId = $re->getTraining()->getId();
-                if (!isset ($sessions[$tId])) {
+                if ( ! isset($sessions[$tId])) {
                     $sessions[$tId] = array();
                 }
-                if (!isset ($sessions[$tId][$ys[0]])) {
+                if ( ! isset($sessions[$tId][$ys[0]])) {
                     $sessions[$tId][$ys[0]] = array();
                 }
-                if (!isset ($sessions[$tId][$ys[0]][$ys[1]])) {
+                if ( ! isset($sessions[$tId][$ys[0]][$ys[1]])) {
                     $sessions[$tId][$ys[0]][$ys[1]] = array();
                 }
                 $sessions[$tId][$ys[0]][$ys[1]][] = $re;
@@ -394,14 +375,14 @@ class SemesteredTraining
         foreach ($idList as $id) {
             $params = explode('_', $id);
 
-            if (count($params) == 3) {
-                if (!empty ($sessions[$params[0]][$params[1]][$params[2]])) {
+            if (count($params) === 3) {
+                if ( ! empty($sessions[$params[0]][$params[1]][$params[2]])) {
 
                     //getting sessions
                     $tmpSessions = $sessions[$params[0]][$params[1]][$params[2]];
-                    $semTrains[] = new SemesteredTraining($params[1], $params[2], $tmpSessions[0]->getTraining(), $tmpSessions);
+                    $semTrains[] = new self($params[1], $params[2], $tmpSessions[0]->getTraining(), $tmpSessions);
                 } else {
-                    $semTrains[] = new SemesteredTraining($params[1], $params[2],         $em->getRepository('SygeforTrainingBundle:Training')->find($params[0]), array());
+                    $semTrains[] = new self($params[1], $params[2],         $em->getRepository('SygeforTrainingBundle:Training\AbstractTraining')->find($params[0]), array());
                 }
             }
         }
@@ -410,29 +391,30 @@ class SemesteredTraining
     }
 
     /**
-     * helper for getting year+ semester
+     * helper for getting year+ semester.
+     *
      * @param \DateTime $date
+     *
      * @return array
      */
     public static function getYearAndSemesterFromDate(\DateTime $date)
     {
-        $year = $date->format('Y');
-        $semester = ( $date->format('m') <= 6 ) ? 1 : 2 ;
+        $year     = $date->format('Y');
+        $semester = ( $date->format('m') <= 6 ) ? 1 : 2;
 
         return array($year, $semester);
     }
 
     /**
-     * ordering
-     *
+     * ordering.
      */
     private function orderSessions()
     {
-         @usort ($this->sessions, function($a,$b){
+         @usort($this->sessions, function ($a, $b) {
             $ad = $a->getDateBegin();
             $bd = $b->getDateBegin();
 
-            if ($ad == $bd) {
+            if ($ad === $bd) {
                 return 0;
             }
 

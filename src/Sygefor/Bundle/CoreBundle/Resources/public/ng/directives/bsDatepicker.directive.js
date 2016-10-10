@@ -5,7 +5,7 @@ sygeforApp.directive('bsDatepicker', ['$timeout', function($timeout) {
     return {
         restrict: 'A',
         require: "?ngModel",
-        link: function(scope, element, attrs, ngModel){
+        link: function(scope, element, attrs, ngModel) {
 
             var options = {
                 language: "fr",
@@ -35,10 +35,6 @@ sygeforApp.directive('bsDatepicker', ['$timeout', function($timeout) {
                         datepicker.pickers[0].update(from);
                         datepicker.pickers[1].update(to);
                         datepicker.pickers[1].setStartDate(from);
-                        // set the second datepicker view to the right page
-                        if(!datepicker.pickers[1].getDate() || datepicker.pickers[1].viewDate < datepicker.pickers[0].getUTCDate()) {
-                            datepicker.pickers[1].viewDate = datepicker.pickers[0].getUTCDate();
-                        }
                     });
                 };
 

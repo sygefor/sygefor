@@ -5,16 +5,16 @@ parameters:
 
 services:
     sygefor_activity_report.builder_factory:
-        class: %sygefor_activity_report.builder_factory.class%
-        arguments: [@fos_elastica.index, @doctrine.orm.entity_manager]
+        class: "%sygefor_activity_report.builder_factory.class%"
+        arguments: ["@fos_elastica.index", "@doctrine.orm.entity_manager"]
     sygefor_activity_report.configure_menu_listener:
         class: Sygefor\Bundle\ActivityReportBundle\EventListener\ConfigureMenuListener
         arguments:
-                    - @security.context
-                    - @router
+                    - "@security.context"
+                    - "@router"
         tags:
             - { name: kernel.event_listener, event: sygefor_core.menu_configure, method: onMenuConfigure }
     sygefor_excel_writer:
-        class: %sygefor_excel_writer.class%
+        class: "%sygefor_excel_writer.class%"
     sygefor_xls_paginer:
-        class: %sygefor_xls_paginer.class%
+        class: "%sygefor_xls_paginer.class%"

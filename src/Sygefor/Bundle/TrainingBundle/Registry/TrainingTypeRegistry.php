@@ -1,4 +1,5 @@
 <?php
+
 namespace Sygefor\Bundle\TrainingBundle\Registry;
 
 class TrainingTypeRegistry
@@ -33,15 +34,17 @@ class TrainingTypeRegistry
 
     /**
      * @param $type
-     * @return array
+     *
      * @throws \InvalidArgumentException
+     *
+     * @return array
      */
     public function getType($type)
     {
-        if(!isset($this->types[$type])) {
-            throw new \InvalidArgumentException("Invalid training type : " . $type);
+        if( ! isset($this->types[$type])) {
+            throw new \InvalidArgumentException('Invalid training type : ' . $type);
         }
+
         return $this->types[$type];
     }
-
 }

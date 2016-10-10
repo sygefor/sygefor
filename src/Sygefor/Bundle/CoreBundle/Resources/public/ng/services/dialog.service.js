@@ -12,28 +12,32 @@ sygeforApp.provider('$dialog', [function() {
      */
     this.dialog = function(name, params) {
         profiles[name] = params;
-    }
+    };
 
     /**
      * this.$get
      */
     this.$get = function($modal, $dialogParams) {
-
         return {
-
             /**
              * Open a dialog
-             * @param id
+             *
+             * @param name
+             * @param params
+             * @param options
              */
             open: function(name, params, options) {
-
                 // get the profil
                 var profile = profiles[name];
-                if(!profile) {
+                if (!profile) {
                     throw "Unknown dialog profile : " + name;
                 }
-                angular.copy(params, $dialogParams);
-                var options = angular.extend({}, profile, options ? options : {});
+
+                for (var i in params) {
+                    $dialogParams[i] = params[i];
+                }
+                //angular.copy(params, $dialogParams);
+                options = angular.extend({}, profile, options ? options : {});
 
                 var modalInstance = $modal.open(options);
                 return modalInstance.result;

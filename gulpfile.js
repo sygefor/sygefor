@@ -17,10 +17,15 @@ var assets = require('./app/config/assets');
  * Scripts
  */
 gulp.task('scripts', ['templates'], function(){
-    return gulp.src(assets.scripts.concat(['web/build/templates.js']))
+    gulp.src(assets.scripts.scripts.concat(['web/build/templates.js']))
         .pipe(concat('scripts.js'))
         .pipe(gulp.dest('web/build'));
-        //.pipe(notify({ message: 'scripted!' }));
+
+    gulp.src(assets.scripts.front)
+        .pipe(concat('front.js'))
+        .pipe(gulp.dest('web/build'));
+
+    //.pipe(notify({ message: 'scripted!' }));
 });
 
 gulp.task('uglify', ['scripts'], function() {
@@ -105,7 +110,7 @@ gulp.task('templates', function(){
             }
         }))
         .pipe(gulp.dest('web/build/'));
-        //.pipe(notify({ message: 'templated!' }));
+    //.pipe(notify({ message: 'templated!' }));
 });
 
 /**
@@ -125,8 +130,14 @@ gulp.task('images', function() {
 gulp.task('watch', function() {
     livereload.listen();
     // scripts
-    gulp.watch(assets.scripts, ['scripts']);
-    gulp.watch('web/build/scripts.js').on('change', livereload.changed);
+    for (var key in assets.scripts) {
+        (function() {
+            const _key = key;
+            gulp.watch(assets.scripts[_key], ['scripts']);
+            gulp.watch('web/build/' + _key + '.js').on('change', livereload.changed);
+        })();
+    }
+
     // templates
     gulp.watch(assets.templates, ['scripts']);
     // styles

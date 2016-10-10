@@ -1,19 +1,18 @@
 <?php
+
 namespace Sygefor\Bundle\TrainingBundle\Form;
 
-use Doctrine\ORM\EntityRepository;
-use Sygefor\Bundle\TaxonomyBundle\Form\Type\VocabularyType;
+use Sygefor\Bundle\CoreBundle\Form\Type\VocabularyType;
 use Symfony\Component\Form\FormBuilderInterface;
 
 /**
- * Class PublicTypeType
- * @package Sygefor\Bundle\TrainingBundle\Form
+ * Class PublicTypeType.
  */
 class PublicTypeType extends VocabularyType
 {
     /**
      * @param FormBuilderInterface $builder
-     * @param array $options
+     * @param array                $options
      */
     public function buildForm(FormBuilderInterface $builder, array $options)
     {
@@ -26,17 +25,8 @@ class PublicTypeType extends VocabularyType
     /**
      * @return string
      */
-    public function getName()
-    {
-        return 'publictype';
-    }
-
-    /**
-     * @return string
-     */
     public function getParent()
     {
-        return 'vocabulary' ;
+        return VocabularyType::class;
     }
-
 }

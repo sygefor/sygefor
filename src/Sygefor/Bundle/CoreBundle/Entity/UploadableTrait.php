@@ -1,49 +1,50 @@
 <?php
+
 /**
  * Created by PhpStorm.
  * User: maxime
  * Date: 10/07/14
- * Time: 14:45
+ * Time: 14:45.
  */
-
 namespace Sygefor\Bundle\CoreBundle\Entity;
 
-
+use Doctrine\ORM\Event\PreUpdateEventArgs;
+use Doctrine\ORM\Mapping as ORM;
+use Symfony\Component\Filesystem\Filesystem;
 use Symfony\Component\HttpFoundation\File\File;
 use Symfony\Component\HttpFoundation\File\UploadedFile;
-use Symfony\Component\Validator\Constraints as Assert;
-use Doctrine\ORM\Event\PreUpdateEventArgs;
 use Symfony\Component\HttpFoundation\Response;
-use Doctrine\ORM\Mapping as ORM;
 use Symfony\Component\Validator\ExecutionContextInterface;
 
-
 /**
- * Class UploadableTrait
- * @package Sygefor\Bundle\CoreBundle\Entity
+ * Class UploadableTrait.
+ *
  * @ORM\HasLifecycleCallbacks
  */
 trait UploadableTrait
 {
     /**
      * @ORM\Column(name="file_path", type="string", nullable=false)
-     * @var string $filePath
+     *
+     * @var string
      */
-    private $filePath;
+    protected $filePath;
 
     /**
      * @ORM\Column(name="file_name", type="string", nullable=false)
-     * @var string $fileName
+     *
+     * @var string
      */
     protected $fileName;
 
     /**
-     * @var File $file
+     * @var File
      */
     protected $file;
 
     /**
      * used to force file update when changing file.
+     *
      * @var \DateTime
      * @ORM\Column(type="datetime")
      */
@@ -54,12 +55,24 @@ trait UploadableTrait
      */
     static protected $maxFileSize = 50000000;
 
-    /**
-     * @param String $filePath
-     */
-    public function setFilePath($file)
+    public function __clone()
     {
-        $this->filePath = $file;
+        $file = $this->getFile();
+        if (!empty($file)) {
+            $this->id = null;
+            $fs = new Filesystem();
+            $tmpFileName = sha1(uniqid(mt_rand(), true)) . '.' . $file->getFileInfo()->getExtension();
+            $fs->copy($this->getTemplatesRootDir() . '/' . $this->filePath, $this->getTemplatesRootDir() . '/' . $tmpFileName);
+            $this->setFile(new File($this->getTemplatesRootDir() . '/' . $tmpFileName), $this->getFileName());
+        }
+    }
+
+    /**
+     * @param string $filePath
+     */
+    public function setFilePath($filePath)
+    {
+        $this->filePath = $filePath;
     }
 
     /**
@@ -68,13 +81,14 @@ trait UploadableTrait
     public function getFile()
     {
         if ($this->filePath !== null) {
-            $this->file = new File($this->getTemplatesRootDir().'/'.$this->filePath);
+            $this->file = new File($this->getTemplatesRootDir() . '/' . $this->filePath);
         }
+
         return $this->file;
     }
 
     /**
-     * @return String
+     * @return string
      */
     public function getFilePath()
     {
@@ -82,7 +96,7 @@ trait UploadableTrait
     }
 
     /**
-     * @param String $fileName
+     * @param string $fileName
      */
     public function setFileName($fileName)
     {
@@ -99,6 +113,7 @@ trait UploadableTrait
 
     /**
      * @param File $file
+     * @param string $name
      */
     public function setFile(File $file = null, $name = null)
     {
@@ -106,9 +121,10 @@ trait UploadableTrait
             $this->uploaded = new \DateTime();
             $this->file = $file;
             if ($this->file instanceof UploadedFile) {
-                $this->filePath = sha1(uniqid(mt_rand(), true)).'.'.$this->file->guessClientExtension();
+                $this->filePath = sha1(uniqid(mt_rand(), true)) . '.' . $this->file->guessClientExtension();
                 $this->fileName = $this->file->getClientOriginalName();
-            } else {
+            }
+            else {
                 $this->filePath = $file->getFileInfo()->getFilename();
                 $this->fileName = ($name) ? $name : $file->getFileInfo()->getFilename();
             }
@@ -120,11 +136,27 @@ trait UploadableTrait
      */
     public function preUpload()
     {
-        if (null !== $this->file && ($this->file instanceof UploadedFile) ) {
+        if (null !== $this->file && ($this->file instanceof UploadedFile)) {
             // nom unique du fichier.
-            $this->filePath = sha1(uniqid(mt_rand(), true)).'.'.$this->file->guessClientExtension();
+            $this->filePath = sha1(uniqid(mt_rand(), true)) . '.' . $this->file->guessClientExtension();
             $this->fileName = $this->file->getClientOriginalName();
         }
+    }
+
+    /**
+     * @return \DateTime
+     */
+    public function getUploaded()
+    {
+        return $this->uploaded;
+    }
+
+    /**
+     * @param \DateTime $uploaded
+     */
+    public function setUploaded($uploaded)
+    {
+        $this->uploaded = $uploaded;
     }
 
     /**
@@ -135,7 +167,7 @@ trait UploadableTrait
     {
         //a new file is set : we delete the old one
         if ($args->hasChangedField('uploaded')) {//new uploaded file : old one is deleted
-            unlink($this->getTemplatesRootDir().'/'.$args->getOldValue('filePath'));
+            unlink($this->getTemplatesRootDir() . '/' . $args->getOldValue('filePath'));
         }
     }
 
@@ -143,7 +175,7 @@ trait UploadableTrait
      * @ORM\PostPersist()
      * @ORM\PostUpdate()
      */
-    public function upload($args)
+    public function upload()
     {
         if (null === $this->file) {
             return;
@@ -168,7 +200,7 @@ trait UploadableTrait
      */
     public function getAbsolutePath()
     {
-        return ( null == $this->filePath ) ? null : $this->getTemplatesRootDir().'/'.$this->filePath;
+        return (null === $this->filePath) ? null : $this->getTemplatesRootDir() . '/' . $this->filePath;
     }
 
     /**
@@ -177,7 +209,7 @@ trait UploadableTrait
     protected function getTemplatesRootDir()
     {
         // le chemin absolu du répertoire où les documents uploadés doivent être sauvegardés
-        return '/../../../../../app/Resources/default';
+        return __DIR__ . '/../../../../../../app/Resources/default';
     }
 
     /**
@@ -188,10 +220,9 @@ trait UploadableTrait
         return self::$maxFileSize;
     }
 
-
-
     /**
-     * Returns a response to send to the client if file is requested
+     * Returns a response to send to the client if file is requested.
+     *
      * @return Response
      */
     public function send()
@@ -208,15 +239,15 @@ trait UploadableTrait
         $response->setContent(readfile($fp));
 
         return $response;
-
     }
 
     /**
      * @param ExecutionContextInterface $context
      */
-    public function validateFileSize(ExecutionContextInterface $context){
-        if ($this->file->getSize() > $this->maxFileSize){
-            $context->addViolationAt('file',"La taille du fichier dépasse la limite autorisée",array(),null);
+    public function validateFileSize(ExecutionContextInterface $context)
+    {
+        if ($this->file->getSize() > self::$maxFileSize) {
+            $context->addViolationAt('file', 'La taille du fichier dépasse la limite autorisée', array(), null);
         }
     }
 }

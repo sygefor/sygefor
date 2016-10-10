@@ -1,0 +1,49 @@
+header {
+  background: linear-gradient(180deg, darken($brand-primary, 10), $brand-primary);
+  padding-bottom: 0;
+
+  * {
+    color: white;
+  }
+
+  > .container {
+
+    .row {
+      padding-top: $padding-large-vertical * 2;
+      padding-bottom: $padding-large-vertical * 2;
+    }
+
+    .nav.nav-tabs {
+      margin-top: 0;
+      margin-bottom: 0;
+    }
+
+    .program-btn {
+      margin-top: $padding-large-vertical;
+      position: absolute;
+      right: 0;
+      top: 100%;
+    }
+
+    input {
+      margin-top: $padding-small-vertical;
+    }
+  }
+
+  h3 {
+    margin: 0 0 0 0;
+  }
+
+  h1 {
+    font-size: 30px;
+    margin:0;
+  }
+
+  p {
+    font-family: $headings-font-family;
+  }
+
+  .img-responsive {
+    margin: 0 auto;
+  }
+}

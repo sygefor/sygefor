@@ -1,11 +1,12 @@
 <?php
+
 namespace Sygefor\Bundle\ApiBundle\Service;
+
 use Symfony\Component\DependencyInjection\ContainerAware;
-use \Symfony\Component\Form\Form;
+use Symfony\Component\Form\Form;
 
 /**
- * Class FormErrorsParser
- * @package Sygefor\Bundle\ApiBundle\Service
+ * Class FormErrorsParser.
  */
 class FormErrorsParser extends ContainerAware
 {
@@ -13,6 +14,7 @@ class FormErrorsParser extends ContainerAware
      * This is the main method of service. Pass form object and call it to get resulting array.
      *
      * @param \Symfony\Component\Form\Form $form
+     *
      * @return array
      */
     public function parseErrors(Form $form)
@@ -39,8 +41,8 @@ class FormErrorsParser extends ContainerAware
         }
         if ($form->count()) {
             foreach ($form as $child) {
-                if (!$child->isValid()) {
-                    if(!isset($errors['fields'])) {
+                if ( ! $child->isValid()) {
+                    if( ! isset($errors['fields'])) {
                         $errors['fields'] = array();
                     }
                     $_errors = $this->parseErrors($child);
@@ -51,9 +53,6 @@ class FormErrorsParser extends ContainerAware
             }
         }
 
-
         return $errors;
     }
 }
-
-?>

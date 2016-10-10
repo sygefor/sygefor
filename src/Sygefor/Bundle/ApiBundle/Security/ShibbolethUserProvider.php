@@ -1,17 +1,12 @@
 <?php
+
 namespace Sygefor\Bundle\ApiBundle\Security;
 
 use KULeuven\ShibbolethBundle\Security\ShibbolethUserProviderInterface;
 use KULeuven\ShibbolethBundle\Security\ShibbolethUserToken;
 use KULeuven\ShibbolethBundle\Service\Shibboleth;
-use Sygefor\Bundle\ApiBundle\Entity\ShibbolethAttributes;
-use Sygefor\Bundle\ApiBundle\Entity\ShibbolethRegisterRequest;
-use Sygefor\Bundle\TraineeBundle\Entity\Trainee;
 use Sygefor\Bundle\TraineeBundle\Entity\TraineeRepository;
 use Symfony\Component\DependencyInjection\ContainerInterface;
-use Symfony\Component\HttpFoundation\RedirectResponse;
-use Symfony\Component\Security\Core\Exception\TokenNotFoundException;
-use Symfony\Component\Security\Core\Exception\UnsupportedUserException;
 use Symfony\Component\Security\Core\Exception\UsernameNotFoundException;
 use Symfony\Component\Security\Core\User\UserInterface;
 
@@ -28,16 +23,16 @@ class ShibbolethUserProvider implements ShibbolethUserProviderInterface
     private $repository;
 
     /**
-     * @inheritdoc
+     * {@inheritdoc}
      */
     function __construct(ContainerInterface $container, TraineeRepository $repository)
     {
-        $this->container = $container;
+        $this->container  = $container;
         $this->repository = $repository;
     }
 
     /**
-     * @inheritdoc
+     * {@inheritdoc}
      */
     public function loadUserByUsername($username)
     {
@@ -46,7 +41,7 @@ class ShibbolethUserProvider implements ShibbolethUserProviderInterface
     }
 
     /**
-     * @inheritdoc
+     * {@inheritdoc}
      */
     public function refreshUser(UserInterface $user)
     {
@@ -54,7 +49,7 @@ class ShibbolethUserProvider implements ShibbolethUserProviderInterface
     }
 
     /**
-     * @inheritdoc
+     * {@inheritdoc}
      */
     public function supportsClass($class)
     {
@@ -62,7 +57,7 @@ class ShibbolethUserProvider implements ShibbolethUserProviderInterface
     }
 
     /**
-     * If no user was found based on persistentId, try to find it by email
+     * If no user was found based on persistentId, try to find it by email.
      */
     public function createUser(ShibbolethUserToken $token)
     {
@@ -78,22 +73,22 @@ class ShibbolethUserProvider implements ShibbolethUserProviderInterface
         $shibbolethId = $persistentId ? $persistentId : $targetedId;
 
         // else, build a custom one with eppn
-        if(!$shibbolethId && $identityProvider && $eppn) {
-            $shibbolethId = $identityProvider.'!'.$eppn;
+        if (!$shibbolethId && $identityProvider && $eppn) {
+            $shibbolethId = $identityProvider . '!' . $eppn;
         }
 
         // else, set it to 1
-        if(!$shibbolethId) {
+        if (!$shibbolethId) {
             $shibbolethId = $email;
         }
 
         // try to find the user by email, and then by persistent id
         $user = $this->repository->findOneByShibbolethPersistentId($shibbolethId);
-        if(!$user && ($shibbolethId != $email)) {
+        if (!$user && ($shibbolethId !== $email)) {
             $user = $this->repository->findOneByEmail($email);
         }
 
-        if($user) {
+        if ($user) {
             /*if($user->getShibbolethPersistentId() && $persistentId != $user->getShibbolethPersistentId()) {
                 throw new UsernameNotFoundException("The email belongs to another shibboleth account.");
             }*/
@@ -102,8 +97,10 @@ class ShibbolethUserProvider implements ShibbolethUserProviderInterface
             // set the mail
             // $user->setEmail($email);
             $em->flush();
+
             return $user;
         }
-        return null;
+
+        return;
     }
 }

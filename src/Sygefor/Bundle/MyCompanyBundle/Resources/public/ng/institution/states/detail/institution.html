@@ -1,0 +1,36 @@
+<form sf-xeditable-form="form" sf-href='institution.view({id: institution.id})' on-success="onSuccess(data)">
+    <div class="row">
+        <div class="col-md-8">
+
+            <div class="btn-group pull-right">
+                <a class="btn btn-fa" href="" tooltip="Changer le centre de rattachement" ng-if="$user.hasAccessRight('sygefor_institution.rights.institution.all.update')" ng-click="changeOrganization()"><span class="fa fa-university"></span></a>
+                <a class="btn btn-fa" href="" tooltip="Supprimer" ng-if="institution._accessRights.delete" ng-click="delete()"><span class="fa fa-trash-o"></span></a>
+            </div>
+
+            <div class="pre-title">Créé le {{ institution.createdAt|date: 'dd/MM/yyyy' }} - {{ institution.organization.name }}</div>
+            <h2><span sf-xeditable="form.children.name">{{ institution.name }}</span></h2>
+
+            <div class="row">
+                <div class="col-lg-6">
+                    <h3>Informations</h3>
+                    <hr>
+                    <ul class="summary">
+                        <li><label>Adresse</label> <span sf-xeditable="form.children.address" data-type="textarea">{{ institution.address }}</span></li>
+                        <li><label>Code postal</label> <span sf-xeditable="form.children.zip">{{ institution.zip }}</span></li>
+                        <li><label>Ville</label> <span sf-xeditable="form.children.city">{{ institution.city }}</span></li>
+                    </ul>
+                </div>
+                <div class="col-lg-6">
+                    <h3>Directeur de l'établissement</h3>
+                    <hr>
+                    <ul class="summary">
+                        <li><label>Nom</label> <span sf-xeditable="form.children.manager.children.lastName">{{ institution.manager.lastName }}</span></li>
+                        <li><label>Prénom</label> <span sf-xeditable="form.children.manager.children.firstName">{{ institution.manager.firstName }}</span></li>
+                        <li><label>Téléphone</label> <span sf-xeditable="form.children.manager.children.phoneNumber">{{ institution.manager.phoneNumber }}</span></li>
+                        <li><label>Email</label> <span sf-xeditable="form.children.manager.children.email">{{ institution.manager.email }}</span></li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+    </div>
+</form>

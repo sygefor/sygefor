@@ -9,7 +9,6 @@ use Symfony\Component\Routing\Router;
 
 /**
  * Class ConfigureMenuListener
- * @package Sygefor\Bundle\TraineeBundle\EventListener
  */
 class ConfigureMenuListener
 {
@@ -26,7 +25,8 @@ class ConfigureMenuListener
     /**
      * Construct
      */
-    public function __construct(SecurityContext $securityContext, Router $router) {
+    public function __construct(SecurityContext $securityContext, Router $router)
+    {
         $this->securityContext = $securityContext;
         $this->router = $router;
     }
@@ -43,7 +43,8 @@ class ConfigureMenuListener
                 'icon'  => 'bar-chart-o',
                 'uri' => $this->router->generate('core.index')  . '#/report/training/summaries'
               ));
-        } catch(AuthenticationCredentialsNotFoundException $e) {
+        }
+        catch(AuthenticationCredentialsNotFoundException $e) {
 
         }
     }

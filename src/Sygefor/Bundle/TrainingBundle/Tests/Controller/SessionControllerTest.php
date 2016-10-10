@@ -1,24 +1,20 @@
 <?php
+
 namespace Sygefor\Bundle\TrainingBundle\Tests\Controller;
 
 use Sygefor\Bundle\CoreBundle\Test\WebTestCase;
-use Symfony\Component\BrowserKit\Cookie;
-use Symfony\Component\HttpFoundation\Request;
 use Symfony\Bundle\FrameworkBundle\Client as Client;
-use Symfony\Component\Security\Core\Authentication\Token\UsernamePasswordToken;
-use Doctrine\ORM\EntityManager;
-use Sygefor\Bundle\TrainingBundle\Controller\SessionController;
+use Symfony\Component\HttpFoundation\Request;
 
 /**
- * Class SessionControllerTest
- * @package Sygefor\Bundle\TrainingBundle\Tests\Controller
+ * Class SessionControllerTest.
  */
 class SessionControllerTest extends WebTestCase
 {
     public function testCreateSession()
     {
         $training = $this->client->getContainer()->get('doctrine')->getManager()->getRepository('SygeforTrainingBundle:Training')->findOneBy(array());
-        $url = $this->client->getContainer()->get('router')->generate('session.create', array('training' => $training->getId()));
+        $url      = $this->client->getContainer()->get('router')->generate('session.create', array('training' => $training->getId()));
 
         //connecting with non allowed role provokes unsuccessful response
         $this->client->request('GET', $url);
@@ -36,7 +32,7 @@ class SessionControllerTest extends WebTestCase
             'POST',
             $url,
             array('sessiontype' => array(
-                'training' => $training->getId(),
+                'training'  => $training->getId(),
                 'dateBegin' => '16/04/2014'/*array(
                     'year' => '2014',
                     'month' => '4',
@@ -53,20 +49,18 @@ class SessionControllerTest extends WebTestCase
                     'day' => '16'
                 )*/,
                 'maximumNumberOfRegistrations' => 10,
-                'published' => 1,
-                "_token" => $csrfToken
+                'published'                    => 1,
+                '_token'                       => $csrfToken,
             ))
         );
         $this->assertTrue($this->client->getResponse()->isRedirect($this->client->getContainer()->get('router')->generate('training.index')));
     }
 
-
-
     public function testRemoveSession()
     {
         $repository = $this->getEntityManager()->getRepository('SygeforTrainingBundle:Session');
-        $session = $repository->findOneBy(array());
-        $url = $this->client->getContainer()->get('router')->generate('session.remove', array('id' => $session->getId()));
+        $session    = $repository->findOneBy(array());
+        $url        = $this->client->getContainer()->get('router')->generate('session.remove', array('id' => $session->getId()));
 
         $this->client->request('GET', $url);
         $this->assertResponseSuccess(false);

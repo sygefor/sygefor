@@ -1,0 +1,23 @@
+.label.label-empty {
+  margin-right: $grid-gutter-width / 3;
+  background-color: inherit;
+
+  &.label-success {
+    border: 3px solid $alert-success-border;
+    a {
+      color: $alert-success-text;
+    }
+  }
+  &.label-danger {
+    border: 3px solid $alert-danger-border;
+    a {
+      color: $alert-danger-text;
+    }
+  };
+  &.label-warning {
+    border: 3px solid $alert-warning-border;
+    a {
+      color: $alert-warning-text;
+    }
+  }
+}

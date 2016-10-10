@@ -1,11 +1,11 @@
 <?php
+
 namespace Sygefor\Bundle\ApiBundle\Sitemap;
 
 use JMS\Serializer\Annotation as Serializer;
 
 /**
- * Class Url
- * @package Veilhan\Bundle\APIBundle\Model
+ * Class Url.
  */
 class Url
 {
@@ -35,7 +35,7 @@ class Url
      * @param $image
      */
     public function addImage($image) {
-        if(!$image instanceof Image) {
+        if( ! $image instanceof Image) {
             $image = new Image($image);
         }
         $this->images[] = $image;
@@ -49,13 +49,14 @@ class Url
     }
 
     /**
-     * SPECIFIC
+     * SPECIFIC.
+     *
      * @param $medias
      */
     public function addMedias($medias) {
         foreach($medias as $media) {
             $media = $media['media'];
-            if($media['type'] == 'image') {
+            if($media['type'] === 'image') {
                 $image = new Image('http://media.veilhan.com/' . $media['publicPath'] . '/large.jpg');
                 $image->setTitle($media['title']);
                 $image->setCaption($media['description']);

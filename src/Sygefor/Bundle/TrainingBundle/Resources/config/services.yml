@@ -1,252 +1,20 @@
-parameters:
-    sygefor_training.taxonomy.group: "Formation"
-
 services:
     # training types registry
     sygefor_training.type.registry:
         class: Sygefor\Bundle\TrainingBundle\Registry\TrainingTypeRegistry
         arguments: [null] # all services with tag "sygefor_training.type are inserted here by TrainingTypeRegistryPass
 
-    # training types
-    sygefor_training.type.internship:
-        class: Sygefor\Bundle\TrainingBundle\Entity\Internship
-        tags:
-            - { name: sygefor_training.type }
-    sygefor_training.type.training_course:
-        class: Sygefor\Bundle\TrainingBundle\Entity\TrainingCourse
-        tags:
-            - { name: sygefor_training.type }
-    sygefor_training.type.doctoral_training:
-        class: Sygefor\Bundle\TrainingBundle\Entity\DoctoralTraining
-        tags:
-            - { name: sygefor_training.type }
-    sygefor_training.type.diverse_training:
-        class: Sygefor\Bundle\TrainingBundle\Entity\DiverseTraining
-        tags:
-            - { name: sygefor_training.type }
-    sygefor_training.type.meeting:
-        class: Sygefor\Bundle\TrainingBundle\Entity\Meeting
-        tags:
-            - { name: sygefor_training.type }
-
-    # serializer
-    sygefor_training.serializer.training.event_subscriber:
-        class: Sygefor\Bundle\TrainingBundle\Serializer\EventSubscriber\TrainingEventSubscriber
-        tags:
-            - { name: jms_serializer.event_subscriber }
-
-    sygefor_training.serializer.session.event_subscriber:
-        class: Sygefor\Bundle\TrainingBundle\Serializer\EventSubscriber\SessionEventSubscriber
-        arguments: [@service_container]
-        tags:
-            - { name: jms_serializer.event_subscriber }
-
-    # taxonomy
-    sygefor_training.vocabulary_teachingcursus:
-        class:        Sygefor\Bundle\TrainingBundle\Entity\Term\TeachingCursus
-        tags:
-            - { name: sygefor_taxonomy.vocabulary_provider, group: "%sygefor_training.taxonomy.group%" }
-
-    sygefor_training.vocabulary_institution:
-        class:        Sygefor\Bundle\TrainingBundle\Entity\Term\Institution
-        tags:
-            - { name: sygefor_taxonomy.vocabulary_provider, group: "%sygefor_training.taxonomy.group%" }
-
-    sygefor_training.vocabulary_eventkind:
-        class:        Sygefor\Bundle\TrainingBundle\Entity\Term\EventKind
-        tags:
-            - { name: sygefor_taxonomy.vocabulary_provider, group: "%sygefor_training.taxonomy.group%" }
-
-    sygefor_training.vocabulary_tag:
-        class:        Sygefor\Bundle\TrainingBundle\Entity\Term\Tag
-        tags:
-            - { name: sygefor_taxonomy.vocabulary_provider, group: "%sygefor_training.taxonomy.group%" }
-
-    sygefor_training.vocabulary_theme:
-        class:        Sygefor\Bundle\TrainingBundle\Entity\Term\Theme
-        tags:
-            - { name: sygefor_taxonomy.vocabulary_provider, group: "%sygefor_training.taxonomy.group%" }
-
-    sygefor_training.vocabulary_variousaction:
-        class:        Sygefor\Bundle\TrainingBundle\Entity\Term\VariousAction
-        tags:
-            - { name: sygefor_taxonomy.vocabulary_provider, group: "%sygefor_training.taxonomy.group%" }
-
-    sygefor_training.vocabulary_eventtype:
-        class:        Sygefor\Bundle\TrainingBundle\Entity\Term\EventType
-        tags:
-            - { name: sygefor_taxonomy.vocabulary_provider, group: "%sygefor_training.taxonomy.group%" }
-    sygefor_training.vocabulary_place:
-        class:        Sygefor\Bundle\TrainingBundle\Entity\Term\Place
-        tags:
-            - { name: sygefor_taxonomy.vocabulary_provider, group: "%sygefor_training.taxonomy.group%" }
-
-    sygefor_training.vocabulary_applicantorganism:
-        class:        Sygefor\Bundle\TrainingBundle\Entity\Term\ApplicantOrganism
-        tags:
-            - { name: sygefor_taxonomy.vocabulary_provider, group: "%sygefor_training.taxonomy.group%" }
-
-    sygefor_training.vocabulary_doctoralschool:
-        class:        Sygefor\Bundle\TrainingBundle\Entity\Term\DoctoralSchool
-        tags:
-            - { name: sygefor_taxonomy.vocabulary_provider, group: "%sygefor_training.taxonomy.group%" }
-
-    sygefor_training.vocabulary_doctoralyear:
-        class:        Sygefor\Bundle\TrainingBundle\Entity\Term\DoctoralYear
-        tags:
-            - { name: sygefor_taxonomy.vocabulary_provider, group: "%sygefor_training.taxonomy.group%" }
-
-    sygefor_training.vocabulary_doctoralpartner:
-        class:        Sygefor\Bundle\TrainingBundle\Entity\Term\DoctoralPartner
-        tags:
-            - { name: sygefor_taxonomy.vocabulary_provider, group: "%sygefor_training.taxonomy.group%" }
-
-    sygefor_training.vocabulary_pedagogicpartner:
-        class:        Sygefor\Bundle\TrainingBundle\Entity\Term\PedagogicPartner
-        tags:
-            - { name: sygefor_taxonomy.vocabulary_provider, group: "%sygefor_training.taxonomy.group%" }
-
-    sygefor_training.vocabulary_place:
-        class:        Sygefor\Bundle\TrainingBundle\Entity\Term\Place
-        tags:
-            - { name: sygefor_taxonomy.vocabulary_provider, group: "%sygefor_training.taxonomy.group%" }
-    # menu
-    sygefor_training.configure_menu_listener:
-        class: Sygefor\Bundle\TrainingBundle\EventListener\ConfigureMenuListener
-        arguments:
-            - @security.context
-            - @router
-            - @sygefor_training.type.registry
-        tags:
-            - { name: kernel.event_listener, event: sygefor_core.menu_configure, method: onMenuConfigure }
-
-    # voters
-    sygefor_training.rights.training.own.view:
-        class:        Sygefor\Bundle\TrainingBundle\Security\Authorization\AccessRight\OwnTrainingViewAccessRight
-        tags:
-            - { name: sygefor_user.right_provider, group: "Formations" }
-    sygefor_training.rights.training.own.create:
-        class:        Sygefor\Bundle\TrainingBundle\Security\Authorization\AccessRight\OwnTrainingCreateAccessRight
-        tags:
-            - { name: sygefor_user.right_provider, group: "Formations" }
-    sygefor_training.rights.training.own.update:
-        class:        Sygefor\Bundle\TrainingBundle\Security\Authorization\AccessRight\OwnTrainingUpdateAccessRight
-        tags:
-            - { name: sygefor_user.right_provider, group: "Formations" }
-    sygefor_training.rights.training.own.delete:
-        class:        Sygefor\Bundle\TrainingBundle\Security\Authorization\AccessRight\OwnTrainingDeleteAccessRight
-        tags:
-            - { name: sygefor_user.right_provider, group: "Formations" }
-
-    sygefor_training.rights.training.all.view:
-        class:        Sygefor\Bundle\TrainingBundle\Security\Authorization\AccessRight\AllTrainingViewAccessRight
-        tags:
-            - { name: sygefor_user.right_provider, group: "Formations" }
-    sygefor_training.rights.training.all.create:
-        class:        Sygefor\Bundle\TrainingBundle\Security\Authorization\AccessRight\AllTrainingCreateAccessRight
-        tags:
-            - { name: sygefor_user.right_provider, group: "Formations" }
-    sygefor_training.rights.training.all.update:
-        class:        Sygefor\Bundle\TrainingBundle\Security\Authorization\AccessRight\AllTrainingUpdateAccessRight
-        tags:
-            - { name: sygefor_user.right_provider, group: "Formations" }
-    sygefor_training.rights.training.all.delete:
-        class:        Sygefor\Bundle\TrainingBundle\Security\Authorization\AccessRight\AllTrainingDeleteAccessRight
-        tags:
-            - { name: sygefor_user.right_provider, group: "Formations" }
-
-    # form
-    sygefor_training.form.type.training:
-        class:      Sygefor\Bundle\TrainingBundle\Form\TrainingType
-        arguments:
-            - "@sygefor_user.access_right_registry"
-        tags:
-            - { name: form.type, alias: trainingtype }
-
-    sygefor_training.form.type.trainingcourse:
-        class:      Sygefor\Bundle\TrainingBundle\Form\TrainingCourseType
-        arguments:
-            - "@sygefor_user.access_right_registry"
-            - "@security.context"
-        tags:
-            - { name: form.type, alias: trainingcoursetype }
-
-    sygefor_training.form.type.meeting:
-        class:      Sygefor\Bundle\TrainingBundle\Form\MeetingType
-        arguments:
-            - "@sygefor_user.access_right_registry"
-        tags:
-            - { name: form.type, alias: meetingtype }
-
-    sygefor_training.form.type.internship:
-        class:      Sygefor\Bundle\TrainingBundle\Form\InternshipType
-        arguments:
-            - "@sygefor_user.access_right_registry"
-        tags:
-            - { name: form.type, alias: internshiptype }
-
-    sygefor_training.form.type.diversetraining:
-        class:      Sygefor\Bundle\TrainingBundle\Form\DiverseTrainingType
-        arguments:
-            - "@sygefor_user.access_right_registry"
-        tags:
-            - { name: form.type, alias: diversetrainingtype }
-
-    sygefor_training.form.type.doctoraltraining:
-        class:      Sygefor\Bundle\TrainingBundle\Form\DoctoralTrainingType
-        arguments:
-            - "@sygefor_user.access_right_registry"
-        tags:
-            - { name: form.type, alias: doctoraltrainingtype }
-
-    sygefor_training.form.type.session:
-            class:      Sygefor\Bundle\TrainingBundle\Form\SessionType
-            tags:
-                - { name: form.type, alias: sessiontype }
-    sygefor_training.form.type.material:
-            class:      Sygefor\Bundle\TrainingBundle\Form\MaterialType
-            tags:
-                - { name: form.type, alias: material }
-    sygefor_training.form.type.publictype:
-        class: Sygefor\Bundle\TrainingBundle\Form\PublicTypeType
-        arguments:
-            - @security.context
-        tags:
-            - { name: form.type, alias: publictype }
-    sygefor_training.form.type.duplicateTraining:
-        class:      Sygefor\Bundle\TrainingBundle\Form\DuplicateTrainingType
-        arguments:
-            - @security.context
-        tags:
-            - { name: form.type, alias: duplicatetrainingtype }
-
-    # doctrine training event subscriber
+    # doctrine event subscriber
     sygefor_training.training.listener:
         class: Sygefor\Bundle\TrainingBundle\Listener\TrainingListener
         arguments:
             - "@sygefor_training.type.registry"
         tags:
             - { name: doctrine.event_subscriber }
-
-    #elastica
-    sygefor_training.search:
-        class: Sygefor\Bundle\CoreBundle\Search\SearchService
-        arguments: [@fos_elastica.index.sygefor3.training]
-
-    sygefor_training.semestered.search:
-        class: Sygefor\Bundle\CoreBundle\Search\SearchService
-        arguments: [@fos_elastica.index.sygefor3.semestered_training]
-
-    sygefor_training.session.search:
-        class: Sygefor\Bundle\CoreBundle\Search\SearchService
-        arguments: [@fos_elastica.index.sygefor3.session]
-
-    # elastica transformer
-    sygefor_training.session.elastica.transformer:
-        class: Sygefor\Bundle\TrainingBundle\Transformer\SessionToElasticaTransformer
-        arguments: [@service_container]
-        calls:
-            - [setPropertyAccessor, [@fos_elastica.property_accessor]]
+    sygefor_training.session.listener:
+        class: Sygefor\Bundle\TrainingBundle\Listener\SessionListener
+        tags:
+            - { name: doctrine.event_subscriber }
 
     #event listener
     sygefor_training.semestered_training_listener:
@@ -259,22 +27,39 @@ services:
             - { name: doctrine.event_subscriber, connection: default  }
             - { name: fos_elastica.listener }
 
-    #provider for semestered training
-    sygefor_training.elastica_provider.semestered_training:
-        class: Sygefor\Bundle\TrainingBundle\Providers\SemesteredTrainingProvider
-        arguments:
-            - "@fos_elastica.object_persister.sygefor3.semestered_training"
-            - "@fos_elastica.indexable"
-            - "@doctrine"
+    sygefor_trainer.participation.orm.listener:
+        class: Sygefor\Bundle\TrainingBundle\Listener\TrainerParticipationListener
         tags:
-            - { name: fos_elastica.provider, index: sygefor3, type: semestered_training }
+            - { name: doctrine.event_subscriber, connection: default }
 
-    #batch operation
+    # batch operation
     sygefor_training.batch.session_registration_change:
           class: Sygefor\Bundle\TrainingBundle\BatchOperations\SessionRegistrationChangeBatchOperation
           arguments:
-              - @doctrine.orm.entity_manager
+              - "@doctrine.orm.entity_manager"
           calls:
-              - [ setContainer, [ @service_container ] ]
+              - [ setContainer, [ "@service_container" ] ]
           tags:
-              - {name: sygefor_list.batch_operation_provider}
+              - {name: sygefor_core.batch_operation_provider}
+
+    # serializer
+    sygefor_training.serializer.training.event_subscriber:
+        class: Sygefor\Bundle\TrainingBundle\Serializer\EventSubscriber\TrainingEventSubscriber
+        tags:
+            - { name: jms_serializer.event_subscriber }
+
+    sygefor_training.serializer.session.event_subscriber:
+        class: Sygefor\Bundle\TrainingBundle\Serializer\EventSubscriber\SessionEventSubscriber
+        arguments: ["@service_container"]
+        tags:
+            - { name: jms_serializer.event_subscriber }
+
+    # menu
+    sygefor_training.configure_menu_listener:
+        class: Sygefor\Bundle\TrainingBundle\EventListener\ConfigureMenuListener
+        arguments:
+            - "@security.context"
+            - "@router"
+            - "@sygefor_training.type.registry"
+        tags:
+            - { name: kernel.event_listener, event: sygefor_core.menu_configure, method: onMenuConfigure }

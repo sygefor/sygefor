@@ -2,19 +2,14 @@
 
 namespace Sygefor\Bundle\ApiBundle\Controller;
 
-use Elastica\Filter\Bool;
-use Elastica\Filter\Range;
 use Elastica\Filter\Term;
 use Sygefor\Bundle\ApiBundle\Sitemap\Url;
 use Sygefor\Bundle\ApiBundle\Sitemap\UrlSet;
 use Sygefor\Bundle\CoreBundle\Search\SearchService;
-use Sygefor\Bundle\TrainingBundle\Entity\Session;
 use Symfony\Bundle\FrameworkBundle\Controller\Controller;
-use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
-use FOS\RestBundle\Controller\Annotations as Rest;
 use Symfony\Component\HttpFoundation\Request;
-
-
+use FOS\RestBundle\Controller\Annotations as Rest;
+use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
 
 class SitemapController extends Controller
 {
@@ -24,7 +19,7 @@ class SitemapController extends Controller
      */
     public function sitemapAction(Request $request)
     {
-        $siteUrl = $this->container->getParameter("front_url")."/";
+        $siteUrl = $this->container->getParameter('front_url') . '/';
 
         $urlset = new UrlSet();
 
@@ -32,35 +27,34 @@ class SitemapController extends Controller
 
         //program
         foreach ($organizations as $org) {
-            $url = new Url($siteUrl .  "program/" . $org->getCode());
+            $url = new Url($siteUrl . 'program/' . $org->getCode());
             $urlset->addUrl($url);
         }
 
         //formations
-        $urlset->addUrl(new Url($siteUrl . "training"));
+        $urlset->addUrl(new Url($siteUrl . 'training'));
 
         //formateurs
-        $urlset->addUrl(new Url($siteUrl . "trainers/extern"));
-        $urlset->addUrl(new Url($siteUrl . "trainers/urfist"));
+        $urlset->addUrl(new Url($siteUrl . 'trainers/extern'));
+        $urlset->addUrl(new Url($siteUrl . 'trainers/organization'));
 
         //partenaires
-        $urlset->addUrl(new Url($siteUrl . "partners"));
+        $urlset->addUrl(new Url($siteUrl . 'partners'));
 
         //faq
-        $urlset->addUrl(new Url($siteUrl . "faq"));
+        $urlset->addUrl(new Url($siteUrl . 'faq'));
 
         //about
-        $urlset->addUrl(new Url($siteUrl . "sygefor3"));
+        $urlset->addUrl(new Url($siteUrl . 'sygefor3'));
 
         //mentions légales
-        $urlset->addUrl(new Url($siteUrl . "legals"));
+        $urlset->addUrl(new Url($siteUrl . 'legals'));
 
         //association
-        $urlset->addUrl(new Url($siteUrl . "aru"));
-
+        $urlset->addUrl(new Url($siteUrl . 'aru'));
 
         /** @var SearchService $search */
-        $search =  $this->get('sygefor_training.search');
+        $search = $this->get('sygefor_training.search');
 
         //getting only trainings with opened registrations
         $filter = new Term(array('sessions.displayOnline' => true));

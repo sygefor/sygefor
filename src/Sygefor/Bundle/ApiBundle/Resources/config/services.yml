@@ -4,18 +4,18 @@ parameters:
 services:
     # override
     security.authentication.entry_point.shibboleth:
-      class: %shibboleth.authentication.entry_point.class%
+      class: "%shibboleth.authentication.entry_point.class%"
       arguments:
-          - @shibboleth
-          - @service_container
+          - "@shibboleth"
+          - "@service_container"
 
     # kernel
     sygefor_api.kernel.listener.oauth_public_client:
         class: Sygefor\Bundle\ApiBundle\HttpKernel\EventSubscriber\OauthKernelEventSubscriber
         arguments:
-            - @fos_oauth_server.client_manager
-            - @fos_oauth_server.server
-            - @fos_rest.serializer
+            - "@fos_oauth_server.client_manager"
+            - "@fos_oauth_server.server"
+            - "@fos_rest.serializer"
         tags:
             - { name: kernel.event_subscriber }
 
@@ -45,13 +45,13 @@ services:
     sygefor_api.shibboleth.user_provider:
         class: Sygefor\Bundle\ApiBundle\Security\ShibbolethUserProvider
         arguments:
-            - @service_container
-            - @sygefor_trainee.user_provider
+            - "@service_container"
+            - "@sygefor_trainee.user_provider"
 
     # oauth token generator
     sygefor_api.oauth.token_generator:
         class: Sygefor\Bundle\ApiBundle\Security\OAuthTokenGenerator
         arguments:
-            - @fos_oauth_server.server
-            - @fos_oauth_server.storage
-            - @fos_rest.serializer
+            - "@fos_oauth_server.server"
+            - "@fos_oauth_server.storage"
+            - "@fos_rest.serializer"

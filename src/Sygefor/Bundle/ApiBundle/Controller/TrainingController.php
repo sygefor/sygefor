@@ -1,40 +1,18 @@
 <?php
+
 namespace Sygefor\Bundle\ApiBundle\Controller;
 
 use Elastica\Filter\BoolOr;
-use Elastica\Filter\Nested;
-use Elastica\Filter\Range;
 use Elastica\Filter\Term;
-use Elastica\Filter\Terms;
 use Elastica\Search;
-use Sygefor\Bundle\CoreBundle\Search\SearchService;
-use Sygefor\Bundle\TrainingBundle\Entity\DiverseTraining;
-use Sygefor\Bundle\TrainingBundle\Entity\Internship;
-use Sygefor\Bundle\TrainingBundle\Entity\Meeting;
-use Sygefor\Bundle\TrainingBundle\Entity\SingleSessionTraining;
-use Sygefor\Bundle\TrainingBundle\Entity\Training;
-use Sygefor\Bundle\TrainingBundle\Entity\Session;
-use Sygefor\Bundle\TrainingBundle\Entity\TrainingCourse;
-use Sygefor\Bundle\TrainingBundle\Form\DiverseTrainingType;
-use Sygefor\Bundle\TrainingBundle\Form\InternshipType;
-use Sygefor\Bundle\TrainingBundle\Form\MeetingType;
-use Sygefor\Bundle\TrainingBundle\Form\SessionType;
-use Sygefor\Bundle\TrainingBundle\Form\TrainingCourseType;
-use Sygefor\Bundle\TrainingBundle\Form\TrainingType;
-use Symfony\Bundle\FrameworkBundle\Controller\Controller;
-use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
-use Sensio\Bundle\FrameworkExtraBundle\Configuration\ParamConverter;
-use Sensio\Bundle\FrameworkExtraBundle\Configuration\Template;
-use Doctrine\ORM\EntityManager;
-use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
-use Symfony\Component\Security\Core\Exception\AccessDeniedException;
-use Symfony\Component\HttpFoundation\Request;
-use Sensio\Bundle\FrameworkExtraBundle\Configuration\Security;
-use JMS\SecurityExtraBundle\Annotation\SecureParam;
-use Symfony\Component\HttpFoundation\Response;
-use Symfony\Component\HttpKernel\Exception\BadRequestHttpException;
-use Symfony\Component\Security\Core\SecurityContext;
 use FOS\RestBundle\Controller\Annotations as Rest;
+use Sensio\Bundle\FrameworkExtraBundle\Configuration\ParamConverter;
+use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
+use Sygefor\Bundle\CoreBundle\Search\SearchService;
+use Sygefor\Bundle\TrainingBundle\Entity\Session\AbstractSession;
+use Sygefor\Bundle\TrainingBundle\Entity\Training\AbstractTraining;
+use Symfony\Component\HttpFoundation\Request;
+use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
 
 /**
  * @Route("/api/training")
@@ -44,13 +22,15 @@ class TrainingController extends AbstractController
     static protected $authorizedFields = array(
         'session' => array(
           'id',
+          'name',
           'dateBegin',
           'dateEnd',
           'year',
           'semester',
           'semesterLabel',
           'limitRegistrationDate',
-          'hourDuration',
+          'hourNumber',
+          'dayNumber',
           'numberOfParticipants',
           'price',
           'maximumNumberOfRegistrations',
@@ -61,34 +41,27 @@ class TrainingController extends AbstractController
           'participations',
           'schedule',
           'promote',
-          'collegeYear',
-          'collegeSemester'
+          'status',
         ),
         'training' => array(
           'id',
           'type',
           'typeLabel',
+          'typeLabel.source',
           'organization',
           'number',
           'serial',
           'theme',
           'tags',
           'name',
-          'objectives',
+          'description',
           'program',
           'prerequisite',
           'interventionType',
-          'publicTypes',
-          'resources',
+          'publicType',
           'firstSessionPeriodSemester',
           'firstSessionPeriodYear',
-          'doctoralSchools',
-          'doctoralYears',
-          'applicantOrganism',
-          'ects',
-          'collegeYear',
-          'collegeSemester'
-        )
+        ),
     );
 
     /**
@@ -123,7 +96,7 @@ class TrainingController extends AbstractController
         /** @var SearchService $search */
         $search = $this->get('sygefor_training.session.search');
         $search->handleRequestBody($request);
-        $includePrivate = !!$request->query->get('private');
+        $includePrivate = (bool) $request->query->get('private');
 
         // limit available source fields
         $search->setSource(array_merge(
@@ -136,8 +109,8 @@ class TrainingController extends AbstractController
 
         // include private sessions
         if ($includePrivate) {
-            $orFilter = new BoolOr();
-            $privateFilter = new Term(array('registration' => Session::REGISTRATION_PRIVATE));
+            $orFilter      = new BoolOr();
+            $privateFilter = new Term(array('registration' => AbstractSession::REGISTRATION_PRIVATE));
             $orFilter->addFilter($onlineFilter);
             $orFilter->addFilter($privateFilter);
             $search->filterQuery($orFilter);
@@ -150,18 +123,18 @@ class TrainingController extends AbstractController
     }
 
     /**
-     * Training REST API
+     * Training REST API.
      *
      * @Route("/{id}", requirements={"id" = "\d+"}, name="api.training.detail", defaults={"_format" = "json"})
-     * @ParamConverter("training", class="SygeforTrainingBundle:Training", options={"id" = "id"})
+     * @ParamConverter("training", class="SygeforTrainingBundle:Training\AbstractTraining", options={"id" = "id"})
      * @Rest\View(serializerGroups={"api", "api.training"}, serializerEnableMaxDepthChecks=true)
      */
-    public function trainingAction(Training $training)
+    public function trainingAction(AbstractTraining $training)
     {
         // only training with a online displayed session
-        /** @var Session $session */
+        /** @var AbstractSession $session */
         foreach ($training->getSessions() as $session) {
-            if ($session->getDisplayOnline() || $session->getRegistration() === Session::REGISTRATION_PRIVATE) {
+            if ($session->isDisplayOnline() || $session->getRegistration() === AbstractSession::REGISTRATION_PRIVATE) {
                 return $training;
             }
         }

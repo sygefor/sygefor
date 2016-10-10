@@ -1,14 +1,14 @@
 <?php
+
 /**
  * Created by PhpStorm.
  * User: maxime
  * Date: 17/07/14
- * Time: 11:50
+ * Time: 11:50.
  */
 namespace Sygefor\Bundle\TrainerBundle\Security\Authorization\AccessRight;
 
-
-use Sygefor\Bundle\UserBundle\AccessRight\AbstractAccessRight;
+use Sygefor\Bundle\CoreBundle\AccessRight\AbstractAccessRight;
 use Symfony\Component\Security\Core\Authentication\Token\TokenInterface;
 
 class OwnTrainerDeleteAccessRights extends AbstractAccessRight
@@ -18,20 +18,22 @@ class OwnTrainerDeleteAccessRights extends AbstractAccessRight
      */
     public function getLabel()
     {
-        return "Supprimer les formateurs de sa propre URFIST";
+        return 'Supprimer les formateurs de son propre centre';
     }
 
     /**
      * Checks if the access right supports the given class.
      *
      * @param string
-     * @return Boolean
+     *
+     * @return bool
      */
     public function supportsClass($class)
     {
-        if ($class == 'Sygefor\Bundle\TrainerBundle\Entity\Trainer') {
+        if ($class === 'Sygefor\Bundle\TrainerBundle\Entity\AbstractTrainer') {
             return true;
         }
+
         return false;
     }
 
@@ -40,11 +42,11 @@ class OwnTrainerDeleteAccessRights extends AbstractAccessRight
      */
     public function isGranted(TokenInterface $token, $object = null, $attribute)
     {
-        if ($attribute != 'DELETE') return false;
+        if ($attribute !== 'DELETE') return false;
         if ($object) {
-            return ($object->getOrganization() == $token->getUser()->getOrganization());
+            return $object->getOrganization() === $token->getUser()->getOrganization();
         } else {
             return true;
         }
     }
-} 
+}

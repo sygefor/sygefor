@@ -1,67 +1,9 @@
 services:
-
     #menu
     sygefor_trainer.configure_menu_listener:
         class: Sygefor\Bundle\TrainerBundle\EventListener\ConfigureMenuListener
         arguments:
-                    - @security.context
-                    - @router
+            - "@security.context"
+            - "@router"
         tags:
             - { name: kernel.event_listener, event: sygefor_core.menu_configure, method: onMenuConfigure }
-
-    #taxonomy
-    sygefor_trainer.vocabulary_competence_field:
-        class:        Sygefor\Bundle\TrainerBundle\Entity\Term\CompetenceField
-        tags:
-            - { name: sygefor_taxonomy.vocabulary_provider, group: "%sygefor_training.taxonomy.group%" }
-    sygefor_trainer.participation.orm.listener:
-        class: Sygefor\Bundle\TrainerBundle\Listener\TrainerParticipationListener
-        tags:
-            - { name: doctrine.event_subscriber, connection: default }
-    # voter
-    sygefor_trainer.rights.trainer.own.view:
-        class: Sygefor\Bundle\TrainerBundle\Security\Authorization\AccessRight\OwnTrainerViewAccessRights
-        tags:
-            - { name: sygefor_user.right_provider, group: "Formateurs" }
-    sygefor_trainer.rights.trainer.own.create:
-        class: Sygefor\Bundle\TrainerBundle\Security\Authorization\AccessRight\OwnTrainerCreateAccessRights
-        tags:
-            - { name: sygefor_user.right_provider, group: "Formateurs" }
-    sygefor_trainer.rights.trainer.own.update:
-        class: Sygefor\Bundle\TrainerBundle\Security\Authorization\AccessRight\OwnTrainerUpdateAccessRights
-        tags:
-            - { name: sygefor_user.right_provider, group: "Formateurs" }
-    sygefor_trainer.rights.trainer.own.delete:
-        class: Sygefor\Bundle\TrainerBundle\Security\Authorization\AccessRight\OwnTrainerDeleteAccessRights
-        tags:
-            - { name: sygefor_user.right_provider, group: "Formateurs" }
-
-    sygefor_trainer.rights.trainer.all.view:
-        class: Sygefor\Bundle\TrainerBundle\Security\Authorization\AccessRight\AllTrainerViewAccessRights
-        tags:
-            - { name: sygefor_user.right_provider, group: "Formateurs" }
-    sygefor_trainer.rights.trainer.all.create:
-        class: Sygefor\Bundle\TrainerBundle\Security\Authorization\AccessRight\AllTrainerCreateAccessRights
-        tags:
-            - { name: sygefor_user.right_provider, group: "Formateurs" }
-    sygefor_trainer.rights.trainer.all.update:
-        class: Sygefor\Bundle\TrainerBundle\Security\Authorization\AccessRight\AllTrainerUpdateAccessRights
-        tags:
-            - { name: sygefor_user.right_provider, group: "Formateurs" }
-    sygefor_trainer.rights.trainer.all.delete:
-        class: Sygefor\Bundle\TrainerBundle\Security\Authorization\AccessRight\AllTrainerDeleteAccessRights
-        tags:
-            - { name: sygefor_user.right_provider, group: "Formateurs" }
-
-    #elastica
-    sygefor_trainer.search:
-        class: Sygefor\Bundle\CoreBundle\Search\SearchService
-        arguments: [@fos_elastica.index.sygefor3.trainer]
-
-    #form
-    sygefor_trainer.form.type.trainer:
-        class: Sygefor\Bundle\TrainerBundle\Form\TrainerType
-        arguments:
-            - @Sygefor_user.access_right_registry
-        tags:
-            - { name: form.type, alias: trainer }

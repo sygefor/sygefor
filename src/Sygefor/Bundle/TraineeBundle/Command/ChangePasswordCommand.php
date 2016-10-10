@@ -1,14 +1,14 @@
 <?php
+
 namespace Sygefor\Bundle\TraineeBundle\Command;
 
-use Doctrine\ORM\EntityManager;
 use Symfony\Bundle\FrameworkBundle\Command\ContainerAwareCommand;
 use Symfony\Component\Console\Input\InputArgument;
 use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Output\OutputInterface;
 
 /**
- * ChangePasswordCommand
+ * ChangePasswordCommand.
  */
 class ChangePasswordCommand extends ContainerAwareCommand
 {
@@ -31,13 +31,13 @@ class ChangePasswordCommand extends ContainerAwareCommand
      */
     protected function execute(InputInterface $input, OutputInterface $output)
     {
-        $email = $input->getArgument('email');
+        $email    = $input->getArgument('email');
         $password = $input->getArgument('password');
 
-        $em = $this->getContainer()->get('doctrine')->getManager();
-        $repository = $em->getRepository('SygeforTraineeBundle:Trainee');
-        $trainee = $repository->findOneByEmail($email);
-        if (!$trainee) {
+        $em         = $this->getContainer()->get('doctrine')->getManager();
+        $repository = $em->getRepository('SygeforTraineeBundle:AbstractTrainee');
+        $trainee    = $repository->findOneByEmail($email);
+        if ( ! $trainee) {
             throw new \InvalidArgumentException(sprintf('Trainee identified by "%s" email does not exist.', $email));
         }
 
@@ -53,11 +53,11 @@ class ChangePasswordCommand extends ContainerAwareCommand
      */
     protected function interact(InputInterface $input, OutputInterface $output)
     {
-        if (!$input->getArgument('email')) {
+        if ( ! $input->getArgument('email')) {
             $email = $this->getHelper('dialog')->askAndValidate(
                 $output,
                 'Please give the email:',
-                function($email) {
+                function ($email) {
                     if (empty($email)) {
                         throw new \Exception('Email can not be empty');
                     }
@@ -68,11 +68,11 @@ class ChangePasswordCommand extends ContainerAwareCommand
             $input->setArgument('email', $email);
         }
 
-        if (!$input->getArgument('password')) {
+        if ( ! $input->getArgument('password')) {
             $password = $this->getHelper('dialog')->askAndValidate(
                 $output,
                 'Please enter the new password:',
-                function($password) {
+                function ($password) {
                     if (empty($password)) {
                         throw new \Exception('Password can not be empty');
                     }

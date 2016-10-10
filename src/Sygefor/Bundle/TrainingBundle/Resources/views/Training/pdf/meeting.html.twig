@@ -4,7 +4,7 @@
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <title>{{ training.name }}</title>
-    <link href='http://fonts.googleapis.com/css?family=Open+Sans:400,300,600' rel='stylesheet' type='text/css'>
+    <link href='https://fonts.googleapis.com/css?family=Open+Sans:400,300,600' rel='stylesheet' type='text/css'>
     <link href="{{ link }}\build\styles.css" rel="stylesheet" type='text/css'>
 </head>
 <body style="background-color: white">
@@ -12,33 +12,18 @@
         <div class="col-md-9">
                 <div class="pre-title">{{ training.typeLabel }} n°{{ training.id }} -  {{ training.organization.name }}</div>
                 <h2><span>{{ training.name }}</span></h2>
+
                 <div class="infos">
-                    {% if training.theme is not null %}
-                        <div><span>{{ training.theme.name }}</span></div>
-                    {% endif %}
-                    {% if training.tags is not null %}
-                        <div><span>{{ training.tags|join('name') }}</span></div>
-                    {% endif %}
                     <ul class="summary">
+                        <li><label>Thème : </label> <span>{{ training.theme.name }}</span></li>
                         <li><label> Type</label>
-                        {% if training.eventType is not null %}
-                            <span>{{ training.eventType.name }}</span>
+                        {% if training.category is not null %}
+                            <span>{{ training.category.name }}</span>
                         {% endif %}
                         </li>
                         <li><label> National</label> <span>{{ training.national ? 'Oui' : 'Non' }}</span></li>
-                        <li><label> Nature</label>
-                        {% if training.eventKind is not null %}
-                            {% for eventKind in training.eventKind %}
-                                {{ eventKind.name }}
-                            {% endfor %}
-                        {% endif %}
-                        </li>
                         <li><label> Partenaires</label> <span> {{ training.partners }}</span></li>
-                        <li><label> Tarif</label>
-                        {% if training.session is not null %}
-                            <span> {{ training.session.price }}</span>
-                        {% endif %}
-                        </li>
+                        <li><label> Tarifs</label><span> {{ training.prices }}</span></li>
                         <li><label> Statut</label>
                         {% if training.session is not null %}
                             <span> {{ training.session.displayOnline ? 'En ligne' : 'Hors ligne' }}</span>
@@ -46,9 +31,6 @@
                         </li>
                     </ul>
                 </div>
-
-                <h3><span>Objectifs</span></h3>
-                <p><span>{{ training.objectives|nl2br }}</span></p>
 
                 <h3><span>Programme</span></h3>
                 <p><span>{{ training.program|nl2br }}</span></p>
@@ -73,22 +55,16 @@
                     </div>
                     <h3><span>Coût</span></h3>
                     <div class="row">
-                        <div class="col-md-6">
+                        <div class="col-md-12">
                             <ul class="summary">
-                                <li><label> Intervenants</label> <span>{{ training.session.externTrainerCost }}&euro;</span></li>
-                                <li><label> Accueil</label> <span>{{ training.receptionCost }}&euro;</span></li>
-                            </ul>
-                        </div>
-
-                        <div class="col-md-6">
-                            <ul class="summary">
-                                <li><label> Documents</label> <span>{{ training.session.reprographyCost }}&euro;</span></li>
-                                <li><label> Divers</label> <span>{{ training.session.otherCost }}&euro;</span></li>
+                                {% for key, cost in training.session.costs %}
+                                    <li><label> {{ key }}</label> <span>{{ cost }}&euro;</span></li>
+                                {% endfor %}
                             </ul>
                         </div>
                     </div>
-                    <h3><span>Observations</span></h3>
-                    <p><span>{{ training.session.observations }}</span></p>
+                    <h3><span>Commentaires</span></h3>
+                    <p><span>{{ training.comments }}</span></p>
                 {% else %}
                     <span>Pas de session.</span>
                 {% endif %}

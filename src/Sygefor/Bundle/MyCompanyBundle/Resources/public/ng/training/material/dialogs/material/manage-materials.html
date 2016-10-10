@@ -1,0 +1,86 @@
+<div class="modal-header">
+    <button type="button" class="close" ng-click="dialog.dismiss()" aria-hidden="true">×</button>
+    <h4 class="modal-title" id="myModalLabel">Gérer les supports</h4>
+</div>
+
+<div class="modal-body">
+    <!--add buttons-->
+    <div class="row mb-1 fileupload-buttonbar">
+        <div class="col-xs-12">
+            <div class="pull-right">
+
+                <!--file add button-->
+                <span class="btn btn-primary fileinput-button">
+                    <i class="glyphicon glyphicon-plus"></i>
+                    <span>Ajouter un fichier</span>
+                    <div sf-file-upload data-thref="{route: 'material.add', params: {entity_id: dialog.params.entity.id, type_entity: dialog.params.entityType}}"
+                         data-add-callback="getUploadedFile"
+                         data-queue='entity.materials'>
+                    </div>
+                </span>
+
+                <!--link material add button-->
+                <span class="btn btn-primary" ng-click="addLinkMaterial()">
+                    <i class="glyphicon glyphicon-plus"></i>
+                    <span>Ajouter un lien</span>
+                </span>
+            </div>
+        </div>
+    </div>
+
+    <!-- The list of files availables for upload/download -->
+    <div ng-if='!entity.materials.length' class="row">
+        <div class="col-xs-12">
+            <div class="well well-empty well-sm">
+                Aucun support n'est disponible
+            </div>
+        </div>
+    </div>
+
+    <div ng-if='entity.materials.length' ng-repeat="file in entity.materials track by $index" class="row mb-1">
+        <div class="col-md-6">
+            <button type="button" class="btn btn-default">
+                {{file.name}}
+            </button>
+        </div>
+
+        <div class="col-md-3">
+            <!--link material-->
+            <a ng-if="file.url" target="_blank" href="{{file.url}}"><i class="fa fa-external-link"></i></a>
+
+            <!--file material uploading -->
+            <div ng-if="file.uploading" class="progress progress-striped active fade" ng-class="{pending: 'in'}[file.$state()]" data-file-upload-progress="file.$progress()" style="width:96px; height:33px;">
+                <div class="progress-bar progress-bar-success" ng-style="{width: num + '%'}"></div>
+            </div>
+
+            <!--file material on server -->
+            <button ng-if="file.filePath" type="button" class="btn btn-success" ng-click="getFile(file)">
+                <i class="fa fa-download"></i>
+                <span>Voir</span>
+            </button>
+        </div>
+
+        <div class="col-md-3">
+            <!--link material or server file-->
+            <div ng-if="file.url || file.filePath" class="col-md-3">
+                <button type="button" class="btn btn-warning cancel" ng-click="removeMaterial(file)">
+                    <i class="glyphicon glyphicon-ban-circle"></i>
+                    <span>Retirer</span>
+                </button>
+            </div>
+
+            <!--file material uploading -->
+            <div ng-if="file.uploading" class="col-md-3">
+                <button type="button" class="btn btn-warning cancel" ng-click="file.$cancel()"
+                        ng-hide="!file.$cancel">
+                    <i class="glyphicon glyphicon-ban-circle"></i>
+                    <span>Arreter</span>
+                </button>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div class="modal-footer">
+    <a class="btn btn-default" ng-click="dialog.dismiss()">Fermer</a>
+</div>

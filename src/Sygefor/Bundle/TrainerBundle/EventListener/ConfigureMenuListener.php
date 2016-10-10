@@ -1,22 +1,20 @@
 <?php
+
 /**
  * Created by PhpStorm.
  * User: maxime
  * Date: 20/05/14
- * Time: 11:54
+ * Time: 11:54.
  */
-
 namespace Sygefor\Bundle\TrainerBundle\EventListener;
 
-
 use Sygefor\Bundle\CoreBundle\Event\ConfigureMenuEvent;
+use Symfony\Component\Routing\Router;
 use Symfony\Component\Security\Core\Exception\AuthenticationCredentialsNotFoundException;
 use Symfony\Component\Security\Core\SecurityContext;
-use Symfony\Component\Routing\Router;
 
 /**
- * Class ConfigureMenuListener
- * @package Sygefor\Bundle\TraineeBundle\EventListener
+ * Class ConfigureMenuListener.
  */
 class ConfigureMenuListener
 {
@@ -31,11 +29,11 @@ class ConfigureMenuListener
     private $router;
 
     /**
-     * Construct
+     * Construct.
      */
     public function __construct(SecurityContext $securityContext, Router $router) {
         $this->securityContext = $securityContext;
-        $this->router = $router;
+        $this->router          = $router;
     }
 
     /**
@@ -45,11 +43,11 @@ class ConfigureMenuListener
     {
         $menu = $event->getMenu();
         try {
-            if($this->securityContext->isGranted('VIEW', 'SygeforTrainerBundle:Trainer')) {
+            if($this->securityContext->isGranted('VIEW', 'SygeforTrainerBundle:AbstractTrainer')) {
                 $menu->addChild('trainers', array(
                     'label' => 'Intervenants',
                     'icon'  => 'user',
-                    'uri' => $this->router->generate('core.index')  . '#/trainer'
+                    'uri'   => $this->router->generate('core.index') . '#/trainer',
                 ));
             }
         } catch(AuthenticationCredentialsNotFoundException $e) {

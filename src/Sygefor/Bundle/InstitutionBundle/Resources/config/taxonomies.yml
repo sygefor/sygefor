@@ -1,0 +1,12 @@
+parameters:
+    sygefor_institution.taxonomy.group: "Etablissement"
+
+services:
+    sygefor_institution.vocabulary_institution_type:
+        class:  Sygefor\Bundle\InstitutionBundle\Entity\Term\InstitutionType
+        tags:
+              - { name: sygefor_taxonomy.vocabulary_provider, group: "%sygefor_institution.taxonomy.group%" }
+    sygefor_institution.vocabulary_geographic_origin:
+        class:  Sygefor\Bundle\InstitutionBundle\Entity\Term\GeographicOrigin
+        tags:
+              - { name: sygefor_taxonomy.vocabulary_provider, group: "%sygefor_institution.taxonomy.group%" }

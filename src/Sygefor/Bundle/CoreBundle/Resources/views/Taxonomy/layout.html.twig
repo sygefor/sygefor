@@ -1,0 +1,50 @@
+{% extends "SygeforCoreBundle::layout.html.twig" %}
+{% block content %}
+    <div class="list-view bg-transparent full-height-item is-grow">
+        <div class="full-height-container is-absolute is-full-width">
+            <div class="full-height-container is-absolute is-full-width is-direction-row">
+
+                <!-- left col -->
+                <div class="full-height-item grid-list-detail-results bg-white">
+                    <div class="full-height-container is-full-width is-absolute is-direction-column">
+                        <div class="full-height-item is-full-width is-grow is-overflow-y">
+                            <div class="list-group">
+                                {% for vocabularyc in vocabularies %}
+                                    <div class="list-group-item {{ vocabularyc.id == vocabulary.vocabularyId ? 'active' : '' }}">
+                                        <a href="{{ path('taxonomy.view', { 'vocabularyId': vocabularyc.id }) }}">
+                                            <span class="badge pull-right" title="Vocabulaire {{ vocabularyc.scope == 0 ? 'national' : (vocabularyc.scope == 1 ? 'local' : 'mixte') }}">
+                                                {% if vocabularyc.scope == 0 %}
+                                                    N
+                                                {% elseif vocabularyc.scope == 1 %}
+                                                    L
+                                                {% elseif vocabularyc.scope == 2 %}
+                                                    M
+                                                {% else %}
+                                                    {{ vocabularyc.scope }}
+                                                {% endif %}
+                                            </span>
+                                            <div class="list-group-item-title">{{ vocabularyc.vocabulary.vocabularyLabel }}</div>
+                                        </a>
+                                    </div>
+                                {% endfor %}
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- right col -->
+                <div class="full-height-item grid-list-detail-view">
+                    <div class="full-height-container is-full-width is-absolute is-direction-column">
+                        {{ block('tabs') }}
+                        <div class="full-height-item is-overflow-y is-grow view bg-white">
+                            <div ui-view>
+                                {% block subcontent %}{% endblock %}
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+            </div>
+        </div>
+    </div>
+{% endblock %}

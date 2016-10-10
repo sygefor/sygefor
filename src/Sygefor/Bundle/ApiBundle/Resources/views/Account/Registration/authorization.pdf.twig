@@ -67,9 +67,8 @@
         <h3 class="no-mt">Stagiaire</h3>
         <p>
             <strong>Nom :</strong> {{ trainee.fullName }}<br>
-            <strong>Établissement :</strong> {{ trainee.institution.isMachineName('other') ? trainee.otherInstitution : trainee.institution }}<br>
+            <strong>Établissement :</strong> {{ trainee.institution ? trainee.institution : '' }}<br>
             <strong>Adresse de contact :</strong> {{ trainee.fullAddress }}<br>
-            <strong>Situation professionnelle :</strong> {{ trainee.publicCategory }}
         </p>
     </div>
 
@@ -79,7 +78,7 @@
             {% for session in sessions %}
                 <li>
                     <strong>{{ session.training.typeLabel }} n°{{ session.training.number }} : {{ session.training.name }}</strong><br>
-                    {% if session.dateEnd %}
+                    {% if (session.dateEnd) or (session.dateBegin | date('d/m/Y') == session.dateEnd | date('d/m/Y')) %}
                         <strong>Dates</strong> : du {{ session.dateBegin | date('d/m/Y') }} au {{ session.dateEnd | date('d/m/Y') }}
                     {% else %}
                         <strong>Date</strong> : le {{ session.dateBegin | date('d/m/Y') }}
@@ -87,8 +86,11 @@
                     {% if session.schedule %}
                         - <strong>Horaires</strong> : {{ session.schedule }}
                     {% endif %}
-                    {% if session.hourDuration %}
-                        - <strong>Durée</strong> : {{ session.hourDuration }} heures
+                    {% if session.hourNumber %}
+                        - <strong>Durée</strong> : {{ session.hourNumber }} heures
+                        {% if session.dayNumber %}
+                            sur {{ session.dayNumber }} jours
+                        {% endif %}
                     {% endif %}
                     {% if session.place %}
                         - <strong>Lieu</strong> : {{ session.place }}
@@ -101,35 +103,34 @@
         {% endif %}
     </div>
 
-    {% if trainee.publicType.isPaying == false %}
-        <div class="no-pb">
-            <h3>Classification de la formation professionnelle des agents publics</h3>
-            <p><i>Circulaire d'application du décret n°2007-1470 du 15 octobre 2007 (pages 3 et 4) relatif à la Formation tout au long de la vie</i> - <strong>Ne le remplir que si votre administration le demande</strong></p>
-            <table>
-                <tr>
-                    <td>
-                        <strong>DIF</strong> <i>(Droit Individuel à la Formation)</i>
-                        <br><span class="box">&#9744;</span> <strong>Cocher la case correspondante</strong>
-                    </td>
-                    <td>
-                        <span class="box">&#9744;</span> <strong>T2 : Evolution prévisible du métier</strong><br>
-                        <span class="box">&#9744;</span> <strong>Oui utilisation du DIF nombre d'heures :</strong><br>
-                        <span class="box">&#9744;</span> <strong>Non</strong>
-                    </td>
-                </tr>
-                <tr>
-                    <td>
-                        <span class="box">&#9744;</span> <strong>T1 : Adaptation immédiate au poste de travail, utilisation du DIF non possible</strong>
-                    </td>
-                    <td>
-                        <span class="box">&#9744;</span> <strong>T3 : Acquisition de nouvelles compétences</strong><br>
-                        <span class="box">&#9744;</span> <strong>Oui utilisation du DIF nombre d'heures :</strong><br>
-                        <span class="box">&#9744;</span> <strong>Non</strong>
-                    </td>
-                </tr>
-            </table>
-        </div>
-    {% endif %}
+    <div class="no-pb">
+        <h3>Classification de la formation professionnelle des agents publics</h3>
+        <p><i>Circulaire d'application du décret n°2007-1470 du 15 octobre 2007 (pages 3 et 4) relatif à la Formation tout au long de la vie</i> - <strong>Ne le remplir que si votre administration le demande</strong></p>
+        <table>
+            <tr>
+                <td>
+                    <strong>DIF</strong> <i>(Droit Individuel à la Formation)</i>
+                    <br><span class="box">&#9744;</span> <strong>Cocher la case correspondante</strong>
+                </td>
+                <td>
+                    <span class="box">&#9744;</span> <strong>T2 : Evolution prévisible du métier</strong><br>
+                    <span class="box">&#9744;</span> <strong>Oui utilisation du DIF nombre d'heures :</strong><br>
+                    <span class="box">&#9744;</span> <strong>Non</strong>
+                </td>
+            </tr>
+            <tr>
+                <td>
+                    <span class="box">&#9744;</span> <strong>T1 : Adaptation immédiate au poste de travail, utilisation du DIF non possible</strong>
+                </td>
+                <td>
+                    <span class="box">&#9744;</span> <strong>T3 : Acquisition de nouvelles compétences</strong><br>
+                    <span class="box">&#9744;</span> <strong>Oui utilisation du DIF nombre d'heures :</strong><br>
+                    <span class="box">&#9744;</span> <strong>Non</strong>
+                </td>
+            </tr>
+        </table>
+    </div>
+
     <div class="no-pb">
         <h3>Administration</h3>
         <p><u>En cas d'autorisation requise :</u></p>
@@ -174,10 +175,10 @@
 
     <div class="no-pb">
         <h3>Coût des stages</h3>
-        {% if trainee.isPaying == false %}
+        {% if trainee.institution %}
             <p class="border">Gratuits pour toute personne relevant du Ministère de l’Education Nationale, des Grands Etablissements de Recherche et pour les étudiants.</p>
         {% else %}
-            <p>Vous êtes personnel hors Enseignement supérieur, Recherche et Education Nationale. Les stages de l'URFIST sont payants et devront être pris en charge par votre administration ou votre entreprise. Vous devez faire remplir l'encadré ci-dessous et nous le retourner dans les plus brefs délais :</p>
+            <p>Vous êtes personnel hors Enseignement supérieur, Recherche et Education Nationale. Les stages de votre compagnie sont payants et devront être pris en charge par votre administration ou votre entreprise. Vous devez faire remplir l'encadré ci-dessous et nous le retourner dans les plus brefs délais :</p>
             <p class="lh border">
                 Je soussigné(e) : ...........................................................................<br>
                 Directeur(trice) de : .......................................................................<br>
@@ -186,7 +187,7 @@
                 Date :&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Signature :
             </p>
         {% endif %}
-        <p>La signature de ce bulletin d'autorisation signifie que vous acceptez nos conditions d’inscription, précisées dans Sygefor, sans préjuger de la validation par l'Urfist de votre demande de stage.</p>
+        <p>La signature de ce bulletin d'autorisation signifie que vous acceptez nos conditions d’inscription, précisées dans Sygefor, sans préjuger de la validation par le CRFCB de votre demande de stage.</p>
         <p>Fait à &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
             Le &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
             Signature :</p>

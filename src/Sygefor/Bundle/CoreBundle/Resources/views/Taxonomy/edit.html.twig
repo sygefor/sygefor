@@ -1,0 +1,34 @@
+{% extends "SygeforCoreBundle:Taxonomy:layout.html.twig" %}
+{% form_theme form 'SygeforCoreBundle:Form:fields.html.twig' %}
+
+{% block breadcrumbs %}
+    <ol class="breadcrumb full-height-item">
+        <li><a href="{{ path('core.index') }}">Accueil</a></li>
+        <li><a href="#">Administration</a></li>
+        <li><a href="{{ path('taxonomy.index') }}">Vocabulaires</a></li>
+        <li><a href="{{ path('taxonomy.view', { 'vocabularyId': vocabulary.vocabularyId }) }}">{{ vocabulary.vocabularyLabel }}</a></li>
+        {% if organization is not null %}
+            <li><a href="{{ path('taxonomy.view', { 'vocabularyId': vocabulary.vocabularyId, organizationId: organization.id }) }}">{{ organization.name }}</a></li>
+        {% elseif vocabulary.vocabularyStatus == 2 %}
+            <li><a href="{{ path('taxonomy.view', { 'vocabularyId': vocabulary.vocabularyId }) }}">Termes nationaux</a></li>
+        {% endif %}
+        <li class="active"><a href="#">{{ term.id ? term.name : "Ajouter un terme" }}</a></li>
+    </ol>
+{% endblock %}
+
+{% block subcontent %}
+
+    {{ form_start(form) }}
+    {% for child in form.children%}
+        {{ form_row(child) }}
+    {% endfor %}
+
+    <div class="form-group">
+        <div class="col-sm-offset-2 col-sm-10">
+            <button type="submit" class="btn btn-primary">Enregistrer</button>
+        </div>
+    </div>
+
+    {{ form_end(form) }}
+
+{% endblock %}

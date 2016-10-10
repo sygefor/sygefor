@@ -1,14 +1,14 @@
 <?php
+
 /**
  * Created by PhpStorm.
  * User: maxime
  * Date: 20/03/14
- * Time: 16:46
+ * Time: 16:46.
  */
-
 namespace Sygefor\Bundle\TrainingBundle\Security\Authorization\AccessRight;
 
-use Sygefor\Bundle\UserBundle\AccessRight\AbstractAccessRight;
+use Sygefor\Bundle\CoreBundle\AccessRight\AbstractAccessRight;
 use Symfony\Component\Security\Core\Authentication\Token\TokenInterface;
 
 class AllTrainingUpdateAccessRight extends AbstractAccessRight
@@ -18,23 +18,25 @@ class AllTrainingUpdateAccessRight extends AbstractAccessRight
      */
     public function getLabel()
     {
-        return 'Modifier les formations de toutes les URFIST';
+        return 'Modifier les formations de tous les centres';
     }
 
     /**
      * Checks if the access right supports the given class.
      *
      * @param string
-     * @return Boolean
+     *
+     * @return bool
      */
     public function supportsClass($class)
     {
-        if ($class == 'Sygefor\Bundle\TrainingBundle\Entity\Training' || $class == 'Sygefor\Bundle\TrainingBundle\Entity\Session') {
+        if ($class === 'Sygefor\Bundle\TrainingBundle\Entity\Training\AbstractTraining' || $class === 'Sygefor\Bundle\TrainingBundle\Entity\Session\AbstractSession') {
             return true;
         }
         try {
             $refl = new \ReflectionClass($class);
-            return $refl->isSubclassOf('Sygefor\Bundle\TrainingBundle\Entity\Training');
+
+            return $refl->isSubclassOf('Sygefor\Bundle\TrainingBundle\Entity\Training\AbstractTraining');
         } catch (\ReflectionException $re){
             return false;
         }
@@ -45,7 +47,8 @@ class AllTrainingUpdateAccessRight extends AbstractAccessRight
      */
     public function isGranted(TokenInterface $token, $object = null, $attribute)
     {
-        if ($attribute != 'EDIT') return false;
+        if ($attribute !== 'EDIT') return false;
+
         return true;
     }
 }
