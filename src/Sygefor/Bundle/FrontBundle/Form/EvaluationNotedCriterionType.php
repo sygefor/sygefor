@@ -11,6 +11,7 @@ namespace Sygefor\Bundle\FrontBundle\Form;
 
 use Sygefor\Bundle\MyCompanybundle\Entity\Inscription;
 use Sygefor\Bundle\CoreBundle\Form\Type\EntityHiddenType;
+use Sygefor\Bundle\MyCompanyBundle\Entity\Term\EvaluationCriterion;
 use Symfony\Bridge\Doctrine\Form\Type\EntityType;
 use Symfony\Component\Form\AbstractType;
 use Symfony\Component\Form\Extension\Core\Type\ChoiceType;

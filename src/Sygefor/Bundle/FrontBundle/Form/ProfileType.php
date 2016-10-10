@@ -3,7 +3,7 @@
 namespace Sygefor\Bundle\FrontBundle\Form;
 
 use Doctrine\ORM\EntityRepository;
-use Sygefor\Bundle\MyCompanybundle\Form\TraineeType;
+use Sygefor\Bundle\MyCompanyBundle\Form\TraineeType;
 use Sygefor\Bundle\CoreBundle\Entity\Organization;
 use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Component\Form\FormEvent;

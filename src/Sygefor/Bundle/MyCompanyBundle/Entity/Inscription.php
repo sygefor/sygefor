@@ -20,6 +20,13 @@ class Inscription extends AbstractInscription
     use DisciplinaryTrait;
 
     /**
+     * @var String
+     * @ORM\Column(name="motivation", type="text", nullable=true)
+     * @Serializer\Groups({"Default", "api"})
+     */
+    protected $motivation;
+
+    /**
      * @var ArrayCollection
      * @ORM\OneToMany(targetEntity="Sygefor\Bundle\MyCompanyBundle\Entity\EvaluationNotedCriterion", mappedBy="inscription", cascade={"persist", "merge", "remove"})
      * @Serializer\Groups({"training", "api.attendance"})
@@ -27,11 +34,10 @@ class Inscription extends AbstractInscription
     protected $criteria;
 
     /**
-     * @var String
-     * @ORM\Column(name="motivation", type="text", nullable=true)
-     * @Serializer\Groups({"Default", "api"})
+     * @ORM\Column(name="message", type="text", nullable=true)
+     * @Serializer\Groups({"Default", "api.attendance"})
      */
-    protected $motivation;
+    protected $message;
 
     /**
      *
@@ -80,6 +86,22 @@ class Inscription extends AbstractInscription
     public function setCriteria($criteria)
     {
         $this->criteria = $criteria;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getMessage()
+    {
+        return $this->message;
+    }
+
+    /**
+     * @param mixed $message
+     */
+    public function setMessage($message)
+    {
+        $this->message = $message;
     }
 
     /**

@@ -1,29 +1,5 @@
 {% extends "@SygeforFront/base.html.twig" %}
 
-{% block javascripts %}
-    <script type="application/javascript">
-        (function($) {
-            $(document).ready(function() {
-                // display dif form field only for T2 and T3
-                dif();
-                $('#inscription_typology').change(dif);
-
-                function dif() {
-                    var typology = $('select#inscription_typology option:selected').text();
-                    var $dif = $($('form').children()[2]);
-                    if (typology == "T2" || typology == "T3") {
-                        $dif.show();
-                    }
-                    else {
-                        $('#inscription_dif').prop('checked', false);
-                        $dif.hide();
-                    }
-                }
-            });
-        })(jQuery);
-    </script>
-{% endblock %}
-
 {% block header %}
     <header>
         <div class="container">
@@ -73,10 +49,6 @@
                         {{ form_start(form) }}
                         {{ form_row(form.children.motivation) }}
                         {{ form_errors(form.children.motivation) }}
-                        {{ form_row(form.children.typology) }}
-                        {{ form_errors(form.children.typology) }}
-                        {{ form_row(form.children.dif) }}
-                        {{ form_errors(form.children.dif) }}
                         {{ form_errors(form) }}
 
                         <div class="form-group">
@@ -188,15 +160,6 @@
                     {% if training.website is defined %}
                         <h4 class="mb-base">Site web</h4>
                         <p><a href="{{ training.website }}" target="_blank">{{ training.website }}</a></p>
-                    {% endif %}
-                    {% if training.partners | length > 0 %}
-                        <h4 class="mb-base">Partenaires</h4>
-                        <p>
-                            {% for key, partner in training.partners %}
-                                {% if key > 0 %}<span>, </span>{% endif %}
-                                {{ partner.name }}
-                            {% endfor %}
-                        </p>
                     {% endif %}
 
                     <h4 class="mb-base">Informations pratiques</h4>

@@ -108,16 +108,14 @@
                         {% endfor %}
                     {% endif %}
 
-                    <div>
-                        {% if pastSessions is defined and pastSessions | length > 0 %}
-                            <h4>Sessions passées <span class="label secondary radius no-mb pull-right">{{ pastSessions | length }}</span></h4>
+                    {% if pastSessions is defined and pastSessions | length > 0 %}
+                        <h4>Sessions passées <span class="label secondary radius no-mb pull-right">{{ pastSessions | length }}</span></h4>
+                        <ul>
                             {% for pastSession in (pastSessions | orderBy('dateBegin')) %}
-                                <div class="btn btn-default btn-group-justified disabled">
-                                   {{ pastSession.dateBegin | date('l') | trans }} {{ pastSession.dateBegin | date('d') }} {{ pastSession.dateBegin | date('F') | trans }} {{ pastSession.dateBegin | date('Y') }}
-                                </div>
+                               <li>{{ pastSession.dateBegin | date('l') | trans }} {{ pastSession.dateBegin | date('d') }} {{ pastSession.dateBegin | date('F') | trans }} {{ pastSession.dateBegin | date('Y') }}</li>
                             {% endfor %}
-                        {% endif %}
-                    </div>
+                        </ul>
+                    {% endif %}
 
                     <!--long training-->
                     {% if training.modules is defined and training.modules | length > 0 %}
