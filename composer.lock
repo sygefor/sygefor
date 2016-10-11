@@ -3539,12 +3539,12 @@
             "source": {
                 "type": "git",
                 "url": "https://github.com/sygefor/core-bundle.git",
-                "reference": "8305ac4b21f3ae4298b34724130b05450e3c0975"
+                "reference": "0c4ad8c79578d0a0489c6aed3713df90391718b3"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/sygefor/core-bundle/zipball/8305ac4b21f3ae4298b34724130b05450e3c0975",
-                "reference": "8305ac4b21f3ae4298b34724130b05450e3c0975",
+                "url": "https://api.github.com/repos/sygefor/core-bundle/zipball/0c4ad8c79578d0a0489c6aed3713df90391718b3",
+                "reference": "0c4ad8c79578d0a0489c6aed3713df90391718b3",
                 "shasum": ""
             },
             "require": {
@@ -3573,7 +3573,7 @@
                 "source": "https://github.com/sygefor/core-bundle/tree/master",
                 "issues": "https://github.com/sygefor/core-bundle/issues"
             },
-            "time": "2016-10-11 09:26:48"
+            "time": "2016-10-11 11:02:53"
         },
         {
             "name": "sygefor/inscription-bundle",
