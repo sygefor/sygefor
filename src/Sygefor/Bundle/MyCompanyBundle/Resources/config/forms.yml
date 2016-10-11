@@ -37,3 +37,10 @@ services:
             - "@sygefor_core.access_right_registry"
         tags:
             - { name: form.type, alias: longtrainingtype }
+
+    sygefor_mycompany.form.type.institution:
+        class: Sygefor\Bundle\MyCompanyBundle\Form\InstitutionType
+        arguments:
+            - "@sygefor_core.access_right_registry"
+        tags:
+            - { name: form.type, alias: institutiontype }

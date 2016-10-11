@@ -14,6 +14,7 @@ use Doctrine\ORM\Mapping as ORM;
 use JMS\Serializer\Annotation as Serializer;
 use Symfony\Component\Validator\Constraints as Assert;
 use Symfony\Component\Validator\Mapping\ClassMetadata;
+use Sygefor\Bundle\MyCompanyBundle\Form\InstitutionType;
 
 /**
  *
@@ -22,6 +23,11 @@ use Symfony\Component\Validator\Mapping\ClassMetadata;
  */
 class Institution extends AbstractInstitution
 {
+    public static function getFormType()
+    {
+        return InstitutionType::class;
+    }
+
     /**
      * loadValidatorMetadata.
      *
