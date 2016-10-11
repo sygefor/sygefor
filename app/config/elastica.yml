@@ -117,7 +117,6 @@ fos_elastica:
                         # ---
                         # meeting
                         # ---
-                        partners: { index: analyzed }
                         national: { index: not_analyzed }
                     persistence:
                         driver: orm # orm, mongodb, propel are available
@@ -352,9 +351,6 @@ fos_elastica:
                                     type: string
                                     fields:
                                         source: { type: string, index: not_analyzed }
-                        typology:
-                            index: not_analyzed
-                            type: string
                         price: ~
                         institution:
                             _include: trainee.institution
@@ -363,8 +359,6 @@ fos_elastica:
                         zip: ~
                         city: ~
                         createdAt: { index: not_analyzed, type: date }
-                        lastEmailDate: { index: not_analyzed, type: date }
-                        zoneCompetence: { index: not_analyzed }
                         inscriptionStatusUpdatedAt: { index: not_analyzed, type: date }
                     persistence:
                         driver: orm # orm, mongodb, propel are available
@@ -409,7 +403,6 @@ fos_elastica:
                             type: boolean
                         institution:
                             _include: trainee.institution
-                        otherInstitution: ~
                         service:
                             type: string
                             fields:
@@ -540,8 +533,6 @@ fos_elastica:
                             type: string
                             fields:
                                 source: { type: string, index: not_analyzed }
-                        code: { type: string, index: not_analyzed }
-                        laboratory: { type: string, index: not_analyzed }
                         zip: { type: string, index: not_analyzed }
                         city:
                             type: string
