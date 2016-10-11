@@ -21,7 +21,6 @@ sygeforApp.controller('InscriptionStatusChange', ['$scope', '$http', '$window', 
             'key': i,
             'label': config.templates[i]['name'],
             'subject': config.templates[i]['subject'],
-            'cc': replaceCCFormat(config.templates[i]['cc']),
             'body': config.templates[i]['body'],
             'attachmentTemplates': config.templates[i]['attachmentTemplates']
         };
@@ -32,7 +31,6 @@ sygeforApp.controller('InscriptionStatusChange', ['$scope', '$http', '$window', 
     if ($scope.templates.length) {
         $scope.message.template = $scope.templates[0];
         $scope.message.subject = $scope.templates[0].subject;
-        $scope.message.cc = $scope.templates[0].cc;
         $scope.message.body = $scope.templates[0].body;
     }
 
@@ -162,12 +160,10 @@ sygeforApp.controller('InscriptionStatusChange', ['$scope', '$http', '$window', 
             //storing changes
             if (typeof oldValue != 'undefined') {
                 oldValue.subject = $scope.message.subject;
-                oldValue.cc = $scope.message.cc;
                 oldValue.body = $scope.message.body;
             }
             //replacing values
             $scope.message.subject = newValue.subject;
-            $scope.message.cc = newValue.cc;
             $scope.message.body = newValue.body;
             $scope.attCheckList = newValue.attachmentTemplates;
         }

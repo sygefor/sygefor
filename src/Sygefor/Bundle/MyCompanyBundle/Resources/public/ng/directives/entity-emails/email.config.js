@@ -16,7 +16,6 @@ sygeforApp.config(["$dialogProvider", function($dialogProvider) {
         resolve:{
             email: function ($http, $dialogParams){
                 return $http.get(Routing.generate('email.view', {id: $dialogParams.id })).then(function(response) {
-                    response.data.email.cc = angular.fromJson(response.data.email.cc);
                     return response.data.email;
                 });
             }
