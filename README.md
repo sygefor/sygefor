@@ -97,11 +97,12 @@ Installation
 - composer install
     - Renseigner les paramètres symfony
 - npm install
-- napa
+- bower install
 - php app/console doctrine:database:create
 - php app/console doctrine:schema:create
 - php app/console doctrine:fixtures:load (pour générer quelques données initiales)
 - gulp build
+- php app/console fos:js-routing:dump
 - php app/console fos:elastica:populate
 - php app/console server:run 127.0.0.1:8000
 - Se rendre sur localhost:8000 avec votre navigateur
