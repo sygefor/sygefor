@@ -1,7 +1,0 @@
-services:
-    sygefor_institution.form.type.institution:
-        class: Sygefor\Bundle\InstitutionBundle\Form\BaseInstitutionType
-        arguments:
-            - "@sygefor_core.access_right_registry"
-        tags:
-            - { name: form.type, alias: baseinstitutiontype }

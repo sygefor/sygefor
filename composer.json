@@ -15,11 +15,39 @@
         {
             "type": "vcs",
             "url": "git@github.com:rmoreas/ShibbolethBundle.git"
+        },
+        {
+            "type": "vcs",
+            "url": "git@github.com:sygefor/api-bundle.git"
+        },
+        {
+            "type": "vcs",
+            "url": "git@github.com:sygefor/core-bundle.git"
+        },
+        {
+            "type": "vcs",
+            "url": "git@github.com:sygefor/institution-bundle.git"
+        },
+        {
+            "type": "vcs",
+            "url": "git@github.com:sygefor/inscription-bundle.git"
+        },
+        {
+            "type": "vcs",
+            "url": "git@github.com:sygefor/trainee-bundle.git"
+        },
+        {
+            "type": "vcs",
+            "url": "git@github.com:sygefor/trainer-bundle.git"
+        },
+        {
+            "type": "vcs",
+            "url": "git@github.com:sygefor/training-bundle.git"
         }
     ],
     "require": {
         "php": ">=5.3.9",
-        "symfony/symfony": "2.8.6",
+        "symfony/symfony": "2.8.9",
         "doctrine/orm": "^2.4.8",
         "doctrine/doctrine-bundle": "~1.4",
         "symfony/swiftmailer-bundle": "~2.3",
@@ -51,7 +79,15 @@
         "jms/serializer-bundle": "^1.1.0",
         "jms/security-extra-bundle": "^1.6.0",
         "mopa/bootstrap-bundle": "^3.0.0",
-        "ras/flash-alert-bundle": "^2.1"
+        "ras/flash-alert-bundle": "^2.1",
+
+        "sygefor/api-bundle": "dev-master",
+        "sygefor/core-bundle": "dev-master",
+        "sygefor/inscription-bundle": "dev-master",
+        "sygefor/institution-bundle": "dev-master",
+        "sygefor/trainee-bundle": "dev-master",
+        "sygefor/trainer-bundle": "dev-master",
+        "sygefor/training-bundle": "dev-master"
     },
     "require-dev": {
         "sensio/generator-bundle": "~3.0",
@@ -79,6 +115,8 @@
     "config": {
         "bin-dir": "bin"
     },
+    "minimum-stability": "dev",
+    "prefer-stable": true,
     "extra": {
         "symfony-app-dir": "app",
         "symfony-web-dir": "web",

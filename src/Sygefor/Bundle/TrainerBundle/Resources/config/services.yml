@@ -1,9 +1,0 @@
-services:
-    #menu
-    sygefor_trainer.configure_menu_listener:
-        class: Sygefor\Bundle\TrainerBundle\EventListener\ConfigureMenuListener
-        arguments:
-            - "@security.context"
-            - "@router"
-        tags:
-            - { name: kernel.event_listener, event: sygefor_core.menu_configure, method: onMenuConfigure }

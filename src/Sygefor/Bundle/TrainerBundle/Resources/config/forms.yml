@@ -1,7 +1,0 @@
-services:
-    sygefor_trainer.form.type.trainer:
-        class: Sygefor\Bundle\TrainerBundle\Form\BaseTrainerType
-        arguments:
-            - "@Sygefor_core.access_right_registry"
-        tags:
-            - { name: form.type, alias: trainer_type }

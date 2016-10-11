@@ -1,8 +1,0 @@
-parameters:
-    sygefor_trainer.taxonomy.group: "Intervenant"
-
-services:
-    sygefor_trainer.vocabulary_trainer_type:
-        class:        Sygefor\Bundle\TrainerBundle\Entity\Term\TrainerType
-        tags:
-            - { name: sygefor_core.vocabulary_provider, group: "%sygefor_trainer.taxonomy.group%" }

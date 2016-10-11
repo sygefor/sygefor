@@ -1,4 +1,0 @@
-services:
-    sygefor_inscription.search:
-        class: Sygefor\Bundle\CoreBundle\Search\SearchService
-        arguments: ["@fos_elastica.index.sygefor3.inscription"]

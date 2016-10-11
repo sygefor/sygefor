@@ -1,7 +1,0 @@
-services:
-    sygefor_api.form.type.registration:
-            class: Sygefor\Bundle\ApiBundle\Form\Type\RegistrationType
-            arguments:
-                - "@Sygefor_core.access_right_registry"
-            tags:
-                - { name: form.type }
