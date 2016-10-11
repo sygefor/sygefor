@@ -23,7 +23,7 @@ Captures d'écran
 <img src="https://raw.githubusercontent.com/conjecto/sygefor/master/assets/screen-mailing.png?raw=true" title="Capture d'écran d'un envoie d'emails" width="30%"/>
 <img src="https://raw.githubusercontent.com/conjecto/sygefor/master/assets/screen-summary.png?raw=true" title="Capture d'écran de la génération des bilans" width="30%"/>
 <img src="https://raw.githubusercontent.com/conjecto/sygefor/develop/assets/screen-front-home.png?raw=true" title="Capture d'écran de la page d'accueil du site public" width="30%"/>
-<img src="https://raw.githubusercontent.com/conjecto/sygefor/develop/assets/screen-front-profilehome.png?raw=true" title="Capture d'écran de la partie compte du site public" width="30%"/>
+<img src="https://raw.githubusercontent.com/conjecto/sygefor/develop/assets/screen-front-profile.png?raw=true" title="Capture d'écran de la partie compte du site public" width="30%"/>
 
 Configuration requise
 ------------
