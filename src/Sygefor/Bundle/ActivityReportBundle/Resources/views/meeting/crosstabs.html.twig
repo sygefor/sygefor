@@ -1,0 +1,11 @@
+{% import "SygeforActivityReportBundle::macros.html.twig" as macros %}
+
+<section>
+    <h2>Croisements</h2>
+    {{ macros.crosstab('Nombre de rencontres locales par type', report.crosstabs.category.local) }}
+    {{ macros.crosstab('Nombre de rencontres nationales par type', report.crosstabs.category.national) }}
+    {{ macros.crosstab('Nombre de rencontres par thématiques', report.crosstabs.theme_single_session_training) }}
+
+    {{ macros.crosstab('Nombre de participants par type de public', report.crosstabs.publicType_single_session_training) }}
+    {{ macros.crosstab('Nombre de participants par origine géographique', report.crosstabs.origingeo_single_session_training) }}
+</section>

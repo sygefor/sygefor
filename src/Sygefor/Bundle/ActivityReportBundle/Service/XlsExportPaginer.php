@@ -23,7 +23,7 @@ class XlsExportPaginer
     public function refactorDatas($variables)
     {
         // add data level in arrays to be compatible with excel writer
-        $variables['report']['summaries'] = $this->transformArrays($variables['report']['summaries'], ['all']);
+        $variables['report']['summaries'] = $this->transformArrays($variables['report']['summaries'], ['internship', 'long_training', 'all', 'meeting']);
         $variables['report']['crosstabs'] = $this->transformArrays($variables['report']['crosstabs']);
         $variables['report']['listings'] = $this->transformArrays($variables['report']['listings']);
 
@@ -48,11 +48,16 @@ class XlsExportPaginer
         $crosstabs = $this->transformCrosstabs($variables['report']['crosstabs']);
         // refactor listings
         $listings = $this->transformListings($variables['report']['listings']);
+        // refactor meetings
+        $meetings = $this->transformMeetings($alignedSummaries['Rencontres scientifiques'], $variables['report']['crosstabs']);
+        // remove meeting from page 1
+        unset($alignedSummaries['Rencontres scientifiques']);
 
         // return datas by page
         $arraysBySheet = array(
             ['title' => 'Synthèses', 'arrays' => $alignedSummaries],
             ['title' => 'Croisements', 'arrays' => $crosstabs],
+            ['title' => 'Rencontres scientifiques', 'arrays' => $meetings],
             ['title' => 'Récaputalifs', 'arrays' => $listings],
         );
 
@@ -66,9 +71,26 @@ class XlsExportPaginer
     protected function transformSummaries($summaries)
     {
         $summaries = array(
-            'Total des activités de formation' => $this->getAllSummaryArray($summaries['all'])
+            'Stages' => $this->getInternshipArray($summaries['internship']),
+            'Formation longues' => $this->getLongTrainingArray($summaries['long_training']),
+            'Total des activités de formation' => $this->getAllSummaryArray($summaries['all']),
+            'Rencontres scientifiques' => $this->getMeetingArray($summaries['meeting'])
         );
         return $summaries;
+    }
+
+    /**
+     * @param $crossMeetings
+     * @return array
+     */
+    protected function transformCrossMeetings($crossMeetings)
+    {
+        return [
+            'datas' => [
+                'Nombre de rencontres locales par type' => $crossMeetings['datas']['local'],
+                'Nombre de rencontres nationales par type' => $crossMeetings['datas']['national']
+            ]
+        ];
     }
 
     /**
@@ -78,7 +100,25 @@ class XlsExportPaginer
     protected function transformListings($listings)
     {
         return  [
-            'Liste des stages' => isset($listings['internship']) ? $this->transformListingInternship($listings['internship']) : array()
+            'Liste des stages' => isset($listings['internship']) ? $this->transformListingInternship($listings['internship']) : array(),
+            'Liste des formations longues' => isset($listings['long_training']) ? $this->getLongTrainingArray($listings['long_training']) : array(),
+            'Liste des rencontres scientifiques' => isset($listings['meeting']) ? $this->transformListingMeeting($listings['meeting']) : array()
+        ];
+    }
+
+    /**
+     * @param $meetingSummary
+     * @param $crosstabs
+     * @return array
+     */
+    protected function transformMeetings($meetingSummary, $crosstabs)
+    {
+        return [
+            'Synthèse' => $meetingSummary,
+            'Croisements' => $this->transformCrossMeetings($crosstabs['category']),
+            'Nombre de rencontres par thématiques' => $crosstabs['theme_single_session_training'],
+            'Nombre d\'inscriptions par type de public' => $crosstabs['publicType_single_session_training'],
+            'Nombre d\'inscriptions par origine géographique' => $crosstabs['origingeo_single_session_training']
         ];
     }
 
@@ -114,6 +154,68 @@ class XlsExportPaginer
     }
 
     /**
+     * @param $listing
+     * @return array
+     */
+    protected function transformListingLongTraining($listing)
+    {
+        $arrayKeys = ['name', 'sessions', 'hourDuration', 'isOrganization', 'theme', 'interventionType', 'publicTypes', 'numberOfRegistrations', 'numberOfParticipants', 'totalCost'];;
+        $transformedLongTraining = array();
+        foreach ($listing['datas'] as $longTraining) {
+            foreach ($arrayKeys as $key) {
+                if (!isset($longTraining[$key])) {
+                    $longTraining[$key] = "";
+                }
+            }
+            $transformedLongTraining[] = [
+                'Intitulé' => $transformedLongTraining['name'],
+                'Nombre de sessions' => $transformedLongTraining['sessions'],
+                'Nombre d\'heures' => $transformedLongTraining['hourDuration'],
+                'Type d\'intervenant' => $transformedLongTraining['isOrganization'] ? 'Interne' : 'Extérieur',
+                'Thématique' => $transformedLongTraining['theme'],
+                'Type de formation' => $transformedLongTraining['interventionType'],
+                'Types de public' => $transformedLongTraining['publicTypes'],
+                'Demandes d\'inscriptions' => $transformedLongTraining['numberOfRegistrations'],
+                'Participants' => $transformedLongTraining['numberOfParticipants'],
+                'Coût' => $transformedLongTraining['totalCost'],
+            ];
+        }
+
+        return ['datas' => $transformedLongTraining];
+    }
+
+    /**
+     * @param $listing
+     * @return array
+     */
+    protected function transformListingMeeting($listing)
+    {
+        $arrayKeys = ['name', 'session.date', 'category', 'national', 'numberOfRegistrations', 'numberOfParticipants', 'totalCost', 'totalTaking'];
+        $transformedMeeting = array();
+        foreach ($listing['datas'] as $meeting) {
+            foreach ($arrayKeys as $key) {
+                if (!isset($meeting[$key])) {
+                    $meeting[$key] = "";
+                }
+            }
+
+            $transformedMeeting[] = [
+                'Titre' => $meeting['name'],
+                'Date' => (new \DateTime($meeting['session.date']))->format('d/m/Y'),
+                'Type' => $meeting['category'],
+                'National' => $meeting['national'] ? 'Oui' : 'Non',
+                'Thématique' => $meeting['theme'],
+                'Demandes d\'inscriptions' => $meeting['numberOfRegistrations'],
+                'Participants' => $meeting['numberOfParticipants'],
+                'Coût' => $meeting['totalCost'],
+                'Recette' => $meeting['totalTaking']
+            ];
+        }
+
+        return ['datas' => $transformedMeeting];
+    }
+
+    /**
      * @param $crosstabs
      * @return array
      */
@@ -137,6 +239,8 @@ class XlsExportPaginer
     {
         return [
             'datas' => [
+                'Répartition des étudiants et enseignants-chercheurs dans les stages par discipline' => $publicDiscipline['datas']['internship'],
+                'Répartition des étudiants dans les formations longues par discipline' => $publicDiscipline['datas']['long_training'],
                 'Répartition des étudiants et enseignants-chercheurs dans l\'ensemble des formations par discipline' => $publicDiscipline['datas']['all'],
             ]
         ];
@@ -151,6 +255,7 @@ class XlsExportPaginer
         return [
             'datas' => [
                 'Répartition des publics dans les stages par origine géographique' => $publicOrigins['datas']['internship'],
+                'Répartition des publics dans les formations longues par origine géographique' => $publicOrigins['datas']['long_training'],
             ]
         ];
     }
@@ -171,6 +276,36 @@ class XlsExportPaginer
                 "Nombre de personnes formées" => $this->getArrayData($internship['datas'], 'participations'),
                 "Coût global" => (float)number_format($this->getArrayData($internship['datas'], 'cost'), 2, '.', ''),
                 "Recettes globales" => $this->getArrayData($internship['datas'], 'taking')
+            ]
+        ];
+    }
+
+    /**
+     * @param $trainingCourse
+     * @return array
+     */
+    protected function getLongTrainingArray($doctoralTraining)
+    {
+        return [
+            'datas' => [
+                "Nombre d'interventions" => $this->getArrayData($doctoralTraining['datas'], 'trainings'),
+                "Nombre d'heures de formation" => $this->getArrayData($doctoralTraining['datas'], 'hours'),
+                "Nombre de personnes formées" => $this->getArrayData($doctoralTraining['datas'], 'participations')
+            ],
+            'espacedBy' => "1:2"
+        ];
+    }
+
+    /**
+     * @param $meeting
+     * @return array
+     */
+    protected function getMeetingArray($meeting)
+    {
+        return [
+            'datas' => [
+                "Nombre de rencontres scientifiques" => $this->getArrayData($meeting['datas'], 'trainings'),
+                "Nombre de participants" => $this->getArrayData($meeting['datas'], 'participations')
             ]
         ];
     }

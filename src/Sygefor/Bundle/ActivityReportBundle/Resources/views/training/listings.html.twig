@@ -3,4 +3,5 @@
 <section>
     <h2>Récapitulatifs</h2>
     {{ macros.listing('Liste des stages', report.listings.internship | default, 'SygeforActivityReportBundle:training:listings/internship.html.twig') }}
+    {{ macros.listing('Liste des formations longues', report.listings.long_training | default, 'SygeforActivityReportBundle:training:listings/long-training.html.twig') }}
 </section>

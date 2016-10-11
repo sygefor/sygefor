@@ -2,7 +2,69 @@
 <h2>Synthèse</h2>
 
 <div class="row">
-    <div class="col-xs-12">
+    <div class="col-xs-6">
+        <h3>Stages</h3>
+        <table class="table table-hover">
+            <tr>
+                <td>Nombre de stages</td>
+                <td class="text-right"><strong>{{ report.summaries.internship.trainings }}</strong></td>
+            </tr>
+            <tr>
+                <td>Nombre de sessions</td>
+                <td class="text-right"><strong>{{ report.summaries.internship.sessions }}</strong></td>
+            </tr>
+            <tr>
+                <td>Nombre d'heures de formation</td>
+                <td class="text-right"><strong>{{ report.summaries.internship.hours }} h</strong></td>
+            </tr>
+            <tr>
+                <td>Nombre d'heures-personnes</td>
+                <td class="text-right"><strong>{{ report.summaries.internship.hours_participant | number : 2 }} h</strong></td>
+            </tr>
+            <tr>
+                <td>Nombre de demandes d'inscriptions</td>
+                <td class="text-right"><strong>{{ report.summaries.internship.registrations }}</strong></td>
+            </tr>
+            <tr>
+                <td>Nombre de personnes formées</td>
+                <td class="text-right"><strong>{{ report.summaries.internship.participations }}</strong></td>
+            </tr>
+            <tr>
+                <td>Coût global</td>
+                <td class="text-right"><strong>{{ report.summaries.internship.cost | number : 2 }} €</strong></td>
+            </tr>
+            <tr>
+                <td>Recettes globales</td>
+                <td class="text-right"><strong>{{ report.summaries.internship.taking | number : 2 }} €</strong></td>
+            </tr>
+        </table>
+
+        <h3>Formations longues</h3>
+        <table class="table table-hover">
+            <tr>
+                <td>Nombre de formation longues</td>
+                <td class="text-right"><strong>{{ report.summaries.long_training.sessions }}</strong></td>
+            </tr>
+            <tr>
+                <td>Nombre d'heures de formation</td>
+                <td class="text-right"><strong>{{ report.summaries.long_training.hours }} h</strong></td>
+            </tr>
+            <tr>
+                <td>Nombre de personnes formées</td>
+                <td class="text-right"><strong>{{ report.summaries.long_training.participations }}</strong></td>
+            </tr>
+            <tr>
+                <td>Coût global</td>
+                <td class="text-right"><strong>{{ report.summaries.long_training.cost | number : 2 }} €</strong></td>
+            </tr>
+            <tr>
+                <td>Recettes globales</td>
+                <td class="text-right"><strong>{{ report.summaries.long_training.taking | number : 2 }} €</strong></td>
+            </tr>
+        </table>
+    </div>
+
+    <div class="col-xs-6">
         <h3>Total des activités de formation</h3>
         <table class="table table-hover">
             <tr>

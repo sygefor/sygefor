@@ -1,0 +1,33 @@
+<table class="table">
+    <caption>{{ caption }}</caption>
+    <thead>
+    <tr>
+        <th>Intitulé</th>
+        <th>Nombre de sessions</th>
+        <th>Nombre d'heures</th>
+        <th>Type d'intervenant</th>
+        <th>Thématique</th>
+        <th>Type de formation</th>
+        <th>Types de public</th>
+        <th>Demandes d'inscriptions</th>
+        <th>Participants</th>
+        <th>Coût</th>
+    </tr>
+    </thead>
+    <tbody>
+    {% for training in data %}
+        <tr>
+            <td>{% if training.name is defined %}{{ training.name }}{% endif %}</td>
+            <td>{% if training.sessions is defined %}{{ training.sessions }}{% endif %}</td>
+            <td class="text-right">{% if training.hourNumber is defined %}{{ training.hourNumber }}{% endif %}</td>
+            <td>{% if training.isOrganization|default is not empty %}URFIST{% else %}Extérieur{% endif %}</td>
+            <td>{% if training.theme is defined %}{{ training.theme }}{% endif %}</td>
+            <td>{% if training.interventionType is defined %}{{ training.interventionType }}{% endif %}</td>
+            <td>{% if training.publicTypes is defined %}{{ training.publicTypes | join(', ') }}{% endif %}</td>
+            <td class="text-right">{% if training.numberOfRegistrations is defined %}{{ training.numberOfRegistrations }}{% endif %}</td>
+            <td class="text-right">{% if training.numberOfParticipants is defined %}{{ training.numberOfParticipants }}{% endif %}</td>
+            <td class="text-right">{% if training.totalCost is defined %}{{ training.totalCost }}&nbsp;€{% endif %}</td>
+        </tr>
+    {% endfor %}
+    </tbody>
+</table>
