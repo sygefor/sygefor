@@ -33,7 +33,6 @@
             "node_modules/jquery/dist/jquery.js",
             "node_modules/bootstrap/dist/js/bootstrap.js",
             "node_modules/angular/angular.js",
-            "src/Sygefor/Bundle/ListBundle/Resources/public/js/**/*.js",
 
             "node_modules/angular-resource/angular-resource.js",
             "node_modules/angular-animate/angular-animate.js",
@@ -78,8 +77,8 @@
 
             "vendor/friendsofsymfony/jsrouting-bundle/FOS/JsRoutingBundle/Resources/public/js/router.js",
             "web/js/fos_js_routes.js",
-            "src/Sygefor/Bundle/CoreBundle/Resources/public/js/modernizr-custom.js",
-            "src/Sygefor/Bundle/CoreBundle/Resources/public/ng/**/*.js",
+            "vendor/sygefor/core-bundle/Resources/public/js/modernizr-custom.js",
+            "vendor/sygefor/core-bundle/Resources/public/ng/**/*.js",
             "src/Sygefor/Bundle/MyCompanyBundle/Resources/public/ng/**/*.js",
             "src/Sygefor/Bundle/ActivityReportBundle/Resources/public/ng/**/*.js"
         ],
@@ -90,6 +89,7 @@
         ]
     },
     "templates": [
+        "vendor/sygefor/core-bundle/Resources/public/ng/**/*.html",
         "src/**/Resources/public/ng/**/*.html"
     ],
     "images": [

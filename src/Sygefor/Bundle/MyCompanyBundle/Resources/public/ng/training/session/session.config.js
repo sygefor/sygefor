@@ -7,7 +7,7 @@ sygeforApp.config(["$listStateProvider", "$dialogProvider", "$widgetProvider", f
     $listStateProvider.state('session', {
         url: "/training/session?q&training&trainers",
         abstract: true,
-        templateUrl: "corebundle/list.html",
+        templateUrl: "list.html",
         controller:"SessionListController",
         resolve: {
             training: function($stateParams, $entityManager) {
@@ -55,7 +55,7 @@ sygeforApp.config(["$listStateProvider", "$dialogProvider", "$widgetProvider", f
                 icon: "fa-eye",
                 label: "Liste détaillée",
                 weight: 1,
-                templateUrl: "corebundle/states/detail/detail.html",
+                templateUrl: "states/detail/detail.html",
                 //reloadOnSearch:false,
                 controller: 'ListDetailController',
                 data:{

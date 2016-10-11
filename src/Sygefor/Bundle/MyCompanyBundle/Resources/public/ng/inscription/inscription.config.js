@@ -7,7 +7,7 @@ sygeforApp.config(["$listStateProvider", "$dialogProvider", "$widgetProvider", f
     $listStateProvider.state('inscription', {
         url: "/inscription?q&session&trainee&status",
         abstract: true,
-        templateUrl: "corebundle/list.html",
+        templateUrl: "list.html",
         controller:"InscriptionListController",
         resolve: {
             session: function($stateParams, $entityManager) {
@@ -82,7 +82,7 @@ sygeforApp.config(["$listStateProvider", "$dialogProvider", "$widgetProvider", f
                 icon: "fa-eye",
                 label: "aListe détaillée",
                 weight: 1,
-                templateUrl: "corebundle/states/detail/detail.html",
+                templateUrl: "states/detail/detail.html",
                 controller: 'ListDetailController',
                 data:{
                     resultTemplateUrl: "mycompanybundle/inscription/states/detail/result.html"

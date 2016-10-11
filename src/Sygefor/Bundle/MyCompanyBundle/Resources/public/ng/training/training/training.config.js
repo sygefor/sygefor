@@ -7,7 +7,7 @@ sygeforApp.config(["$trainingBundleProvider", "$listStateProvider", "$dialogProv
     $listStateProvider.state('training', {
         url: "/training?q&type",
         abstract: true,
-        templateUrl: "corebundle/list.html",
+        templateUrl: "list.html",
         controller:"TrainingListController",
         resolve: {
             search: function ($searchFactory, $stateParams, $trainingBundle, $user) {
@@ -48,7 +48,7 @@ sygeforApp.config(["$trainingBundleProvider", "$listStateProvider", "$dialogProv
                 icon: "fa-eye",
                 label: "Liste détaillée",
                 weight: 1,
-                templateUrl: "corebundle/states/detail/detail.html",
+                templateUrl: "states/detail/detail.html",
                 controller: 'ListDetailController',
                 data:{
                     resultTemplateUrl: "mycompanybundle/training/training/states/detail/result.html"

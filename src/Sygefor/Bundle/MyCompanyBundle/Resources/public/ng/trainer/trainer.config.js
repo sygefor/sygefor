@@ -7,7 +7,7 @@ sygeforApp.config(["$listStateProvider", "$dialogProvider",  function($listState
     $listStateProvider.state('trainer', {
         url: "/trainer?q&session",
         abstract: true,
-        templateUrl: "corebundle/list.html",
+        templateUrl: "list.html",
         controller:"TrainerListController",
         breadcrumb: [
             { label: "Intervenants", sref: "trainer.table" }
@@ -45,7 +45,7 @@ sygeforApp.config(["$listStateProvider", "$dialogProvider",  function($listState
                 icon: "fa-eye",
                 label: "Liste détaillée",
                 weight: 1,
-                templateUrl: "corebundle/states/detail/detail.html",
+                templateUrl: "states/detail/detail.html",
                 controller: 'ListDetailController',
                 data:{
                     resultTemplateUrl: "mycompanybundle/trainer/states/detail/result.html"
