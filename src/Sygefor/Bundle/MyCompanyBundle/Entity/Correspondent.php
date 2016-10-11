@@ -25,28 +25,6 @@ use Symfony\Component\Validator\Mapping\ClassMetadata;
 class Correspondent extends AbstractCorrespondent
 {
     /**
-     * @var AbstractInstitution
-     * @ORM\ManyToOne(targetEntity="Sygefor\Bundle\MyCompanyBundle\Entity\Institution", inversedBy="trainingCorrespondents")
-     * @ORM\JoinColumn(onDelete="CASCADE", nullable=true)
-     * @Serializer\Groups({"trainee", "institution", "api.institution"})
-     */
-    protected $institution;
-
-    /**
-     * Used if form for new empty service.
-     *
-     * @var bool
-     */
-    protected $new = false;
-
-    /**
-     * @var string
-     * @ORM\Column(name="position", type="string", length=512, nullable=true)
-     * @Serializer\Groups({"trainee", "institution", "api.institution"})
-     */
-    protected $position;
-
-    /**
      * @var string
      *
      * @ORM\Column(name="phone_number", type="string", length=255, nullable=true)
@@ -62,62 +40,6 @@ class Correspondent extends AbstractCorrespondent
      * @Serializer\Groups({"trainee", "institution", "api.institution"})
      */
     protected $email;
-
-    /**
-     * @var string address
-     *
-     * @ORM\Column(name="address", type="string", length=512, nullable=true)
-     * @Serializer\Groups({"trainee", "institution", "api.institution"})
-     */
-    protected $address;
-
-    /**
-     * @return AbstractInstitution
-     */
-    public function getInstitution()
-    {
-        return $this->institution;
-    }
-
-    /**
-     * @param AbstractInstitution $institution
-     */
-    public function setInstitution($institution)
-    {
-        $this->institution = $institution;
-    }
-
-    /**
-     * @return bool
-     */
-    public function isNew()
-    {
-        return $this->new;
-    }
-
-    /**
-     * @param bool $new
-     */
-    public function setNew($new)
-    {
-        $this->new = $new;
-    }
-
-    /**
-     * @return string
-     */
-    public function getPosition()
-    {
-        return $this->position;
-    }
-
-    /**
-     * @param string $position
-     */
-    public function setPosition($position)
-    {
-        $this->position = $position;
-    }
 
     /**
      * @return string
@@ -149,30 +71,6 @@ class Correspondent extends AbstractCorrespondent
     public function setEmail($email)
     {
         $this->email = $email;
-    }
-
-    /**
-     * @return string
-     */
-    public function getAddress()
-    {
-        return $this->address;
-    }
-
-    /**
-     * @param string $address
-     */
-    public function setAddress($address)
-    {
-        $this->address = $address;
-    }
-
-    /**
-     * @return bool
-     */
-    public function isEmpty()
-    {
-        return empty($this->lastName) && empty($this->firstName) && empty($this->phoneNumber) && empty($this->email);
     }
 
     /**
