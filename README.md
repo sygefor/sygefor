@@ -22,8 +22,8 @@ Captures d'écran
 <img src="https://raw.githubusercontent.com/conjecto/sygefor/master/assets/screen-trainee.png?raw=true" title="Capture d'écran de la vue d'un stagiaire" width="30%"/>
 <img src="https://raw.githubusercontent.com/conjecto/sygefor/master/assets/screen-mailing.png?raw=true" title="Capture d'écran d'un envoie d'emails" width="30%"/>
 <img src="https://raw.githubusercontent.com/conjecto/sygefor/master/assets/screen-summary.png?raw=true" title="Capture d'écran de la génération des bilans" width="30%"/>
-<img src="https://raw.githubusercontent.com/conjecto/sygefor/develop/assets/screen-front-home.png?raw=true" title="Capture d'écran de la page d'accueil du site public" width="30%"/>
-<img src="https://raw.githubusercontent.com/conjecto/sygefor/develop/assets/screen-front-profile.png?raw=true" title="Capture d'écran de la partie compte du site public" width="30%"/>
+<img src="https://raw.githubusercontent.com/conjecto/sygefor/master/assets/screen-front-home.png?raw=true" title="Capture d'écran de la page d'accueil du site public" width="30%"/>
+<img src="https://raw.githubusercontent.com/conjecto/sygefor/master/assets/screen-front-profile.png?raw=true" title="Capture d'écran de la partie compte du site public" width="30%"/>
 
 Configuration requise
 ------------
@@ -42,6 +42,10 @@ Configuration requise
     * curl
     * fileinfo
     
+### Symfony2
+
+Sygefor3 s'appuie sur Symfony 2.8.
+
 ### MySQL
 
 version 5.0 minimum
@@ -98,10 +102,11 @@ Installation
 - php app/console doctrine:schema:create
 - php app/console doctrine:fixtures:load (pour générer quelques données initiales)
 - gulp build
+- php app/console fos:elastica:populate
 - php app/console server:run 127.0.0.1:8000
 - Se rendre sur localhost:8000 avec votre navigateur
 
-### Etendre le projet
+### Etendre
 
 Le coeur de Sygefor3 est intégré dans les vendors du projet. Ce coeur déclare des classes et des controlleurs abstraits. Vous devez étendre
 ces classes et controlleurs pour faire fonctionner l'application.
