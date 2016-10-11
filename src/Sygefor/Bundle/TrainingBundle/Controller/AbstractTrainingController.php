@@ -16,7 +16,7 @@ use Sygefor\Bundle\TrainingBundle\Entity\Training\AbstractModule;
 use Sygefor\Bundle\TrainingBundle\Entity\Session\AbstractSession;
 use Sygefor\Bundle\TrainingBundle\Entity\Training\SingleSessionTraining;
 use Sygefor\Bundle\TrainingBundle\Entity\Training\AbstractTraining;
-use Sygefor\Bundle\TrainingBundle\Form\ModuleType;
+use Sygefor\Bundle\TrainingBundle\Form\BaseModuleType;
 use Sygefor\Bundle\TrainingBundle\SpreadSheet\TrainingBalanceSheet;
 use Symfony\Bundle\FrameworkBundle\Controller\Controller;
 use Symfony\Component\HttpFoundation\Request;
@@ -136,17 +136,22 @@ abstract class AbstractTrainingController extends Controller
     }
 
     /**
+     * @param \Symfony\Component\HttpFoundation\Request $request
+     * @param AbstractModule $module
+     *
      * @Route("/module/{id}/edit", requirements={"id" = "\d+"}, name="module.edit", options={"expose"=true}, defaults={"_format" = "json"})
      * @ParamConverter("module", class="SygeforTrainingBundle:Training\AbstractModule", options={"id" = "id"})
      * @Rest\View(serializerGroups={"Default", "training"}, serializerEnableMaxDepthChecks=true)
+     *
+     * @return array
      */
-    public function editModuleAction(Request $request, AbstractModule $module)
+    public function editModuleAction(Request $request, $module)
     {
         if (!$this->get('security.context')->isGranted('EDIT', $module->getTraining())) {
             throw new AccessDeniedException('Action non autorisée');
         }
 
-        $form = $this->createForm(new ModuleType(), $module);
+        $form = $this->createForm(new BaseModuleType(), $module);
         if ($request->getMethod() === 'POST') {
             $form->handleRequest($request);
             if ($form->isValid()) {

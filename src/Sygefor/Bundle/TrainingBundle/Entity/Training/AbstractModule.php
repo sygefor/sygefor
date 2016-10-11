@@ -16,12 +16,7 @@ use Sygefor\Bundle\TrainingBundle\Form\BaseModuleType;
 use Symfony\Component\Validator\Constraints as Assert;
 
 /**
- * AbstractModule.
- *
- * @ORM\Table(name="module")
- * @ORM\Entity
- * @ORM\InheritanceType("SINGLE_TABLE")
- * @ORM\DiscriminatorColumn(name="type", type="string")
+ * AbstractModule
  */
 abstract class AbstractModule
 {
@@ -43,15 +38,6 @@ abstract class AbstractModule
      */
     protected $name;
 
-    /*
-     * @var AbstractTraining
-     * @ORM\ManyToOne(targetEntity="SygeforTrainingBundle:Training\AbstractTraining", inversedBy="modules")
-     * @ORM\JoinColumn(name="training_id", referencedColumnName="id")
-     * @Assert\NotNull(message="Vous devez sélectionner une formation.")
-     * @Serializer\Groups({"session", "training", "api.training", "api.session"})
-     */
-    protected $training;
-
     /**
      * @ORM\Column(name="mandatory", type="boolean")
      *
@@ -60,23 +46,22 @@ abstract class AbstractModule
      */
     protected $mandatory;
 
-    /**
+    /*
+     * @var AbstractTraining
+     * @ORM\ManyToOne(targetEntity="SygeforTrainingBundle:Training\AbstractTraining", inversedBy="modules")
+     * @ORM\JoinColumn(name="training_id", referencedColumnName="id")
+     * @Assert\NotNull(message="Vous devez sélectionner une formation.")
+     * @Serializer\Groups({"session", "training", "api.training", "api.session"})
+     */
+//    protected $training;
+
+    /*
      * @var ArrayCollection
      * @ORM\OneToMany(targetEntity="Sygefor\Bundle\TrainingBundle\Entity\Session\AbstractSession", mappedBy="module", fetch="EXTRA_LAZY")
      * @ORM\OrderBy({"dateBegin" = "DESC"})
      * @Serializer\Groups({"training", "api.training"})
      */
-    protected $sessions;
-
-    public function __construct()
-    {
-        $this->sessions = new ArrayCollection();
-    }
-
-    public function __clone()
-    {
-        $this->sessions = new ArrayCollection();
-    }
+//    protected $sessions;
 
     /**
      * @return int
@@ -103,22 +88,6 @@ abstract class AbstractModule
     }
 
     /**
-     * @return AbstractTraining
-     */
-    public function getTraining()
-    {
-        return $this->training;
-    }
-
-    /**
-     * @param AbstractTraining $training
-     */
-    public function setTraining($training)
-    {
-        $this->training = $training;
-    }
-
-    /**
      * @return bool
      */
     public function isMandatory()
@@ -132,56 +101,6 @@ abstract class AbstractModule
     public function setMandatory($mandatory)
     {
         $this->mandatory = $mandatory;
-    }
-
-    /**
-     * @return ArrayCollection
-     */
-    public function getSessions()
-    {
-        return $this->sessions;
-    }
-
-    /**
-     * @param mixed $sessions
-     */
-    public function setSessions($sessions)
-    {
-        $this->sessions = $sessions;
-    }
-
-    /**
-     * @param AbstractSession $session
-     *
-     * @return bool
-     */
-    public function addSession($session)
-    {
-        if (!$this->sessions->contains($session)) {
-            $this->sessions->add($session);
-            $session->setModule($this);
-
-            return true;
-        }
-
-        return false;
-    }
-
-    /**
-     * @param AbstractSession $session
-     *
-     * @return bool
-     */
-    public function removeSession($session)
-    {
-        if ($this->sessions->contains($session)) {
-            $this->sessions->remove($session);
-            $session->setModule(null);
-
-            return true;
-        }
-
-        return false;
     }
 
     function __toString()

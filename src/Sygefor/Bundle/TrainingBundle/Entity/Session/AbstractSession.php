@@ -276,7 +276,7 @@ abstract class AbstractSession implements SerializedAccessRights
      */
     public function addParticipation($participation)
     {
-        if ( ! $this->participations->contains($participation)) {
+        if (!$this->participations->contains($participation)) {
             $this->participations->add($participation);
 
             return true;
@@ -1057,12 +1057,8 @@ abstract class AbstractSession implements SerializedAccessRights
         $url = $front_root_url . '/training/' . $this->getTraining()->getId() . '/';
         if (!$apiSerialization) {
             // URL permitting to register a private session
-            if ($this->getRegistration() === self::REGISTRATION_PRIVATE && (!method_exists($this, 'getModule') || !$this->getModule())) {
+            if ($this->getRegistration() === self::REGISTRATION_PRIVATE) {
                 return $url . $this->getId() . '/' . md5($this->getId() + $this->getTraining()->getId());
-            }
-            // URL permitting to register a module sessions
-            else if (method_exists($this, 'getModule') && $this->getModule()) {
-                return $url . '/' . md5($this->training->getType() . $this->getTraining()->getId());
             }
         }
 
@@ -1072,7 +1068,7 @@ abstract class AbstractSession implements SerializedAccessRights
 
     function __toString()
     {
-        return $this->getName();
+        return $this->getTraining()->getName() . " - " . $this->getDateRange();
     }
 
     /**

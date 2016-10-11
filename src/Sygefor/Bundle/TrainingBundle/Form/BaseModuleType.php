@@ -24,18 +24,19 @@ class BaseModuleType extends AbstractType
     public function buildForm(FormBuilderInterface $builder, array $options)
     {
         $builder
-            ->add('training', EntityHiddenType::class, array(
-                'label'    => 'Formation longue',
-                'class'    => AbstractTraining::class,
-                'required' => true,
-            ))
             ->add('name', null, array(
                 'label' => 'Nom',
             ))
             ->add('mandatory', null, array(
                 'label'    => 'Obligatoire',
                 'required' => false,
-            ));
+            ))
+//            ->add('training', EntityHiddenType::class, array(
+//                'label'    => 'Formation',
+//                'class'    => AbstractTraining::class,
+//                'required' => true,
+//            ))
+            ;
     }
 
     /**

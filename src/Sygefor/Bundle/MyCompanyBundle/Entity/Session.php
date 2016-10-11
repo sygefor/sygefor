@@ -123,7 +123,27 @@ class Session extends AbstractSession
      */
     public function getFrontUrl($front_root_url = 'http://sygefor.dev', $apiSerialization = false)
     {
-        return parent::getFrontUrl($front_root_url, $apiSerialization);
+        $url = $front_root_url . '/training/' . $this->getTraining()->getId() . '/';
+        if (!$apiSerialization) {
+            // URL permitting to register a private session
+            if ($this->getRegistration() === self::REGISTRATION_PRIVATE && (!method_exists($this, 'getModule') || !$this->getModule())) {
+                return $url . $this->getId() . '/' . md5($this->getId() + $this->getTraining()->getId());
+            }
+            // URL permitting to register a module sessions
+            else if (method_exists($this, 'getModule') && $this->getModule()) {
+                return $url . '/' . md5($this->training->getType() . $this->getTraining()->getId());
+            }
+        }
+
+        // return public URL
+        return $url . $this->getId();
+    }
+
+    function __toString()
+    {
+        $name = $this->getName() ? $this->getName() : $this->getTraining()->getName();
+
+        return $name . " - " . $this->getDateRange();
     }
 
     public static function getFormType()

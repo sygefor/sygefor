@@ -9,6 +9,7 @@
 namespace Sygefor\Bundle\MyCompanyBundle\Entity;
 
 
+use Doctrine\Common\Collections\ArrayCollection;
 use Sygefor\Bundle\TrainingBundle\Entity\Training\AbstractModule;
 use Doctrine\ORM\Mapping as ORM;
 use JMS\Serializer\Annotation as Serializer;
@@ -30,6 +31,90 @@ class Module extends AbstractModule
      * @Serializer\Groups({"session", "training", "api.training", "api.session"})
      */
     protected $training;
+
+    /**
+     * @var ArrayCollection
+     * @ORM\OneToMany(targetEntity="Session", mappedBy="module", fetch="EXTRA_LAZY")
+     * @ORM\OrderBy({"dateBegin" = "DESC"})
+     * @Serializer\Groups({"training", "api.training"})
+     */
+    protected $sessions;
+
+    public function __construct()
+    {
+        $this->sessions = new ArrayCollection();
+    }
+
+    public function __clone()
+    {
+        $this->sessions = new ArrayCollection();
+    }
+
+    /**
+     * @return LongTraining
+     */
+    public function getTraining()
+    {
+        return $this->training;
+    }
+
+    /**
+     * @param LongTraining $training
+     */
+    public function setTraining($training)
+    {
+        $this->training = $training;
+    }
+
+    /**
+     * @return ArrayCollection
+     */
+    public function getSessions()
+    {
+        return $this->sessions;
+    }
+
+    /**
+     * @param mixed $sessions
+     */
+    public function setSessions($sessions)
+    {
+        $this->sessions = $sessions;
+    }
+
+    /**
+     * @param Session $session
+     *
+     * @return bool
+     */
+    public function addSession($session)
+    {
+        if (!$this->sessions->contains($session)) {
+            $this->sessions->add($session);
+            $session->setModule($this);
+
+            return true;
+        }
+
+        return false;
+    }
+
+    /**
+     * @param Session $session
+     *
+     * @return bool
+     */
+    public function removeSession($session)
+    {
+        if ($this->sessions->contains($session)) {
+            $this->sessions->remove($session);
+            $session->setModule(null);
+
+            return true;
+        }
+
+        return false;
+    }
 
     /**
      * @return string
