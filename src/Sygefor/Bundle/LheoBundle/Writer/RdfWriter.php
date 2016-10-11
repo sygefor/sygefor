@@ -1,6 +1,10 @@
 <?php
+
 namespace Sygefor\Bundle\LheoBundle\Writer;
 
+/**
+ * Class RdfWriter.
+ */
 class RdfWriter
 {
     /**
@@ -9,35 +13,36 @@ class RdfWriter
     protected $bnodecpt;
 
     /**
-     * @var \EasyRdf_Graph $globalGraph
+     * @var \EasyRdf_Graph
      */
     protected $globalGraph;
 
     /**
-     * @var \EasyRdf_Resource $contactObject
+     * @var \EasyRdf_Resource
      */
     protected $contactObject;
 
     /**
      * @param $trainings
-     * @param $urfistCoordinates
+     * @param $organizationCoordinates
+     *
      * @return mixed
      */
-    public function generateLheoRdf($trainings, $urfistCoordinates)
+    public function generateLheoRdf($trainings, $organizationCoordinates)
     {
         \EasyRdf_Namespace::set('lheo', 'http://www.conjecto.com/ontology/2015/lheo#');
         $this->globalGraph = new \EasyRdf_Graph();
-        $this->bnodecpt = 0;
+        $this->bnodecpt    = 0;
 
         $offers = $this->newObject('lheo:offre-type');
-        if (!empty($trainings)) {
+        if ( ! empty($trainings)) {
             $this->contactObject = $this->newObject('lheo:coordonnees-type', '1');
-            $this->fillContact($this->contactObject, $urfistCoordinates);
+            $this->fillContact($this->contactObject, $organizationCoordinates);
 
             foreach ($trainings as $training) {
                 $esTraining = $training->getHit()['_source'];
-                $training = $this->newObject('lheo:formation-type', $esTraining['id']);
-                $this->fillTraining($training, $esTraining, $urfistCoordinates);
+                $training   = $this->newObject('lheo:formation-type', $esTraining['id']);
+                $this->fillTraining($training, $esTraining, $organizationCoordinates);
                 $offers->add('lheo:formation', $training);
             }
         }
@@ -48,15 +53,15 @@ class RdfWriter
     /**
      * @param $training
      * @param $esTraining
-     * @param $urfistCoordinates
+     * @param $organizationCoordinates
      */
-    protected function fillTraining($training, $esTraining, $urfistCoordinates)
+    protected function fillTraining($training, $esTraining, $organizationCoordinates)
     {
-        $this->fillOrganizationDomain($training, $urfistCoordinates);
+        $this->fillOrganizationDomain($training, $organizationCoordinates);
         $training->add('lheo:intitule-formation', $esTraining['name']);
-        $training->add('lheo:objectif-formation', $this->addCdata($esTraining['objectives']));
-        $training->add('lheo:resultats-attendus', $this->addCdata($esTraining['objectives']));
-        $training->add('lheo:contenu-formation', $this->addCdata($esTraining['program']));
+        $training->add('lheo:objectif-formation', $this->addCdata($esTraining['program']));
+        $training->add('lheo:resultats-attendus', $this->addCdata($esTraining['description']));
+        $training->add('lheo:contenu-formation', $this->addCdata($esTraining['teachingMethods']));
         $training->add('lheo:certifiante', 0);
         $contact = $this->newObject('lheo:contact-formation-type');
         $contact->add('lheo:coordonnees', $this->contactObject);
@@ -68,12 +73,12 @@ class RdfWriter
             // all training sessions are returned by elasticsearch so we have to check the dateBegin
             if (strtotime($esSession['dateBegin']) > time()) {
                 $session = $this->newObject('lheo:action-type', $esSession['id']);
-                $this->fillSession($session, $esTraining, $esSession, $urfistCoordinates);
+                $this->fillSession($session, $esTraining, $esSession, $organizationCoordinates);
                 $training->add('lheo:action', $session);
             }
         }
 
-        $this->fillResponsableOrganization($training, $esTraining, $urfistCoordinates);
+        $this->fillResponsableOrganization($training, $esTraining, $organizationCoordinates);
         $training->add('lheo:identifiant-module', $esTraining['id']);
     }
 
@@ -81,17 +86,17 @@ class RdfWriter
      * @param $action
      * @param $esTraining
      * @param $esSession
-     * @param $urfistCoordinates
+     * @param $organizationCoordinates
      */
-    protected function fillSession($action, $esTraining, $esSession, $urfistCoordinates)
+    protected function fillSession($action, $esTraining, $esSession, $organizationCoordinates)
     {
-        $action->add('lheo:rythme-formation', 'Temps plein');
+        $action->add('lheo:rythme-formation', $esSession['scheduleString']);
         $action->add('lheo:code-public-vise', '80056');
-        $action->add('lheo:duree-indicative', strval($esSession['hourDuration']) . " heures");
+        $action->add('lheo:duree-indicative', strval($esSession['hourNumber']) . ' heures');
         $action->add('lheo:niveau-entree-obligatoire', 0);
         $action->add('lheo:modalites-alternance', 'pas d\'alternance');
         $action->add('lheo:modalites-enseignement', 0);
-        $action->add('lheo:conditions-specifiques', $esTraining['prerequisite']);
+        $action->add('lheo:conditions-specifiques', $esTraining['prerequisites']);
         $action->add('lheo:prise-en-charge-frais-possible', '1');
         $formationPlace = $this->newObject('lheo:lieu-de-formation-type');
         $formationPlace->add('lheo:coordonnees', $this->contactObject);
@@ -110,63 +115,63 @@ class RdfWriter
         $session->add('lheo:periode', $periode);
         $action->add('lheo:session', $session);
         $action->add('lheo:langue-formation', 'fr');
-        $action->add('lheo:frais-restants',	$esSession['price']);
+        $action->add('lheo:frais-restants', $esTraining['prices']);
         $inscriptionDate = $this->newObject('lheo:date-limite-inscription-type');
         $inscriptionDate->add('lheo:date', $this->formatDate($esSession['limitRegistrationDate']));
         $action->add('lheo:date-limite-inscription', $inscriptionDate);
-        $this->fillTrainerOrganization($action, $urfistCoordinates);
+        $this->fillTrainerOrganization($action, $organizationCoordinates);
     }
 
     /**
      * @param $training
-     * @param array $urfistCoordinates
+     * @param array $organizationCoordinates
      */
-    protected function fillOrganizationDomain($training, array $urfistCoordinates)
+    protected function fillOrganizationDomain($training, array $organizationCoordinates)
     {
         $domaine = $this->newObject('lheo:domaine-formation-type');
-        $domaine->add('lheo:code-FORMACODE', $urfistCoordinates['FORMACODE']);
-        $domaine->add('lheo:code-NSF', $urfistCoordinates['NSF']);
-        $domaine->add('lheo:code-ROME', $urfistCoordinates['ROME']);
+        $domaine->add('lheo:code-FORMACODE', $organizationCoordinates['FORMACODE']);
+        $domaine->add('lheo:code-NSF', $organizationCoordinates['NSF']);
+        $domaine->add('lheo:code-ROME', $organizationCoordinates['ROME']);
         $training->add('lheo:domaine-formation', $domaine);
     }
 
     /**
      * @param $action
-     * @param $urfistCoordinates
+     * @param $organizationCoordinates
      */
-    protected function fillTrainerOrganization($action, $urfistCoordinates)
+    protected function fillTrainerOrganization($action, $organizationCoordinates)
     {
         $trainerOrganization = $this->newObject('lheo:organisme-formateur-type');
-        $trainterSiret = $this->newObject('lheo:SIRET-formateur-type');
-        $trainterSiret->add('lheo:siret', $urfistCoordinates['siret']);
+        $trainterSiret       = $this->newObject('lheo:SIRET-formateur-type');
+        $trainterSiret->add('lheo:siret', $organizationCoordinates['siret']);
         $trainerOrganization->add('lheo:SIRET-formateur', $trainterSiret);
-        $trainerOrganization->add('lheo:raison-sociale-formateur', $urfistCoordinates['name']);
+        $trainerOrganization->add('lheo:raison-sociale-formateur', $organizationCoordinates['name']);
         $contactTrainer = $this->newObject('lheo:contact-formateur-type');
         $contactTrainer->add('lheo:coordonnees', $this->contactObject);
         $trainerOrganization->add('lheo:contact-formateur', $contactTrainer);
         $potential = $this->newObject('lheo:potentiel-type');
-        $potential->add('lheo:code-FORMACODE', $urfistCoordinates['FORMACODE']);
+        $potential->add('lheo:code-FORMACODE', $organizationCoordinates['FORMACODE']);
         $trainerOrganization->add('lheo:potentiel', $potential);
         $action->add('lheo:organisme-formateur', $trainerOrganization);
     }
 
     /**
-     * @param $node
      * @param $training
-     * @param $urfistCoordinates
+     * @param $esTraining
+     * @param $organizationCoordinates
      */
-    protected function fillResponsableOrganization($training, $esTraining, $urfistCoordinates)
+    protected function fillResponsableOrganization($training, $esTraining, $organizationCoordinates)
     {
         $responsableOrganization = $this->newObject('lheo:organisme-formation-responsable-type');
-        $responsableOrganization->add('lheo:numero-activite', $urfistCoordinates['activityNumber']);
+        $responsableOrganization->add('lheo:numero-activite', $organizationCoordinates['activityNumber']);
 
         $siretTrainingOrganization = $this->newObject('lheo:SIRET-organisme-formation-type');
-        $siretTrainingOrganization->add('lheo:siret', $urfistCoordinates['siret']);
+        $siretTrainingOrganization->add('lheo:siret', $organizationCoordinates['siret']);
         $responsableOrganization->add('lheo:SIRET-organisme-formation', $siretTrainingOrganization);
 
         $responsableOrganization->add('lheo:nom-organisme', $esTraining['organization']['name']);
         $responsableOrganization->add('lheo:raison-sociale', $esTraining['organization']['name']);
-        $responsableOrganization->add('lheo:renseignements-specifiques', $urfistCoordinates['specificRenseignements']);
+        $responsableOrganization->add('lheo:renseignements-specifiques', $organizationCoordinates['specificRenseignements']);
 
         $contactOrganization = $this->newObject('lheo:coordonnees-organisme-type');
         $contactOrganization->add('lheo:coordonnees', $this->contactObject);
@@ -185,8 +190,8 @@ class RdfWriter
     {
         $arrayKeys = array(
             'lheo:civilite' => 'civilite',
-            'lheo:nom' => 'name',
-            'lheo:prenom' => 'firstName',
+            'lheo:nom'      => 'name',
+            'lheo:prenom'   => 'firstName',
             'lheo:courriel' => 'email',
         );
 
@@ -197,9 +202,9 @@ class RdfWriter
         }
 
         $arrayKeys = array(
-            'lheo:telfixe' => 'fixNumber',
+            'lheo:telfixe'  => 'phoneNumber',
             'lheo:portable' => 'mobileNumber',
-            'lheo:fax' => 'faxNumber'
+            'lheo:fax'      => 'faxNumber',
         );
 
         foreach ($arrayKeys as $key => $value) {
@@ -211,7 +216,7 @@ class RdfWriter
         }
 
         $arrayKeys = array(
-            'lheo:web' => 'webUrl'
+            'lheo:web' => 'website',
         );
 
         foreach ($arrayKeys as $key => $value) {
@@ -223,15 +228,15 @@ class RdfWriter
         }
 
         $arrayKeys = array(
-            'lheo:ligne' => 'street',
-            'lheo:codepostal' => 'zip',
-            'lheo:ville' => 'city',
-            'lheo:departement' => 'departement',
+            'lheo:ligne'              => 'address',
+            'lheo:codepostal'         => 'zip',
+            'lheo:ville'              => 'city',
+            'lheo:departement'        => 'departement',
             'lheo:code-INSEE-commune' => 'code-INSEE-commune',
-            'lheo:code-INSEE-canton' => 'code-INSEE-canton',
-            'lheo:region' => 'region',
-            'lheo:pays' => 'pays',
-            'lheo:geolocalisation' => 'geolocalisation'
+            'lheo:code-INSEE-canton'  => 'code-INSEE-canton',
+            'lheo:region'             => 'region',
+            'lheo:pays'               => 'pays',
+            'lheo:geolocalisation'    => 'geolocalisation',
         );
 
         $address = $this->newObject('lheo:adresse-type');
@@ -245,6 +250,7 @@ class RdfWriter
 
     /**
      * @param $date
+     *
      * @return string
      */
     protected function formatDate($date)
@@ -253,9 +259,11 @@ class RdfWriter
     }
 
     /**
-     * @param $type
-     * @param $id
-     * @return \EasyRdf_Resource
+     * @param $rdfType
+     * @param null   $id
+     * @param string $typeObject
+     *
+     * @return mixed
      */
     protected function newObject($rdfType, $id = null, $typeObject = 'EasyRdf_Resource')
     {
@@ -280,6 +288,8 @@ class RdfWriter
 
     /**
      * @param $data
+     *
+     * @return string
      */
     protected function addCdata($data)
     {

@@ -58,6 +58,12 @@ sygefor_front:
     host:     "%front_host%"
     prefix:   /
 
+sygefor_lheo:
+    resource: "@SygeforLheoBundle/Controller/"
+    type:     annotation
+    host:     "%front_host%"
+    prefix:   /
+
 shibboleth_logout:
     path:   /shibboleth/logout
     host:     "%front_host%"

@@ -44,6 +44,7 @@ class AppKernel extends Kernel
             new Sygefor\Bundle\TrainerBundle\SygeforTrainerBundle(),
             new Sygefor\Bundle\MyCompanyBundle\SygeforMyCompanyBundle(),
             new \Sygefor\Bundle\ActivityReportBundle\SygeforActivityReportBundle(),
+            new \Sygefor\Bundle\LheoBundle\SygeforLheoBundle(),
 
             // keep this extension at the end to ensure listeners registring order
             new Stof\DoctrineExtensionsBundle\StofDoctrineExtensionsBundle(),

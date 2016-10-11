@@ -1,16 +1,22 @@
 <?php
+
 namespace Sygefor\Bundle\LheoBundle\Writer;
 
+/**
+ * Class XmlWriter.
+ */
 class XmlWriter
 {
     /**
-     * Generate LHEO from training details
+     * Generate LHEO from training details.
+     *
      * @param $trainings
-     * @param $urfistCoordinates
-     * @param $groupAction
+     * @param $organizationCoordinates
+     * @param $degroupAction
+     *
      * @return mixed
      */
-    public function generateLheoXml($trainings, $urfistCoordinates, $degroupAction = false)
+    public function generateLheoXml($trainings, $organizationCoordinates, $degroupAction = false)
     {
         $rootNode = new \SimpleXMLElement('<lheo xmlns="http://www.lheo.org/2.0"
 												 xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
@@ -25,13 +31,13 @@ class XmlWriter
                 foreach ($training['sessions'] as $session) {
                     // all training sessions are returned by elasticsearch so we have to check the dateBegin
                     if (strtotime($session['dateBegin']) > time()) {
-                        $this->fillFormation($offersNode, $training, array($session), $urfistCoordinates);
+                        $this->fillFormation($offersNode, $training, array($session), $organizationCoordinates);
                     }
                 }
             }
             else {
                 // write all training sessions in this training
-                $this->fillFormation($offersNode, $training, $training['sessions'], $urfistCoordinates);
+                $this->fillFormation($offersNode, $training, $training['sessions'], $organizationCoordinates);
             }
         }
 
@@ -39,25 +45,25 @@ class XmlWriter
     }
 
     /**
-     * Fill formation details
+     * Fill formation details.
+     *
      * @param $node
      * @param $training
      * @param $sessions
-     * @param $urfistCoordinates
+     * @param $organizationCoordinates
      */
-    protected function fillFormation(&$node, $training, $sessions, $urfistCoordinates)
+    protected function fillFormation(&$node, $training, $sessions, $organizationCoordinates)
     {
-        //@todo presence of some of the childs is mandatory
         $internshipNode = $node->addChild('formation');
-        $this->fillOrganizationDomain($internshipNode, $urfistCoordinates);
+        $this->fillOrganizationDomain($internshipNode, $organizationCoordinates);
         $this->addChildLimitedString($internshipNode, 'intitule-formation', $training['name'], 1, 255, $cdata = false, $mandatory = true);
-        $this->addChildLimitedString($internshipNode, 'objectif-formation', $training['objectives'], 1, 3000, $cdata = true, $mandatory = true);
-        $this->addChildLimitedString($internshipNode, 'resultats-attendus', $training['objectives'], 1, 3000, $cdata = true, $mandatory = true);
-        $this->addChildLimitedString($internshipNode, 'contenu-formation', $training['program'], 1, 3000, $cdata = true, $mandatory = true);
+        $this->addChildLimitedString($internshipNode, 'objectif-formation', $training['program'], 1, 3000, $cdata = true, $mandatory = true);
+        $this->addChildLimitedString($internshipNode, 'resultats-attendus', $training['description'], 1, 3000, $cdata = true, $mandatory = true);
+        $this->addChildLimitedString($internshipNode, 'contenu-formation', $training['teachingMethods'], 1, 3000, $cdata = true, $mandatory = true);
         $internshipNode->addChild('certifiante', 0);
         $informationContact = $internshipNode->addChild('contact-formation');
-        $this->fillCoordonates($informationContact, $urfistCoordinates, null, $urfistCoordinates['name'], null, null, $urfistCoordinates['fixNumber'], null,
-            $urfistCoordinates['faxNumber'], $urfistCoordinates['email'], $urfistCoordinates['webUrl']);
+        $this->fillCoordonates($informationContact, $organizationCoordinates, null, $organizationCoordinates['name'], null, null, $organizationCoordinates['phoneNumber'], null,
+            $organizationCoordinates['faxNumber'], $organizationCoordinates['email'], $organizationCoordinates['website']);
         $internshipNode->addChild('parcours-de-formation', 1);
         $internshipNode->addChild('code-niveau-entree', 0);
 
@@ -65,79 +71,80 @@ class XmlWriter
             // all training sessions are returned by elasticsearch so we have to check the dateBegin
             // need to check the condition if groupAction is setted
             if (strtotime($session['dateBegin']) > time()) {
-                $this->fillAction($internshipNode, $training, $session, $urfistCoordinates);
+                $this->fillAction($internshipNode, $training, $session, $organizationCoordinates);
             }
         }
 
-        $this->fillResponsableOrganization($internshipNode, $training, $urfistCoordinates);
+        $this->fillResponsableOrganization($internshipNode, $training, $organizationCoordinates);
         $internshipNode->addChild('identifiant-module', $training['id']);
     }
 
     /**
      * @param $node
      * @param $training
-     * @param $urfistCoordinates
+     * @param $organizationCoordinates
      */
-    protected function fillResponsableOrganization(&$node, $training, $urfistCoordinates)
+    protected function fillResponsableOrganization(&$node, $training, $organizationCoordinates)
     {
         $responsableOrganization = $node->addChild('organisme-formation-responsable');
-        $this->addChildLimitedString($responsableOrganization, 'numero-activite', $urfistCoordinates['activityNumber'], 11, 11, $cdata = false, $mandatory = true);
+        $this->addChildLimitedString($responsableOrganization, 'numero-activite', $organizationCoordinates['activityNumber'], 11, 11, $cdata = false, $mandatory = true);
         $siretTrainingOrganization = $responsableOrganization->addChild('SIRET-organisme-formation');
-        $this->addSiret($siretTrainingOrganization, $urfistCoordinates['siret']);
+        $this->addSiret($siretTrainingOrganization, $organizationCoordinates['siret']);
         $this->addChildLimitedString($responsableOrganization, 'nom-organisme', $training['organization']['name'], 1, 250, $cdata = false, $mandatory = true);
         $this->addChildLimitedString($responsableOrganization, 'raison-sociale', $training['organization']['name'], 1, 250, $cdata = false, $mandatory = true);
-        $this->addChildLimitedString($responsableOrganization, 'renseignements-specifiques', $urfistCoordinates['specificRenseignements'], 0, 3000);
-        $organizationCoordinates = $responsableOrganization->addChild('coordonnees-organisme');
-        $this->fillCoordonates($organizationCoordinates, $urfistCoordinates, null, $urfistCoordinates['name'], null, $urfistCoordinates['name'], $urfistCoordinates['fixNumber'], null,
-            $urfistCoordinates['faxNumber'], $urfistCoordinates['email'], $urfistCoordinates['webUrl']);
+        $this->addChildLimitedString($responsableOrganization, 'renseignements-specifiques', $organizationCoordinates['specificRenseignements'], 0, 3000);
+        $organizationCoordinatesNode = $responsableOrganization->addChild('coordonnees-organisme');
+        $this->fillCoordonates($organizationCoordinatesNode, $organizationCoordinates, null, $organizationCoordinates['name'], null, $organizationCoordinates['name'], $organizationCoordinates['phoneNumber'], null,
+            $organizationCoordinates['faxNumber'], $organizationCoordinates['email'], $organizationCoordinates['website']);
         $organizationContact = $responsableOrganization->addChild('contact-organisme');
-        $this->fillCoordonates($organizationContact, $urfistCoordinates, null, $urfistCoordinates['name'], null, $urfistCoordinates['name'], $urfistCoordinates['fixNumber'], null,
-            $urfistCoordinates['faxNumber'], $urfistCoordinates['email'], $urfistCoordinates['webUrl']);
+        $this->fillCoordonates($organizationContact, $organizationCoordinates, null, $organizationCoordinates['name'], null, $organizationCoordinates['name'], $organizationCoordinates['phoneNumber'], null,
+            $organizationCoordinates['faxNumber'], $organizationCoordinates['email'], $organizationCoordinates['website']);
     }
 
     /**
      * @param $node
-     * @param $urfistCoordinates
+     * @param $organizationCoordinates
      */
-    protected function fillOrganizationDomain(&$node, $urfistCoordinates)
+    protected function fillOrganizationDomain(&$node, $organizationCoordinates)
     {
         $internshipDomainNode = $node->addChild('domaine-formation');
-        $this->addChildLimitedString($internshipDomainNode, 'code-FORMACODE', $urfistCoordinates['FORMACODE'], 5, 5);
-        $this->addChildLimitedString($internshipDomainNode, 'code-NSF', $urfistCoordinates['NSF'], 3, 3);
-        $this->addChildLimitedString($internshipDomainNode, 'code-ROME', $urfistCoordinates['ROME'], 5, 5);
+        $this->addChildLimitedString($internshipDomainNode, 'code-FORMACODE', $organizationCoordinates['FORMACODE'], 5, 5);
+        $this->addChildLimitedString($internshipDomainNode, 'code-NSF', $organizationCoordinates['NSF'], 3, 3);
+        $this->addChildLimitedString($internshipDomainNode, 'code-ROME', $organizationCoordinates['ROME'], 5, 5);
     }
 
     /**
-     * Fill session details
+     * Fill session details.
+     *
      * @param $node
      * @param $training
      * @param $session
-     * @param $urfistCoordinates
+     * @param $organizationCoordinates
      */
-    protected function fillAction(&$node, $training, $session, $urfistCoordinates)
+    protected function fillAction(&$node, $training, $session, $organizationCoordinates)
     {
         $action = $node->addChild('action');
-        $action->addChild('rythme-formation', 'Temps plein');
+        $action->addChild('rythme-formation', $session['scheduleString']);
         $this->addChildLimitedString($action, 'code-public-vise', '80056', 5, 5, $cdata = false, $cdata = false, $mandatory = true);
-        $this->addChildLimitedString($action, 'duree-indicative', strval($session['hourDuration']) . " heures", 1, 50, $cdata = false, $mandatory = true);
+        $this->addChildLimitedString($action, 'duree-indicative', strval($session['hourNumber']) . ' heures', 1, 50, $cdata = false, $mandatory = true);
         $action->addChild('niveau-entree-obligatoire', 0);
         $action->addChild('modalites-alternance', 'pas d\'alternance');
         $action->addChild('modalites-enseignement', 0);
-        $this->addChildLimitedString($action, 'conditions-specifiques', $training['prerequisite'], 1, 3000, $cdata = false, $mandatory = true);
+        $this->addChildLimitedString($action, 'conditions-specifiques', $training['prerequisites'], 1, 3000, $cdata = false, $mandatory = true);
         $action->addChild('prise-en-charge-frais-possible', '1');
         $formationPlace = $action->addChild('lieu-de-formation');
-        $this->fillCoordonates($formationPlace, $urfistCoordinates, null, $urfistCoordinates['name'], null, $session['place'], $urfistCoordinates['fixNumber'], null, $urfistCoordinates['faxNumber'],
-            $urfistCoordinates['email'], $urfistCoordinates['webUrl']);
+        $this->fillCoordonates($formationPlace, $organizationCoordinates, null, $organizationCoordinates['name'], null, $session['place'], $organizationCoordinates['phoneNumber'], null, $organizationCoordinates['faxNumber'],
+            $organizationCoordinates['email'], $organizationCoordinates['website']);
         $action->addChild('modalites-entrees-sorties', 0);
         $addressInscription = $action->addChild('adresse-inscription');
-        $this->fillAddress($addressInscription, $urfistCoordinates['street'], $urfistCoordinates['zip'], $urfistCoordinates['region'], $urfistCoordinates['city']);
+        $this->fillAddress($addressInscription, $organizationCoordinates['address'], $organizationCoordinates['zip'], $organizationCoordinates['region'], $organizationCoordinates['city']);
         $action->addChild('date-inscription')->addChild('date', $this->formatDate($session['dateBegin']));
         $this->fillSession($action, $session['dateBegin'], $session['dateEnd']);
 
         $action->addChild('langue-formation', 'fr');
-        $action->addChild('frais-restants',	$session['price']);
+        $action->addChild('frais-restants', $training['prices']);
         $action->addChild('date-limite-inscription')->addChild('date', $this->formatDate($session['limitRegistrationDate']));
-        $this->fillTrainerOrganization($action, $urfistCoordinates);
+        $this->fillTrainerOrganization($action, $organizationCoordinates);
     }
 
     /**
@@ -154,6 +161,7 @@ class XmlWriter
 
     /**
      * @param $date
+     *
      * @return string
      */
     protected function formatDate($date)
@@ -163,24 +171,24 @@ class XmlWriter
 
     /**
      * @param $node
-     * @param $urfistCoordinates
+     * @param $organizationCoordinates
      */
-    protected function fillTrainerOrganization(&$node, $urfistCoordinates)
+    protected function fillTrainerOrganization(&$node, $organizationCoordinates)
     {
         $trainerOrganization = $node->addChild('organisme-formateur');
-        $trainterSiret = $trainerOrganization->addChild('SIRET-formateur');
-        $this->addSiret($trainterSiret, $urfistCoordinates['siret']);
-        $this->addChildLimitedString($trainerOrganization, 'raison-sociale-formateur', $urfistCoordinates['name'], 0, 250, $cdata = false, $mandatory = true);
+        $trainterSiret       = $trainerOrganization->addChild('SIRET-formateur');
+        $this->addSiret($trainterSiret, $organizationCoordinates['siret']);
+        $this->addChildLimitedString($trainerOrganization, 'raison-sociale-formateur', $organizationCoordinates['name'], 0, 250, $cdata = false, $mandatory = true);
         $contactTrainer = $trainerOrganization->addChild('contact-formateur');
-        $this->fillCoordonates($contactTrainer, $urfistCoordinates, null, $urfistCoordinates['name'], null, $urfistCoordinates['street'], $urfistCoordinates['fixNumber'], null, $urfistCoordinates['faxNumber'],
-            $urfistCoordinates['email'], $urfistCoordinates['webUrl']);
+        $this->fillCoordonates($contactTrainer, $organizationCoordinates, null, $organizationCoordinates['name'], null, $organizationCoordinates['address'], $organizationCoordinates['phoneNumber'], null, $organizationCoordinates['faxNumber'],
+            $organizationCoordinates['email'], $organizationCoordinates['website']);
         $potential = $trainerOrganization->addChild('potentiel');
-        $this->addChildLimitedString($potential, 'code-FORMACODE', $urfistCoordinates['FORMACODE'], 5, 5);
+        $this->addChildLimitedString($potential, 'code-FORMACODE', $organizationCoordinates['FORMACODE'], 5, 5);
     }
 
     /**
      * @param $node
-     * @param null $urfistCoordinates
+     * @param null $organizationCoordinates
      * @param null $civility
      * @param null $name
      * @param null $firstName
@@ -191,7 +199,7 @@ class XmlWriter
      * @param null $email
      * @param null $webAddress
      */
-    protected function fillCoordonates(&$node, $urfistCoordinates = null, $civility = null, $name = null, $firstName = null, $street = null, $fixNumber = null, $mobileNumber = null,
+    protected function fillCoordonates(&$node, $organizationCoordinates = null, $civility = null, $name = null, $firstName = null, $street = null, $fixNumber = null, $mobileNumber = null,
                                     $faxNumber = null, $email = null, $webAddress = null)
     {
         $coordonnates = $node->addChild('coordonnees');
@@ -199,8 +207,8 @@ class XmlWriter
         if ($name) $this->addChildLimitedString($coordonnates, 'nom', $name, 1, 50);
         if ($firstName) $this->addChildLimitedString($coordonnates, $firstName, 'value', 1, 50);
         if ($street) $this->addStreet($coordonnates, $street);
-        if ($urfistCoordinates) {
-            $this->fillAddress($coordonnates, $urfistCoordinates['street'], $urfistCoordinates['zip'], $urfistCoordinates['region'], $urfistCoordinates['city']);
+        if ($organizationCoordinates) {
+            $this->fillAddress($coordonnates, $organizationCoordinates['address'], $organizationCoordinates['zip'], $organizationCoordinates['region'], $organizationCoordinates['city']);
         }
         if ($fixNumber) {
             $fix = $coordonnates->addChild('telfixe');
@@ -244,11 +252,11 @@ class XmlWriter
      * @param $value
      * @param $lowerLimit
      * @param $highLimit
-     * @param bool $cdata
-     * @param bool $mandatory
+     * @param bool   $cdata
+     * @param bool   $mandatory
      * @param string $replacement
      */
-    protected function addChildLimitedString(&$node, $child, $value, $lowerLimit, $highLimit, $cdata = false, $mandatory = false, $replacement = "Non renseigné")
+    protected function addChildLimitedString(&$node, $child, $value, $lowerLimit, $highLimit, $cdata = false, $mandatory = false, $replacement = 'Non renseigné')
     {
         $value = str_replace('&', 'et', $value);
         $value = trim(strip_tags($value));
@@ -280,8 +288,8 @@ class XmlWriter
     protected function addCdata(&$node, $child, $data)
     {
         $nChild = $node->addChild($child);
-        $n = dom_import_simplexml($nChild);
-        $doc = $n->ownerDocument;
+        $n      = dom_import_simplexml($nChild);
+        $doc    = $n->ownerDocument;
         $n->appendChild($doc->createCDATASection($data));
     }
 
@@ -315,6 +323,7 @@ class XmlWriter
     /**
      * @param $value
      * @param $limit
+     *
      * @return string
      */
     protected function limitStringSize($value, $limit)
