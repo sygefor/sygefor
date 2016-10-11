@@ -18,8 +18,14 @@ class LoadTrainingCategory extends AbstractTermLoad
     public function getTerms()
     {
         return array(
-            'Actions régionales',
-            'Actions nationales'
+            array(
+                'name' => 'Actions régionales',
+                'trainingType' => 'internship',
+            ),
+            array(
+                'name' => 'Actions nationales',
+                'trainingType' => 'internship',
+            )
         );
     }
 }

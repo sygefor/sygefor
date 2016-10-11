@@ -20,15 +20,15 @@ class LoadOrganizationData extends AbstractTermLoad
     {
         return array(
             array(
-                'name'        => 'MyCompany',
-                'code'        => 'company',
-                'address'     => '',
-                'zip'         => '',
-                'city'        => '',
-                'email'       => 'contact@my-company.dev',
-                'phoneNumber' => '',
+                'name'        => 'Conjecto',
+                'code'        => 'conjecto',
+                'address'     => '29 rue de Lorient',
+                'zip'         => '35000',
+                'city'        => 'Rennes',
+                'email'       => 'contact@conjecto.com',
+                'phoneNumber' => '(+33) 9 80 52 20 21',
                 'faxNumber'   => '',
-                'website'     => '',
+                'website'     => 'http://www.conjecto.com',
                 'trainee_registrable' => true,
             ),
         );

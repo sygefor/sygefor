@@ -91,7 +91,6 @@ class TrainingType extends AbstractType
                 'query_builder' => $training ? function (EntityRepository $er) use ($training) {
                     return $er->createQueryBuilder('c')
                         ->where('c.trainingType = :trainingType')
-                        ->orWhere('c.trainingType IS NULL')
                         ->setParameter('trainingType', $training->getType());
                 } : null,
                 'required' => false,
