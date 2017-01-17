@@ -55,6 +55,8 @@ des éléments.
 La génération des PDF lors d'un publipostage est rendue possible grâce à la librairie [Unoconv](https://github.com/dagwieers/unoconv) 
 qui doit donc être installée sur le serveur.
 
+* [version 0.7](https://gist.github.com/janeklb/657e119b2ce3d0138b42e6720f248e09)
+
 ### Accès interactif
 
 Sygefor3 est livré avec un outil en ligne de commande qui permet d'automatiser certaines opérations d'installation et 
