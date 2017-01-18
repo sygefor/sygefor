@@ -115,7 +115,8 @@ Installation
 - php app/console assetic:dump
 - php app/console assets:install --symlink
 - gulp build
-- php app/console fos:elastica:populate (en cas de problème de sérialisation composer update doctrine/orm)
+- php app/console fos:elastica:populate (en cas de problème de sérialisation exécutez un composer update doctrine/orm)
+- php app/console fos:user:change-password admin admin
 - php app/console server:run
 - Se rendre sur localhost:8000 avec votre navigateur (s'identifier avec admin/admin)
 - chown www-data. app/cache app/logs -R pour servir avec apache et nginx
