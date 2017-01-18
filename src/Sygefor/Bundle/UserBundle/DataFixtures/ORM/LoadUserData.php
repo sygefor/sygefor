@@ -68,6 +68,17 @@ class LoadUserData extends AbstractDataFixture
         $encoderFactory = $this->container->get('security.encoder_factory');
         $organizations = $manager->getRepository('SygeforCoreBundle:Organization')->findAll();
 
+        // admin
+        $user = new User();
+        $user->setUsername("admin");
+        $encoder = $encoderFactory->getEncoder($user);
+        $user->setPassword($encoder->encodePassword("adm1n", $user->getSalt()));
+        $user->setEmail("admin@localhost") ;
+        $user->setEnabled(1);
+        $user->setRoles(array ('ROLE_ADMIN')) ;
+        $user->setOrganization($manager->getRepository('SygeforCoreBundle:Organization')->find(1));
+        $manager->persist($user) ;
+
         /** @var Organization $organization */
         foreach($organizations as $organization) {
             $user = new User();
@@ -81,17 +92,6 @@ class LoadUserData extends AbstractDataFixture
             $user->setEnabled(true);
             $manager->persist($user) ;
         }
-
-        // admin
-        $user = new User();
-        $user->setUsername("admin");
-        $encoder = $encoderFactory->getEncoder($user);
-        $user->setPassword($encoder->encodePassword("adm1n", $user->getSalt()));
-        $user->setEmail("admin@localhost") ;
-        $user->setEnabled(1);
-        $user->setRoles(array ('ROLE_ADMIN')) ;
-        $user->setOrganization($manager->getRepository('SygeforCoreBundle:Organization')->find(1));
-        $manager->persist($user) ;
 
         // flush
         $manager->flush();

@@ -49,7 +49,6 @@
 .absolute-fixed-wrapper {
 	@extend .full-height-container;
 	@extend .is-absolute;
-	@extend .is-direction-column;
 
 	.table-search {
 		@extend .full-height-item;
