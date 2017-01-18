@@ -35,4 +35,9 @@ parameters:
     elasticsearch_prefix: env_
 
     wkhtmltopdf_bin: ../bin/wkhtmltopdf-amd64
+    #####################################################################
+    #############################  UNOCONV  #############################
+    # You need to export HOME for apache or using unoconv 0.7 for nginx #
+    #####################################################################
+    # unoconv_bin: export HOME=/tmp/sygefor; unoconv
     unoconv_bin: unoconv
