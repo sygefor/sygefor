@@ -1,0 +1,80 @@
+<!--
+     ce fichier définit les règles de diffusion d'attributs vers les différentes ressources
+
+     exemple distribué pour la fédération Éducation-Recherche : Il filtre les attributs reçu depuis les IdP.
+
+     les attributs sont décrits sur la page
+     http://federation.renater.fr/technique/attributs
+
+     Documentation de référence :
+     https://spaces.internet2.edu/display/SHIB2/NativeSPAttributeFilter
+
+-->
+
+<afp:AttributeFilterPolicyGroup
+        xmlns="urn:mace:shibboleth:2.0:afp:mf:basic"
+        xmlns:basic="urn:mace:shibboleth:2.0:afp:mf:basic"
+        xmlns:afp="urn:mace:shibboleth:2.0:afp"
+        xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
+
+    <!-- Règle partagée entre les valeurs des attributs de type 'affiliation' -->
+    <afp:PermitValueRule id="eduPersonAffiliationValues" xsi:type="OR">
+        <Rule xsi:type="AttributeValueString" value="faculty"/>
+        <Rule xsi:type="AttributeValueString" value="student"/>
+        <Rule xsi:type="AttributeValueString" value="staff"/>
+        <Rule xsi:type="AttributeValueString" value="alum"/>
+        <Rule xsi:type="AttributeValueString" value="member"/>
+        <Rule xsi:type="AttributeValueString" value="affiliate"/>
+        <Rule xsi:type="AttributeValueString" value="employee"/>
+        <Rule xsi:type="AttributeValueString" value="library-walk-in"/>
+    </afp:PermitValueRule>
+
+    <!--
+    Règle partagée entre tous les attributs "scoped". Mais il faut appliquer cette règle
+    explicitement dans un AttributeRule plus bas si on veut vérifier certains de ces types
+    d'attributs.
+    -->
+    <afp:PermitValueRule id="ScopingRules" xsi:type="AND">
+        <Rule xsi:type="NOT">
+            <Rule xsi:type="AttributeValueRegex" regex="@"/>
+        </Rule>
+        <Rule xsi:type="saml:AttributeScopeMatchesShibMDScope" xmlns:saml="urn:mace:shibboleth:2.0:afp:mf:saml"/>
+    </afp:PermitValueRule>
+
+    <afp:AttributeFilterPolicy>
+        <!-- This policy is in effect in all cases. -->
+        <afp:PolicyRequirementRule xsi:type="ANY"/>
+
+        <!-- interdit les affiliations non définies en appliquant les valeurs possibles définies ci-dessus -->
+        <afp:AttributeRule attributeID="affiliation">
+            <afp:PermitValueRule xsi:type="AND">
+                <RuleReference ref="eduPersonAffiliationValues"/>
+                <RuleReference ref="ScopingRules"/>
+            </afp:PermitValueRule>
+        </afp:AttributeRule>
+
+        <afp:AttributeRule attributeID="unscoped-affiliation">
+            <afp:PermitValueRuleReference ref="eduPersonAffiliationValues"/>
+        </afp:AttributeRule>
+
+        <afp:AttributeRule attributeID="primary-affiliation">
+            <afp:PermitValueRuleReference ref="eduPersonAffiliationValues"/>
+        </afp:AttributeRule>
+
+        <afp:AttributeRule attributeID="eppn">
+            <afp:PermitValueRuleReference ref="ScopingRules"/>
+        </afp:AttributeRule>
+
+        <afp:AttributeRule attributeID="targeted-id">
+            <afp:PermitValueRule xsi:type="ANY"/>
+        </afp:AttributeRule>
+
+        <!-- Pour tous les autres attributs non filtrés ci-dessus : permissif -->
+        <afp:AttributeRule attributeID="*">
+            <afp:PermitValueRule xsi:type="ANY"/>
+        </afp:AttributeRule>
+
+    </afp:AttributeFilterPolicy>
+
+</afp:AttributeFilterPolicyGroup>
+

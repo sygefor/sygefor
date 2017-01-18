@@ -39,6 +39,10 @@ Configuration requise
     * curl
     * fileinfo
     
+### Symfony2
+
+Sygefor3 s'appuie sur Symfony 2.8.
+
 ### MySQL
 
 version 5.0 minimum
@@ -48,14 +52,20 @@ version 5.0 minimum
 Sygefor3 s'appuie sur un serveur [ElasticSearch](http://www.elasticsearch.org/) qui gère l'indexation de l'ensemble 
 des éléments.
 
-* version 1.1 minimum
+- version 1.4
+ - Répertoire pour Debian : deb http://packages.elasticsearch.org/elasticsearch/1.4/debian stable main
+ - Répertoire pour CentOS : voir (ajouter le fichier external_conf/elasticsearch.repo dans /etc/yum.repos.d/)
+ - apt-get/yum update
+ - apt-get/yum install elasticsearch
+ - service elasticsearch start
+ - update-rc.d elasticsearch defaults
 
 ### Unoconv
 
-La génération des PDF lors d'un publipostage est rendue possible grâce à la librairie [Unoconv](https://github.com/dagwieers/unoconv) 
+- La génération des PDF lors d'un publipostage est rendue possible grâce à la librairie [Unoconv](https://github.com/dagwieers/unoconv)
 qui doit donc être installée sur le serveur.
-
-* [version 0.7](https://gist.github.com/janeklb/657e119b2ce3d0138b42e6720f248e09)
+    - yum/apt-get install unoconv
+    - Mettre à jour vers la [version 0.7](https://gist.github.com/janeklb/657e119b2ce3d0138b42e6720f248e09)
 
 ### Accès interactif
 
@@ -73,6 +83,7 @@ du protocole Shibboleth. Il faut donc installer un Service Provider sur le serve
 
 [Installation d'un SP Shibboleth](https://services.renater.fr/federation/docs/installation/sp#test_dans_la_federation_de_test)
 
+Vous pouvez utiliser le script d'installation de Shibboleth (dans shell/installShib)
 
 Installation
 ------------
@@ -81,21 +92,30 @@ Installation
 
 - Composer installé : http://www.coolcoyote.net/php-mysql/installation-de-composer-sous-linux-et-windows
 - Openssl installé
-- Node.js (et npm) installé
-- Visual Studio Redistributables installé
-- wkhtmltopdf installé (pour générer des pdf)
+- npm installé (sudo apt-get/yum install npm)
+    - Si vous rencontrez des problèmes avec le npm install, vous pouvez installer la version 0.12.17 de Node.js (sudo npm install n -g && sudo n 0.12.17)
+- bower installé (sudo npm install bower -g)
+- gulp installé (sudo npm install gulp@3.8.0 -g)
+- Visual Studio Redistributables installé sur Windows
+- wkhtmltopdf installé (pour générer des pdf) (sudo apt-get/yum install wkhtmltopdf)
 - Rewrite module activé
 
 ### Le projet
 
-- git clone https://github.com/conjecto/sygefor.git
-- cd sygefor3
+- git clone https://github.com/sygefor/sygefor
+- cd sygefor
 - composer install
     - Renseigner les paramètres symfony
 - npm install
-- napa
+- bower install
+- php app/console doctrine:database:create
 - php app/console doctrine:schema:create
 - php app/console doctrine:fixtures:load (pour générer quelques données initiales)
-- gulp
+- php app/console fos:js-routing:dump
+- php app/console assetic:dump
+- php app/console assets:install --symlink
+- gulp build
+- php app/console fos:elastica:populate (en cas de problème de sérialisation composer update doctrine/orm)
 - php app/console server:run
-- Se rendre sur localhost:8000 avec votre navigateur
+- Se rendre sur localhost:8000 avec votre navigateur (s'identifier avec admin/admin)
+- chown www-data. app/cache app/logs -R pour servir avec apache et nginx

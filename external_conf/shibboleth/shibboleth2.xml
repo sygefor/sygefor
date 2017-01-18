@@ -1,0 +1,180 @@
+<SPConfig xmlns="urn:mace:shibboleth:2.0:native:sp:config"
+    xmlns:conf="urn:mace:shibboleth:2.0:native:sp:config"
+    xmlns:saml="urn:oasis:names:tc:SAML:2.0:assertion"
+    xmlns:samlp="urn:oasis:names:tc:SAML:2.0:protocol"
+    xmlns:md="urn:oasis:names:tc:SAML:2.0:metadata"
+    clockSkew="180">
+
+    <!--
+    The InProcess section contains settings affecting web server modules.
+    Required for IIS, but can be removed when using other web servers.
+    -->
+    <InProcess logger="native.logger">
+        <ISAPI normalizeRequest="true" safeHeaderNames="true">
+            <!--
+            Maps IIS Instance ID values to the host scheme/name/port. The name is
+            required so that the proper <Host> in the request map above is found without
+            having to cover every possible DNS/IP combination the user might enter.
+            -->
+            <Site id="1" name="sp.example.org"/>
+            <!--
+            When the port and scheme are omitted, the HTTP request's port and scheme are used.
+            If these are wrong because of virtualization, they can be explicitly set here to
+            ensure proper redirect generation.
+            -->
+            <!--
+            <Site id="42" name="virtual.example.org" scheme="https" port="443"/>
+            -->
+        </ISAPI>
+    </InProcess>
+
+    <!--
+    By default, in-memory StorageService, ReplayCache, ArtifactMap, and SessionCache
+    are used. See example-shibboleth2.xml for samples of explicitly configuring them.
+    -->
+
+    <!--
+    To customize behavior for specific resources on IIS, and to link vhosts or
+    resources to ApplicationOverride settings below, use the XML syntax below.
+    See https://wiki.shibboleth.net/confluence/display/SHIB2/NativeSPRequestMapHowTo for help.
+
+    Apache users should rely on web server options/commands in most cases, and can remove the
+    RequestMapper element. See https://wiki.shibboleth.net/confluence/display/SHIB2/NativeSPApacheConfig
+    -->
+    <RequestMapper type="Native">
+        <RequestMap>
+            <!--
+            The example requires a session for documents in /secure on the containing host with http and
+            https on the default ports. Note that the name and port in the <Host> elements MUST match
+            Apache's ServerName and Port directives or the IIS Site name in the <ISAPI> element above.
+            -->
+            <Host name="sp.example.org">
+                <Path name="secure" authType="shibboleth" requireSession="true"/>
+            </Host>
+            <!-- Example of a second vhost mapped to a different applicationId. -->
+            <!--
+            <Host name="admin.example.org" applicationId="admin" authType="shibboleth" requireSession="true"/>
+            -->
+        </RequestMap>
+    </RequestMapper>
+
+    <!--
+    The ApplicationDefaults element is where most of Shibboleth's SAML bits are defined.
+    Resource requests are mapped by the RequestMapper to an applicationId that
+    points into to this section (or to the defaults here).
+    -->
+    <ApplicationDefaults entityID="https://sygefor.dev"
+                         REMOTE_USER="eppn persistent-id targeted-id">
+
+    <!--ApplicationDefaults entityID="https://aaa.sygefor.reseau-urfist.fr"
+                         REMOTE_USER="eppn persistent-id targeted-id"-->
+
+        <!--
+        Controls session lifetimes, address checks, cookie handling, and the protocol handlers.
+        You MUST supply an effectively unique handlerURL value for each of your applications.
+        The value defaults to /Shibboleth.sso, and should be a relative path, with the SP computing
+        a relative value based on the virtual host. Using handlerSSL="true", the default, will force
+        the protocol to be https. You should also set cookieProps to "https" for SSL-only sites.
+        Note that while we default checkAddress to "false", this has a negative impact on the
+        security of your site. Stealing sessions via cookie theft is much easier with this disabled.
+        -->
+        <Sessions lifetime="28800" timeout="3600" relayState="ss:mem"
+                  checkAddress="false" handlerSSL="false" cookieProps="; path=/; HttpOnly">
+
+            <!--
+            Configures SSO for a default IdP. To allow for >1 IdP, remove
+            entityID property and adjust discoveryURL to point to discovery service.
+            (Set discoveryProtocol to "WAYF" for legacy Shibboleth WAYF support.)
+            You can also override entityID on /Login query string, or in RequestMap/htaccess.
+            -->
+            <!--SSO discoveryProtocol="SAMLDS" discoveryURL="https://discovery.renater.fr/test"-->
+            <SSO discoveryProtocol="SAMLDS" discoveryURL="http://sygefor.dev/wayf?lang=fr">
+              SAML2 SAML1
+            </SSO>
+            <!--SSO discoveryProtocol="SAMLDS" discoveryURL="https://discovery.renater.fr/renater">
+                SAML2 SAML1
+            </SSO-->
+
+            <!-- SAML and local-only logout. -->
+            <Logout>SAML2 Local</Logout>
+
+            <!-- Extension service that generates "approximate" metadata based on SP configuration. -->
+            <Handler type="MetadataGenerator" Location="/Metadata" signing="false"/>
+
+            <!-- Status reporting service. -->
+            <Handler type="Status" Location="/Status" acl="127.0.0.1 ::1"/>
+
+            <!-- Session diagnostic service. -->
+            <Handler type="Session" Location="/Session" showAttributeValues="true"/>
+
+            <!-- JSON feed of discovery information. -->
+            <Handler type="DiscoveryFeed" Location="/DiscoFeed"/>
+        </Sessions>
+
+        <!--
+        Allows overriding of error template information/filenames. You can
+        also add attributes with values that can be plugged into the templates.
+        -->
+        <Errors supportContact="support@sygefor.dev"
+            helpLocation="/about.html"
+            styleSheet="/shibboleth-sp/main.css"/>
+
+        <!-- prod metadata. -->
+        <MetadataProvider type="XML" uri="https://federation.renater.fr/renater/renater-metadata.xml"
+              backingFilePath="renater-metadata.xml" reloadInterval="7200">
+            <MetadataFilter type="RequireValidUntil" maxValidityInterval="2419200"/>
+            <MetadataFilter type="Signature" certificate="metadata-federation-renater.crt"/>
+            <!--<MetadataFilter type="Whitelist">-->
+              <!--<Include>IPD Entity ID</Include>-->
+            <!--</MetadataFilter>-->
+        </MetadataProvider>
+
+	    <!-- test metadata -->
+        <!--MetadataProvider type="XML" uri="https://federation.renater.fr/test/renater-test-metadata.xml"
+              backingFilePath="renater-testmetadata.xml" reloadInterval="7200">
+            <MetadataFilter type="RequireValidUntil" maxValidityInterval="2419200"/>
+            <MetadataFilter type="Signature" certificate="metadata-federation-renater.crt"/>
+        </MetadataProvider-->
+
+	<!-- cru metadata -->
+	<MetadataProvider type="XML" uri="https://cru.renater.fr/idp/profile/Metadata/SAML"
+                backingFilePath="sac-metadata.xml" reloadInterval="7200" />
+
+        <!-- Example of locally maintained metadata. -->
+        <!--
+        <MetadataProvider type="XML" file="partner-metadata.xml"/>
+        -->
+
+        <!-- Map to extract attributes from SAML assertions. -->
+        <AttributeExtractor type="XML" validate="true" reloadChanges="false" path="attribute-map.xml"/>
+
+        <!-- Use a SAML query if no attributes are supplied during SSO. -->
+        <AttributeResolver type="Query" subjectMatch="true"/>
+
+        <!-- Default filtering policy for recognized attributes, lets other data pass. -->
+        <AttributeFilter type="XML" validate="true" path="attribute-policy.xml"/>
+
+        <!-- Simple file-based resolver for using a single keypair. -->
+        <CredentialResolver type="File" key="sp-key.pem" certificate="sp-cert.pem"/>
+
+        <!--
+        The default settings can be overridden by creating ApplicationOverride elements (see
+        the https://wiki.shibboleth.net/confluence/display/SHIB2/NativeSPApplicationOverride topic).
+        Resource requests are mapped by web server commands, or the RequestMapper, to an
+        applicationId setting.
+
+        Example of a second application (for a second vhost) that has a different entityID.
+        Resources on the vhost would map to an applicationId of "admin":
+        -->
+        <!--
+        <ApplicationOverride id="admin" entityID="https://admin.example.org/shibboleth"/>
+        -->
+    </ApplicationDefaults>
+
+    <!-- Policies that determine how to process and authenticate runtime messages. -->
+    <SecurityPolicyProvider type="XML" validate="true" path="security-policy.xml"/>
+
+    <!-- Low-level configuration about protocols and bindings available for use. -->
+    <ProtocolProvider type="XML" validate="true" reloadChanges="false" path="protocols.xml"/>
+
+</SPConfig>

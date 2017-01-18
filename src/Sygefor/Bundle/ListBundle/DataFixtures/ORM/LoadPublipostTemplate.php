@@ -23,7 +23,7 @@ class LoadPublipostTemplate extends AbstractDataFixture
             $template->setOrganization($organization);
             $template->setName($name);
             $fs = new Filesystem();
-            $fs->copy(__DIR__.'/../../../../../../app/Resources/fixtures/feuille_presence.odt', __DIR__.'/../../../../../../app/Resources/fixtures/feuille_presence_'.$organization->getId().'.odt');
+            $fs->copy(__DIR__ . '/../../../../../../app/Resources/fixtures/feuille_presence.odt', __DIR__.'/../../../../../../app/Resources/fixtures/feuille_presence_'.$organization->getId().'.odt');
             $template->setFile(new File(__DIR__.'/../../../../../../app/Resources/fixtures/feuille_presence_'.$organization->getId().'.odt'),"feuille_presence.odt");
             $template->setEntity($entity);
             $manager->persist($template);
@@ -37,7 +37,7 @@ class LoadPublipostTemplate extends AbstractDataFixture
      */
     protected function doLoad(ObjectManager $manager) {
 
-        $this->loadOneEntry($manager, "Feuille d'émargement", __DIR__.'/../../../../../../app/Resources/fixtures/feuille_presence.odt',"Sygefor\\Bundle\\TraineeBundle\\Entity\\Inscription");
+        $this->loadOneEntry($manager, "Feuille d'émargement", __DIR__ . '/../../../../../../app/Resources/fixtures/feuille_presence.odt',"Sygefor\\Bundle\\TraineeBundle\\Entity\\Inscription");
 
         $manager->flush();
     }
