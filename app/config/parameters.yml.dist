@@ -27,6 +27,9 @@ parameters:
     mailer_local_auth_mode: null
     mailer_local_port:      1025
 
+    trusted_hosts: [127.0.0.1, 192.168.1.42, "extranet.sygefor.dev", "sygefor.dev"]
+    trusted_proxies: [127.0.0.1, 192.168.1.42, ]
+
     locale:            en
     secret:            ThisTokenIsNotSoSecretChangeIt
 

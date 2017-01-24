@@ -19,13 +19,13 @@
                 <div class="col-md-7">
                     {% include '@SygeforFront/Public/program/training-tags.html.twig' %}
 
-                    {% if training.description is defined %}
-                        <h4>Programme</h4>
+                    {% if training.description is defined and training.description | length > 0 %}
+                        <h4>Objectifs</h4>
                         <p>{{ training.description | nl2br }}</p>
                     {% endif %}
 
-                    {% if training.program is defined %}
-                        <h4>Objectifs</h4>
+                    {% if training.program is defined and training.program | length > 0 %}
+                        <h4>Programme</h4>
                         <p>{{ training.program | nl2br }}</p>
                     {% endif %}
 
