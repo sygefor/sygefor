@@ -24,7 +24,7 @@ sygeforApp.controller('InstitutionListController', ['$scope', '$user', '$injecto
 
     // add operations
     $scope.addOperations = [{
-        label: 'Ajouter une unité',
+        label: 'Ajouter un établissement',
         execute: function () {
             $dialog.open('institution.create').then(function (result) {
                 $state.go('institution.detail.view', {id: result.institution.id}, {reload: true});

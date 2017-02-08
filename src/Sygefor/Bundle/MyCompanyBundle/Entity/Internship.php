@@ -46,7 +46,7 @@ class Internship extends AbstractTraining
     {
         $this->publicTypes = new ArrayCollection();
 
-        parent::__construct();
+        parent::__clone();
     }
 
     /**

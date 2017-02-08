@@ -9,7 +9,14 @@
             <li><label>Thématique</label> {{ session.training.theme.name }} </li>
             <li><label>Date(s)</label> {{ session.dateRange }}</li>
             <li><label>Horaires</label> {{ session.schedule }}</li>
-            <li><label>Durée</label> {{ session.hourNumber  + ' heure(s) sur ' + session.dayNumber + ' jour(s)' }}</li>
+            <li>
+                <label>Durée</label>
+                <div>
+                    <span ng-if="session.hourNumber !== undefined">{{ session.hourNumber  + ' heure(s)' }}</span>
+                    <span ng-if="session.hourNumber !== undefined && session.dayNumber !== undefined"> sur </span>
+                    <span ng-if="session.dayNumber !== undefined">{{ session.dayNumber + ' jour(s)' }}</span>
+                </div>
+            </li>
             <li><label>Lieu</label> {{ session.place.name }}</li>
         </ul>
     </div>

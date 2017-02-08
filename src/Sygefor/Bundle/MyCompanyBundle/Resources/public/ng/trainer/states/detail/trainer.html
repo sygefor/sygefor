@@ -2,9 +2,7 @@
     <div class="row">
         <div class="col-md-8">
             <div class="btn-group pull-right">
-                <a class="btn btn-fa" href="" tooltip="Changer le centre de rattachement" ng-click="changeOrganization()"><span class="fa fa-university"></span></a>
-                   <!--ng-if="$user.hasAccessRight('sygefor_trainer.rights.trainer.all.update')" -->
-
+                <a ng-if="$user.hasAccessRight('sygefor_trainer.rights.trainer.all.update')" class="btn btn-fa" href="" tooltip="Changer le centre de rattachement" ng-if="trainer._accessRights.edit" ng-click="changeOrganization()"><span class="fa fa-university"></span></a>
                 <a class="btn btn-fa" href="" tooltip="Supprimer" ng-if="trainer._accessRights.delete" ng-click="delete()"><span class="fa fa-trash-o"></span></a>
             </div>
 

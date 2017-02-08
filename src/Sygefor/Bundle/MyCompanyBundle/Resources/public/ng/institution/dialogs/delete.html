@@ -2,12 +2,44 @@
     <button type="button" class="close" ng-click="dialog.dismiss()" aria-hidden="true">×</button>
     <h4 class="modal-title"><i class="fa fa-warning"></i> Supprimer un établissement</h4>
 </div>
-<div class="modal-body center-block">
-    <div class="alert alert-danger" role="alert">
-        Êtes-vous certain de vouloir supprimer l'établissement <strong>{{ dialog.params.institution.name }}</strong> ?
+
+<form sf-href="institution.remove({id: dialog.params.institution.id})" sf-form="form" json-path="form" on-success="onSuccess(data)" class="form-horizontal" novalidate>
+    <div ng-if="institutionTrainees > 0">
+        <div class="modal-body">
+            <div class="alert alert-danger" role="alert">
+                <i class="fa fa-warning"></i> <strong>{{ institutionTrainees }}
+                <span ng-if="institutionTrainees > 1"> stagiaires sont liés </span>
+                <span ng-if="institutionTrainees == 1"> stagiaire est lié </span>
+                à cet établissement. Vous devez l{{ institutionTrainees > 1 ? 'es ' : '\'' }}assigner à un autre établissement
+                avant de le supprimer.</strong>
+            </div>
+
+            <div class="form-group" ng-if="form.children.replacement" ng-class="{'has-error': (form.children.replacement.errors.length || form.errors.length) }">
+                <label class="col-sm-3 control-label" for="{{ form.children.replacement.id }}">{{ form.children.replacement.label }}</label>
+                <div class="col-sm-9">
+                    <span sf-form-widget="form.children.replacement" class="form-control"/>
+                    <div ng-if="form.errors.length && error.length" ng-repeat="error in form.errors" class="help-block">{{ error }}</div>
+                    <div ng-if="error.length" ng-repeat="error in form.errors" class="help-block">{{ error }}</div>
+                    <div ng-if="error.length" ng-repeat="error in form.children.replacement.errors" class="help-block">{{ error }}</div>
+                </div>
+            </div>
+        </div>
     </div>
-</div>
-<div class="modal-footer">
-    <a class="btn btn-default" ng-click="dialog.dismiss()">Annuler</a>
-    <a class="btn btn-primary" ng-click="ok()">Valider</a>
-</div>
+    <div ng-if="institutionTrainees === 0">
+        <div class="modal-body center-block">
+            <div class="alert alert-danger" role="alert">
+                Êtes-vous certain de vouloir supprimer l'établissement <strong>{{ dialog.params.institution.name }}</strong> ?
+            </div>
+            <div class="form-group" ng-if="form.errors.length" ng-class="{'has-error': form.errors.length }">
+                <div class="col-sm-9">
+                    <div ng-if="error.length" ng-repeat="error in form.errors" class="help-block">{{ error }}</div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="modal-footer">
+        <a class="btn btn-default" ng-click="dialog.dismiss()">Annuler</a>
+        <input class="btn btn-primary" type="submit" value="{{ institutionTrainees > 0 ? 'Remplacer et supprimer' : 'Supprimer' }}" />
+    </div>
+</form>

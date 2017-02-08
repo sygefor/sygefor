@@ -20,7 +20,7 @@ class Session extends AbstractSession
     /**
      * @var string
      * @ORM\Column(name="name", type="string", length=255)
-     * @Serializer\Groups({"session", "inscription", "api"})
+     * @Serializer\Groups({"training", "session", "inscription", "api"})
      */
     protected $name;
 

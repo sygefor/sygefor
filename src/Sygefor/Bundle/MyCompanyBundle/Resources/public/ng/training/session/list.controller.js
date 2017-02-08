@@ -31,8 +31,7 @@ sygeforApp.controller('SessionListController', ['$scope', '$state', '$injector',
         icon: 'fa-bullhorn',
         label: "Modifier l'état des inscriptions",
         available: function () {
-            return true;
-            //return $user.hasAccessRight('sygefor_training.rights.inscription.own.update') || $user.hasAccessRight('sygefor_trainee.rights.inscription.all.update');
+            return $user.hasAccessRight('sygefor_inscription.rights.inscription.own.update') || $user.hasAccessRight('sygefor_inscription.rights.inscription.all.update');
         },
         subitems: function (){
             var items = [];

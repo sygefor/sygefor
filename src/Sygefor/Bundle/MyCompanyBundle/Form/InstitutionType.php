@@ -21,8 +21,8 @@ class InstitutionType extends BaseInstitutionType
         $builder
             ->add('manager', CorrespondentType::class, array(
                 'label'              => "Directeur de l'établissement",
-                'required'           => false,
                 'allow_extra_fields' => $options['allow_extra_fields'],
+                'required'           => false,
             ));
 
         // remove unused fields

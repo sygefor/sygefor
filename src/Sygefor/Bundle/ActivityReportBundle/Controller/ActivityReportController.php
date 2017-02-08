@@ -74,6 +74,9 @@ class ActivityReportController extends Controller
             "crosstabs" => $builder->getTrainingCrosstabs($this->multipleSessionTrainingTypes, $this->singleSessionTrainingTypes),
             "listings" => $builder->getListing($this->multipleSessionTrainingTypes)
         );
+        if (count($array['summaries']) === 1) {
+            $array['summaries']['all'] = $array['summaries'][array_keys($array['summaries'])[0]];
+        }
 
         $array['listings'] = array_merge($array['listings'], $builder->getListing($this->singleSessionTrainingTypes, array(
             'trainingKeys' => array(

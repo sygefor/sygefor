@@ -115,12 +115,12 @@ sygeforApp.config(["$listStateProvider", "$dialogProvider", function($listStateP
         controller: function($scope, $modalInstance, $dialogParams, $state, $http, growl) {
             $scope.dialog = $modalInstance;
             $scope.dialog.params = $dialogParams;
-            $scope.ok = function() {
-                var url = Routing.generate('institution.remove', {id: $dialogParams.institution.id});
-                $http.post(url).then(function (response){
-                    growl.addSuccessMessage("L'établissement a bien été supprimé.");
-                    $scope.dialog.close(response.data);
-                });
+            $scope.form = $dialogParams.form;
+            $scope.institution = $dialogParams.institution;
+            $scope.institutionTrainees = $dialogParams.institutionTrainees;
+            $scope.onSuccess = function(response) {
+                growl.addSuccessMessage("L'établissement a bien été supprimé.");
+                $scope.dialog.close(response.data);
             };
         }
     });

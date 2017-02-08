@@ -8,8 +8,8 @@
             <div class="btn-group pull-right">
                 <a class="btn btn-fa" href="" tooltip="Publipostage" ng-click="$dialog.open('batch.publipost', { items: [session.id], service: 'session' })"><span class="fa fa-file-word-o"></span></a>
                 <a class="btn btn-fa" href="" tooltip="Voir l'événement" ng-if="session.training._accessRights.view" ui-sref="training.detail.view({id: session.training.id})"><span class="fa fa-calendar"></span></a>
-                <a class="btn btn-fa" href="" ng-if="!session.promote" tooltip="Promouvoir la session" ng-if="session._accessRights.edit" ng-click="promote(1)"><span class="fa fa-star-o"></span></a>
-                <a class="btn btn-fa" href="" ng-if="session.promote" tooltip="Dépromouvoir la session" ng-if="session._accessRights.edit" ng-click="promote(0)"><span class="fa fa-star fa-highlight"></span></a>
+                <a class="btn btn-fa" href="" ng-if="!session.promote && session._accessRights.edit" tooltip="Promouvoir la session" ng-click="promote(1)"><span class="fa fa-star-o"></span></a>
+                <a class="btn btn-fa" href="" ng-if="session.promote && session._accessRights.edit" tooltip="Dépromouvoir la session" ng-click="promote(0)"><span class="fa fa-star fa-highlight"></span></a>
                 <a class="btn btn-fa" href="" tooltip="Dupliquer" ng-if="session._accessRights.edit" ng-click="duplicate()"><span class="fa fa-copy"></span></a>
                 <a class="btn btn-fa" href="" tooltip="Supprimer" ng-if="session._accessRights.delete" ng-click="delete()"><span class="fa fa-trash-o"></span></a>
             </div>

@@ -1,7 +1,7 @@
 /**
  * BatchMailingController
  */
-sygeforApp.controller('InscriptionStatusChange', ['$scope', '$http', '$window', '$modalInstance', '$dialogParams', '$dialog', 'config', function ($scope, $http, $window, $modalInstance, $dialogParams, $dialog, config)
+sygeforApp.controller('InscriptionStatusChange', ['$scope', '$http', '$window', '$modalInstance', '$dialogParams', '$dialog', 'config', '$filter', function ($scope, $http, $window, $modalInstance, $dialogParams, $dialog, config, $filter)
 {
     $scope.service = 'sygefor_inscription.batch.inscription_status_change';
     $scope.dialog = $modalInstance;
@@ -89,7 +89,8 @@ sygeforApp.controller('InscriptionStatusChange', ['$scope', '$http', '$window', 
             options: {
                 targetClass: 'SygeforInscriptionBundle:AbstractInscription',
                 subject: $scope.message.subject,
-                message: $scope.message.body
+                message: $scope.message.body,
+                templateAttachments: $filter('filter')($scope.attCheckList, {selected: true})
             }
         });
     };
@@ -166,6 +167,10 @@ sygeforApp.controller('InscriptionStatusChange', ['$scope', '$http', '$window', 
             $scope.message.subject = newValue.subject;
             $scope.message.body = newValue.body;
             $scope.attCheckList = newValue.attachmentTemplates;
+
+            for (var i in newValue.attachmentTemplates) {
+                newValue.attachmentTemplates[i].selected = true;
+            }
         }
     });
 }]);

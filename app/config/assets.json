@@ -17,8 +17,7 @@
             "node_modules/blueimp-file-upload/css/jquery.fileupload.css",
             "node_modules/blueimp-file-upload/css/jquery.fileupload-ui.css",
             "app/Resources/scss/**/*",
-            "!app/Resources/scss/pdf.scss",
-            "src/Sygefor/Bundle/MyCompanyBundle/Resources/public/scss/*.scss"
+            "!app/Resources/scss/pdf.scss"
         ],
         "pdf": [
             "app/Resources/scss/pdf.scss"

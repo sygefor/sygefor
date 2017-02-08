@@ -24,8 +24,10 @@ sygeforApp.controller('InstitutionDetailViewController', ['$scope', '$taxonomy',
      * Delete the institution
      */
     $scope.delete = function () {
-        $dialog.open('institution.delete', {institution: $scope.institution}).then(function (){
-            $state.go('institution.table', null, { reload:true });
+        $http.get(Routing.generate('institution.remove', {id : $scope.institution.id})).then(function (data) {
+            $dialog.open('institution.delete', {institution: $scope.institution, institutionTrainees: data.data.institutionTrainees, form: data.data.form}).then(function () {
+                $state.go('institution.table', null, { reload:true });
+            });
         });
     };
 }]);

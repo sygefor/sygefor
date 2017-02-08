@@ -49,7 +49,6 @@ class CorrespondentType extends BaseCorrespondentType
             ))
             ->add('email', EmailType::class, array(
                 'label'    => 'Email',
-                'required' => false,
             ))
             ->add('address', TextareaType::class, array(
                 'label'    => 'Adresse',

@@ -96,18 +96,6 @@
                 <div ng-if="error.length" ng-repeat="error in childReg.errors" class="help-block">{{ error }}</div>
             </div>
         </div>
-
-        <div ng-repeat="key in ['dayNumber', 'hourNumber']">
-            <div class="form-group" ng-if="form.children[key]" ng-class="{'has-error': form.children[key].errors.length }">
-                <label class="col-sm-3 control-label" for="{{ form.children[key].id }}">{{ form.children[key].label }}</label>
-                <div class="col-sm-9">
-                    <span sf-form-widget="form.children[key]" class="form-control"/>
-                    <div ng-if="error.length" ng-if="error.length" ng-repeat="error in form.children[key].errors" class="help-block">{{ error }}</div>
-                </div>
-            </div>
-        </div>
-
-
     </div>
     <div class="modal-footer">
         <a class="btn btn-default" ng-click="dialog.dismiss()">Annuler</a>
