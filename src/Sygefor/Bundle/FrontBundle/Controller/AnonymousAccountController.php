@@ -41,12 +41,24 @@ class AnonymousAccountController extends AbstractAnonymousAccountController
             array('name' => $shibbolethAttributes['title'])
         ));
         $trainee->setOrganization($this->getDoctrine()->getRepository('SygeforCoreBundle:Organization')->find(1));
-//        $trainee->setLastName($shibbolethAttributes['givenName']);
-        $trainee->setEmail($shibbolethAttributes['mail']);
-        $trainee->setAddress($shibbolethAttributes['street']);
-        $trainee->setZip($shibbolethAttributes['postalCode']);
-        $trainee->setCity($shibbolethAttributes['postalAddress']);
-        $trainee->setPhoneNumber($shibbolethAttributes['telephoneNumber']);
+        if (isset($shibbolethAttributes['givenName'])) {
+            $trainee->setLastName($shibbolethAttributes['givenName']);
+        }
+        if (isset($shibbolethAttributes['mail'])) {
+            $trainee->setEmail($shibbolethAttributes['mail']);
+        }
+        if (isset($shibbolethAttributes['street'])) {
+            $trainee->setAddress($shibbolethAttributes['street']);
+        }
+        if (isset($shibbolethAttributes['postalCode'])) {
+            $trainee->setZip($shibbolethAttributes['postalCode']);
+        }
+        if (isset($shibbolethAttributes['postalAddress'])) {
+            $trainee->setCity($shibbolethAttributes['postalAddress']);
+        }
+        if (isset($shibbolethAttributes['telephoneNumber'])) {
+            $trainee->setPhoneNumber($shibbolethAttributes['telephoneNumber']);
+        }
 
         $form = $this->createForm(new ProfileType($this->get('sygefor_core.access_right_registry')), $trainee);
 

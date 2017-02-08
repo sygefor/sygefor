@@ -74,7 +74,7 @@ Vous recevrez, par courrier électronique, une convocation environ deux semaines
 
 Les places étant limitées, nous vous prions instamment de nous informer au plus vite en cas d'indisponibilité de votre part, afin de pouvoir proposer votre place à une autre personne.
 
-Nous rappellons qu'une absence non signalée a un stage entraîne l'annulation des inscriptions à tous les autres stages du programme en cours.
+Nous rappelons qu'une absence non signalée à un stage entraîne l'annulation des inscriptions à tous les autres stages du programme en cours.
 
 Avec nos cordiales salutations,
 L'équipe de votre Compagnie.",
