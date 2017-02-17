@@ -14,7 +14,7 @@ sygeforApp.controller('InscriptionStatusChange', ['$scope', '$http', '$window', 
     $scope.attCheckList = $scope.attachmentTemplates;
     $scope.formError = '';
 
-    //building templates contents
+    // building templates contents
     $scope.templates = [];
     for (var i in config.templates) {
         $scope.templates[i] = {
@@ -27,19 +27,41 @@ sygeforApp.controller('InscriptionStatusChange', ['$scope', '$http', '$window', 
     }
 
     $scope.message = {};
-
     if ($scope.templates.length) {
         $scope.message.template = $scope.templates[0];
         $scope.message.subject = $scope.templates[0].subject;
         $scope.message.body = $scope.templates[0].body;
     }
+    $scope.message.attachments = [];
+
+    /**
+     * watches file upload attachment
+     */
+    $scope.fileChanged = function (element, $scope) {
+        $scope.$apply(function (scope) {
+            for (var key in element.files) {
+                if (typeof element.files[key] === "object") {
+                    $scope.message.attachments.push(element.files[key]);
+                }
+            }
+        });
+        angular.element($('#inputAttachment')).val(null);
+    };
+
+    /**
+     * Remove file attachment
+     * @param key
+     */
+    $scope.removeAttachment = function(key) {
+        $scope.message.attachments.splice(key, 1);
+        angular.element($('#inputAttachment')).val(null);
+    };
 
     /**
      * ensures the form was correctly filed (sets an error message otherwise), then asks for server-side message sending
      * if mail sending is performed without errors, the file is asked for download
      */
     $scope.ok = function () {
-
         if ($scope.send.Mail && !($scope.message.subject || $scope.message.message)) {
             $scope.formError = 'Pas de corps de message';
             return;
@@ -47,7 +69,6 @@ sygeforApp.controller('InscriptionStatusChange', ['$scope', '$http', '$window', 
 
         $scope.formError = '';
         var url = Routing.generate('sygefor_core.batch_operation.execute', {id: $scope.service});
-
         var attTemplates = [];
         if (typeof $scope.attCheckList != 'undefined') {
             angular.forEach($scope.attCheckList, function (tpl) {
@@ -67,6 +88,7 @@ sygeforApp.controller('InscriptionStatusChange', ['$scope', '$http', '$window', 
                 attachmentTemplates: attTemplates,
                 objects: {'SygeforTrainingBundle:Session': ($dialogParams.session) ? $dialogParams.session.id : 0}
             },
+            attachments: $scope.message.attachments,
             ids: $scope.items.join(",")
         };
 
@@ -78,9 +100,26 @@ sygeforApp.controller('InscriptionStatusChange', ['$scope', '$http', '$window', 
             data['options']['presenceStatus'] = $scope.presenceStatus.id
         }
 
-        $http.post(url, data).success(function() {
-            $scope.dialog.close();
+        $http({
+            method: 'POST',
+            url: url,
+            transformRequest: function (data) {
+                var formData = new FormData();
+                formData.append("options", angular.toJson(data.options));
+                //now add all of the assigned files
+                formData.append("ids", angular.toJson(data.ids));
+                //add each file to the form data and iteratively name them
+
+                for (var key in data.attachments) {
+                    formData.append("attachment_" + key, data.attachments[key]);
+                }
+                return formData;
+            },
+            headers: {'Content-Type': undefined},
+            data: data
         });
+
+        $modalInstance.close();
     };
 
     $scope.preview = function () {
@@ -91,7 +130,8 @@ sygeforApp.controller('InscriptionStatusChange', ['$scope', '$http', '$window', 
                 subject: $scope.message.subject,
                 message: $scope.message.body,
                 templateAttachments: $filter('filter')($scope.attCheckList, {selected: true})
-            }
+            },
+            attachments : $scope.message.attachments
         });
     };
 
@@ -137,19 +177,6 @@ sygeforApp.controller('InscriptionStatusChange', ['$scope', '$http', '$window', 
                 }
             });
 
-    };
-
-    $scope.cancel = function () {
-        $modalInstance.dismiss();
-    };
-
-    /**
-     * watches file upload model, and updates the form accordingly
-     */
-    $scope.fileChanged = function (element, $scope) {
-        $scope.$apply(function (scope) {
-            $scope.options.templateFile = element.files[0];
-        });
     };
 
     /**

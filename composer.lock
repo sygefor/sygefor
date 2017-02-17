@@ -3539,12 +3539,12 @@
             "source": {
                 "type": "git",
                 "url": "https://github.com/sygefor/core-bundle.git",
-                "reference": "b515eddfeea5553ad48c16d91042960cc0f45bec"
+                "reference": "f6ebe91836dee7d24f19639c0f7ceeab49594b7b"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/sygefor/core-bundle/zipball/b515eddfeea5553ad48c16d91042960cc0f45bec",
-                "reference": "b515eddfeea5553ad48c16d91042960cc0f45bec",
+                "url": "https://api.github.com/repos/sygefor/core-bundle/zipball/f6ebe91836dee7d24f19639c0f7ceeab49594b7b",
+                "reference": "f6ebe91836dee7d24f19639c0f7ceeab49594b7b",
                 "shasum": ""
             },
             "require": {
@@ -3573,7 +3573,7 @@
                 "source": "https://github.com/sygefor/core-bundle/tree/master",
                 "issues": "https://github.com/sygefor/core-bundle/issues"
             },
-            "time": "2017-02-08 10:54:44"
+            "time": "2017-02-17 13:37:53"
         },
         {
             "name": "sygefor/inscription-bundle",
@@ -3581,12 +3581,12 @@
             "source": {
                 "type": "git",
                 "url": "https://github.com/sygefor/inscription-bundle.git",
-                "reference": "b140d9721724dfeb7931666a783ce8660d08bcba"
+                "reference": "8a36b8cb3ee28a1b2c2f050c1d04085ebd769c75"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/sygefor/inscription-bundle/zipball/b140d9721724dfeb7931666a783ce8660d08bcba",
-                "reference": "b140d9721724dfeb7931666a783ce8660d08bcba",
+                "url": "https://api.github.com/repos/sygefor/inscription-bundle/zipball/8a36b8cb3ee28a1b2c2f050c1d04085ebd769c75",
+                "reference": "8a36b8cb3ee28a1b2c2f050c1d04085ebd769c75",
                 "shasum": ""
             },
             "type": "symfony-bundle",
@@ -3611,7 +3611,7 @@
                 "source": "https://github.com/sygefor/inscription-bundle/tree/master",
                 "issues": "https://github.com/sygefor/inscription-bundle/issues"
             },
-            "time": "2017-02-08 10:54:44"
+            "time": "2017-02-17 13:37:53"
         },
         {
             "name": "sygefor/institution-bundle",
@@ -3619,12 +3619,12 @@
             "source": {
                 "type": "git",
                 "url": "https://github.com/sygefor/institution-bundle.git",
-                "reference": "fb3a481deeba016889d73149f1d684b5dbec2155"
+                "reference": "76e87438cae536e690a0bb90c3e4f6ce9d5eae53"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/sygefor/institution-bundle/zipball/fb3a481deeba016889d73149f1d684b5dbec2155",
-                "reference": "fb3a481deeba016889d73149f1d684b5dbec2155",
+                "url": "https://api.github.com/repos/sygefor/institution-bundle/zipball/76e87438cae536e690a0bb90c3e4f6ce9d5eae53",
+                "reference": "76e87438cae536e690a0bb90c3e4f6ce9d5eae53",
                 "shasum": ""
             },
             "type": "symfony-bundle",
@@ -3649,7 +3649,7 @@
                 "source": "https://github.com/sygefor/institution-bundle/tree/master",
                 "issues": "https://github.com/sygefor/institution-bundle/issues"
             },
-            "time": "2017-02-08 13:44:50"
+            "time": "2017-02-17 13:37:14"
         },
         {
             "name": "sygefor/trainee-bundle",
@@ -3657,12 +3657,12 @@
             "source": {
                 "type": "git",
                 "url": "https://github.com/sygefor/trainee-bundle.git",
-                "reference": "82cf0b55b0ff963c2badb69daa0c8e3de34a48c4"
+                "reference": "396ee0b510b4f38451b8720bbcb8f7919aa006fc"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/sygefor/trainee-bundle/zipball/82cf0b55b0ff963c2badb69daa0c8e3de34a48c4",
-                "reference": "82cf0b55b0ff963c2badb69daa0c8e3de34a48c4",
+                "url": "https://api.github.com/repos/sygefor/trainee-bundle/zipball/396ee0b510b4f38451b8720bbcb8f7919aa006fc",
+                "reference": "396ee0b510b4f38451b8720bbcb8f7919aa006fc",
                 "shasum": ""
             },
             "type": "symfony-bundle",
@@ -3687,7 +3687,7 @@
                 "source": "https://github.com/sygefor/trainee-bundle/tree/master",
                 "issues": "https://github.com/sygefor/trainee-bundle/issues"
             },
-            "time": "2017-02-07 09:58:01"
+            "time": "2017-02-17 13:37:14"
         },
         {
             "name": "sygefor/trainer-bundle",
@@ -3695,12 +3695,12 @@
             "source": {
                 "type": "git",
                 "url": "https://github.com/sygefor/trainer-bundle.git",
-                "reference": "034cf5cd9a172a555945c6a666af9c0f01402f98"
+                "reference": "7d2c4e12188922df2b4e3e2b77d0468573673389"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/sygefor/trainer-bundle/zipball/034cf5cd9a172a555945c6a666af9c0f01402f98",
-                "reference": "034cf5cd9a172a555945c6a666af9c0f01402f98",
+                "url": "https://api.github.com/repos/sygefor/trainer-bundle/zipball/7d2c4e12188922df2b4e3e2b77d0468573673389",
+                "reference": "7d2c4e12188922df2b4e3e2b77d0468573673389",
                 "shasum": ""
             },
             "type": "symfony-bundle",
@@ -3725,7 +3725,7 @@
                 "source": "https://github.com/sygefor/trainer-bundle/tree/master",
                 "issues": "https://github.com/sygefor/trainer-bundle/issues"
             },
-            "time": "2017-02-07 09:58:01"
+            "time": "2017-02-17 13:37:14"
         },
         {
             "name": "sygefor/training-bundle",
@@ -3733,12 +3733,12 @@
             "source": {
                 "type": "git",
                 "url": "https://github.com/sygefor/training-bundle.git",
-                "reference": "a1e661e678d44a4e32e5be13416cfe17a809cb10"
+                "reference": "4260c3c146fff72449d64e3b8ad32e7dc4f1a95c"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/sygefor/training-bundle/zipball/a1e661e678d44a4e32e5be13416cfe17a809cb10",
-                "reference": "a1e661e678d44a4e32e5be13416cfe17a809cb10",
+                "url": "https://api.github.com/repos/sygefor/training-bundle/zipball/4260c3c146fff72449d64e3b8ad32e7dc4f1a95c",
+                "reference": "4260c3c146fff72449d64e3b8ad32e7dc4f1a95c",
                 "shasum": ""
             },
             "type": "symfony-bundle",
@@ -3763,7 +3763,7 @@
                 "source": "https://github.com/sygefor/training-bundle/tree/master",
                 "issues": "https://github.com/sygefor/training-bundle/issues"
             },
-            "time": "2017-02-08 10:54:44"
+            "time": "2017-02-17 13:37:14"
         },
         {
             "name": "symfony/monolog-bundle",

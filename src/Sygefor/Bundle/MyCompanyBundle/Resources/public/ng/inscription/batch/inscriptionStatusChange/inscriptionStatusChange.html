@@ -31,42 +31,76 @@
                 <label class="control-label" for="send_mail">Envoyer un email</label>
             </div>
         </div>
-        <div class="form-group" ng-show='send.Mail' >
-            <label for="subject" class="col-sm-3 control-label">Modèle </label>
-            <div class="col-sm-9">
-                <select type="text" ng-disabled='!send.Mail' class="form-control" id="template" ng-options="template.label for template in templates" ng-model="message.template" placeholder="Modèle du mail">
-                </select>
+        <div ng-show="send.Mail">
+            <div class="form-group">
+                <label for="subject" class="col-sm-3 control-label">Modèle </label>
+                <div class="col-sm-9">
+                    <select type="text" class="form-control" id="template" ng-options="template.label for template in templates" ng-model="message.template" placeholder="Modèle du mail">
+                    </select>
+                </div>
             </div>
-        </div>
-        <div class="form-group animate-show" ng-show='send.Mail'>
-            <label for="subject" class="col-sm-3 control-label">Sujet </label>
-            <div class="col-sm-9">
-                <input type="text" ng-disabled='!send.Mail' class="form-control" id="subject" ng-model="message.subject" placeholder="Sujet du mail">
+            <div class="form-group animate-show">
+                <label for="subject" class="col-sm-3 control-label">Sujet </label>
+                <div class="col-sm-9">
+                    <input type="text" class="form-control" id="subject" ng-model="message.subject" placeholder="Sujet du mail">
+                </div>
             </div>
-        </div>
-        <div class="form-group" ng-show='send.Mail' >
-            <label for="message" class="col-sm-3 control-label">Message </label>
-            <div class="col-sm-9">
-                <textarea class="form-control" ng-disabled='!send.Mail' rows="10" id="message" ng-model="message.body"  placeholder="Message du mail"></textarea>
+            <div class="form-group animate-show">
+                <label for="CC" class="col-sm-3 control-label">CC </label>
+                <div class="col-sm-9">
+                    <input type="checkbox" ng-model="message.cc.alternativeEmail" id="cc_1">
+                    <label class="control-label" for="cc_1">Email alternatif</label>&nbsp;
+
+                    <input type="checkbox" ng-model="message.cc.manager" id="cc_2">
+                    <label class="control-label" for="cc_2">Directeur</label>&nbsp;
+
+                    <input type="checkbox" ng-model="message.cc.trainingCorrespondent" id="cc_3">
+                    <label class="control-label" for="cc_3">Correspondant formation</label>&nbsp;
+
+                    <input type="checkbox" ng-model="message.cc.financialCorrespondent" id="cc_4">
+                    <label class="control-label" for="cc_4">Correspondant financier</label>
+                </div>
             </div>
-        </div>
-        <div class="form-group" ng-show='send.Mail'>
-            <div class="col-sm-3">
+            <div class="form-group">
+                <label for="message" class="col-sm-3 control-label">Message </label>
+                <div class="col-sm-9">
+                    <textarea class="form-control" rows="10" id="message" ng-model="message.body"  placeholder="Message du mail"></textarea>
+                </div>
             </div>
-            <div class="col-sm-9">
-            <button type="button" ng-disabled='!send.Mail' class="btn" ng-click="preview()">Prévisualiser</button>
+            <div class="form-group" ng-show='attCheckList.length'>
+                <div class="col-sm-3 control-label"><b>Pièces jointes</b> </div>
+                <div class="col-sm-5">
+                    <div ng-repeat="attachmentTemplate in attCheckList">
+                        <input type="checkbox" ng-model="attachmentTemplate.selected" id="attachment_{{ attachmentTemplate.id }}"/>
+                        <label class="control-label" for="attachment_{{ attachmentTemplate.id }}">{{ attachmentTemplate.name }}</label><a href="" class="pull-right" ng-click="previewAttachment(attachmentTemplate)"><i class="fa fa-download"></i> Prévisualiser</a>
+                    </div>
+                </div>
             </div>
-        </div>
-        <div class="form-group" ng-show='send.Mail && attCheckList.length'>
-            <div class="col-sm-3 control-label"><b>Pièces jointes</b> </div>
-            <div class="col-sm-5">
-                <div ng-repeat="attachmentTemplate in attCheckList">
-                <input type="checkbox" ng-model="attachmentTemplate.selected" id="attachment_{{ attachmentTemplate.id }}"/>
-                <label class="control-label" for="attachment_{{ attachmentTemplate.id }}">{{ attachmentTemplate.name }}</label><a href="" class="pull-right" ng-click="previewAttachment(attachmentTemplate)"><i class="fa fa-download"></i> Prévisualiser</a>
+            <div class="form-group" ng-if="message.attachments.length > 0">
+                <div class="col-sm-3 control-label"><b>Pièce{{ message.attachments.length > 1 ? 's' : '' }} jointe{{ message.attachments.length > 1 ? 's' : '' }} supplémentaire{{ message.attachments.length > 1 ? 's' : '' }}</b></div>
+                <div class="col-sm-9">
+                    <div ng-repeat="(id, attachment) in message.attachments track by $index">
+                        <label class="control-label" for="attachment_{{ id }}">{{attachment.name}}</label>&nbsp;
+                        <a href="" ng-click="removeAttachment(id)">&nbsp;x&nbsp;</a>
+                    </div>
+                </div>
+            </div>
+
+            <div class="form-group">
+                <div class="col-sm-3 control-label"><b>Ajouter des pièces jointes</b> </div>
+                <div class="col-sm-9">
+                    <input multiple type="file" class="form-control" onChange="angular.element(this).scope().fileChanged(this,angular.element(this).scope())" id="inputAttachment"/>
+                </div>
+            </div>
+
+            <div class="form-group">
+                <div class="col-sm-3">
+                </div>
+                <div class="col-sm-9">
+                    <button type="button" class="btn" ng-click="preview()">Prévisualiser</button>
                 </div>
             </div>
         </div>
-
         <div class="alert alert-danger" ng-show="formError != ''">{{ formError }}</div>
     </form>
 </div>
