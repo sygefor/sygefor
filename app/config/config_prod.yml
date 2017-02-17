@@ -35,13 +35,13 @@ monolog:
         buffered:
             type:    buffer
             handler: swift
-        swift:
-            type:       swift_mailer
-            mailer:     swiftmailer.mailer.local
-            from_email: support@conjecto.com
-            to_email:   support@conjecto.com
-            subject:    SYGEFOR : An Error Occurred!
-            level:      info
+#        swift:
+#            type:       swift_mailer
+#            mailer:     swiftmailer.mailer.local
+#            from_email: support@conjecto.com
+#            to_email:   support@conjecto.com
+#            subject:    SYGEFOR : An Error Occurred!
+#            level:      info
 
         # channel : trainee_merge
         trainee_merge:
