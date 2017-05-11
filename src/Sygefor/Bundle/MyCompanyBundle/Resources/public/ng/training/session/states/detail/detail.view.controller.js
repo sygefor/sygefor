@@ -60,4 +60,12 @@ sygeforApp.controller('SessionDetailViewController', ['$scope', '$taxonomy', '$d
             $state.go('session.detail.view', {id: result.id}, {reload:true});
         });
     };
+
+    /*
+     * Request and download balance sheet
+     */
+    $scope.getEvaluationSheet = function () {
+        var url = Routing.generate('session.evaluations', {id: $scope.session.id});
+        $window.location = url;
+    };
 }]);

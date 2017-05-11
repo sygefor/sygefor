@@ -22,4 +22,27 @@ use JMS\SecurityExtraBundle\Annotation\SatisfiesParentSecurityPolicy;
 class InstitutionController extends AbstractInstitutionController
 {
     protected $institutionClass = Institution::class;
+
+    /**
+     * @param Institution $institution
+     * @param Correspondent $manager
+     *
+     * @Route("/{idInstitution}/manager/remove/{id}", requirements={"id" = "\d+"}, name="institution.removeManager", options={"expose"=true}, defaults={"_format" = "json"})
+     * @ParamConverter("institution", class="SygeforMyCompanyBundle:Institution", options={"id" = "idInstitution"})
+     * @ParamConverter("manager", class="SygeforInstitutionBundle:AbstractCorrespondent", options={"id" = "id"})
+     * @SecureParam(name="institution", permissions="EDIT")
+     * @Method("POST")
+     *
+     * @return mixed
+     */
+    public function removeManagerAction(Institution $institution, Correspondent $manager)
+    {
+        $em = $this->getDoctrine()->getManager();
+        $institution->setManager(null);
+        $em->remove($manager);
+        $em->flush();
+        $this->get('fos_elastica.index')->refresh();
+
+        return $this->redirectToRoute('institution.view', array('id' => $institution->getId()));
+    }
 }

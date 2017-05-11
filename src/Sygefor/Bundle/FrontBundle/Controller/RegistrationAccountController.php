@@ -28,6 +28,12 @@ class RegistrationAccountController extends AbstractRegistrationAccountControlle
 {
     protected $inscriptionClass = Inscription::class;
 
+    protected $sendCheckoutNotificationTemplates = array(
+        'SygeforFrontBundle:Account/registration:authorization.pdf.twig',
+    );
+
+    protected $authorizationTemplate = 'SygeforFrontBundle:Account/registration:authorization.pdf.twig';
+
     /**
      * Checkout registrations cart.
      *
@@ -105,5 +111,49 @@ class RegistrationAccountController extends AbstractRegistrationAccountControlle
     public function authorizationAction($ids, Request $request)
     {
         return parent::authorizationAction($ids, $request);
+    }
+
+    /**
+     * Generate authorization forms.
+     *
+     * @param $trainee
+     * @param $registrations
+     * @param $templates
+     *
+     * @throws \InvalidArgumentException
+     *
+     * @return array
+     */
+    protected function getAuthorizationForms($trainee, $registrations, $templates)
+    {
+        $repository    = $this->get('doctrine')->getManager()->getRepository($this->inscriptionClass);
+        $registrations = $repository->findBy(array('id' => $registrations));
+
+        /** @var Inscription $registration */
+        foreach ($registrations as $key => $registration) {
+            if ($registration->getTrainee() !== $trainee) {
+                throw new \InvalidArgumentException('The registration does not belong to the trainee : ' . $registration->getId());
+            }
+            if ($registration->getInscriptionStatus()->getMachineName() === 'desist') {
+                unset($registration[$key]);
+            }
+        }
+
+        if (is_string($templates)) {
+            $templates = array($templates);
+        }
+
+        // build pages
+        $forms     = array();
+        $variables = array(
+            'trainee'       => $trainee,
+            'registrations' => $registrations,
+        );
+
+        foreach ($templates as $key => $template) {
+            $forms[0][$key] = $this->renderView($template, $variables);
+        }
+
+        return $forms;
     }
 }

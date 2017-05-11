@@ -6,6 +6,7 @@
         -->
         <div class="col-md-8">
             <div class="btn-group pull-right">
+                <a class="btn btn-fa" href="" tooltip="Export des évaluations" ng-click="getEvaluationSheet()"><span class="fa fa-file-excel-o"></span></a>
                 <a class="btn btn-fa" href="" tooltip="Publipostage" ng-click="$dialog.open('batch.publipost', { items: [session.id], service: 'session' })"><span class="fa fa-file-word-o"></span></a>
                 <a class="btn btn-fa" href="" tooltip="Voir l'événement" ng-if="session.training._accessRights.view" ui-sref="training.detail.view({id: session.training.id})"><span class="fa fa-calendar"></span></a>
                 <a class="btn btn-fa" href="" ng-if="!session.promote && session._accessRights.edit" tooltip="Promouvoir la session" ng-click="promote(1)"><span class="fa fa-star-o"></span></a>
@@ -19,7 +20,6 @@
 
             <div class="infos" ng-if="form.children.module">
                 <div><label>Module :</label> <span sf-xeditable="form.children.module" data-type="select">{{ session.module.name }}</span></div>
-                <div><label>Type :</label> <span sf-xeditable="form.children.type" data-type="select">{{ session.type.name }}</span></div>
             </div>
 
             <h3>Informations</h3>
@@ -30,8 +30,8 @@
                         <li><label>Date</label> <span sf-xeditable="form.children.dateBegin">{{ session.dateBegin|date: 'dd/MM/yyyy' }}</span></li>
                         <li><label>Date de fin</label> <span sf-xeditable="form.children.dateEnd">{{ session.dateEnd|date: 'dd/MM/yyyy' }}</span></li>
                         <li><label>Horaires</label> <span sf-xeditable="form.children.schedule">{{ session.schedule }}</span></li>
-                        <li><label>Nombre d'heures</label> <span sf-xeditable="form.children.hourNumber">{{ session.hourNumber }}</span></li>
-                        <li><label>Nombre de jours</label> <span sf-xeditable="form.children.dayNumber">{{ session.dayNumber }}</span></li>
+                        <li><label>Nombre d'heures</label> <span sf-xeditable="form.children.hourNumber">{{ session.hourNumber | number }}</span></li>
+                        <li><label>Nombre de jours</label> <span sf-xeditable="form.children.dayNumber">{{ session.dayNumber | number }}</span></li>
                         <li><label>Tarif</label> <span sf-xeditable="form.children.price">{{ session.price ? session.price : '0' }} €</span></li>
                     </ul>
                 </div>

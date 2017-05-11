@@ -26,7 +26,7 @@ class LoadOrganizationData extends AbstractTermLoad
                 'zip'         => '35000',
                 'city'        => 'Rennes',
                 'email'       => 'contact@conjecto.com',
-                'phoneNumber' => '(+33) 9 80 52 20 21',
+                'phoneNumber' => '09 80 52 20 21',
                 'faxNumber'   => '',
                 'website'     => 'http://www.conjecto.com',
                 'trainee_registrable' => true,

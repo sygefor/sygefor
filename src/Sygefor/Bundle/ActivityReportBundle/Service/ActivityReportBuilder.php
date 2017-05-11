@@ -27,7 +27,7 @@ use Sygefor\Bundle\InstitutionBundle\Entity\Term\GeographicOrigin;
 use Sygefor\Bundle\TraineeBundle\Entity\Term\Disciplinary;
 use Sygefor\Bundle\InscriptionBundle\Entity\Term\PresenceStatus;
 use Sygefor\Bundle\TraineeBundle\Entity\Term\PublicType;
-use Sygefor\Bundle\TrainingBundle\Entity\Training\Term\Theme;
+use Sygefor\Bundle\TrainingBundle\Entity\Training\Term\AbstractTheme;
 use Sygefor\Bundle\TrainingBundle\Entity\Training\Term\TrainingCategory;
 use Symfony\Component\HttpFoundation\Request;
 
@@ -89,7 +89,7 @@ class ActivityReportBuilder
         }
 
         // some usefull terms
-        $this->terms['theme'] = $this->getSortedTerms(Theme::class);
+        $this->terms['theme']             = $this->getSortedTerms(AbstractTheme::class);
         $this->terms['geographic_origin'] = $this->getSortedTerms(GeographicOrigin::class);
         $this->terms['disciplinary'] = $this->getSortedTerms(Disciplinary::class, array('parent' => null));
         $this->terms['public_type'] = $this->getSortedTerms(PublicType::class);

@@ -22,8 +22,6 @@
                         {% endif %}
                         </li>
                         <li><label> National</label> <span>{{ training.national ? 'Oui' : 'Non' }}</span></li>
-                        <li><label> Partenaires</label> <span> {{ training.partners }}</span></li>
-                        <li><label> Tarifs</label><span> {{ training.prices }}</span></li>
                         <li><label> Statut</label>
                         {% if training.session is not null %}
                             <span> {{ training.session.displayOnline ? 'En ligne' : 'Hors ligne' }}</span>
@@ -50,16 +48,6 @@
                                 <li><label> Places disponibles</label> <span>{{ training.session.maximumNumberOfRegistrations }}</span></li>
                                 <li><label> Inscrits</label> <span>{{ training.session.numberOfRegistrations }}</span></li>
                                 <li><label> Présents</label> <span>{{ training.session.numberOfParticipants }}</span></li>
-                            </ul>
-                        </div>
-                    </div>
-                    <h3><span>Coût</span></h3>
-                    <div class="row">
-                        <div class="col-md-12">
-                            <ul class="summary">
-                                {% for key, cost in training.session.costs %}
-                                    <li><label> {{ key }}</label> <span>{{ cost }}&euro;</span></li>
-                                {% endfor %}
                             </ul>
                         </div>
                     </div>

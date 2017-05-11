@@ -73,8 +73,8 @@
                                                 {% if upcomingSession.maximumNumberOfRegistrations is defined and upcomingSession.maximumNumberOfRegistrations > 0 and upcomingSession.availablePlaces is defined %}
                                                     <li title="Nombre maximum d'inscrits ({{ upcomingSession.availablePlaces }} places disponibles)"><i class="glyphicon glyphicon-user"></i>&nbsp;&nbsp;{{ upcomingSession.maximumNumberOfRegistrations }} inscriptions max.</li>
                                                 {% endif %}
-                                                {% if user.isPaying is defined and user.isPaying and upcomingSession.price is defined %}
-                                                    <li title="Tarif de la formation"><strong>&euro;</strong>&nbsp;&nbsp;{{ upcomingSession.price }} &euro;</li>
+                                                {% if user is null or user.isPaying is defined and user.isPaying and upcomingSession.price is defined %}
+                                                    <li title="Tarifs de la formation"><strong>&euro;</strong>&nbsp;&nbsp;{{ upcomingSession.price }} &euro;</li>
                                                     <!--prices-->
                                                 {% endif %}
                                                 {% if upcomingSession.limitRegistrationDate is defined and upcomingSession.isPublic and upcomingSession.availablePlaces > 0 and upcomingSession.limitRegistrationDate %}
@@ -235,6 +235,9 @@
                         <div>{{ training.organization.fullAddress | nl2br }}</div>
                         {% if training.organization.phoneNumber | length > 0 %}
                             <div><span class="glyphicon glyphicon-phone-alt"></span> <a href="tel:{{ training.organization.phoneNumber | replace(' ', '') }}">&nbsp;{{ training.organization.phoneNumber }}</a></div>
+                        {% endif %}
+                        {% if training.organization.faxNumber | length > 0 %}
+                            <div><span class="glyphicon glyphicon-print"></span>&nbsp;&nbsp;{{ training.organization.faxNumber | replace(' ', '') }}</div>
                         {% endif %}
                         <div><span class="glyphicon glyphicon-envelope"></span> <a href="mailto:{{ training.organization.email }}">&nbsp;{{ training.organization.email }}</a></div>
                         {% if training.organization.website is defined and  training.organization.website | length > 0 %}

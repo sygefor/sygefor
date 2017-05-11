@@ -16,14 +16,11 @@
                         <li><label>Type de formation</label> <span sf-xeditable="form.children.category">{{ training.category.name }}</span></li>
                         <li><label>Publics prioritaires</label> <span sf-xeditable="form.children.publicTypes" data-type="select2">{{ training.publicTypes | joinObjects:'name' }}</span></li>
                         <li><label>Etablissement</label> <span sf-xeditable="form.children.institution">{{ training.institution.name }}</span></li>
-                        <li><label>Prérequis</label> <span sf-xeditable="form.children.prerequisites" data-type="textarea">{{ training.prerequisites }}</span></li>
                     </ul>
                 </div>
                 <div class="col-lg-6">
                     <ul class="summary">
-                        <li><label>Type d'intervention</label> <span sf-xeditable="form.children.interventionType">{{ training.interventionType }}</span></li>
-                        <li><label>Initiative extérieure</label> <span sf-xeditable="form.children.externalInitiative" sf-choices="['Commande extérieure', 'Commande interne']">{{ training.externalInitiative ? 'Commande' : 'Commande interne' }}</span></li>
-                        <li><label>Responsable pédag.</label> <span sf-xeditable="form.children.supervisor" data-mode="popup" data-type="select">{{ training.supervisor.fullName }}</span></li>
+                        <li><label>Prérequis</label> <span sf-xeditable="form.children.prerequisites" data-type="textarea">{{ training.prerequisites }}</span></li>
                         <li><label>1<sup>ère</sup> session</label>
                             <span>
                                 <span sf-xeditable="form.children.firstSessionPeriodSemester">{{ training.firstSessionPeriodSemester == 1 ? '1er semestre' : (training.firstSessionPeriodSemester == 2 ? '2nd semestre' : '') }}</span>

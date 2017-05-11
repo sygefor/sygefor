@@ -65,6 +65,7 @@ class PublicController extends Controller
      * @param null $token
      *
      * @Route("/training/{id}/{sessionId}/{token}", name="front.public.training", requirements={"id": "\d+", "sessionId": "\d+"})
+     * @Route("/training/{id}//{token}", name="front.public.module", requirements={"id": "\d+"})
      * @ParamConverter("training", class="SygeforTrainingBundle:Training\AbstractTraining", options={"id" = "id"})
      * @Template("@SygeforFront/Public/program/training.html.twig")
      *
@@ -272,6 +273,9 @@ class PublicController extends Controller
 
         $dateBegin = new Range('dateBegin', array("gte" => (new \DateTime("now", timezone_open('Europe/Paris')))->format('Y-m-d')));
         $filters->addFilter($dateBegin);
+
+        $displayOnline = new Term(array('displayOnline' => true));
+        $filters->addFilter($displayOnline);
 
 //        $types = new Terms('training.type', array('internship'));
 //        $filters->addFilter($types);

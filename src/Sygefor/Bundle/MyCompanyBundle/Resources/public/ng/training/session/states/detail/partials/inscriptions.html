@@ -62,11 +62,11 @@
 
                     <!-- editable -->
                     <div ng-if="session._accessRights.edit" class="btn-group dropdown">
-                        <button class="btn btn-xs dropdown-toggle" ng-if="!inscription.presenceStatus" class="label" ng-class="$root.inscriptionStatusClass(inscription.inscriptionStatus.status, 'btn')">
+                        <button class="btn btn-xs dropdown-toggle" data-toggle="dropdown" ng-if="!inscription.presenceStatus" class="label" ng-class="$root.inscriptionStatusClass(inscription.inscriptionStatus.status, 'btn')">
                             {{ inscription.inscriptionStatus.name }}
                             <span class="caret"></span>
                         </button>
-                        <button class="btn btn-xs dropdown-toggle" ng-if="inscription.presenceStatus" class="label" ng-class="$root.presenceStatusClass(inscription.presenceStatus.status, 'btn')">
+                        <button class="btn btn-xs dropdown-toggle" data-toggle="dropdown" ng-if="inscription.presenceStatus" class="label" ng-class="$root.presenceStatusClass(inscription.presenceStatus.status, 'btn')">
                             {{ inscription.presenceStatus.name }}
                             <span class="caret"></span>
                         </button>

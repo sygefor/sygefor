@@ -92,7 +92,7 @@ function initConfigOptions(){
 	$defaults['cssURL'] = 'https://'.$_SERVER['SERVER_NAME'].dirname($_SERVER['SCRIPT_NAME']).'/css';
 	$defaults['IDPConfigFile'] = 'IDProvider.conf.php';
 	$defaults['backupIDPConfigFile'] = 'IDProvider.conf.php';
-	$defaults['metadataFile'] = '/etc/shibboleth/metadata.switchaai.xml';
+	$defaults['metadataFile'] = '/etc/shibboleth/main-all-renater-metadata.xml';
 	$defaults['metadataIDPFile'] = 'IDProvider.metadata.php';
 	$defaults['metadataSPFile'] = 'SProvider.metadata.php';
 	$lockFileName = preg_replace('/[^-_\.a-zA-Z]/', '', $defaults['instanceIdentifier']);

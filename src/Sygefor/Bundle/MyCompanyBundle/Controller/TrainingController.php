@@ -8,11 +8,14 @@ use Sygefor\Bundle\MyCompanyBundle\Entity\Session;
 use Sygefor\Bundle\MyCompanyBundle\Form\ModuleType;
 use Sygefor\Bundle\TrainingBundle\Controller\AbstractTrainingController;
 use Sygefor\Bundle\TrainingBundle\Entity\Training\AbstractTraining;
+use Sygefor\Bundle\MyCompanyBundle\SpreadSheet\TrainingBalanceSheet;
 use FOS\RestBundle\Controller\Annotations as Rest;
 use Symfony\Component\Finder\Exception\AccessDeniedException;
 use Symfony\Component\HttpFoundation\Request;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
+use Sensio\Bundle\FrameworkExtraBundle\Configuration\Method;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\ParamConverter;
+use JMS\SecurityExtraBundle\Annotation\SecureParam;
 
 /**
  * @Route("/training")
@@ -72,5 +75,18 @@ class TrainingController extends AbstractTrainingController
 
         $em->persist($dest);
         $em->flush();
+    }
+
+    /**
+     * @Route("/{id}/bilan.{_format}", requirements={"id" = "\d+"}, name="training.balancesheet", options={"expose"=true}, defaults={"_format" = "xls"}, requirements={"_format"="csv|xls|xlsx"})
+     * @Method("GET")
+     * @ParamConverter("training", class="SygeforTrainingBundle:Training\AbstractTraining", options={"id" = "id"})
+     * @SecureParam(name="training", permissions="VIEW")
+     */
+    public function balanceSheetAction(AbstractTraining $training)
+    {
+        $bs = new TrainingBalanceSheet($training, $this->get('phpexcel'), $this->container);
+
+        return $bs->getResponse();
     }
 }

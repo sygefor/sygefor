@@ -110,6 +110,28 @@ sygeforApp.config(["$listStateProvider", "$dialogProvider", function($listStateP
     /**
      * institution deletion modal window
      */
+    $dialogProvider.dialog('institution.removeManager', /* @ngInject */ {
+        templateUrl: 'mycompanybundle/institution/dialogs/remove-manager.html',
+        controller: function($scope, $modalInstance, $dialogParams, $state, $http, growl) {
+            $scope.dialog = $modalInstance;
+            $scope.dialog.params = $dialogParams;
+
+            $scope.ok = function() {
+                var url = Routing.generate('institution.removeManager', {
+                    idInstitution: $dialogParams.institution.id,
+                    id: $dialogParams.manager.id
+                });
+                $http.post(url).then(function (response){
+                    growl.addSuccessMessage("Le directeur de l'établissement a été supprimé.");
+                    $scope.dialog.close(response.data);
+                });
+            };
+        }
+    });
+
+    /**
+     * institution deletion modal window
+     */
     $dialogProvider.dialog('institution.delete', /* @ngInject */ {
         templateUrl: 'mycompanybundle/institution/dialogs/delete.html',
         controller: function($scope, $modalInstance, $dialogParams, $state, $http, growl) {

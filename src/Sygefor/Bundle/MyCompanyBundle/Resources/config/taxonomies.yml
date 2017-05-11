@@ -12,9 +12,13 @@ services:
         tags:
             - { name: sygefor_core.vocabulary_provider, group: "%sygefor_mycompany.taxonomy.group%" }
 
+    sygefor_mycompany.vocabulary_training_theme:
+        class:        Sygefor\Bundle\MyCompanyBundle\Entity\Term\Theme
+        tags:
+            - { name: sygefor_core.vocabulary_provider, group: "%sygefor_training.taxonomy.group%"}
+
         # override term name example
 #        sygefor_training.vocabulary_training_theme:
 #        class:        Sygefor\Bundle\TrainingBundle\Entity\Training\Term\Theme
 #        tags:
 #            - { name: sygefor_core.vocabulary_provider, group: "%sygefor_training.taxonomy.group%", label: "Domaine de compétence"}
-

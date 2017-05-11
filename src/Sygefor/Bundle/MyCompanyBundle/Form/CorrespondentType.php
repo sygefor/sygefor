@@ -34,25 +34,12 @@ class CorrespondentType extends BaseCorrespondentType
         parent::buildForm($builder, $options);
 
         $builder
-            ->add('institution', EntityHiddenType::class, array(
-                'label'    => 'Unité',
-                'class'    => Institution::class,
-                'required' => true,
-            ))
-            ->add('position', TextType::class, array(
-                'label'    => 'Fonction',
-                'required' => false,
-            ))
             ->add('phoneNumber', TextType::class, array(
                 'label'    => 'Téléphone',
                 'required' => false,
             ))
             ->add('email', EmailType::class, array(
                 'label'    => 'Email',
-            ))
-            ->add('address', TextareaType::class, array(
-                'label'    => 'Adresse',
-                'required' => false,
             ));
     }
 

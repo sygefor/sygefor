@@ -37,7 +37,7 @@ monolog:
             handler: swift
 #        swift:
 #            type:       swift_mailer
-#            mailer:     swiftmailer.mailer.local
+#            mailer:     mailer
 #            from_email: support@sygefor.dev
 #            to_email:   support@sygefor.dev
 #            subject:    SYGEFOR : An Error Occurred!

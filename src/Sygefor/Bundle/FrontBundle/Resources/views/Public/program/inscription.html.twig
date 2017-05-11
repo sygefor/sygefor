@@ -141,7 +141,7 @@
                                                 <li title="Horaires de la session"><i class="glyphicon glyphicon-time"></i>&nbsp;&nbsp;{{ session.schedule }}</li>
                                             {% endif %}
                                             {% if user.isPaying is defined and user.isPaying and session.price is defined %}
-                                                <li title="Tarif de la formation"><strong>&euro;</strong>&nbsp;&nbsp;{{ session.price }} &euro;</li>
+                                                <li title="Tarifs de la formation"><strong>&euro;</strong>&nbsp;&nbsp;{{ session.price }} &euro;</li>
                                             {% endif %}
                                         </ul>
                                     </div>
@@ -163,11 +163,14 @@
                     {% endif %}
 
                     <h4 class="mb-base">Informations pratiques</h4>
-                    <img src="/img/organization/{{ training.organization.name }}/logo.png" alt="">
+                    <img src="/img/organization/{{ training.organization.code }}/logo.png" alt="">
                     <address>
                         <div>{{ training.organization.name }}</div>
                         <div>{{ training.organization.fullAddress | nl2br }}</div>
                         <div><span class="glyphicon glyphicon-phone-alt"></span> <a href="tel:{{ training.organization.phoneNumber | replace(' ', '') }}">&nbsp;{{ training.organization.phoneNumber }}</a></div>
+                        {% if training.organization.faxNumber | length > 0 %}
+                            <div><span class="glyphicon glyphicon-print"></span>&nbsp;&nbsp;{{ training.organization.faxNumber | replace(' ', '') }}</div>
+                        {% endif %}
                         <div><span class="glyphicon glyphicon-envelope"></span> <a href="mailto:{{ training.organization.email }}">&nbsp;{{ training.organization.email }}</a></div>
                         {% if training.organization.website is defined and training.organization.website | length > 0 %}
                             <div><span class="glyphicon glyphicon-globe"></span> <a href="{{ training.organization.website }}" target="_blank">&nbsp;{{ training.organization.website }}</a></div>

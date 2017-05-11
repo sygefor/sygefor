@@ -22,12 +22,13 @@
                 </div>
                 <div class="col-lg-6">
                     <h3>Directeur de l'établissement</h3>
+                    <a class="title-action btn btn-fa" href="" tooltip="Supprimer" ng-if="institution.manager && institution._accessRights.edit" ng-click="deleteManager(institution.manager)"><span class="fa fa-times"></span></a>
                     <hr>
                     <ul class="summary">
-                        <li><label>Nom</label> <span sf-xeditable="form.children.manager.children.lastName">{{ institution.manager.lastName }}</span></li>
+                        <li><label ng-class="{'required': isCorrespondentNotEmpty(form.children.manager)}">Nom</label> <span sf-xeditable="form.children.manager.children.lastName">{{ institution.manager.lastName }}</span></li>
                         <li><label>Prénom</label> <span sf-xeditable="form.children.manager.children.firstName">{{ institution.manager.firstName }}</span></li>
                         <li><label>Téléphone</label> <span sf-xeditable="form.children.manager.children.phoneNumber">{{ institution.manager.phoneNumber }}</span></li>
-                        <li><label>Email</label> <span sf-xeditable="form.children.manager.children.email">{{ institution.manager.email }}</span></li>
+                        <li><label ng-class="{'required': isCorrespondentNotEmpty(form.children.manager)}">Email</label> <span sf-xeditable="form.children.manager.children.email">{{ institution.manager.email }}</span></li>
                     </ul>
                 </div>
             </div>

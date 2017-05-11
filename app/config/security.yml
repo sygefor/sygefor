@@ -119,64 +119,18 @@ shibboleth:
             header: targeted-id
         persistent-id:
             header: persistent-id
-        o:
-            header: o
         eppn:
             header: eppn
-        facsimileTelephoneNumber:
-            header: facsimileTelephoneNumber
-        firstName:
-            header: firstName
         givenName:
             header: givenName
-        mail:
-            header: mail
-        mobile:
-            header: mobile
-        postalAddress:
-            header: postalAddress
-        street:
-            header: street
-        postOfficeBox:
-            header: postOfficeBox
-        postalCode:
-            header: postalCode
         sn:
             header: sn
+        mail:
+            header: mail
         telephoneNumber:
             header: telephoneNumber
-        title:
-            header: title
-        uid:
-            header: uid
-        unscoped-affiliation:
-            header: unscoped-affiliation
-        affiliation:
-            header: affiliation
-        primary-affiliation:
-            header: primary-affiliation
-        primary-orgunit-dn:
-            header: primary-orgunit-dn
-        org-dn:
-            header: org-dn
-        supannActivite:
-            header: supannActivite
-        supannCivilite:
-            header: supannCivilite
-        supannEntiteAffectation:
-            header: supannEntiteAffectation
-        supannEtablissement:
-            header: supannEtablissement
-        supannRoleEntite:
-            header: supannRoleEntite
-        supannRoleGenerique:
-            header: supannRoleGenerique
-        supannEtuCursusAnnee:
-            header: supannEtuCursusAnnee
-        supannEtuDiplome:
-            header: supannEtuTypeDiplome
-        supannEtuTypeDiplome:
-            header: supannEtuDiplome
+        ou:
+            header: ou
 # CORS
 nelmio_cors:
     defaults:

@@ -9,7 +9,7 @@
 namespace Sygefor\Bundle\MyCompanyBundle\DataFixtures\ORM;
 
 use Sygefor\Bundle\CoreBundle\DataFixtures\AbstractTermLoad;
-use Sygefor\Bundle\TrainingBundle\Entity\Training\Term\Theme;
+use Sygefor\Bundle\MyCompanyBundle\Entity\Term\Theme;
 
 /**
  * Class LoadTheme.
@@ -23,9 +23,16 @@ class LoadTheme extends AbstractTermLoad
         return array(
             'Connaissances scientifiques',
             'Techniques spécifiques',
+            'Informatique (conception des outils)',
+            'Bureautique (utilisation des outils)',
+            'Utilisation d\'applications spécialisées CNRS',
             'Prévention et sécurité / Ethique',
+            'Partenariat et valorisation',
             'Finances, comptabilité',
-            'Culture institutionnelle et efficacité personelle'
+            'Resources humaines',
+            'Management / Qualité',
+            'Culture institutionnelle et efficacité personelle',
+            'Langues',
         );
     }
 }

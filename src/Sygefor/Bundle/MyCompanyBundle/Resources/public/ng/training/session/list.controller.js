@@ -10,18 +10,7 @@ sygeforApp.controller('SessionListController', ['$scope', '$state', '$injector',
      * Declare add operation
      * @var {Array}
      */
-     $scope.addOperations = [{
-        //templateUrl: 'mycompanybundle/training/session/modals/create.html',
-        label: 'Ajouter une session',
-        execute: function (){
-            $dialog.open('session.create',{training: training.id}).then(function(data) {
-                $state.go('session.detail.view', {id: data.session.id, training: data.session.training.id}, {reload: true});
-            });
-        },
-        available: function () {
-            return ( training !== null ) && ($user.hasAccessRight('sygefor_training.rights.training.all.update') || $user.hasAccessRight('sygefor_training.rights.training.own.update'));
-        }
-     }];
+     $scope.addOperations = [];
 
     /**
      * Batch operations

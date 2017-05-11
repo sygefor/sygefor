@@ -12,8 +12,8 @@
 <h2><span>{{ training.name }}</span></h2>
 <div class="infos">
     <div><span>Thème : </span> <span>{{ training.theme.name }}</span></div>
-    {% if training.areas.count > 0 %}
-        <div><span>Domaines : </span> <span>{{ training.areas | join('name') }}</span></div>
+    {% if training.tags.count > 0 %}
+        <div><span>Tags : </span> <span>{{ training.tags | join('name') }}</span></div>
     {% endif %}
 </div>
 
@@ -30,21 +30,14 @@
 <div class="row">
     <div class="col-md-6">
         <ul class="summary">
-            <li><label>Public</label> <span>{{ training.publicType }}</span></li>
+            <li><label>Public</label> <span>{{ training.publicTypes | join('name') }}</span></li>
             <li><label>Catégorie</label> <span>{{ training.category }}</span></li>
-            <li><label>Prérequis</label> <span>{{ training.prerequisites }}</span></li>
+            <li><label>Etablissement</label> <span>{% if training.institution is defined and training.institution | length > 0 %}{{ training.institution.name }}{% endif %}</span></li>
         </ul>
     </div>
     <div class="col-md-6">
         <ul class="summary">
-            <li><label>Initiative externe</label> <span>{{ training.externalInitiative ? 'Oui' : 'Non' }}</span></li>
-            <li><label>Type d'intervention</label> <span>{{ training.interventionType }}</span></li>
-            <li><label>Tarifs</label> <span>{{ training.prices }}</span></li>
-            <li><label>Responsable pédagogique</label>
-                {% if training.supervisor is not null %}
-                    <span>{{ training.supervisor.fullName }}</span>
-                {% endif %}
-            </li>
+            <li><label>Prérequis</label> <span>{{ training.prerequisites }}</span></li>
             <li><label>1<sup>ère</sup> session : </label>
                     <span>
                         {% if training.sessions|length == 0 %}

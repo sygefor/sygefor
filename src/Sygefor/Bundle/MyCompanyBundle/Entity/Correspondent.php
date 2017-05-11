@@ -74,25 +74,6 @@ class Correspondent extends AbstractCorrespondent
         $this->email = $email;
     }
 
-    /**
-     * loadValidatorMetadata.
-     *
-     * @param ClassMetadata $metadata
-     */
-    public static function loadValidatorMetadata(ClassMetadata $metadata)
-    {
-        // PersonTrait
-        $metadata->addPropertyConstraint('firstName', new Assert\NotBlank(array(
-            'message' => 'Vous devez renseigner un nom de famille.',
-        )));
-        $metadata->addPropertyConstraint('lastName', new Assert\NotBlank(array(
-            'message' => 'Vous devez renseigner un nom de famille.',
-        )));
-        $metadata->addPropertyConstraint('email', new Assert\NotBlank(array(
-            'message' => 'Vous devez renseigner un email.',
-        )));
-    }
-
     public static function getFormType()
     {
         return CorrespondentType::class;

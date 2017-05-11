@@ -20,6 +20,7 @@ sygeforApp.controller('InscriptionStatusChange', ['$scope', '$http', '$window', 
         $scope.templates[i] = {
             'key': i,
             'label': config.templates[i]['name'],
+            'cc': null,
             'subject': config.templates[i]['subject'],
             'body': config.templates[i]['body'],
             'attachmentTemplates': config.templates[i]['attachmentTemplates']
@@ -30,6 +31,7 @@ sygeforApp.controller('InscriptionStatusChange', ['$scope', '$http', '$window', 
     if ($scope.templates.length) {
         $scope.message.template = $scope.templates[0];
         $scope.message.subject = $scope.templates[0].subject;
+        $scope.message.cc = null;
         $scope.message.body = $scope.templates[0].body;
     }
     $scope.message.attachments = [];
@@ -84,6 +86,7 @@ sygeforApp.controller('InscriptionStatusChange', ['$scope', '$http', '$window', 
                 targetClass: 'SygeforInscriptionBundle:AbstractInscription',
                 sendMail: $scope.send.Mail,
                 subject: $scope.message.subject,
+                cc: $scope.message.cc,
                 message: $scope.message.body,
                 attachmentTemplates: attTemplates,
                 objects: {'SygeforTrainingBundle:Session': ($dialogParams.session) ? $dialogParams.session.id : 0}
@@ -128,6 +131,7 @@ sygeforApp.controller('InscriptionStatusChange', ['$scope', '$http', '$window', 
             options: {
                 targetClass: 'SygeforInscriptionBundle:AbstractInscription',
                 subject: $scope.message.subject,
+                cc: $scope.message.cc,
                 message: $scope.message.body,
                 templateAttachments: $filter('filter')($scope.attCheckList, {selected: true})
             },
@@ -188,10 +192,12 @@ sygeforApp.controller('InscriptionStatusChange', ['$scope', '$http', '$window', 
             //storing changes
             if (typeof oldValue != 'undefined') {
                 oldValue.subject = $scope.message.subject;
+                oldValue.cc = $scope.message.cc;
                 oldValue.body = $scope.message.body;
             }
             //replacing values
             $scope.message.subject = newValue.subject;
+            $scope.message.cc = newValue.cc;
             $scope.message.body = newValue.body;
             $scope.attCheckList = newValue.attachmentTemplates;
 

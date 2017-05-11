@@ -122,26 +122,31 @@ class Module extends AbstractModule
      */
     public function getDateRange()
     {
-        /** @var \DateTime $minDateBegin */
-        $minDateBegin = $this->sessions->first()->getDateBegin();
-        /** @var \DateTime $maxDateEnd */
-        $maxDateEnd = $this->sessions->first()->getDateEnd();
+        $session = $this->sessions->count() > 0 ? $this->sessions->first() : null;
+        if ($session) {
+            /** @var \DateTime $minDateBegin */
+            $minDateBegin = $this->sessions->first()->getDateBegin();
+            /** @var \DateTime $maxDateEnd */
+            $maxDateEnd = $this->sessions->first()->getDateEnd();
 
-        /** @var Session $session */
-        foreach ($this->sessions as $session) {
-            if ($session->getDateBegin() < $minDateBegin) {
-                $minDateBegin = $session->getDateBegin();
+            /** @var Session $session */
+            foreach ($this->sessions as $session) {
+                if ($session->getDateBegin() < $minDateBegin) {
+                    $minDateBegin = $session->getDateBegin();
+                }
+                if ($session->getDateEnd() > $maxDateEnd) {
+                    $maxDateEnd = $session->getDateEnd();
+                }
             }
-            if ($session->getDateEnd() > $maxDateEnd) {
-                $maxDateEnd = $session->getDateEnd();
+
+            if ($minDateBegin->format('dd/MM/YYYY') != $maxDateEnd->format('dd/MM/YYYY')) {
+                return "Du " . $minDateBegin->format('dd/MM/YYYY') . " au " . $maxDateEnd->format('dd/MM/YYYY');
             }
+
+            return "Le " . $minDateBegin->format('dd/MM/YYYY');
         }
 
-        if ($minDateBegin->format('dd/MM/YYYY') != $maxDateEnd->format('dd/MM/YYYY')) {
-            return "Du " . $minDateBegin->format('dd/MM/YYYY') . " au " . $maxDateEnd->format('dd/MM/YYYY');
-        }
-
-        return "Le " . $minDateBegin->format('dd/MM/YYYY');
+        return "";
     }
 
     /**

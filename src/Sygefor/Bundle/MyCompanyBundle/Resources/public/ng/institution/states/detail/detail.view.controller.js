@@ -20,6 +20,29 @@ sygeforApp.controller('InstitutionDetailViewController', ['$scope', '$taxonomy',
         });
     };
 
+    $scope.isCorrespondentNotEmpty = function(form) {
+        var keys = ['lastName', 'email'];
+
+        for (var i in keys) {
+            if (typeof form.children[keys[i]].value !== "undefined" && form.children[keys[i]].value !== "") {
+                console.log(typeof form.children[keys[i]].value);
+                return true;
+            }
+        }
+
+        return false;
+    };
+
+    /**
+     * Delete the manager
+     */
+    $scope.deleteManager = function (manager) {
+        $dialog.open('institution.removeManager', {institution: $scope.institution, manager: manager}).then(function (data) {
+            $scope.form = data.form;
+            $scope.institution = data.institution;
+        });
+    };
+
     /**
      * Delete the institution
      */

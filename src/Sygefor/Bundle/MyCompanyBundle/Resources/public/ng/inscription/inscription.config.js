@@ -211,7 +211,7 @@ sygeforApp.config(["$listStateProvider", "$dialogProvider", "$widgetProvider", f
                 size: 10,
                 filters:{
                     'session.training.organization.name.source': $user.organization.name,
-                    'inscriptionStatus.name.source': 'Attente de validation'
+                    'inscriptionStatus.name.source': 'En attente'
                 },
                 sorts: {'createdAt': 'desc'}
             }

@@ -16,6 +16,10 @@ fos_elastica:
                 index:
                     analysis:
                         analyzer:
+                            sort :
+                                type : custom
+                                tokenizer : keyword
+                                filter : [asciifolding, lowercase]
                             fr:
                                 tokenizer: standard
                                 filter: [standard, lowercase, stop_fr, snowball_fr]
@@ -23,6 +27,10 @@ fos_elastica:
                                 type: custom,
                                 tokenizer: whitespace
                                 filter: [lowercase, engram]
+                            autocomplete_uppercase:
+                                type: custom,
+                                tokenizer: whitespace
+                                filter: [uppercase, engram]
                             csv:
                                 type: pattern
                                 pattern: "\s*,\s*"
@@ -56,6 +64,7 @@ fos_elastica:
                                     type: string
                                     fields:
                                         source: { type: string, index: not_analyzed }
+#                                        sort: { type: string, analyzer: sort }
                     persistence:
                         driver: orm # orm, mongodb, propel are available
                         model: Sygefor\Bundle\CoreBundle\Entity\User\User
@@ -146,8 +155,8 @@ fos_elastica:
                                 source: { type: string, index: not_analyzed }
                         dateBegin: { type: date, index: not_analyzed }
                         dateEnd: { type: date, index: not_analyzed }
-                        hourNumber: { type: integer, index: not_analyzed }
-                        dayNumber: { type: integer, index: not_analyzed }
+                        hourNumber: { type: float, index: not_analyzed }
+                        dayNumber: { type: float, index: not_analyzed }
                         schedule: { type: string, index: not_analyzed }
                         year: { type: integer, index: not_analyzed }
                         semester: { type: integer, index: not_analyzed }

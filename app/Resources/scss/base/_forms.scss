@@ -217,3 +217,10 @@ form .nav.nav-tabs {
 form .overflow-table {
   overflow: scroll;
 }
+
+form label.required {
+  &:after {
+    content: '*';
+    color: $brand-primary;
+  }
+}

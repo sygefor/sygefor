@@ -6,18 +6,15 @@ use Elastica\Aggregation\Terms;
 
 /**
  * Nested aggregation to group participant summaries
- *
- *
- * @package Sygefor\Bundle\ActivityReportBundle\Service\Aggregation
  */
 class TrainingCategoryAggregation extends AbstractTrainingTypeAggregation
 {
     /**
      * constructor.
      */
-    public function __construct($singleSessionTraining = true)
+    public function __construct($meeting = false)
     {
-        parent::__construct($singleSessionTraining);
+        parent::__construct($meeting);
 
         // add theme aggregation
         $theme = new Terms('training.category.source');

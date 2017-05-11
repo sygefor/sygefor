@@ -53,7 +53,6 @@
                     <li><label>Payant</label> {{ inscription.isPaying ? 'Oui' : 'Non' }}</li>
                     <li><label>Fonction, statut</label> {{ inscription.status }}</li>
                     <li><label>Domaine disciplinaire</label> {{ inscription.disciplinaryDomain.name }}</li>
-                    <li><label>Discipline</label> {{ inscription.disciplinary.name }}</li>
                 </ul>
             </div>
         </div>
@@ -65,7 +64,6 @@
                     <hr>
                     <ul class="summary">
                         <li><label>Tarif</label> {{ inscription.price ? inscription.price : 0 }} &euro;</li>
-                        <li><label>Typologie</label> <span sf-xeditable="form.children.typology">{{ inscription.typology.name }}</span></li>
                         <li><label>Motivation</label> <span sf-xeditable="form.children.motivation" data-type="textarea">{{ inscription.motivation }}</span></li>
                     </ul>
                 </form>

@@ -7,6 +7,7 @@ use Doctrine\ORM\Mapping as ORM;
 use Symfony\Component\Validator\Constraints as Assert;
 use Knp\DoctrineBehaviors\Model as ORMBehaviors;
 use JMS\Serializer\Annotation as Serializer;
+use Sygefor\Bundle\MyCompanyBundle\Entity\Term\EvaluationCriterion;
 
 /**
  * @ORM\Table(name="evaluation_noted_criterion")
@@ -60,7 +61,7 @@ class EvaluationNotedCriterion
     }
 
     /**
-     * @return mixed
+     * @return Inscription
      */
     public function getInscription()
     {
@@ -68,7 +69,7 @@ class EvaluationNotedCriterion
     }
 
     /**
-     * @param mixed $inscription
+     * @param Inscription $inscription
      */
     public function setInscription($inscription)
     {
@@ -76,7 +77,7 @@ class EvaluationNotedCriterion
     }
 
     /**
-     * @return mixed
+     * @return EvaluationCriterion
      */
     public function getCriterion()
     {
@@ -84,7 +85,7 @@ class EvaluationNotedCriterion
     }
 
     /**
-     * @param mixed $criterion
+     * @param EvaluationCriterion $criterion
      */
     public function setCriterion($criterion)
     {
@@ -92,7 +93,7 @@ class EvaluationNotedCriterion
     }
 
     /**
-     * @return mixed
+     * @return int
      */
     public function getNote()
     {
@@ -100,7 +101,7 @@ class EvaluationNotedCriterion
     }
 
     /**
-     * @param mixed $note
+     * @param int $note
      */
     public function setNote($note)
     {

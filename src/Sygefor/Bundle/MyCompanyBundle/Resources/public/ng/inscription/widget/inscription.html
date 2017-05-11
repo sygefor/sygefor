@@ -5,7 +5,7 @@
             <th>Date</th>
             <th>Stagiaire</th>
             <th>Session</th>
-            <th>Type de personnel</th>
+            <th>Etablissement</th>
             <th>Inscription</th>
         </tr>
         </thead>
@@ -14,7 +14,7 @@
                 <td><a href="" ui-sref="inscription.detail.view({ id: item.id, session: item.session.id })" ui-sref-widget-opts>{{ item.createdAt|date: 'dd/MM/yyyy' }}</a></td>
                 <td><a href="" ui-sref="trainee.detail.view({ id: item.trainee.id })">{{ item.trainee.fullName }}</a></td>
                 <td><a href="" ui-sref="session.detail.view({ id: item.session.id, training: item.session.training.id })">{{ item.session.dateBegin|date: 'dd/MM/yyyy' }} - {{ item.session.training.name }}</a></td>
-                <td>{{ item.trainee.publicCategory }}</td>
+                <td><a href="" ui-sref="institution.detail.view({ id: item.trainee.institution.id })">{{ item.trainee.institution.name }}</a></td>
                 <td><span class="label" ng-class="$root.inscriptionStatusClass(item.inscriptionStatus.status)">{{ item.inscriptionStatus.name }}</span></td>
             </tr>
         </tbody>

@@ -57,7 +57,6 @@
                             <ul class="summary">
                                 <li><label>Catégorie de public</label> <span sf-xeditable="form.children.publicType">{{ trainee.publicType.name }}</span></li>
                                 <li><label>Domaine disciplinaire</label> <span sf-xeditable="form.children.disciplinaryDomain" on-change="unset('disciplinary')">{{ trainee.disciplinaryDomain.name }}</span></li>
-                                <li ng-show="trainee.disciplinaryDomain"><label>Discipline</label> <span sf-xeditable="form.children.disciplinary">{{ trainee.disciplinary.name }}</span></li>
                                 <li><label>Payant</label> <span sf-xeditable="form.children.isPaying">{{ trainee.isPaying ? 'Oui' : 'Non' }}</span></li>
                             </ul>
                         </div>

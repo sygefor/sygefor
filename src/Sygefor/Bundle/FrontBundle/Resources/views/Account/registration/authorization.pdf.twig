@@ -1,0 +1,160 @@
+{% extends "SygeforFrontBundle::layout.pdf.twig" %}
+
+{% set title = "Demande de formation" %}
+
+{% block head %}
+    <style>
+        .body {
+            margin-top: 10px;
+        }
+
+        .validation {
+            padding-top: 20px;
+        }
+
+        .signature {
+            margin-top: 15px;
+            margin-bottom: 50px;
+        }
+
+        h2 {
+            text-align: center;
+            font-size: 28px;
+            margin-top: 20px;
+        }
+
+        h3 {
+            margin-top: 20px;
+            padding-bottom: 5px;
+            font-size: 16px;
+            font-weight: 600;
+        }
+
+        .no-mt {
+            margin-top: 0;
+        }
+
+        .no-mb {
+            margin-bottom: 0;
+        }
+
+        p, ul, td {
+            font-size: 14px;
+        }
+
+        table {
+            width: 100%;
+            font-size: inherit;
+        }
+
+        table td, table th {
+            border:1px solid #000000;
+            padding:10px;
+            width: 50%;
+            vertical-align: top;
+        }
+
+        .center {
+            text-align: center;
+        }
+
+        .border {
+            border:1px solid #000000;
+            padding:2px 4px;
+        }
+
+        fieldset {
+            margin-top: 10px;
+        }
+
+        .block {
+            height: 40px;
+        }
+
+        .no-pb {
+            page-break-inside: avoid;
+        }
+    </style>
+{% endblock  %}
+
+{% block body %}
+    <div class="body">
+        <div class="row">
+            <div class="col-md-12 pull-right">
+                A renvoyer à&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+            </div>
+        </div>
+        <div class="row">
+            <div class="col-md-12">
+                formation@sygefor.dev<br/>
+                Délégation Côte d’Azur<br/>
+                Formation Permanente
+            </div>
+        </div>
+    </div>
+
+    <div class="row no-pb">
+        <div class="col-md-12">
+            <h3>Stagiaire</h3>
+            <p>
+                <strong>Nom :</strong> {{ trainee.title }} {{ trainee.firstName }} {{ trainee.lastName }}<br>
+                <strong>Adresse de contact :</strong> {{ trainee.fullAddress }}<br>
+            </p>
+        </div>
+    </div>
+
+    {% for registration in registrations %}
+        <h3>Stage</h3>
+        <table class="no-pb">
+            <thead>
+            <tr>
+                <th class="center">Dates</th>
+                <th class="center">N° et nom du stage</th>
+                <th class="">Durée</th>
+                <th class="center">Lieu</th>
+            </tr>
+            </thead>
+            <tbody>
+            <tr>
+                <td>{{ registration.session.dateRange | replace({'le ': ''}) }}</td>
+                <td>{{ registration.session.training.number }} - {{ registration.session.training.name }}</td>
+                <td>
+                    {% if registration.session.hourNumber is defined and registration.session.hourNumber > 0 %}
+                        {{ registration.session.hourNumber }} heure{% if registration.session.hourNumber > 1 %}s{% endif %}
+                    {% endif %}
+                    {% if (registration.session.hourNumber is defined and registration.session.hourNumber > 0) and (registration.session.dayNumber is defined and registration.session.dayNumber > 0) %}
+                        &nbsp;sur&nbsp;
+                    {% endif %}
+                    {% if registration.session.dayNumber is defined and registration.session.dayNumber > 0  %}
+                        {{ registration.session.dayNumber }} jour{% if registration.session.dayNumber > 1 %}s{% endif %}
+                    {% endif %}
+                </td>
+                <td>{% if registration.session.place is defined and registration.session.place | length > 0 %}{{ registration.session.place.name }}{% endif %}</td>
+            </tr>
+            </tbody>
+        </table>
+
+        <fieldset class="border no-pb">
+            <h3>Motifivation de la demande</h3>
+            <p>{{ registration.motivation }}</p>
+        </fieldset>
+
+        <div class="validation no-pb">
+            <h3>Validations</h3>
+            {% if trainee.institution is defined and trainee.institution | length > 0 and trainee.institution.trainingCorrespondents | length > 0 %}
+                <p>{{ trainee.institution.manager.title }} {{ trainee.institution.manager.fullName }}</p>
+            {% else %}
+                <p>Nom du directeur d’unité ou responsable de service : </p>
+            {% endif %}
+
+            <fieldset class="border">
+                <h4>Avis et/ou motifs</h4>
+                <div class="block"></div>
+            </fieldset>
+
+            <div class="signature">
+                <strong>Date et signature du Directeur d'unité </strong>
+            </div>
+        </div>
+    {% endfor %}
+{% endblock %}

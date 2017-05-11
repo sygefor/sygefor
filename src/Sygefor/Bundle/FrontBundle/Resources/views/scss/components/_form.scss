@@ -8,3 +8,10 @@
     margin-bottom: $padding-small-horizontal;
   }
 }
+
+form label.required {
+  &:after {
+    content: '*';
+    color: $brand-primary;
+  }
+}
