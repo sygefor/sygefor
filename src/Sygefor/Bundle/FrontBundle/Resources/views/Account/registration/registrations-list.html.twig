@@ -20,7 +20,7 @@
                     <td>{{ registration.createdAt | date('d/m/Y') }}</td>
                     <td>{{ registration.session.training.organization.name }}</td>
                     <td><a href="{{ path('front.public.training', {id: registration.session.training.id, sessionId: registration.session.id}) }}">{{ registration.session.training.name }}</a></td>
-                    <td>{{ registration.session.name }} {{ registration.session.dateBegin | date('m/d/Y') }}</td>
+                    <td>{{ registration.session.name }} {{ registration.session.dateBegin | date('d/m/Y') }}</td>
                     {% if user is defined and user.isPaying == true %}
                         <td title="Tarif de la formation"> {{registration.session.price ? registration.session.price : '0'}} €</td>
                     {% endif %}
