@@ -30,7 +30,7 @@ Configuration requise
 
 ### PHP
 
-* version 5.3.9 minimum (sauf 5.3.16)
+* version 5.3.9 minimum (sauf 5.3.16). Php7 n'est pas compatible pour le moment.
 * extensions :
     * json
     * ctype
@@ -55,12 +55,14 @@ version 5.0 minimum
 Sygefor3 s'appuie sur un serveur [ElasticSearch](http://www.elasticsearch.org/) qui gère l'indexation de l'ensemble
 des éléments.
 
-* version 1.4 minimum
+* version 1.4
 
 ### Unoconv
 
 La génération des PDF lors d'un publipostage est rendue possible grâce à la librairie [Unoconv](https://github.com/dagwieers/unoconv)
 qui doit donc être installée sur le serveur.
+
+* version 0.7
 
 ### Accès interactif
 
@@ -85,9 +87,9 @@ Installation
 
 - Composer installé : http://www.coolcoyote.net/php-mysql/installation-de-composer-sous-linux-et-windows
 - Openssl installé
-- npm installé
-- Visual Studio Redistributables installé
-- wkhtmltopdf installé (pour générer des pdf)
+- npm, bower, yarn installé (sudo npm install yarn bower -g)
+- Visual Studio Redistributables installé pour Windows
+- libssl-dev installé pour linux
 - Rewrite module activé
 
 ### Le projet
@@ -96,13 +98,13 @@ Installation
 - cd sygefor
 - composer install
     - Renseigner les paramètres symfony
-- npm install
+- yarn install
 - bower install
 - php app/console doctrine:database:create
 - php app/console doctrine:schema:create
 - php app/console doctrine:fixtures:load (pour générer quelques données initiales)
-- gulp build
 - php app/console fos:js-routing:dump
+- gulp build:dist
 - php app/console fos:elastica:populate
 - php app/console server:run 127.0.0.1:8000
 - Se rendre sur localhost:8000 avec votre navigateur

@@ -60,7 +60,7 @@ function initConfigOptions(){
 
 	// Set independet default configuration options
 	$defaults = array();
-	$defaults['mainDomain'] = isset($_GET['entityID']) && $_GET['entityID'] === "https://aaa.sygefor.reseau-urfist.fr" ? "https://formation-rec.ifsem.cnrs.fr" : "https://formation.ifsem.cnrs.fr";
+	$defaults['mainDomain'] = isset($_GET['entityID']) && $_GET['entityID'] === "https://aaa.sygefor.reseau-urfist.fr" ? "http://sygefor.com" : "http://sygefor.com";
 	$defaults['instanceIdentifier'] = 'wayf';
 	$defaults['defaultLanguage'] = 'fr';
 	$defaults['commonDomain'] = getTopLevelDomain($_SERVER['SERVER_NAME']);
@@ -89,21 +89,19 @@ function initConfigOptions(){
 	$defaults['helpURL'] = '';//$defaults['federationURL'].'/help';
 	$defaults['privacyURL'] = '';//$defaults['federationURL'].'/privacy';
 	$defaults['supportContactEmail'] = 'support@conjecto.com';
-	$defaults['imageURL'] = 'https://'.$_SERVER['SERVER_NAME'].dirname($_SERVER['SCRIPT_NAME']).'/images';
+	$defaults['imageURL'] = 'http://'.$_SERVER['SERVER_NAME'].dirname($_SERVER['SCRIPT_NAME']).'/images';
 	$defaults['javascriptURL'] = 'https://'.$_SERVER['SERVER_NAME'].dirname($_SERVER['SCRIPT_NAME']).'/js';
 	$defaults['cssURL'] = 'https://'.$_SERVER['SERVER_NAME'].dirname($_SERVER['SCRIPT_NAME']).'/css';
 	$defaults['IDPConfigFile'] = 'IDProvider.conf.php';
 	$defaults['backupIDPConfigFile'] = 'IDProvider.conf.php';
-//	$defaults['metadataFile'] = '/etc/shibboleth/shibboleth-sp/main-all-renater-metadata.xml';
-	$defaults['metadataFile'] = '/etc/shibboleth/shibboleth-sp/cnrs-metadata.xml';
+	$defaults['metadataFile'] = '/etc/shibboleth/shibboleth-sp/renater-test-metadata.xml';
 	$defaults['metadataIDPFile'] = 'IDProvider.metadata.php';
 	$defaults['metadataSPFile'] = 'SProvider.metadata.php';
 	$lockFileName = preg_replace('/[^-_\.a-zA-Z]/', '', $defaults['instanceIdentifier']);
 	$defaults['metadataLockFile'] = (substr($_SERVER['PATH'],0,1) == '/') ? '/tmp/wayf_metadata-'.$lockFileName.'.lock' : 'C:\windows\TEMP\wayf_metadata-'.$lockFileName.'.lock';
 	$defaults['WAYFLogFile'] = '/var/log/apache2/wayf.log'; 
 	$defaults['kerberosRedirectURL'] = dirname($_SERVER['SCRIPT_NAME']).'kerberosRedirect.php';
-//	$defaults['developmentMode'] = isset($_GET['entityID']) && $_GET['entityID'] === "https://aaa.sygefor.reseau-urfist.fr";
-	$defaults['developmentMode'] = isset($_GET['entityID']) && $_GET['entityID'] === "https://formation-rec.ifsem.cnrs.fr";
+	$defaults['developmentMode'] = isset($_GET['entityID']) && $_GET['entityID'] === "https://aaa.sygefor.reseau-urfist.fr";
 
 	// Initialize independent defaults
 	foreach($defaults as $key => $value){

@@ -1,8 +1,0 @@
-{{ cofo.title }},<br/><br/>
-
-Nous vous informons que {% if inscription.trainee.title.id == 1 %}le{% else %}la{% endif %} stagiaire {{ inscription.trainee.fullName }} a demandé à suivre la formation "{{ inscription.session.training.name }}" débutant le {{ inscription.session.dateBegin | date('d/m/Y') }}.<br/><br/>
-
-Vous pouvez à tout moment consulter et faire le suivi, en tant que « correspondant formation », des demandes des agents sur votre espace :  <a href="{{ url('front.account') }}">{{ url('front.account') }}</a><br/><br/>
-
-Cordialement,<br/>
-L'équipe formation du CNRS<br/><br/>

@@ -89,7 +89,7 @@
                     <h4 class="mb-base">Informations pratiques</h4>
                     <img class="logo" src="{{ asset('assets/img/organization/' ~ training.organization.code ~ '/logo.png')}}" title="Logo" alt="Logo">
                     <address>
-                        <div>{% if training.organization.code == 'ifsem' %}IFSeM Formation{% else %}{{ training.organization.name }}{% endif %}</div>
+                        <div>{{ training.organization.name }}</div>
                         <div>{{ training.organization.fullAddress | nl2br }}</div>
                         {% if training.organization.phoneNumber | length > 0 %}
                             <div><span class="glyphicon glyphicon-phone-alt"></span> <a href="tel:{{ training.organization.phoneNumber | replace(' ', '') }}">&nbsp;{{ training.organization.phoneNumber }}</a></div>

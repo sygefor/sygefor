@@ -47,16 +47,8 @@
 
 {{ form_start(form) }}
 <section>
-    {% if isCnrs == 1 %}
-        <div class="profile-message">
-            Avant de remplir cette fiche, rapprochez-vous de votre responsable hiérachique pour obtenir
-            le nom de votre "responsable hiérachique" et de votre "correspondant formation".<br/>
-            (<a href="{{ guide_url }}" target="_blank">Consultez <strong>le GUIDE</strong> pour plus de détails.</a>)
-        </div>
-    {% endif %}
-
     {# order these fields #}
-    {% for field in ['title', 'lastName', 'firstName', 'email', 'organization', 'institution', 'employer', 'people_validator', 'people_cofo', 'validator', 'cofo'] %}
+    {% for field in ['title', 'lastName', 'firstName', 'email', 'organization'] %}
         {% if (form[field] is defined) %}
             {{ form_row(form[field]) }}
             {{ form_errors(form[field]) }}

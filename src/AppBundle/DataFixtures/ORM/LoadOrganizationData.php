@@ -23,7 +23,6 @@ class LoadOrganizationData extends AbstractTermLoad
                 'zip' => '35000',
                 'city' => 'Rennes',
                 'phoneNumber' => '',
-                'faxNumber' => '',
                 'website' => 'http://www.conjecto.com',
                 'trainee_registrable' => true,
             ),

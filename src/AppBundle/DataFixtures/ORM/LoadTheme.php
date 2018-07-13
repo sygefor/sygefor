@@ -22,18 +22,18 @@ class LoadTheme extends AbstractTermLoad
     public function getTerms()
     {
         return array(
-            array('code' => 'SCI', 'name' => 'Connaissances scientifiques'),
-            array('code' => 'TEC', 'name' => 'Techniques spécifiques'),
-            array('code' => 'INF', 'name' => 'Informatique (conception des outils)'),
-            array('code' => 'BUR', 'name' => 'Bureautique (utilisation des outils)'),
-            array('code' => 'APS', 'name' => 'Utilisation d\'applications spécialisées CNRS'),
-            array('code' => 'SST', 'name' => 'Prévention et sécurité / Ethique'),
-            array('code' => 'SPV', 'name' => 'Partenariat et valorisation'),
-            array('code' => 'SFC', 'name' => 'Finances, comptabilité'),
-            array('code' => 'SRH', 'name' => 'Resources humaines'),
-            array('code' => 'MGQ', 'name' => 'Management / Qualité'),
-            array('code' => 'EFF', 'name' => 'Culture institutionnelle et efficacité personelle'),
-            array('code' => 'LAN', 'name' => 'Langues'),
+            array('name' => 'Connaissances scientifiques'),
+            array('name' => 'Techniques spécifiques'),
+            array('name' => 'Informatique (conception des outils)'),
+            array('name' => 'Bureautique (utilisation des outils)'),
+            array('name' => 'Utilisation d\'applications spécialisées CNRS'),
+            array('name' => 'Prévention et sécurité / Ethique'),
+            array('name' => 'Partenariat et valorisation'),
+            array('name' => 'Finances, comptabilité'),
+            array('name' => 'Resources humaines'),
+            array('name' => 'Management / Qualité'),
+            array('name' => 'Culture institutionnelle et efficacité personelle'),
+            array('name' => 'Langues'),
         );
     }
 }

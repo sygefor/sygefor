@@ -131,7 +131,7 @@
 
 	    <!-- test metadata -->
         <MetadataProvider type="XML" uri="https://federation.renater.fr/test/renater-test-metadata.xml"
-              backingFilePath="renater-testmetadata.xml" reloadInterval="7200">
+              backingFilePath="renater-test-metadata.xml" reloadInterval="7200">
             <MetadataFilter type="RequireValidUntil" maxValidityInterval="2419200"/>
             <MetadataFilter type="Signature" certificate="metadata-federation-renater.crt"/>
         </MetadataProvider>

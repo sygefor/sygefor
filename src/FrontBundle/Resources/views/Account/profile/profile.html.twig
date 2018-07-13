@@ -17,8 +17,6 @@
 
 {% block body %}
     <div class="container">
-        {% include("@Front/Account/institution-correspondents.html.twig") %}
-        {% if isCnrs == 0 %}<hr />{% endif %}
         {% include('@Front/Account/profile/profile-form.html.twig') %}
     </div>
 {% endblock body %}
