@@ -108,6 +108,7 @@ Installation
 - php app/console fos:elastica:populate
 - php app/console server:run 127.0.0.1:8000
 - Se rendre sur localhost:8000 avec votre navigateur
+- Se connecter avec les identifiants admin/admin
 
 ### Etendre
 
