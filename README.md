@@ -114,8 +114,8 @@ Installation
 
 Le coeur de Sygefor3 est intégré dans les vendors du projet. Ce coeur déclare des classes et des controlleurs abstraits. Vous devez étendre
 ces classes et controlleurs pour faire fonctionner l'application.
-Le bundle MyCompany intègre ces extentions. Vous pourrez comprendre comment étendre Sygefor3 en regardant ce bundle.
+Le bundle App intègre ces extentions. Vous pourrez comprendre comment étendre Sygefor3 en regardant ce bundle.
 
-Vous pouvez également adapter l'interface privée de gestion en modifiant les templates AngularJS contenus dans le répertoire MyCompany/Resources/public/ng.
+Vous pouvez également adapter l'interface privée de gestion en modifiant les templates AngularJS contenus dans le répertoire app/Resources/public/ng.
 Le module FrontBundle intègre une version publique et allégée de Sygefor permettant aux stagiaires de s'inscrire aux différents stages.
 Vous pourrez aussi retrouver un module Bilan basé sur ElasticSearch.
