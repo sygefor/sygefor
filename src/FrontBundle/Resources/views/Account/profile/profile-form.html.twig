@@ -1,0 +1,77 @@
+{% block javascripts %}
+    <script type="application/javascript">
+        (function($) {
+            $(document).ready(function() {
+                function toogleFieldDisplay(selectField, textField) {
+                    var option = $('select#' + selectField + ' option:selected').text();
+                    var $field = $($($('#' + textField)[0].parentNode)[0].parentNode);
+                    if (option == "Autre") {
+                        $field.show();
+                    }
+                    else {
+                        $('#' + textField).val(null);
+                        $field.hide();
+                    }
+                }
+
+                function tooglePublicTypeDisplay() {
+                    return toogleFieldDisplay('profile_publicType', 'profile_otherPublicType');
+                }
+
+                function toogleEmployerDisplay() {
+                    return toogleFieldDisplay('profile_employer', 'profile_otherEmployer');
+                }
+
+                function toogleEndContractDate(e) {
+                    var hide = $('select#' + 'profile_employmentContractType' + ' option:selected').text() === 'Titulaire CNRS';
+                    var endContractDateNode = $('#profile_employmentContractEnd_day').parent().parent().parent().parent();
+                    if (hide) {
+                        endContractDateNode.hide();
+                    }
+                    else {
+                        endContractDateNode.show();
+                    }
+                }
+
+                tooglePublicTypeDisplay();
+                toogleEmployerDisplay();
+                toogleEndContractDate();
+
+                $('#profile_publicType').change(tooglePublicTypeDisplay);
+                $('#profile_employer').change(toogleEmployerDisplay);
+                $('#profile_employmentContractType').change(toogleEndContractDate);
+            });
+        })(jQuery);
+    </script>
+{% endblock %}
+
+{{ form_start(form) }}
+<section>
+    {% if isCnrs == 1 %}
+        <div class="profile-message">
+            Avant de remplir cette fiche, rapprochez-vous de votre responsable hiérachique pour obtenir
+            le nom de votre "responsable hiérachique" et de votre "correspondant formation".<br/>
+            (<a href="{{ guide_url }}" target="_blank">Consultez <strong>le GUIDE</strong> pour plus de détails.</a>)
+        </div>
+    {% endif %}
+
+    {# order these fields #}
+    {% for field in ['title', 'lastName', 'firstName', 'email', 'organization', 'institution', 'employer', 'people_validator', 'people_cofo', 'validator', 'cofo'] %}
+        {% if (form[field] is defined) %}
+            {{ form_row(form[field]) }}
+            {{ form_errors(form[field]) }}
+        {% endif %}
+    {% endfor %}
+    {% for child in form.children %}
+        {{ form_row(child) }}
+        {{ form_errors(child) }}
+    {% endfor %}
+</section>
+<section>
+    <div class="row">
+        <div class="col-md-12">
+            <button type="submit" class="btn btn-primary btn-block">Enregistrer</button>
+        </div>
+    </div>
+</section>
+{{ form_end(form) }}

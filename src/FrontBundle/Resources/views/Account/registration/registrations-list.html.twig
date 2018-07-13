@@ -1,0 +1,52 @@
+<div class="registrations-list">
+    <div class="table-responsive">
+        <table class="table table-hover table-condensed">
+            <thead>
+            <tr>
+                <th>Inscription</th>
+                <th>Formation</th>
+                <th>Session</th>
+                {% if app.user is defined and app.user.isPaying == true %}
+                    <th>Tarif</th>
+                {% endif %}
+                <th>Statut</th>
+                <th></th>
+                <th></th>
+            </tr>
+            </thead>
+            <tbody>
+            {% for registration in list | orderBy('date') %}
+                <tr>
+                    <td>{{ registration.createdAt | date('d/m/Y') }}</td>
+                    <td><a href="{{ path('front.program.training', {id: registration.session.training.id, sessionId: registration.session.id}) }}">{{ registration.session.training.name }}</a></td>
+                    <td>{{ registration.session.name }} {{ registration.session.dateBegin | date('d/m/Y') }}</td>
+                    {% if app.user is defined and app.user.isPaying == true %}
+                        <td title="Tarif de la formation"> {{registration.session.price ? registration.session.price : '0'}} €</td>
+                    {% endif %}
+                    <td>
+                        {% include '@Front/Account/registration/inscription-status-label.html.twig' %}
+                    </td>
+                    <td>
+                        {% if registration.inscriptionStatus.name == "Accepté" or registration.inscriptionStatus.name == "Convoqué" %}
+                            <a href="{{ path('front.program.training', {
+                                    id: registration.session.training.id,
+                                    sessionId: registration.session.id,
+                                    token: registration.id | md5
+                                }) }}" class="btn btn-primary btn-xs pull-right">
+                                Documents de la formation
+                            </a>
+                        {% endif %}
+                    </td>
+                    <td>
+                        {% if registration.pending and registration.upcoming and registration.inscriptionStatus.status < 3 %}
+                            <a href="{{ path('front.account.registration.desist', {id: registration.id}) }}" class="btn btn-danger btn-xs pull-right">
+                                {{ registration.inscriptionStatus.id == 1 ? 'Annuler cette demande' : 'Déclarer un désistement' }}
+                            </a>
+                        {% endif %}
+                    </td>
+                </tr>
+            {% endfor %}
+            </tbody>
+        </table>
+    </div>
+</div>

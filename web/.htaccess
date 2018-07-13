@@ -40,7 +40,6 @@ DirectoryIndex app.php
     # Rewrite all other queries to the front controller.
     RewriteCond %{REQUEST_URI} !^/Shibboleth.sso
     RewriteRule .? %{ENV:BASE}/app.php [L]
-
 </IfModule>
 
 <IfModule !mod_rewrite.c>

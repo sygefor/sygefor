@@ -1,0 +1,9 @@
+.inscription.training-detail-view {
+  div.radio label.required::after {
+    content: '';
+  }
+
+  label.col-sm-12 {
+    @extend .label-red;
+  }
+}

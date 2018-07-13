@@ -3,7 +3,7 @@ sygefor_core:
     batch:
         convert_type:
             semestered_training:
-                class: 'SygeforTrainingBundle:Training\AbstractTraining'
+                class: 'SygeforCoreBundle:AbstractTraining'
         csv:
             user:
                 class: 'SygeforCoreBundle:User'
@@ -13,7 +13,7 @@ sygefor_core:
                     email: Email
                     organization.name: Centre
             session:
-                class: 'SygeforMyCompanyBundle:Session'
+                class: 'AppBundle\Entity\Session\Session'
                 filename: 'session.csv'
                 fields:
                     id: "Numéro"
@@ -31,7 +31,7 @@ sygefor_core:
                     hourNumber: "Nombre d'heures"
                     dayNumber: 'Nombre de jours'
             semestered_training:
-                class: 'Sygefor\Bundle\MyCompanyBundle\Model\SemesteredTraining'
+                class: 'AppBundle\Model\SemesteredTraining'
                 filename: 'formation.csv'
                 fields:
                     training.id: { label: 'Identifiant' }
@@ -43,25 +43,19 @@ sygefor_core:
                     nextSession.dateBegin: { label: 'Prochaine', type: 'date' }
                     lastSession.dateBegin: { label: 'Dernière', type: 'date' }
             trainee:
-                class: 'SygeforMyCompanyBundle:Trainee'
+                class: 'AppBundle\Entity\Trainee\Trainee'
                 filename: 'stagiaire.csv'
                 fields:
-                    createdAt: { label: "Date d'inscription", type: "date" }
+                    createdAt: { label: "Date de création", type: "date" }
                     title: "Civilité"
-                    fullName: "Nom"
-                    organization.name: "Centre"
+                    lastName: "Nom"
+                    firstName: "Prénom"
                     email: "Email"
-                    phoneNumber: "Téléphone"
-                    institution.name: "Etablissement"
-                    publicType: "Catégorie de public"
-                    status: "Statut"
-                    disciplinary: "Discipline"
-                    disciplinaryDomain : "Domaine disciplinaire"
-                    address: "Adresse"
-                    zip: "Code postal"
-                    city: "Ville"
+                    organization.name: "Délégation"
+                    employmentContractType: "Nature de personnel"
+                    function: "Fonction"
             trainer:
-                class: 'SygeforMyCompanyBundle:Trainer'
+                class: 'AppBundle\Entity\Trainer'
                 filename: 'formateur.csv'
                 fields:
                     createdAt: { label: "Date d'inscription", type: "date" }
@@ -71,35 +65,29 @@ sygefor_core:
                     email: "Email"
                     phoneNumber: "Téléphone"
                     webSite: "Site Web"
-                    institution.name: "Unité"
                     address: "Adresse"
                     zip: "Code postal"
                     city: "Ville"
             inscription:
-                class: 'SygeforMyCompanyBundle:Inscription'
+                class: 'AppBundle\Entity\Inscription'
                 filename: 'inscription.csv'
                 fields:
-                    createdAt: { label: "Date d'inscription", type: "date" }
+                    trainee.title: "Civilité"
+                    trainee.lastName: "Nom"
+                    trainee.firstName: "Prénom"
+                    trainee.email: "Email"
                     session.training.name: "Intitulé de la formation"
                     session.name: "Intitulé de la session"
-                    session.dateBegin: { label: 'Session', type: "date" }
-                    trainee.fullName: "Nom du stagiaire"
-                    trainee.email: "Email du stagiaire"
+                    session.dateRange: "Session"
+                    trainee.organization.name: "Délégation"
+                    workplace: "Lieu de travail"
+                    employmentContractType: "Nature de personnel"
+                    function: "Fonction"
+                    createdAt: { label: "Date d'inscription", type: "date" }
+                    motivation: "Motivation agent"
                     inscriptionStatus: "Statut de l'inscription"
                     presenceStatus: "Statut de présence"
-            institution:
-                class: 'SygeforMyCompanyBundle:Institution'
-                filename: 'unite.csv'
-                fields:
-                    name: "Nom"
-                    organization.name: "Centre"
-                    createdAt: { label: "Date de création", type: "date" }
-                    address: "Adresse"
-                    zip: "Code postal"
-                    city: "Ville"
-                    manager.fullName: "Directeur de l'établissement"
-                    manager.phoneNumber: "Téléphone"
-                    manager.email: "Email"
+                    personHours: "Heures-personne"
         mailing:
             # session dates
             stdClass:
@@ -109,29 +97,34 @@ sygefor_core:
                 fields:
                     date: { property: date }
             organization:
-                class: 'Sygefor\Bundle\CoreBundle\Entity\Organization'
+                class: 'AppBundle\Entity\Organization'
                 excludeFromFormType: true
                 alias: 'centre'
+                emailPath: 'email'
                 fields:
                     nom: { property: name }
                     code: { property: code }
+                    adresse: { property: fullAddress }
+                    ville: { property: city }
             inscription:
-                class: 'Sygefor\Bundle\MyCompanyBundle\Entity\Inscription'
+                class: 'AppBundle\Entity\Inscription'
                 emailPath: 'trainee.email'
                 alias: 'inscription'
+                shorcuts:
+                    formateurs: { current: true, path: session.trainers, sort: nom }
+                    stagiaires: { current: false, path: trainee, sort: nom }
+                    dates: { current: true, path: session.datesArray }
                 fields:
-                    centre: { property: organization }
+                    centre: { property: trainee.organization }
                     date: { property: createdAt }
                     session: { property: session }
                     stagiaire: { property: trainee }
                     statutInscription: { property: inscriptionStatus.name }
                     statutPresence: { property: presenceStatus.name }
-                shorcuts:
-                    formateurs: { current: true, path: session.trainers, sort: nom }
-                    stagiaires: { current: false, path: trainee, sort: nom }
-                    dates: { current: true, path: session.datesArray }
+                    evaluationUrl: { property: "evaluationUrl" }
+                    motivation: { property: "motivation" }
             trainee:
-                class: 'Sygefor\Bundle\MyCompanyBundle\Entity\Trainee'
+                class: 'AppBundle\Entity\Trainee\Trainee'
                 alias: 'stagiaire'
                 emailPath: 'email'
                 fields:
@@ -139,17 +132,16 @@ sygefor_core:
                     # PersonTrait
                     civilite: { property: title }
                     nomComplet: { property: fullName }
-                    nomNaissance: { property: maidenName }
                     nom: { property: lastName }
                     prenom: { property: firstName }
                     # CoordinatesTrait
                     adresse: { property: address }
+                    adresseComplete: { property: fullAddress }
                     codePostal: { property: zip }
                     ville: { property: city }
                     email: { property: email }
                     telephone: { property: phoneNumber }
                     # ProfessionalSituationTrait
-                    unite: { property: institution }
                     service: { property: service }
                     public: { property: publicType.name }
                     statut: { property: status }
@@ -157,7 +149,7 @@ sygefor_core:
                     # Trainee
                     inscriptions: { property: inscriptions }
             trainer:
-                class: 'Sygefor\Bundle\MyCompanyBundle\Entity\Trainer'
+                class: 'AppBundle\Entity\Trainer'
                 excludeFromFormType: true
                 alias: 'formateur'
                 emailPath: 'email'
@@ -172,16 +164,13 @@ sygefor_core:
                     codePostal: { property: zip }
                     ville: { property: city }
                     email: { property: email }
-                    fax: { property: faxNumber }
-                    site: { property: website }
                     #coordinatesTrait
-                    etablissement: { property: institution }
                     service: { property: service }
                     statut: { property: status }
                     # other fields
                     sessions: { property: sessions }
             session:
-                class: 'Sygefor\Bundle\MyCompanyBundle\Entity\Session'
+                class: 'AppBundle\Entity\Session\Session'
                 alias: 'session'
                 fields:
                     # AbstractSession
@@ -191,10 +180,7 @@ sygefor_core:
                     dateFin: { property: "dateEnd", type: "date" }
                     dateFinEnLettre: { property: "letterDateEnd", type: "date" }
                     date: { property: "dateRange", type: "string" }
-                    dates: { property: "datesArray" }
                     dateEnLettre: { property: "letterDateRange", type: "string" }
-                    datePrecisions: { property: "datePrecisions" }
-                    heurePrecisions: { property: "hourPrecisions" }
                     formation: { property: "training" }
                     formateurs: { property: "trainersListString" }
                     listeFormateurs: { property: "trainers" }
@@ -202,53 +188,49 @@ sygefor_core:
                     nombrePlaces: { property: "maximumNumberOfRegistrations" }
                     nombreInscrits: { property: "numberOfRegistrations" }
                     dateLimiteInscription: { property: "limitRegistrationDate" }
-                    datePrecisions: { property: "limitRegistrationDate" }
+                    datePrecisions: { property: "datePrecisions" }
                     nombreHeures: { property: "hourNumber" }
                     nombreJours: { property: "dayNumber" }
                     horaires: { property: "schedule" }
                     participantsMax: { property: "maximumNumberOfRegistrations" }
                     lieu: { property: "place.name" }
+                    salle: { property: "room" }
                     adresse: { property: "place.fullAddress" }
-                    programme: { property: "training.program" }
                     #nombrePresents: { property: "numberOfPresentPeople" }
                     inscriptions: { property: "inscriptions" }
                     url: { property: "frontUrl" }
                     # Session
                     tarif: { property: "price" }
             training:
-                class: 'Sygefor\Bundle\TrainingBundle\Entity\Training\AbstractTraining'
+                class: 'SygeforCoreBundle:AbstractTraining'
                 excludeFromFormType: true
                 alias: 'formation'
                 fields:
                     # Training
                     nom: { property: name }
-                    theme: { property: theme.name}
+                    domaine: { property: theme.name}
                     centre: { property: organization }
-                    numero: { property: number }
+                    numero: { property: trainingCode }
                     sessions: { property: sessions }
-                    programme: { property: program }
-                    description: { property: description }
-                    methodes: { property: teachingMethods }
-                    etablissement: { property: institution }
-                    responsable: { property: supervisor.name }
-                    categorie: { property: category.name }
-                    typeIntervention: { property: interventionType }
-                    initiativeExterne: { property: externalInitiative }
-                    # Internship && Long training
+                    programme: { property: program, type: "ckeditor" }
+                    objectifs: { property: description, type: "ckeditor" }
+                    methodes: { property: teachingMethods, type: "ckeditor" }
+                    gestionnaire: { property: user }
+                    # Internship
                     prerequis: { property: prerequisites }
-                    public: { property: publicType.name }
+                    publics: { property: publicTypes }
                     # Long training
-                    modules: { property: modules }
+                    module: { property: module.name }
                     # Meeting
-                    nationale: { property: national }
+                    national: { property: national, type: "boolean" }
             internship:
-                class: 'Sygefor\Bundle\MyCompanyBundle\Entity\Internship'
+                class: 'AppBundle\Entity\Training\Internship'
                 parent: training
             long_training:
-                class: 'Sygefor\Bundle\MyCompanyBundle\Entity\LongTraining'
+                class: 'AppBundle\Entity\Training\LongTraining'
                 parent: training
             meeting:
-                class: 'Sygefor\Bundle\MyCompanyBundle\Entity\Meeting'
+                class: 'AppBundle\Entity\Training\Meeting'
                 parent: training
             semestered_training:
                 class: 'Sygefor\Bundle\CoreBundle\Model\SemesteredTraining'
@@ -259,31 +241,28 @@ sygefor_core:
                     sessions: { property: sessions}
                     semestre: { property: 'semester' }
                     intitule: { property: 'training.name' }
-                    theme: { property: 'training.theme' }
+                    domaine: { property: 'training.theme' }
                     nombreSessions: { property: 'sessionsCount' }
                     prochaineSession: { property: 'nextSession.dateBegin', type:'date', format: 'd/m/Y' }
                     derniereSession: { property: 'lastSession.dateBegin', type:'date', format: 'd/m/Y' }
-            module:
-                class: 'SygeforMyCompanyBundle:Module'
-                alias: 'module'
+            user:
+                class: 'Sygefor\Bundle\CoreBundle\Entity\User'
                 excludeFromFormType: true
+                alias: 'gestionnaire'
                 fields:
-                    nom: { property: name }
-                    obligatoire: { property: mandatory }
-                    sessions: { property: sessions }
+                    nom: { property: username }
+                    email: { property: email }
         pdf:
             training:
-                class: 'SygeforTrainingBundle:Training\AbstractTraining'
-                template: 'SygeforMyCompanyBundle:Training:pdf.html.twig'
+                class: 'SygeforCoreBundle:AbstractTraining'
+                template: 'training/pdf.html.twig'
                 templateDiscriminator: 'type'
                 templates:
-                    internship: 'SygeforMyCompanyBundle:Training:pdf/internship.html.twig'
-                    long_training: 'SygeforMyCompanyBundle:Training:pdf/longtraining.html.twig'
-                    meeting: 'SygeforMyCompanyBundle:Training:pdf/meeting.html.twig'
-
+                    internship: 'training/pdf/internship.html.twig'
+                    long_training: 'training/pdf/long_training.html.twig'
+                    meeting: 'training/pdf/meeting.html.twig'
             inscription.attestation:
-                class: 'SygeforMyCompanyBundle:Inscription'
-                template: 'SygeforMyCompanyBundle:Inscription:attestation.pdf.twig'
+                class: 'AppBundle\Entity\Inscription'
+                template: 'inscription/attestation.pdf.twig'
                 key: inscription
                 filename: "attestation.pdf"
-

@@ -5,6 +5,10 @@ imports:
     - { resource: security.yml }
     - { resource: ../../vendor/knplabs/doctrine-behaviors/config/orm-services.yml }
 
+parameters:
+    timezone: "Europe/Paris"
+    router.request_context.scheme: "%scheme%"
+
 framework:
     #esi:             ~
     translator:      { fallback: "%locale%" }
@@ -25,12 +29,16 @@ framework:
         # handler_id set to null will use default session handler from php.ini
         handler_id:  ~
     fragments:       ~
-    http_method_override: true
+    http_method_override: false
 
 # Twig Configuration
 twig:
     debug:            "%kernel.debug%"
     strict_variables: "%kernel.debug%"
+    form_themes:
+        - SygeforCoreBundle:Form:fields.html.twig
+    date:
+        timezone: "%timezone%"
 
 # Doctrine Configuration
 doctrine:
@@ -82,15 +90,6 @@ swiftmailer:
 #                type: file
 #                path: "%kernel.root_dir%/spool"
             spool:     { type: memory }
-        local:
-            transport:  "%mailer_local_transport%"
-            encryption: "%mailer_local_encryption%"
-            host:       "%mailer_local_host%"
-            username:   "%mailer_local_user%"
-            password:   "%mailer_local_password%"
-            auth_mode:  "%mailer_local_auth_mode%"
-            port:       "%mailer_local_port%"
-            spool:      { type: memory }
 
 # SensionFrameworkExtra configuration
 sensio_framework_extra:
@@ -100,12 +99,17 @@ sensio_framework_extra:
 
 # Monolog configuration
 monolog:
-    channels: ["api"]
+    channels: ["api", "batch_operation"]
 
 # FOSRestBundle configuration
 fos_rest:
     body_listener: true
     format_listener: false
+#        rules:
+#            - { path: '^/api/proxy.html', priorities: [html] }
+#            - { path: '^/api', priorities: [json], fallback_format: json }
+#            - { path: '^/', priorities: [json, html], fallback_format: json }
+#    format_listener: true
     body_converter: { enabled: true }
     view:
         view_response_listener: true
@@ -143,7 +147,7 @@ mopa_bootstrap:
 fos_user:
     db_driver: orm
     firewall_name: main
-    user_class: Sygefor\Bundle\CoreBundle\Entity\User\User
+    user_class: Sygefor\Bundle\CoreBundle\Entity\User
 
 # KnpSnappyBundle configuration
 knp_snappy:

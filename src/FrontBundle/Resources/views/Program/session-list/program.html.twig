@@ -1,0 +1,53 @@
+<div class="container program">
+    <section>
+        <div class="outer-wrap">
+            <div class="inner-wrap">
+                <!-- RESULTS -->
+                <div class="row">
+                    <div class="col-lg-12">
+                        <div class="row">
+                            {% if form is defined and search.items | length > 0 %}
+                                <div class="col-sm-12 col-md-3">
+                                    {% include '@Front/Program/session-list/filters.html.twig' %}
+                                </div>
+                            {% endif %}
+                            <div class="col-xs-12 {% if form is defined %}col-md-9{% else %}col-md-12{% endif %}">
+                                {% if search.items is not defined or search.items | length == 0 %}
+                                    <div class="row">
+                                        <div class="col-xs-12">
+                                            <h3 class="no-session">
+                                                {{ form is defined ? 'Aucune session n\'est disponible pour le moment.' : 'Aucune session mise en avant' }}
+                                            </h3>
+                                        </div>
+                                    </div>
+                                {% else %}
+                                    <div class="session session--list">
+                                        <div>
+                                            {% set theme = "" %}
+                                            {% for session in search.items %}
+                                                {% if session.training.theme.name != theme %}
+                                                    {% set theme = session.training.theme.name %}
+                                                    <h3>{{ session.training.theme.name }}</h3>
+                                                {% endif %}
+                                                {% include '@Front/Program/session-list/session-list-item.html.twig' %}
+                                            {% endfor %}
+                                        </div>
+                                    </div>
+                                {% endif %}
+
+                                {% if form is not defined %}
+                                    <a class="btn btn-primary btn-block"
+                                       href="{{ path('front.program.organization', {code: 'sygefor'}) }}">
+                                        Voir toutes les formations
+                                    </a>
+                                {% endif %}
+
+                                {% include('@Front/pagination.html.twig') %}
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+</div>

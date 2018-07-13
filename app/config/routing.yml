@@ -4,44 +4,14 @@ sygefor_core:
     host:     "%back_host%"
     prefix:   /
 
-sygefor_inscription:
-    resource: "@SygeforInscriptionBundle/Controller/"
-    type:     annotation
-    host:     "%back_host%"
-    prefix:   /
-
-sygefor_institution:
-    resource: "@SygeforInstitutionBundle/Controller/"
-    type:     annotation
-    host:     "%back_host%"
-    prefix:   /
-
-sygefor_trainee:
-    resource: "@SygeforTraineeBundle/Controller/"
-    type:     annotation
-    host:     "%back_host%"
-    prefix:   /
-
-sygefor_trainer:
-    resource: "@SygeforTrainerBundle/Controller/"
-    type:     annotation
-    host:     "%back_host%"
-    prefix:   /
-
-sygefor_training:
-    resource: "@SygeforTrainingBundle/Controller/"
-    type:     annotation
-    host:     "%back_host%"
-    prefix:   /
-
-sygefor_myCompany:
-    resource: "@SygeforMyCompanyBundle/Controller/"
+app:
+    resource: "@AppBundle/Controller/"
     host:     "%back_host%"
     type:     annotation
     prefix:   /
 
-sygefor_activity_report:
-    resource: "@SygeforActivityReportBundle/Controller/"
+activity_report:
+    resource: "@ActivityReportBundle/Controller/"
     type:     annotation
     host:     "%back_host%"
     prefix:   /
@@ -52,14 +22,13 @@ sygefor_api:
     host:     "%front_host%"
     prefix:   /
 
-sygefor_front:
-    resource: "@SygeforFrontBundle/Controller/"
+lheo:
+    resource: "@LheoBundle/Controller/"
     type:     annotation
-    host:     "%front_host%"
     prefix:   /
 
-sygefor_lheo:
-    resource: "@SygeforLheoBundle/Controller/"
+front:
+    resource: "@FrontBundle/Controller/"
     type:     annotation
     host:     "%front_host%"
     prefix:   /

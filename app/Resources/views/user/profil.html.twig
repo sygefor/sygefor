@@ -1,0 +1,33 @@
+{% extends "user/layout.html.twig" %}
+
+{% block breadcrumbs %}
+    <ol class="breadcrumb full-height-item">
+        <li><a href="{{ path('core.index') }}">Accueil</a></li>
+        <li class="active"><a href="{{ path('user.account') }}">Mon compte</a></li>
+    </ol>
+{% endblock %}
+
+{% block subcontent %}
+    {{ form_start(form) }}
+    {{ form_row(form.username) }}
+    {{ form_row(form.email) }}
+    {{ form_row(form.plainPassword) }}
+    {{ form_errors(form.plainPassword) }}
+
+    <div class="form-group">
+        <div class="col-sm-offset-2 col-sm-10">
+            <button type="submit" class="btn btn-primary">Enregistrer</button>
+        </div>
+    </div>
+    {{ form_widget(form._token) }}
+    {{ form_end(form, {'render_rest': false}) }}
+{% endblock %}
+
+{% block scripts %}
+<script type="text/javascript">
+    $('#user_username').change(function() {
+        $('#user_plainPassword_first').removeClass('optional');
+        $('#user_plainPassword_first').addClass('required');
+    });
+</script>
+{% endblock %}

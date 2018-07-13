@@ -1,0 +1,106 @@
+{% extends "@Front/base.html.twig" %}
+
+{% block header %}
+    <header>
+        <div class="container">
+            <div class="row">
+                <div class="col-lg-12">
+                    <h1>{{ training.name }} {% if session is defined and session.status is defined %} {{ session.status | sessionStatusLabel }} {% endif %}</h1>
+                </div>
+            </div>
+        </div>
+    </header>
+{% endblock %}
+
+{% block body %}
+    <div class="container">
+        <section class="session training-detail-view {{ training.type }}">
+            <div class="row">
+                <div class="col-md-7">
+                    {% include '@Front/Program/training/tags.html.twig' %}
+                    {% include '@Front/Program/training/details.html.twig' %}
+
+                    {% if displayPrivateDocuments and session.allPrivateMaterials | length > 0 %}
+                        <h4>Documents de la formation</h4>
+                        <ul class="list-unstyled">
+                            {% for material in session.allPrivateMaterials  %}
+                                <li>
+                                    {% if material.type == 'file' %}
+                                        <a href="{{ path('material.get', {id: material.id}) }}">{{ material.name }}</a>
+                                    {% elseif material.type == 'link' %}
+                                        <a href="{{ material.url }}" target="_blank">{{ material.name }}</a>
+                                    {% endif %}
+                                </li>
+                            {% endfor %}
+                        </ul>
+                    {% endif %}
+
+                    {% if session.allPublicMaterials | length > 0 %}
+                        <h4>Documents téléchargeables</h4>
+                        <ul class="list-unstyled">
+                            {% for material in session.allPublicMaterials  %}
+                                <li>
+                                    {% if material.type == 'file' %}
+                                        <a href="{{ path('material.get', {id: material.id}) }}">{{ material.name }}</a>
+                                    {% elseif material.type == 'link' %}
+                                        <a href="{{ material.url }}" target="_blank">{{ material.name }}</a>
+                                    {% endif %}
+                                </li>
+                            {% endfor %}
+                        </ul>
+                    {% endif %}
+                </div>
+                <div class="col-md-4 col-md-offset-1">
+                    {% if training.type != 'et' %}
+                        <!--other training type than longTraining-->
+                        {% if upcomingSessions is defined and upcomingSessions | length > 0 %}
+                            <h4>Sessions à venir <span class="label secondary radius no-mb pull-right">{{ upcomingSessions | length }}</span></h4>
+                            {% for upcomingSession in (upcomingSessions | orderBy('dateBegin')) %}
+                                <div class="panel-group" id="accordion" role="tablist" aria-multiselectable="true">
+                                    {% include '@Front/Program/training/session/details.html.twig' %}
+                                </div>
+                            {% endfor %}
+                        {% endif %}
+
+                        {% if pastSessions is defined and pastSessions | length > 0 %}
+                            <h4>Sessions passées <span class="label secondary radius no-mb pull-right">{{ pastSessions | length }}</span></h4>
+                            {% for pastSession in (pastSessions | orderBy('dateBegin')) %}
+                                <div class="btn btn-default btn-group-justified disabled">
+                                   {{ pastSession.dateBegin | date('l') | trans }} {{ pastSession.dateBegin | date('d') }} {{ pastSession.dateBegin | date('F') | trans }} {{ pastSession.dateBegin | date('Y') }}
+                                </div>
+                            {% endfor %}
+                        {% endif %}
+                    {% endif %}
+
+                    {% if training.website is defined %}
+                        <h4 class="mb-base">Site web</h4>
+                        <p><a href="{{ training.website }}" target="_blank">{{ training.website }}</a></p>
+                    {% endif %}
+                    {% if training.partners is defined and training.partners | length > 0 %}
+                        <h4 class="mb-base">Partenaires</h4>
+                        <p>
+                            {% for key, partner in training.partners %}
+                                {% if key > 0 %}<span>, </span>{% endif %}
+                                {{ partner.name }}
+                            {% endfor %}
+                        </p>
+                    {% endif %}
+
+                    <h4 class="mb-base">Informations pratiques</h4>
+                    <img class="logo" src="{{ asset('assets/img/organization/' ~ training.organization.code ~ '/logo.png')}}" title="Logo" alt="Logo">
+                    <address>
+                        <div>{% if training.organization.code == 'ifsem' %}IFSeM Formation{% else %}{{ training.organization.name }}{% endif %}</div>
+                        <div>{{ training.organization.fullAddress | nl2br }}</div>
+                        {% if training.organization.phoneNumber | length > 0 %}
+                            <div><span class="glyphicon glyphicon-phone-alt"></span> <a href="tel:{{ training.organization.phoneNumber | replace(' ', '') }}">&nbsp;{{ training.organization.phoneNumber }}</a></div>
+                        {% endif %}
+                        <div><span class="glyphicon glyphicon-envelope"></span> <a href="mailto:{{ training.organization.email }}">&nbsp;{{ training.organization.email }}</a></div>
+                        {% if training.organization.website is defined and  training.organization.website | length > 0 %}
+                            <div><span class="glyphicon glyphicon-globe"></span> <a href="{{ training.organization.website }}" target="_blank">&nbsp;{{ training.organization.website }}</a></div>
+                        {% endif %}
+                    </address>
+                </div>
+            </div>
+        </section>
+    </div>
+{% endblock body %}

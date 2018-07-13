@@ -1,0 +1,45 @@
+{% extends "@Front/base.html.twig" %}
+
+{% block header %}
+    <header>
+        <div class="container">
+            <div class="row">
+                <div class="col-lg-12">
+                    <h1>Mon compte</h1>
+                </div>
+            </div>
+            {% include '@Front/Account/menu.html.twig' %}
+        </div>
+    </header>
+{% endblock %}
+
+{% block body %}
+    <div class="container">
+        {% include("@Front/Account/institution-correspondents.html.twig") %}
+        <div class="row">
+            <div class="col-md-12">
+                <section>
+                    <h3><i class="glyphicon glyphicon-folder-open"></i>&nbsp;&nbsp;<span>Demandes en cours</span></h3>
+                    {% if upcoming is not defined or upcoming | length == 0 %}
+                        <blockquote class="small">Vous n'avez aucune demande d'inscription.</blockquote>
+                    {% else %}
+                        {% set list = upcoming %}
+                        {% include '@Front/Account/registration/registrations-list.html.twig' %}
+
+                        <a href="{{ path('front.account.registration.authorization', {ids: upcomingIds}) }}" class="btn btn-primary"><i class="glyphicon glyphicon-save-file hidden-xs"></i>&nbsp;&nbsp;Télécharger un bulletin d'autorisation</a>
+                    {% endif %}
+                </section>
+
+                <section>
+                    <h3><i class="glyphicon glyphicon-folder-close"></i>&nbsp;&nbsp;<span>Demandes archivées</span></h3>
+                    {% if past is not defined or past | length == 0 %}
+                        <blockquote class="small">Vous n'avez aucune demande d'inscription archivée.</blockquote>
+                    {% else %}
+                        {% set list = past %}
+                        {% include '@Front/Account/registration/registrations-list.html.twig' %}
+                    {% endif %}
+                </section>
+            </div>
+        </div>
+    </div>
+{% endblock body %}

@@ -3,13 +3,13 @@ security:
         fos_userbundle:
             id: fos_user.user_provider.username
         trainees:
-            id: sygefor_trainee.user_provider
+            id: sygefor_api.account_repository
         shibboleth:
             id: sygefor_api.shibboleth.user_provider
 
     encoders:
         FOS\UserBundle\Model\UserInterface: sha512
-        Sygefor\Bundle\MyCompanyBundle\Entity\Trainee: sha512
+        AppBundle\Entity\Trainee\Trainee: sha512
 
     firewalls:
         # ---
@@ -32,6 +32,7 @@ security:
 #                domain:   ~
             logout:       true
             anonymous:    true
+            switch_user:  true
 
         # ---
         # OAuth authentication
@@ -85,13 +86,16 @@ security:
     access_control:
         # Back
         - { host: "%back_host%", path: ^/login$, role: IS_AUTHENTICATED_ANONYMOUSLY }
+        - { path: ^/material/[^/]+/get, roles: IS_AUTHENTICATED_ANONYMOUSLY }
         - { host: "%back_host%", path: ^/, role: IS_AUTHENTICATED_FULLY }
 
     role_hierarchy:
         ROLE_TRAINEE:       ROLE_USER
+        ROLE_COFO:          ROLE_USER
         ROLE_EDITEUR:       ROLE_USER
         ROLE_GESTIONNAIRE:  ROLE_USER
-        ROLE_ADMIN:         ROLE_USER
+        ROLE_ADMIN:         [ROLE_USER, ROLE_ALLOWED_TO_SWITCH]
+        ROLE_SUPER_ADMIN:   [ROLE_ADMIN, ROLE_ALLOWED_TO_SWITCH]
 
 # OAuth Configuration
 fos_oauth_server:
@@ -101,16 +105,16 @@ fos_oauth_server:
     refresh_token_class: Sygefor\Bundle\ApiBundle\Entity\RefreshToken
     auth_code_class:     Sygefor\Bundle\ApiBundle\Entity\AuthCode
     service:
-        user_provider: sygefor_trainee.user_provider
+        user_provider: sygefor_api.account_repository
 #        options:
 #            access_token_lifetime: 90
 #        options:
 #            supported_scopes: user
 
-#Schibboleth
+#Shibboleth
 shibboleth:
     handler_path: /Shibboleth.sso
-    secured_handler: true # https
+    secured_handler: "%shibboleth_secured_handler%"
     session_initiator_path: /Login
     username_attribute: mail
     use_headers: true

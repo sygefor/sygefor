@@ -1,0 +1,16 @@
+Bienvenue sur la plateforme de gestion de formation du CNRS !<br/><br/>
+
+{% if trainee.enabled %}
+Nous vous confirmons la création de votre compte.<br/><br/>
+
+Vous pouvez dès maintenant vous connecter à votre espace dédié pour suivre vos demandes et consulter l'historique des formations suivies : <a href="{{ url('front.account') }}">{{ url('front.account') }}</a><br/><br/>
+{% else %}
+Nous vous confirmons la création de votre compte.<br/><br/>
+
+Votre compte doit être activé par un administrateur. Dès que l’activation est réalisée, un mail vous sera envoyé pour vous en informer.<br/><br/>
+
+Vous pourrez ensuite vous connecter à votre espace dédié pour suivre vos demandes et consulter l'historique des formations suivies : <a href="{{ url('front.account') }}">{{ url('front.account') }}</a><br/><br/>
+{% endif %}
+
+Cordialement,<br/>
+L’équipe formation de Sygefor

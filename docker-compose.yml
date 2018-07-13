@@ -1,0 +1,31 @@
+version: "3.1"
+services:
+
+  mysql:
+    container_name: "sygefor_mysql"
+    image: library/mysql:5.6
+    environment:
+        - MYSQL_USER=dev
+        - MYSQL_PASSWORD=dev
+        - MYSQL_ROOT_PASSWORD=root
+        - MYSQL_DATABASE=sygefor3
+    ports:
+        - "3306:3306"
+    volumes:
+        - ./var/mysql:/var/lib/mysql
+
+  elasticsearch:
+    container_name: "sygefor_elasticsearch"
+    image: elasticsearch:1.4.5
+#    command: bin/plugin -install mobz/elasticsearch-head
+    ports:
+        - "9200:9200"
+    volumes:
+        - ./var/elasticsearch:/var/lib/elasticsearch
+
+  mailcatcher:
+    container_name: "sygefor_mailcatcher"
+    image: schickling/mailcatcher
+    ports:
+        - "1035:1025"
+        - "1080:1080"

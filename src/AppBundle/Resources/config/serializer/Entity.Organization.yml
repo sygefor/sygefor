@@ -1,0 +1,31 @@
+AppBundle\Entity\Organization:
+    properties:
+      id:
+        groups: [Default, api]
+      name:
+        groups: [Default, api]
+      code:
+        groups: [Default, api]
+      users:
+        exclude: true
+      addressType:
+        exclude: true
+      address:
+        groups: [api]
+      bp:
+        groups: [api]
+      zip:
+        groups: [api]
+      city:
+        groups: [api]
+      phoneNumber:
+        groups: [api]
+      email:
+        groups: [api]
+      website:
+        groups: [api]
+      traineeRegistrable:
+        groups: [api]
+    virtual_properties:
+      getFullAddress:
+        groups: [api]

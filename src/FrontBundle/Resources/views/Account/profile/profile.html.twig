@@ -1,0 +1,24 @@
+{% extends "@Front/base.html.twig" %}
+
+
+{% block header %}
+    <header>
+        <div class="container">
+            <div class="row">
+                <div class="col-lg-12">
+                    <h1>Mon compte</h1>
+                </div>
+            </div>
+            {% include '@Front/Account/menu.html.twig' %}
+        </div>
+    </header>
+{% endblock %}
+
+
+{% block body %}
+    <div class="container">
+        {% include("@Front/Account/institution-correspondents.html.twig") %}
+        {% if isCnrs == 0 %}<hr />{% endif %}
+        {% include('@Front/Account/profile/profile-form.html.twig') %}
+    </div>
+{% endblock body %}

@@ -1,0 +1,34 @@
+<div>
+    <div ng-if="!search.result.total" class="well well-empty well-sm">
+        Aucun message n'a été envoyé à ce stagiaire.
+    </div>
+
+    <table ng-if="search.result.total" class="table table-hover table-responsive table-search.result table-condensed table-nohead">
+        <!--<thead>-->
+            <!--<tr>-->
+                <!--<th>Sujet</th>-->
+                <!--<th>Session</th>-->
+                <!--<th>Envoyé par</th>-->
+                <!--<th>Date</th>-->
+            <!--</tr>-->
+        <!--</thead>-->
+        <tbody>
+        <tr ng-repeat="email in search.result.items">
+            <td><a title="Voir le message" ng-click="dislayEmail(email.id)" href="">{{ email.subject }}</a></td>
+            <td>
+                <span ng-if="!$user.hasAccessRight('sygefor_core.access_right.session.own.view') && !$user.hasAccessRight('sygefor_core.access_right.session.all.view')">
+                    {{ email.session.training.name }}
+                </span>
+                <span ng-if="$user.hasAccessRight('sygefor_core.access_right.session.own.view') || $user.hasAccessRight('sygefor_core.access_right.session.all.view')">
+                    <a title="Voir la session" href="" ui-sref="session.detail.view({ id: email.session.id })">{{ email.session.training.name }}</a>
+                </span>
+            </td>
+            <td title="Envoyé par {{ email.userFrom.username }}">{{ email.userFrom.username }}</td>
+            <td title="Date d'envoi">{{ email.sendAt | date: 'dd/MM/yyyy' }}</td>
+        </tr>
+        </tbody>
+    </table>
+    <div ng-if="search.result.total > search.query.size" class="full-height-item is-full-width">
+        <div search-table-controls></div>
+    </div>
+</div>

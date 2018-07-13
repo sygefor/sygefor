@@ -1,0 +1,10 @@
+<html>
+<head>
+    <link href="{{ app.request.getSchemeAndHttpHost() ~ asset('assets/styles/pdf.css') }}" rel="stylesheet" type="text/css" />
+    {% block styles %}{% endblock %}
+</head>
+<body class="pdf">
+    {% block header %}{% endblock %}
+    {% block body %}{% endblock %}
+    {% block footer %}{% endblock %}
+</body>

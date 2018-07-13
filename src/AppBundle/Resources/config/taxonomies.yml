@@ -1,0 +1,50 @@
+parameters:
+    app.taxonomy_group: "CNRS"
+    app.session.taxonomy_group: "Session"
+    app.trainee.taxonomy_group: "Public"
+    app.trainer.taxonomy_group: "Intervenant"
+    app.training.taxonomy_group: "Evénement"
+
+services:
+    app.taxonomy.session_place:
+        class: AppBundle\Entity\Term\Session\Place
+        tags:
+            - { name: sygefor_core.vocabulary_provider, group: "%app.session.taxonomy_group%" }
+
+    app.taxonomy.disciplinary:
+        class: AppBundle\Entity\Term\Trainee\Disciplinary
+        tags:
+            - { name: sygefor_core.vocabulary_provider, group: "%app.trainee.taxonomy_group%" }
+
+    # Training
+    app.taxonomy.training_tag:
+        class: AppBundle\Entity\Term\Training\Tag
+        tags:
+            - { name: sygefor_core.vocabulary_provider, group: "%app.training.taxonomy_group%" }
+
+    app.taxonomy.theme:
+        class: AppBundle\Entity\Term\Training\Theme
+        tags:
+            - { name: sygefor_core.vocabulary_provider, group: "%app.training.taxonomy_group%"}
+
+    # Evaluation
+    app.taxonomy.evaluation_theme:
+        class: AppBundle\Entity\Term\Evaluation\Theme
+        tags:
+            - { name: sygefor_core.vocabulary_provider, group: "%app.taxonomy_group%" }
+
+    app.taxonomy.evaluation_criterion:
+        class: AppBundle\Entity\Term\Evaluation\Criterion
+        tags:
+            - { name: sygefor_core.vocabulary_provider, group: "%app.taxonomy_group%" }
+
+    # Others
+    app.taxonomy.menu_item:
+        class: AppBundle\Entity\Term\MenuItem
+        tags:
+            - { name: sygefor_core.vocabulary_provider, group: "%app.taxonomy_group%" }
+
+    app.taxonomy.public_type:
+        class: AppBundle\Entity\Term\PublicType
+        tags:
+            - { name: sygefor_core.vocabulary_provider,  group: "%app.taxonomy_group%" }

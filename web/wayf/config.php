@@ -14,7 +14,7 @@
 // is not available in languages.php or custom-languages.php.
 // If string in local language is not available, english ('en') will be used
 // as last resort.
-$defaultLanguage = 'fr';
+//$defaultLanguage = 'en'; 
 
 
 

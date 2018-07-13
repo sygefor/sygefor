@@ -35,20 +35,15 @@ class AppKernel extends Kernel
             new KULeuven\ShibbolethBundle\ShibbolethBundle(),
 
             // project bundles
-            new Sygefor\Bundle\TrainingBundle\SygeforTrainingBundle(),
             new Sygefor\Bundle\CoreBundle\SygeforCoreBundle(),
             new Sygefor\Bundle\ApiBundle\SygeforApiBundle(),
-            new Sygefor\Bundle\TraineeBundle\SygeforTraineeBundle(),
-            new Sygefor\Bundle\InscriptionBundle\SygeforInscriptionBundle(),
-            new Sygefor\Bundle\InstitutionBundle\SygeforInstitutionBundle(),
-            new Sygefor\Bundle\TrainerBundle\SygeforTrainerBundle(),
-            new Sygefor\Bundle\MyCompanyBundle\SygeforMyCompanyBundle(),
-            new \Sygefor\Bundle\ActivityReportBundle\SygeforActivityReportBundle(),
-            new \Sygefor\Bundle\LheoBundle\SygeforLheoBundle(),
+            new AppBundle\AppBundle(),
+            new LheoBundle\LheoBundle(),
+            new ActivityReportBundle\ActivityReportBundle(),
 
             // keep this extension at the end to ensure listeners registring order
             new Stof\DoctrineExtensionsBundle\StofDoctrineExtensionsBundle(),
-            new Sygefor\Bundle\FrontBundle\SygeforFrontBundle(),
+            new FrontBundle\FrontBundle(),
         );
 
         if (in_array($this->getEnvironment(), array('dev', 'test'), true)) {

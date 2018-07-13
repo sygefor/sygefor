@@ -1,14 +1,24 @@
 parameters:
-    front_url:         'https://www.sygefor.dev'
-    front_host:        'sygefor.dev'
-    back_host:         'extranet.sygefor.dev'
+    # Application
+    front_url:         'http://sygefor.com'
+    front_host:        'sygefor.com'
+    back_host:         'localhost'
+    scheme:            'http'
+    oauthId:           '5cn6gjovjzks48ckkowkgko8owk8o8ccwow8o4w0c84c40kwsk'
+
+    # Mysql
     database_driver:   pdo_mysql
     database_host:     127.0.0.1
     database_port:     ~
     database_name:     sygefor3
-    database_user:     root
-    database_password: ~
+    database_user:     dev
+    database_password: dev
 
+    # Elasticsearch
+    elasticsearch_host: 127.0.0.1
+    elasticsearch_port: 9200
+
+    # Mailer
     mailer_transport:   smtp
     mailer_host:        127.0.0.1
     mailer_user:        ~
@@ -16,31 +26,16 @@ parameters:
     mailer_encryption:  ~
     mailer_auth_mode:   ~
     mailer_port:        1025
-    mailer_from:        contact@sygefor.dev
+    mailer_from:        no-reply@sygefor.dev
     mailer_from_name:   Sygefor
 
-    mailer_local_transport: smtp
-    mailer_local_host:      127.0.0.1
-    mailer_local_user:      ~
-    mailer_local_password:  ~
-    mailer_local_encryption: ~
-    mailer_local_auth_mode: null
-    mailer_local_port:      1025
-
-    trusted_hosts: [127.0.0.1, 192.168.1.42, "extranet.sygefor.dev", "sygefor.dev"]
-    trusted_proxies: [127.0.0.1, 192.168.1.42, ]
-
-    locale:            en
+    # Symfony
+    locale:            fr
     secret:            ThisTokenIsNotSoSecretChangeIt
+    trusted_hosts: ["127.0.0.1", "localhost", "sygefor.com"]
+    trusted_proxies: ["127.0.0.1"]
+    shibboleth_secured_handler: false
 
-    elasticsearch_host: localhost
-    elasticsearch_port: 9200
-    elasticsearch_prefix: env_
-
+    # Binaries
     wkhtmltopdf_bin: ../bin/wkhtmltopdf-amd64
-    #####################################################################
-    #############################  UNOCONV  #############################
-    # You need to export HOME for apache or using unoconv 0.7 for nginx #
-    #####################################################################
-    # unoconv_bin: export HOME=/tmp/sygefor; unoconv
     unoconv_bin: unoconv

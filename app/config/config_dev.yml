@@ -21,9 +21,6 @@ monolog:
             type:   console
             bubble: false
 
-swiftmailer:
-    delivery_address: recipient@sygefor.dev
-
 # CORS
 nelmio_cors:
     defaults:

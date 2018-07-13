@@ -1,0 +1,21 @@
+<table class="table">
+    <thead>
+    <tr>
+        <th>{{ caption }}</th>
+        <th class="text-right">Total</th>
+        <th ng-if="percent" class="text-right">Pourcentage</th>
+    </tr>
+    </thead>
+    <tbody>
+    <tr ng-repeat="row in data.rows">
+        <td>{{ row.label }}</td>
+        <td ng-if="!row.data" class="text-right">{{ row.value | number: precision }}</td>
+        <td ng-if="percent" class="text-right">{{ (row.value / data.value * 100) | number: 2 }} &percnt;</td>
+    </tr>
+    <tr>
+        <td class="active"></td>
+        <td class="text-right active"><strong>{{ data.value | number: precision }}</strong></td>
+        <td ng-if="percent" class="text-right active"><strong>100 &percnt;</strong></td>
+    </tr>
+    </tbody>
+</table>

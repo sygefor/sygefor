@@ -33,13 +33,3 @@ doctrine:
                         prefix: Sygefor\Bundle\CoreBundle\Tests\Entity
                         dir: "%kernel.root_dir%/../src/Sygefor/Bundle/CoreBundle/Tests/Entity"
                         is_bundle: false
-
-services:
-    sygefor_core.vocabulary_local:
-        class:        Sygefor\Bundle\CoreBundle\Tests\Entity\MyOrganizationVocabulary
-        tags:
-            - { name: sygefor_core.vocabulary_provider, group: "GROUPE Vocabulaire 1" }
-    sygefor_core.vocabulary_national:
-        class:        Sygefor\Bundle\CoreBundle\Tests\Entity\MyNationalVocabulary
-        tags:
-            - { name: sygefor_core.vocabulary_provider, group: "GROUPE Vocabulaire 2" }

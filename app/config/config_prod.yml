@@ -16,9 +16,9 @@ monolog:
         # channel : main
         main:
             type:               fingers_crossed
-            action_level:       error
+            action_level:       info
             handler:            grouped
-            channels:           [!trainee_merge, !api]
+            channels:           [!trainee_merge, !api, !batch_operation]
         grouped:
             type:               group
             #members:            [streamed, buffered]
@@ -26,7 +26,7 @@ monolog:
         streamed:
             type:               stream
             path:               "%kernel.logs_dir%/%kernel.environment%.log"
-            level:              debug
+            level:              info
         # console
         console:
             type:  console
@@ -35,27 +35,13 @@ monolog:
         buffered:
             type:    buffer
             handler: swift
-#        swift:
-#            type:       swift_mailer
-#            mailer:     mailer
-#            from_email: support@sygefor.dev
-#            to_email:   support@sygefor.dev
-#            subject:    SYGEFOR : An Error Occurred!
-#            level:      info
-
-        # channel : trainee_merge
-        trainee_merge:
-            type:         fingers_crossed
-            action_level: error
-            handler:      trainee_merge.grouped
-            channels:     trainee_merge
-        trainee_merge.grouped:
-            type:    group
-            members: [trainee_merge.streamed, buffered]
-        trainee_merge.streamed:
-            type:  stream
-            path:  "%kernel.logs_dir%/trainee_merge.%kernel.environment%.log"
-            level: debug
+        swift:
+            type:       swift_mailer
+            mailer:     swiftmailer.mailer
+            from_email: support@conjecto.com
+            to_email:   support@conjecto.com
+            subject:    SYGEFOR : An Error Occurred!
+            level:      info
 
         # channel : api
         api:
@@ -69,4 +55,18 @@ monolog:
         api.streamed:
             type:  stream
             path:  "%kernel.logs_dir%/api.%kernel.environment%.log"
+            level: debug
+
+        # channel : batch_operation
+        batch_operation:
+            type:         fingers_crossed
+            action_level: debug
+            handler:      batch_operation.grouped
+            channels:     batch_operation
+        batch_operation.grouped:
+            type:    group
+            members: [batch_operation.streamed, buffered]
+        batch_operation.streamed:
+            type:  stream
+            path:  "%kernel.logs_dir%/batch_operation.%kernel.environment%.log"
             level: debug

@@ -1,0 +1,10 @@
+Bonjour,<br/><br/>
+
+{% if trainee.title.id == 1 %}Le{% else %}La{% endif %} stagiaire {{ trainee.fullName }} vient de s'inscrire sur SYGEFOR. Aucune unité n'a pu lui être assigné.<br/><br/>
+
+Vous pouvez vérifier puis activer son compte à l'adresse suivante :<br/>
+<span style="text-align: center;"><a href="{{ app.request.scheme }}://{{ host }}/#/trainee/detail/{{ trainee.id }}">{{ app.request.scheme }}://{{ host }}/#/trainee/detail/{{ trainee.id }}</a></span><br/><br/>
+
+Le stagiaire ne pourra s'inscrire aux formations tant que son compte ne sera pas activé.<br/><br/>
+
+Cet email a été envoyé automatiquement par SYGEFOR.<br/><br/>

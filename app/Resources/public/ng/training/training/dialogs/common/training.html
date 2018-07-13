@@ -1,0 +1,22 @@
+<div ng-repeat="key in ['organization', 'user', 'name', 'theme']">
+    <div class="form-group" ng-if="form.children[key]" ng-class="{'has-error': form.children[key].errors.length }">
+        <label class="col-sm-3 control-label" for="{{ form.children[key].id }}">{{ form.children[key].label }}</label>
+        <div class="col-sm-9">
+            <span sf-form-widget="form.children[key]" class="form-control"/>
+            <div ng-if="error.length" ng-repeat="error in form.children[key].errors" class="help-block">{{ error }}</div>
+        </div>
+    </div>
+</div>
+
+<!-- Year - Semestre -->
+<div class="form-group" ng-if="form.children.firstSessionPeriodSemester" ng-class="{'has-error': form.children.firstSessionPeriodSemester.errors.length || form.children.firstSessionPeriodYear.errors.length }">
+    <label class="col-sm-3 control-label" for="{{ form.children.firstSessionPeriodSemester.id }}">{{ form.children.firstSessionPeriodSemester.label }}</label>
+    <div class="col-sm-9">
+        <div class="row">
+            <div class="col-sm-7"><span sf-form-widget="form.children.firstSessionPeriodSemester" class="form-control"/></div>
+            <div class="col-sm-5"><span sf-form-widget="form.children.firstSessionPeriodYear" class="form-control"/></div>
+        </div>
+        <div ng-if="error.length"  ng-repeat="error in form.children.firstSessionPeriodSemester.errors" class="help-block">{{ error }}</div>
+        <div ng-if="error.length"  ng-repeat="error in form.children.firstSessionPeriodYear.errors" class="help-block">{{ error }}</div>
+    </div>
+</div>

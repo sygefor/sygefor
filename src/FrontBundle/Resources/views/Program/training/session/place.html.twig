@@ -1,0 +1,55 @@
+{% extends "@Front/base.html.twig" %}
+
+{% block header %}
+    <header>
+        <div class="container">
+            <div class="row">
+                <div class="col-md-12 col-xs-12">
+                    {% if place is defined and place | length > 0 %}
+                        <h1>{{ place.name }}</h1>
+                    {% else %}
+                        <h1>Contact de la formation</h1>
+                    {% endif %}
+                </div>
+            </div><!-- /row -->
+        </div> <!-- /container -->
+    </header>
+{% endblock %}
+
+{% block body %}
+
+<div class="container">
+    <section class="place">
+        <div class="row">
+            {% set organization = null %}
+            {% if place is defined and place | length > 0 %}
+                {% set organization = place.organization %}
+                <div class="col-md-7">
+                    <h3>Informations sur le lieu de formation</h3>
+                    <div><label>Nom :</label> <span>{{ place.name }}</span></div>
+                    <div><label>Adresse :</label> <span><a href="https://www.google.com/maps/place/{{ place.fullAddress }}" target="_blank">{{ place.fullAddress }}</a></span></div>
+                    <div><label>Téléphone  :</label> <span> <a href="tel:{{ place.phone }}">{{ place.phone }}</a></span></div>
+                    <div><label>Salle  :</label> <span> {{ place.room }}</span></div>
+                    <div><label>Etage  :</label> <span> {{ place.floor }}</span></div>
+                    <div><label>Escalier  :</label> <span> {{ place.staircase }}</span></div>
+                    <div><label>Autres précisions  :</label> <span> {{ place.precision }}</span></div>
+                    <div>{{ place.embedMap | raw }}</div>
+                </div>
+                <div class="col-md-5">
+            {% else %}
+                <div class="col-md-12">
+            {% endif %}
+            {% if organization is defined and organization | length > 0 %}
+                <h3>Contacter la délégation {{ organization.name }}</h3>
+                <div><label>Email :</label> <span><a href="mailto:{{ organization.email }}">{{ organization.email }}</a></span></div>
+                <div><label>Téléphone :</label> <span><a href="tel:{{ organization.phoneNumber }}">{{ organization.phoneNumber }}</a></span></div>
+                <div><label>Adresse :</label> <span>{{ organization.fullAddress }}</span></div>
+                <div><label>Site internet :</label> <span><a href="{{ organization.website }}">{{ organization.website }}</a></span></div>
+
+                <img class="logo" src="{{ asset('assets/img/organization/' ~ organization.code ~ '/logo.png') }}"/>
+            {% endif %}
+            </div>
+        </div>
+    </section>
+</div>
+{% endblock body %}

@@ -1,0 +1,141 @@
+{% extends "@Front/base.html.twig" %}
+
+{% block header %}
+    <header>
+        <div class="container">
+            <div class="row">
+                <div class="col-lg-12">
+                    <h1>Mon compte</h1>
+                </div>
+            </div>
+            {% include '@Front/Account/menu.html.twig' %}
+        </div>
+    </header>
+{% endblock %}
+
+{% block body %}
+    <div class="container">
+        <section>
+            <div class="well">
+                {{ form_start(form) }}
+                <div class="row">
+                    <div class="col-md-6">
+                        <button class="btn btn-primary btn-block" value="submit" type="button" data-toggle="collapse" data-target="#filters" aria-expanded="false" aria-controls="collapseExample">
+                            Filtrer les résultats
+                        </button>
+                    </div>
+                    <div class="col-md-6">
+                        {{ form_row(form.csv) }}
+                    </div>
+                </div>
+
+                <div class="collapse" id="filters">
+                    <div class="row">
+                        <div class="col-md-6">
+                            {{ form_row(form.createdFrom) }}
+                            {{ form_errors(form.createdFrom) }}
+                        </div>
+                        <div class="col-md-6">
+                            {{ form_row(form.createdTo) }}
+                            {{ form_errors(form.createdTo) }}
+                        </div>
+                    </div>
+                    <div class="row">
+                        <div class="col-md-6">
+                            {{ form_row(form.trainee) }}
+                            {{ form_errors(form.trainee) }}
+                        </div>
+                        <div class="col-md-6">
+                            {{ form_row(form.training) }}
+                            {{ form_errors(form.training) }}
+                        </div>
+                    </div>
+                    <div class="row">
+                        <div class="col-md-6">
+                            {{ form_row(form.inscriptionStatus) }}
+                            {{ form_errors(form.inscriptionStatus) }}
+                        </div>
+                        <div class="col-md-6">
+                            <div class="row">
+                                <div class="col-xs-2">
+                                    <a href="" title="Réinitialiser les filtres" class="btn btn-primary btn-block"><i class="glyphicon glyphicon-remove"></i></a>
+                                </div>
+                                <div class="col-xs-10">
+                                    {{ form_row(form.submit) }}
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    {{ form_errors(form) }}
+                </div>
+                {{ form_end(form) }}
+            </div>
+        </section>
+        <section>
+            <div class="row">
+                <div class="col-md-12">
+                    <div class="registrations-list">
+                        <div class="table-responsive">
+                            <table class="table table-hover table-condensed">
+                                <thead>
+                                <tr>
+                                    {% if isValidator or isManager %}<th>Date de la demande</th>{% endif %}
+                                    <th>Stage</th>
+                                    <th>Stagiaire</th>
+                                    <th>Laboratoire</th>
+                                    <th>Valideur</th>
+                                    <th>COFO</th>
+                                    <th>Typologie</th>
+                                    <th>Priorité</th>
+                                    <th>Statut de la demande</th>
+                                    {% if isCofo == 1 %}<th>Date d'envoi</th>{% endif %}
+                                    {% if displayPresenceStatus == 1 %}<th>Statut de présence</th>{% endif %}
+                                </tr>
+                                </thead>
+                                <tbody>
+                                {% for registration in registrations.items %}
+                                    <tr>
+                                        {% if isValidator or isManager %}<td><a href="{{ path('front.account.inscription.detail', {id: registration.id}) }}">{{ registration.createdAt | date('d/m/Y') }}</a></td>{% endif %}
+                                        <td><a href="{{ path('front.program.training', {id: registration.session.training.id, sessionId: registration.session.id}) }}">{{ registration.session.training.name }}</a></td>
+                                        <td><a href="mailto:{{ registration.trainee.email }}">{{ registration.trainee.fullName }}</a></td>
+                                        <td>
+                                            {% if registration.institution is defined and registration.institution.code is defined %}
+                                                {{ registration.institution.code }}
+                                            {% endif %}
+                                        </td>
+                                        <td>
+                                            {% if registration.trainee.validator.email is defined %}
+                                                <a href="mailto:{{ registration.trainee.validator.email }}">{{ registration.trainee.validator.fullName }}</a>
+                                            {% endif %}
+                                        </td>
+                                        <td>
+                                            {% if registration.trainee.cofo.email is defined %}
+                                                <a href="mailto:{{ registration.trainee.cofo.email }}">{{ registration.trainee.cofo.fullName }}</a></td>
+                                            {% endif %}
+                                        <td>{{ registration.typology }}</td>
+                                        <td>{% if registration.priority | length > 0 %}{{ registration.priority.name }}{% endif %}</td>
+                                        <td>{{ include('@Front/Account/registration/inscription-status-label.html.twig') }}</td>
+                                        {% if isCofo %}<td>{{ registration.lastEmailDate | date('m/d/Y') }}</td>{% endif %}
+                                        {% if displayPresenceStatus == 1 %}<td>
+                                            {% if registration.presenceStatus is not null and registration.presenceStatus | length > 0 %}
+                                                <span class="{% if registration.presenceStatus.status == 0 %}alert-danger{% endif %}">{{ registration.presenceStatus.name }}</span>
+                                            {% endif %}
+                                        </td>{% endif %}
+                                    </tr>
+                                {% endfor %}
+                                </tbody>
+                            </table>
+
+                            {% if registrations.total == 0 %}
+                                <p class="text-center">Aucune inscription ne correspond à votre recherche</p>
+                            {% endif %}
+
+                            {% set search = registrations %}
+                            {% include('@Front/pagination.html.twig') %}
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+    </div>
+{% endblock body %}

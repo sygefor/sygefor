@@ -55,19 +55,21 @@ function initConfigOptions(){
 	global $kerberosRedirectURL;
 	global $instanceIdentifier;
 	global $developmentMode;
-	
-	
+	global $mainDomain;
+
+
 	// Set independet default configuration options
 	$defaults = array();
+	$defaults['mainDomain'] = isset($_GET['entityID']) && $_GET['entityID'] === "https://aaa.sygefor.reseau-urfist.fr" ? "https://formation-rec.ifsem.cnrs.fr" : "https://formation.ifsem.cnrs.fr";
 	$defaults['instanceIdentifier'] = 'wayf';
 	$defaults['defaultLanguage'] = 'fr';
 	$defaults['commonDomain'] = getTopLevelDomain($_SERVER['SERVER_NAME']);
 	$defaults['cookieNamePrefix'] = '';
-	$defaults['cookieSecurity'] = false;
+	$defaults['cookieSecurity'] = true;
 	$defaults['cookieValidity'] = 100;
 	$defaults['showPermanentSetting'] = true;
-	$defaults['useImprovedDropDownList'] = true;
-	$defaults['disableRemoteLogos'] = false;
+	$defaults['useImprovedDropDownList'] = false;
+	$defaults['disableRemoteLogos'] = true;
 	$defaults['useSAML2Metadata'] = true;
 	$defaults['SAML2MetaOverLocalConf'] = true;
 	$defaults['includeLocalConfEntries'] = true;
@@ -82,25 +84,27 @@ function initConfigOptions(){
 	$defaults['exportPreselectedIdP'] = false;
 	$defaults['federationName'] = 'Identity Federation';
 	$defaults['organizationURL'] = 'http://www.'.$defaults['commonDomain'];
-	$defaults['federationURL'] = $defaults['organizationURL'].'/aai';
-	$defaults['faqURL'] = $defaults['federationURL'].'/faq';
-	$defaults['helpURL'] = $defaults['federationURL'].'/help';
-	$defaults['privacyURL'] = $defaults['federationURL'].'/privacy';
-	$defaults['supportContactEmail'] = 'support-contact@'.$defaults['commonDomain'];
+	$defaults['federationURL'] = '';//$defaults['organizationURL'].'/aai';
+	$defaults['faqURL'] = '';//'https://sygefor.com/faq';
+	$defaults['helpURL'] = '';//$defaults['federationURL'].'/help';
+	$defaults['privacyURL'] = '';//$defaults['federationURL'].'/privacy';
+	$defaults['supportContactEmail'] = 'support@conjecto.com';
 	$defaults['imageURL'] = 'https://'.$_SERVER['SERVER_NAME'].dirname($_SERVER['SCRIPT_NAME']).'/images';
 	$defaults['javascriptURL'] = 'https://'.$_SERVER['SERVER_NAME'].dirname($_SERVER['SCRIPT_NAME']).'/js';
 	$defaults['cssURL'] = 'https://'.$_SERVER['SERVER_NAME'].dirname($_SERVER['SCRIPT_NAME']).'/css';
 	$defaults['IDPConfigFile'] = 'IDProvider.conf.php';
 	$defaults['backupIDPConfigFile'] = 'IDProvider.conf.php';
-	$defaults['metadataFile'] = '/etc/shibboleth/main-all-renater-metadata.xml';
+//	$defaults['metadataFile'] = '/etc/shibboleth/shibboleth-sp/main-all-renater-metadata.xml';
+	$defaults['metadataFile'] = '/etc/shibboleth/shibboleth-sp/cnrs-metadata.xml';
 	$defaults['metadataIDPFile'] = 'IDProvider.metadata.php';
 	$defaults['metadataSPFile'] = 'SProvider.metadata.php';
 	$lockFileName = preg_replace('/[^-_\.a-zA-Z]/', '', $defaults['instanceIdentifier']);
 	$defaults['metadataLockFile'] = (substr($_SERVER['PATH'],0,1) == '/') ? '/tmp/wayf_metadata-'.$lockFileName.'.lock' : 'C:\windows\TEMP\wayf_metadata-'.$lockFileName.'.lock';
 	$defaults['WAYFLogFile'] = '/var/log/apache2/wayf.log'; 
 	$defaults['kerberosRedirectURL'] = dirname($_SERVER['SCRIPT_NAME']).'kerberosRedirect.php';
-	$defaults['developmentMode'] = true;
-	
+//	$defaults['developmentMode'] = isset($_GET['entityID']) && $_GET['entityID'] === "https://aaa.sygefor.reseau-urfist.fr";
+	$defaults['developmentMode'] = isset($_GET['entityID']) && $_GET['entityID'] === "https://formation-rec.ifsem.cnrs.fr";
+
 	// Initialize independent defaults
 	foreach($defaults as $key => $value){
 		if (!isset($$key)){
@@ -114,9 +118,9 @@ function initConfigOptions(){
 	$defaults['redirectStateCookieName'] = $cookieNamePrefix.'_redirection_state';
 	$defaults['SAMLDomainCookieName'] = $cookieNamePrefix.'_saml_idp';
 	$defaults['SPCookieName'] = $cookieNamePrefix.'_saml_sp';
-	$defaults['logoURL'] = $imageURL.'/federation-logo.png'; 
+	$defaults['logoURL'] = $imageURL.'/cnrs.jpg';
 	$defaults['smallLogoURL'] = $imageURL.'/small-federation-logo.png';
-	$defaults['organizationLogoURL'] = $imageURL.'/organization-logo.png';
+	$defaults['organizationLogoURL'] = $imageURL.'/renater.png';
 	
 	// Initialize dependent defaults
 	foreach($defaults as $key => $value){

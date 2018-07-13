@@ -1,0 +1,37 @@
+<table class="table">
+   <thead>
+       <tr>
+           <th>{{ caption }}</th>
+           <th ng-repeat="col in data.cols" class="text-right">{{ col.label }}</th>
+           <th></th>
+       </tr>
+   </thead>
+   <tbody>
+       <tr ng-repeat="row in data.rows">
+           <td>{{ row.label }}</td>
+           <td ng-if="row.data" ng-repeat="col in row.data" class="text-right">
+               {{ col.value }}
+                <strong ng-if="percent">({{ (col.value / data.value * 100) | number: 2 }} &percnt;)</strong>
+           </td>
+           <td ng-if="!row.data" class="text-right">
+               {{ row.value | number: precision }}
+               <strong ng-if="percent">({{ (row.value / data.value * 100) | number: 2 }} &percnt;)</strong>
+           </td>
+           <td class="text-right active">
+               {{ row.value }}
+               <strong ng-if="percent">({{ (row.value / data.value * 100) | number: 2 }} &percnt;)</strong>
+           </td>
+       </tr>
+       <tr>
+           <td class="active"></td>
+           <td ng-repeat="col in data.cols" class="text-right active">
+               {{ col.value }}
+               <strong ng-if="percent">({{ (col.value / data.value * 100) | number: 2 }} &percnt;)</strong>
+           </td>
+           <td class="text-right active">
+               <strong>{{ data.value | number: precision }}</strong>
+               <strong ng-if="percent">(100 &percnt;)</strong>
+           </td>
+       </tr>
+   </tbody>
+</table>

@@ -4,7 +4,7 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#composer-lock-the-lock-file",
         "This file is @generated automatically"
     ],
-    "content-hash": "34d4cf534c224ded2286fd2cf994bb7e",
+    "content-hash": "c507d72409dbfecf833083aa922898bc",
     "packages": [
         {
             "name": "behat/transliterator",
@@ -325,16 +325,16 @@
         },
         {
             "name": "doctrine/data-fixtures",
-            "version": "v1.2.1",
+            "version": "v1.2.2",
             "source": {
                 "type": "git",
                 "url": "https://github.com/doctrine/data-fixtures.git",
-                "reference": "b3cae5efef97191a08d53d733260f7eb667c16e4"
+                "reference": "17fa5bfe6ff52e35cb3d9ec37c934a2f4bd1fa2e"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/doctrine/data-fixtures/zipball/b3cae5efef97191a08d53d733260f7eb667c16e4",
-                "reference": "b3cae5efef97191a08d53d733260f7eb667c16e4",
+                "url": "https://api.github.com/repos/doctrine/data-fixtures/zipball/17fa5bfe6ff52e35cb3d9ec37c934a2f4bd1fa2e",
+                "reference": "17fa5bfe6ff52e35cb3d9ec37c934a2f4bd1fa2e",
                 "shasum": ""
             },
             "require": {
@@ -380,7 +380,7 @@
             "keywords": [
                 "database"
             ],
-            "time": "2016-06-20T18:08:26+00:00"
+            "time": "2016-09-20T10:07:57+00:00"
         },
         {
             "name": "doctrine/dbal",
@@ -455,37 +455,37 @@
         },
         {
             "name": "doctrine/doctrine-bundle",
-            "version": "1.6.4",
+            "version": "1.6.8",
             "source": {
                 "type": "git",
                 "url": "https://github.com/doctrine/DoctrineBundle.git",
-                "reference": "dd40b0a7fb16658cda9def9786992b8df8a49be7"
+                "reference": "6e96577cbbdbb5b6dcca2ff203d665976b51beb0"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/doctrine/DoctrineBundle/zipball/dd40b0a7fb16658cda9def9786992b8df8a49be7",
-                "reference": "dd40b0a7fb16658cda9def9786992b8df8a49be7",
+                "url": "https://api.github.com/repos/doctrine/DoctrineBundle/zipball/6e96577cbbdbb5b6dcca2ff203d665976b51beb0",
+                "reference": "6e96577cbbdbb5b6dcca2ff203d665976b51beb0",
                 "shasum": ""
             },
             "require": {
                 "doctrine/dbal": "~2.3",
-                "doctrine/doctrine-cache-bundle": "~1.0",
+                "doctrine/doctrine-cache-bundle": "~1.2",
                 "jdorn/sql-formatter": "~1.1",
-                "php": ">=5.3.2",
-                "symfony/console": "~2.3|~3.0",
-                "symfony/dependency-injection": "~2.3|~3.0",
-                "symfony/doctrine-bridge": "~2.2|~3.0",
-                "symfony/framework-bundle": "~2.3|~3.0"
+                "php": ">=5.5.9",
+                "symfony/console": "~2.7|~3.0|~4.0",
+                "symfony/dependency-injection": "~2.7|~3.0|~4.0",
+                "symfony/doctrine-bridge": "~2.7|~3.0|~4.0",
+                "symfony/framework-bundle": "~2.7|~3.0|~4.0"
             },
             "require-dev": {
                 "doctrine/orm": "~2.3",
                 "phpunit/phpunit": "~4",
-                "satooshi/php-coveralls": "~0.6.1",
-                "symfony/phpunit-bridge": "~2.7|~3.0",
-                "symfony/property-info": "~2.8|~3.0",
-                "symfony/validator": "~2.2|~3.0",
-                "symfony/yaml": "~2.2|~3.0",
-                "twig/twig": "~1.10"
+                "satooshi/php-coveralls": "^1.0",
+                "symfony/phpunit-bridge": "~2.7|~3.0|~4.0",
+                "symfony/property-info": "~2.8|~3.0|~4.0",
+                "symfony/validator": "~2.7|~3.0|~4.0",
+                "symfony/yaml": "~2.7|~3.0|~4.0",
+                "twig/twig": "~1.12|~2.0"
             },
             "suggest": {
                 "doctrine/orm": "The Doctrine ORM integration is optional in the bundle.",
@@ -532,7 +532,7 @@
                 "orm",
                 "persistence"
             ],
-            "time": "2016-08-10T15:35:22+00:00"
+            "time": "2017-05-18T08:15:18+00:00"
         },
         {
             "name": "doctrine/doctrine-cache-bundle",
@@ -856,22 +856,22 @@
         },
         {
             "name": "doctrine/orm",
-            "version": "v2.5.4",
+            "version": "v2.5.6",
             "source": {
                 "type": "git",
                 "url": "https://github.com/doctrine/doctrine2.git",
-                "reference": "bc4ddbfb0114cb33438cc811c9a740d8aa304aab"
+                "reference": "e6c434196c8ef058239aaa0724b4aadb0107940b"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/doctrine/doctrine2/zipball/bc4ddbfb0114cb33438cc811c9a740d8aa304aab",
-                "reference": "bc4ddbfb0114cb33438cc811c9a740d8aa304aab",
+                "url": "https://api.github.com/repos/doctrine/doctrine2/zipball/e6c434196c8ef058239aaa0724b4aadb0107940b",
+                "reference": "e6c434196c8ef058239aaa0724b4aadb0107940b",
                 "shasum": ""
             },
             "require": {
                 "doctrine/cache": "~1.4",
                 "doctrine/collections": "~1.2",
-                "doctrine/common": ">=2.5-dev,<2.7-dev",
+                "doctrine/common": ">=2.5-dev,<2.8-dev",
                 "doctrine/dbal": ">=2.5-dev,<2.6-dev",
                 "doctrine/instantiator": "~1.0.1",
                 "ext-pdo": "*",
@@ -928,7 +928,7 @@
                 "database",
                 "orm"
             ],
-            "time": "2016-01-05T21:34:58+00:00"
+            "time": "2016-12-18T15:42:34+00:00"
         },
         {
             "name": "easyrdf/easyrdf",
@@ -1492,6 +1492,187 @@
                 "uploadable"
             ],
             "time": "2016-07-30T15:51:52+00:00"
+        },
+        {
+            "name": "guzzlehttp/guzzle",
+            "version": "6.3.0",
+            "source": {
+                "type": "git",
+                "url": "https://github.com/guzzle/guzzle.git",
+                "reference": "f4db5a78a5ea468d4831de7f0bf9d9415e348699"
+            },
+            "dist": {
+                "type": "zip",
+                "url": "https://api.github.com/repos/guzzle/guzzle/zipball/f4db5a78a5ea468d4831de7f0bf9d9415e348699",
+                "reference": "f4db5a78a5ea468d4831de7f0bf9d9415e348699",
+                "shasum": ""
+            },
+            "require": {
+                "guzzlehttp/promises": "^1.0",
+                "guzzlehttp/psr7": "^1.4",
+                "php": ">=5.5"
+            },
+            "require-dev": {
+                "ext-curl": "*",
+                "phpunit/phpunit": "^4.0 || ^5.0",
+                "psr/log": "^1.0"
+            },
+            "suggest": {
+                "psr/log": "Required for using the Log middleware"
+            },
+            "type": "library",
+            "extra": {
+                "branch-alias": {
+                    "dev-master": "6.2-dev"
+                }
+            },
+            "autoload": {
+                "files": [
+                    "src/functions_include.php"
+                ],
+                "psr-4": {
+                    "GuzzleHttp\\": "src/"
+                }
+            },
+            "notification-url": "https://packagist.org/downloads/",
+            "license": [
+                "MIT"
+            ],
+            "authors": [
+                {
+                    "name": "Michael Dowling",
+                    "email": "mtdowling@gmail.com",
+                    "homepage": "https://github.com/mtdowling"
+                }
+            ],
+            "description": "Guzzle is a PHP HTTP client library",
+            "homepage": "http://guzzlephp.org/",
+            "keywords": [
+                "client",
+                "curl",
+                "framework",
+                "http",
+                "http client",
+                "rest",
+                "web service"
+            ],
+            "time": "2017-06-22T18:50:49+00:00"
+        },
+        {
+            "name": "guzzlehttp/promises",
+            "version": "v1.3.1",
+            "source": {
+                "type": "git",
+                "url": "https://github.com/guzzle/promises.git",
+                "reference": "a59da6cf61d80060647ff4d3eb2c03a2bc694646"
+            },
+            "dist": {
+                "type": "zip",
+                "url": "https://api.github.com/repos/guzzle/promises/zipball/a59da6cf61d80060647ff4d3eb2c03a2bc694646",
+                "reference": "a59da6cf61d80060647ff4d3eb2c03a2bc694646",
+                "shasum": ""
+            },
+            "require": {
+                "php": ">=5.5.0"
+            },
+            "require-dev": {
+                "phpunit/phpunit": "^4.0"
+            },
+            "type": "library",
+            "extra": {
+                "branch-alias": {
+                    "dev-master": "1.4-dev"
+                }
+            },
+            "autoload": {
+                "psr-4": {
+                    "GuzzleHttp\\Promise\\": "src/"
+                },
+                "files": [
+                    "src/functions_include.php"
+                ]
+            },
+            "notification-url": "https://packagist.org/downloads/",
+            "license": [
+                "MIT"
+            ],
+            "authors": [
+                {
+                    "name": "Michael Dowling",
+                    "email": "mtdowling@gmail.com",
+                    "homepage": "https://github.com/mtdowling"
+                }
+            ],
+            "description": "Guzzle promises library",
+            "keywords": [
+                "promise"
+            ],
+            "time": "2016-12-20T10:07:11+00:00"
+        },
+        {
+            "name": "guzzlehttp/psr7",
+            "version": "1.4.2",
+            "source": {
+                "type": "git",
+                "url": "https://github.com/guzzle/psr7.git",
+                "reference": "f5b8a8512e2b58b0071a7280e39f14f72e05d87c"
+            },
+            "dist": {
+                "type": "zip",
+                "url": "https://api.github.com/repos/guzzle/psr7/zipball/f5b8a8512e2b58b0071a7280e39f14f72e05d87c",
+                "reference": "f5b8a8512e2b58b0071a7280e39f14f72e05d87c",
+                "shasum": ""
+            },
+            "require": {
+                "php": ">=5.4.0",
+                "psr/http-message": "~1.0"
+            },
+            "provide": {
+                "psr/http-message-implementation": "1.0"
+            },
+            "require-dev": {
+                "phpunit/phpunit": "~4.0"
+            },
+            "type": "library",
+            "extra": {
+                "branch-alias": {
+                    "dev-master": "1.4-dev"
+                }
+            },
+            "autoload": {
+                "psr-4": {
+                    "GuzzleHttp\\Psr7\\": "src/"
+                },
+                "files": [
+                    "src/functions_include.php"
+                ]
+            },
+            "notification-url": "https://packagist.org/downloads/",
+            "license": [
+                "MIT"
+            ],
+            "authors": [
+                {
+                    "name": "Michael Dowling",
+                    "email": "mtdowling@gmail.com",
+                    "homepage": "https://github.com/mtdowling"
+                },
+                {
+                    "name": "Tobias Schultze",
+                    "homepage": "https://github.com/Tobion"
+                }
+            ],
+            "description": "PSR-7 message implementation that also provides common utility methods",
+            "keywords": [
+                "http",
+                "message",
+                "request",
+                "response",
+                "stream",
+                "uri",
+                "url"
+            ],
+            "time": "2017-03-20T17:10:46+00:00"
         },
         {
             "name": "h4cc/wkhtmltopdf-amd64",
@@ -2148,16 +2329,16 @@
         },
         {
             "name": "knplabs/doctrine-behaviors",
-            "version": "1.3.2",
+            "version": "1.4.0",
             "source": {
                 "type": "git",
                 "url": "https://github.com/KnpLabs/DoctrineBehaviors.git",
-                "reference": "911dd202be1871d4c4a7d63da02418b033cba9a1"
+                "reference": "c41433f5519d791d2fbdb2164633035c173b9db1"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/KnpLabs/DoctrineBehaviors/zipball/911dd202be1871d4c4a7d63da02418b033cba9a1",
-                "reference": "911dd202be1871d4c4a7d63da02418b033cba9a1",
+                "url": "https://api.github.com/repos/KnpLabs/DoctrineBehaviors/zipball/c41433f5519d791d2fbdb2164633035c173b9db1",
+                "reference": "c41433f5519d791d2fbdb2164633035c173b9db1",
                 "shasum": ""
             },
             "require": {
@@ -2194,7 +2375,7 @@
             ],
             "authors": [
                 {
-                    "name": "KnpLabs",
+                    "name": "Knplabs",
                     "homepage": "http://knplabs.com"
                 }
             ],
@@ -2210,7 +2391,7 @@
                 "translatable",
                 "tree"
             ],
-            "time": "2016-03-09T12:09:55+00:00"
+            "time": "2016-09-30T06:03:12+00:00"
         },
         {
             "name": "knplabs/knp-menu",
@@ -2463,12 +2644,12 @@
             "source": {
                 "type": "git",
                 "url": "https://github.com/rmoreas/ShibbolethBundle.git",
-                "reference": "9c1d734f4434cf597204118ca9b3b042247c172e"
+                "reference": "e3c99bba2a53d9111e9ff3563a9d8f0906e8b69e"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/rmoreas/ShibbolethBundle/zipball/9c1d734f4434cf597204118ca9b3b042247c172e",
-                "reference": "9c1d734f4434cf597204118ca9b3b042247c172e",
+                "url": "https://api.github.com/repos/rmoreas/ShibbolethBundle/zipball/e3c99bba2a53d9111e9ff3563a9d8f0906e8b69e",
+                "reference": "e3c99bba2a53d9111e9ff3563a9d8f0906e8b69e",
                 "shasum": ""
             },
             "type": "symfony-bundle",
@@ -2477,7 +2658,6 @@
                     "KULeuven\\ShibbolethBundle\\": ""
                 }
             },
-            "notification-url": "https://packagist.org/downloads/",
             "license": [
                 "LGPL-3.0+"
             ],
@@ -2491,11 +2671,15 @@
             ],
             "description": "Symfony2 authentication provider for Shibboleth",
             "keywords": [
-                "Authentication",
+                "authentication",
                 "security",
                 "shibboleth"
             ],
-            "time": "2015-10-12 10:50:15"
+            "support": {
+                "source": "https://github.com/rmoreas/ShibbolethBundle/tree/v1.1.0",
+                "issues": "https://github.com/rmoreas/ShibbolethBundle/issues"
+            },
+            "time": "2016-11-02 11:26:16"
         },
         {
             "name": "liuggio/ExcelBundle",
@@ -2570,12 +2754,12 @@
             "source": {
                 "type": "git",
                 "url": "https://github.com/mbence/OpenTBSBundle.git",
-                "reference": "2c8c868b70727af953aed9f36d1d49e451fc3a00"
+                "reference": "6e6be4befb7f659df522cecd10cd27d0935d65c9"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/mbence/OpenTBSBundle/zipball/2c8c868b70727af953aed9f36d1d49e451fc3a00",
-                "reference": "2c8c868b70727af953aed9f36d1d49e451fc3a00",
+                "url": "https://api.github.com/repos/mbence/OpenTBSBundle/zipball/6e6be4befb7f659df522cecd10cd27d0935d65c9",
+                "reference": "6e6be4befb7f659df522cecd10cd27d0935d65c9",
                 "shasum": ""
             },
             "require": {
@@ -2599,7 +2783,7 @@
                     "role": "Developer"
                 }
             ],
-            "description": "OpenTBS Bundle for Symfony2 - create OpenOffice and Ms Office documents with Symfony",
+            "description": "OpenTBS Bundle for Symfony - create OpenOffice and Ms Office documents with Symfony",
             "homepage": "https://github.com/mbence/OpenTBSBundle",
             "keywords": [
                 "MS Office",
@@ -2613,7 +2797,7 @@
                 "symfony",
                 "xlsx"
             ],
-            "time": "2015-09-18 15:37:42"
+            "time": "2016-09-27 12:20:06"
         },
         {
             "name": "monolog/monolog",
@@ -3077,6 +3261,56 @@
             "time": "2015-07-25T16:39:46+00:00"
         },
         {
+            "name": "psr/http-message",
+            "version": "1.0.1",
+            "source": {
+                "type": "git",
+                "url": "https://github.com/php-fig/http-message.git",
+                "reference": "f6561bf28d520154e4b0ec72be95418abe6d9363"
+            },
+            "dist": {
+                "type": "zip",
+                "url": "https://api.github.com/repos/php-fig/http-message/zipball/f6561bf28d520154e4b0ec72be95418abe6d9363",
+                "reference": "f6561bf28d520154e4b0ec72be95418abe6d9363",
+                "shasum": ""
+            },
+            "require": {
+                "php": ">=5.3.0"
+            },
+            "type": "library",
+            "extra": {
+                "branch-alias": {
+                    "dev-master": "1.0.x-dev"
+                }
+            },
+            "autoload": {
+                "psr-4": {
+                    "Psr\\Http\\Message\\": "src/"
+                }
+            },
+            "notification-url": "https://packagist.org/downloads/",
+            "license": [
+                "MIT"
+            ],
+            "authors": [
+                {
+                    "name": "PHP-FIG",
+                    "homepage": "http://www.php-fig.org/"
+                }
+            ],
+            "description": "Common interface for HTTP messages",
+            "homepage": "https://github.com/php-fig/http-message",
+            "keywords": [
+                "http",
+                "http-message",
+                "psr",
+                "psr-7",
+                "request",
+                "response"
+            ],
+            "time": "2016-08-06T14:39:51+00:00"
+        },
+        {
             "name": "psr/log",
             "version": "1.0.0",
             "source": {
@@ -3381,6 +3615,56 @@
             "time": "2015-11-07T08:07:40+00:00"
         },
         {
+            "name": "soundasleep/html2text",
+            "version": "0.5.0",
+            "source": {
+                "type": "git",
+                "url": "https://github.com/soundasleep/html2text.git",
+                "reference": "cdb89f6ffa2c4cc78f8ed9ea6ee0594a9133ccad"
+            },
+            "dist": {
+                "type": "zip",
+                "url": "https://api.github.com/repos/soundasleep/html2text/zipball/cdb89f6ffa2c4cc78f8ed9ea6ee0594a9133ccad",
+                "reference": "cdb89f6ffa2c4cc78f8ed9ea6ee0594a9133ccad",
+                "shasum": ""
+            },
+            "require": {
+                "ext-dom": "*",
+                "ext-libxml": "*",
+                "php": ">=5.3.2"
+            },
+            "require-dev": {
+                "phpunit/phpunit": ">=4.0",
+                "soundasleep/component-tests": "dev-master"
+            },
+            "type": "library",
+            "autoload": {
+                "psr-4": {
+                    "Html2Text\\": "src"
+                }
+            },
+            "notification-url": "https://packagist.org/downloads/",
+            "license": [
+                "EPL-1.0"
+            ],
+            "authors": [
+                {
+                    "name": "Jevon Wright",
+                    "homepage": "https://jevon.org",
+                    "role": "Developer"
+                }
+            ],
+            "description": "A PHP script to convert HTML into a plain text format",
+            "homepage": "https://github.com/soundasleep/html2text",
+            "keywords": [
+                "email",
+                "html",
+                "php",
+                "text"
+            ],
+            "time": "2017-04-19T22:01:50+00:00"
+        },
+        {
             "name": "stof/doctrine-extensions-bundle",
             "version": "v1.2.2",
             "source": {
@@ -3493,276 +3777,6 @@
                 "mailer"
             ],
             "time": "2016-07-08T11:51:25+00:00"
-        },
-        {
-            "name": "sygefor/api-bundle",
-            "version": "dev-master",
-            "source": {
-                "type": "git",
-                "url": "https://github.com/sygefor/api-bundle.git",
-                "reference": "52a57c36610e1e17305034d57ac0088750e44aee"
-            },
-            "dist": {
-                "type": "zip",
-                "url": "https://api.github.com/repos/sygefor/api-bundle/zipball/52a57c36610e1e17305034d57ac0088750e44aee",
-                "reference": "52a57c36610e1e17305034d57ac0088750e44aee",
-                "shasum": ""
-            },
-            "type": "symfony-bundle",
-            "autoload": {
-                "psr-4": {
-                    "Sygefor\\Bundle\\ApiBundle\\": ""
-                }
-            },
-            "license": [
-                "MIT"
-            ],
-            "authors": [
-                {
-                    "name": "Conjecto"
-                }
-            ],
-            "keywords": [
-                "api",
-                "sygefor"
-            ],
-            "support": {
-                "source": "https://github.com/sygefor/api-bundle/tree/master",
-                "issues": "https://github.com/sygefor/api-bundle/issues"
-            },
-            "time": "2017-04-07 10:26:30"
-        },
-        {
-            "name": "sygefor/core-bundle",
-            "version": "dev-master",
-            "source": {
-                "type": "git",
-                "url": "https://github.com/sygefor/core-bundle.git",
-                "reference": "f6ebe91836dee7d24f19639c0f7ceeab49594b7b"
-            },
-            "dist": {
-                "type": "zip",
-                "url": "https://api.github.com/repos/sygefor/core-bundle/zipball/f6ebe91836dee7d24f19639c0f7ceeab49594b7b",
-                "reference": "f6ebe91836dee7d24f19639c0f7ceeab49594b7b",
-                "shasum": ""
-            },
-            "require": {
-                "php": ">=5.3.9",
-                "symfony/symfony": "2.8.9"
-            },
-            "type": "symfony-bundle",
-            "autoload": {
-                "psr-4": {
-                    "Sygefor\\Bundle\\CoreBundle\\": ""
-                }
-            },
-            "license": [
-                "MIT"
-            ],
-            "authors": [
-                {
-                    "name": "Conjecto"
-                }
-            ],
-            "keywords": [
-                "api",
-                "sygefor"
-            ],
-            "support": {
-                "source": "https://github.com/sygefor/core-bundle/tree/master",
-                "issues": "https://github.com/sygefor/core-bundle/issues"
-            },
-            "time": "2017-05-11 09:06:00"
-        },
-        {
-            "name": "sygefor/inscription-bundle",
-            "version": "dev-master",
-            "source": {
-                "type": "git",
-                "url": "https://github.com/sygefor/inscription-bundle.git",
-                "reference": "077b72c02335b054e86e1e5800044e88e0b092f7"
-            },
-            "dist": {
-                "type": "zip",
-                "url": "https://api.github.com/repos/sygefor/inscription-bundle/zipball/077b72c02335b054e86e1e5800044e88e0b092f7",
-                "reference": "077b72c02335b054e86e1e5800044e88e0b092f7",
-                "shasum": ""
-            },
-            "type": "symfony-bundle",
-            "autoload": {
-                "psr-4": {
-                    "Sygefor\\Bundle\\InscriptionBundle\\": ""
-                }
-            },
-            "license": [
-                "MIT"
-            ],
-            "authors": [
-                {
-                    "name": "Conjecto"
-                }
-            ],
-            "keywords": [
-                "api",
-                "sygefor"
-            ],
-            "support": {
-                "source": "https://github.com/sygefor/inscription-bundle/tree/master",
-                "issues": "https://github.com/sygefor/inscription-bundle/issues"
-            },
-            "time": "2017-04-07 10:26:30"
-        },
-        {
-            "name": "sygefor/institution-bundle",
-            "version": "dev-master",
-            "source": {
-                "type": "git",
-                "url": "https://github.com/sygefor/institution-bundle.git",
-                "reference": "76e87438cae536e690a0bb90c3e4f6ce9d5eae53"
-            },
-            "dist": {
-                "type": "zip",
-                "url": "https://api.github.com/repos/sygefor/institution-bundle/zipball/76e87438cae536e690a0bb90c3e4f6ce9d5eae53",
-                "reference": "76e87438cae536e690a0bb90c3e4f6ce9d5eae53",
-                "shasum": ""
-            },
-            "type": "symfony-bundle",
-            "autoload": {
-                "psr-4": {
-                    "Sygefor\\Bundle\\InstitutionBundle\\": ""
-                }
-            },
-            "license": [
-                "MIT"
-            ],
-            "authors": [
-                {
-                    "name": "Conjecto"
-                }
-            ],
-            "keywords": [
-                "institution",
-                "sygefor"
-            ],
-            "support": {
-                "source": "https://github.com/sygefor/institution-bundle/tree/master",
-                "issues": "https://github.com/sygefor/institution-bundle/issues"
-            },
-            "time": "2017-02-17 13:37:14"
-        },
-        {
-            "name": "sygefor/trainee-bundle",
-            "version": "dev-master",
-            "source": {
-                "type": "git",
-                "url": "https://github.com/sygefor/trainee-bundle.git",
-                "reference": "cd860906670eaca1c7de8e7a4c7c875b262c3ffe"
-            },
-            "dist": {
-                "type": "zip",
-                "url": "https://api.github.com/repos/sygefor/trainee-bundle/zipball/cd860906670eaca1c7de8e7a4c7c875b262c3ffe",
-                "reference": "cd860906670eaca1c7de8e7a4c7c875b262c3ffe",
-                "shasum": ""
-            },
-            "type": "symfony-bundle",
-            "autoload": {
-                "psr-4": {
-                    "Sygefor\\Bundle\\TraineeBundle\\": ""
-                }
-            },
-            "license": [
-                "MIT"
-            ],
-            "authors": [
-                {
-                    "name": "Conjecto"
-                }
-            ],
-            "keywords": [
-                "sygefor",
-                "trainee"
-            ],
-            "support": {
-                "source": "https://github.com/sygefor/trainee-bundle/tree/master",
-                "issues": "https://github.com/sygefor/trainee-bundle/issues"
-            },
-            "time": "2017-04-10 09:47:52"
-        },
-        {
-            "name": "sygefor/trainer-bundle",
-            "version": "dev-master",
-            "source": {
-                "type": "git",
-                "url": "https://github.com/sygefor/trainer-bundle.git",
-                "reference": "7d2c4e12188922df2b4e3e2b77d0468573673389"
-            },
-            "dist": {
-                "type": "zip",
-                "url": "https://api.github.com/repos/sygefor/trainer-bundle/zipball/7d2c4e12188922df2b4e3e2b77d0468573673389",
-                "reference": "7d2c4e12188922df2b4e3e2b77d0468573673389",
-                "shasum": ""
-            },
-            "type": "symfony-bundle",
-            "autoload": {
-                "psr-4": {
-                    "Sygefor\\Bundle\\TrainerBundle\\": ""
-                }
-            },
-            "license": [
-                "MIT"
-            ],
-            "authors": [
-                {
-                    "name": "Conjecto"
-                }
-            ],
-            "keywords": [
-                "sygefor",
-                "trainer"
-            ],
-            "support": {
-                "source": "https://github.com/sygefor/trainer-bundle/tree/master",
-                "issues": "https://github.com/sygefor/trainer-bundle/issues"
-            },
-            "time": "2017-02-17 13:37:14"
-        },
-        {
-            "name": "sygefor/training-bundle",
-            "version": "dev-master",
-            "source": {
-                "type": "git",
-                "url": "https://github.com/sygefor/training-bundle.git",
-                "reference": "cc7db0ec57c419a7428f259043240de3de10ee75"
-            },
-            "dist": {
-                "type": "zip",
-                "url": "https://api.github.com/repos/sygefor/training-bundle/zipball/cc7db0ec57c419a7428f259043240de3de10ee75",
-                "reference": "cc7db0ec57c419a7428f259043240de3de10ee75",
-                "shasum": ""
-            },
-            "type": "symfony-bundle",
-            "autoload": {
-                "psr-4": {
-                    "Sygefor\\Bundle\\TrainingBundle\\": ""
-                }
-            },
-            "license": [
-                "MIT"
-            ],
-            "authors": [
-                {
-                    "name": "Conjecto"
-                }
-            ],
-            "keywords": [
-                "sygefor",
-                "training"
-            ],
-            "support": {
-                "source": "https://github.com/sygefor/training-bundle/tree/master",
-                "issues": "https://github.com/sygefor/training-bundle/issues"
-            },
-            "time": "2017-04-11 07:45:15"
         },
         {
             "name": "symfony/monolog-bundle",
@@ -4773,6 +4787,64 @@
     ],
     "packages-dev": [
         {
+            "name": "friendsofphp/php-cs-fixer",
+            "version": "v1.13.1",
+            "source": {
+                "type": "git",
+                "url": "https://github.com/FriendsOfPHP/PHP-CS-Fixer.git",
+                "reference": "0ea4f7ed06ca55da1d8fc45da26ff87f261c4088"
+            },
+            "dist": {
+                "type": "zip",
+                "url": "https://api.github.com/repos/FriendsOfPHP/PHP-CS-Fixer/zipball/0ea4f7ed06ca55da1d8fc45da26ff87f261c4088",
+                "reference": "0ea4f7ed06ca55da1d8fc45da26ff87f261c4088",
+                "shasum": ""
+            },
+            "require": {
+                "ext-tokenizer": "*",
+                "php": "^5.3.6 || >=7.0 <7.2",
+                "sebastian/diff": "^1.1",
+                "symfony/console": "^2.3 || ^3.0",
+                "symfony/event-dispatcher": "^2.1 || ^3.0",
+                "symfony/filesystem": "^2.1 || ^3.0",
+                "symfony/finder": "^2.1 || ^3.0",
+                "symfony/process": "^2.3 || ^3.0",
+                "symfony/stopwatch": "^2.5 || ^3.0"
+            },
+            "conflict": {
+                "hhvm": "<3.9"
+            },
+            "require-dev": {
+                "phpunit/phpunit": "^4.5|^5",
+                "satooshi/php-coveralls": "^1.0"
+            },
+            "bin": [
+                "php-cs-fixer"
+            ],
+            "type": "application",
+            "autoload": {
+                "psr-4": {
+                    "Symfony\\CS\\": "Symfony/CS/"
+                }
+            },
+            "notification-url": "https://packagist.org/downloads/",
+            "license": [
+                "MIT"
+            ],
+            "authors": [
+                {
+                    "name": "Dariusz Rumiński",
+                    "email": "dariusz.ruminski@gmail.com"
+                },
+                {
+                    "name": "Fabien Potencier",
+                    "email": "fabien@symfony.com"
+                }
+            ],
+            "description": "A tool to automatically fix PHP code style",
+            "time": "2016-12-01T00:05:05+00:00"
+        },
+        {
             "name": "fzaninotto/faker",
             "version": "v1.3.0",
             "source": {
@@ -4817,6 +4889,58 @@
                 "fixtures"
             ],
             "time": "2013-12-16T21:56:48+00:00"
+        },
+        {
+            "name": "sebastian/diff",
+            "version": "1.4.3",
+            "source": {
+                "type": "git",
+                "url": "https://github.com/sebastianbergmann/diff.git",
+                "reference": "7f066a26a962dbe58ddea9f72a4e82874a3975a4"
+            },
+            "dist": {
+                "type": "zip",
+                "url": "https://api.github.com/repos/sebastianbergmann/diff/zipball/7f066a26a962dbe58ddea9f72a4e82874a3975a4",
+                "reference": "7f066a26a962dbe58ddea9f72a4e82874a3975a4",
+                "shasum": ""
+            },
+            "require": {
+                "php": "^5.3.3 || ^7.0"
+            },
+            "require-dev": {
+                "phpunit/phpunit": "^4.8.35 || ^5.7 || ^6.0"
+            },
+            "type": "library",
+            "extra": {
+                "branch-alias": {
+                    "dev-master": "1.4-dev"
+                }
+            },
+            "autoload": {
+                "classmap": [
+                    "src/"
+                ]
+            },
+            "notification-url": "https://packagist.org/downloads/",
+            "license": [
+                "BSD-3-Clause"
+            ],
+            "authors": [
+                {
+                    "name": "Kore Nordmann",
+                    "email": "mail@kore-nordmann.de"
+                },
+                {
+                    "name": "Sebastian Bergmann",
+                    "email": "sebastian@phpunit.de"
+                }
+            ],
+            "description": "Diff implementation",
+            "homepage": "https://github.com/sebastianbergmann/diff",
+            "keywords": [
+                "diff"
+            ],
+            "time": "2017-05-22T07:24:03+00:00"
         },
         {
             "name": "sensio/generator-bundle",
@@ -4931,13 +5055,6 @@
     "stability-flags": {
         "mbence/opentbs-bundle": 20,
         "kuleuven/shibboleth-bundle": 20,
-        "sygefor/api-bundle": 20,
-        "sygefor/core-bundle": 20,
-        "sygefor/inscription-bundle": 20,
-        "sygefor/institution-bundle": 20,
-        "sygefor/trainee-bundle": 20,
-        "sygefor/trainer-bundle": 20,
-        "sygefor/training-bundle": 20,
         "fzaninotto/faker": 20
     },
     "prefer-stable": true,

@@ -1,0 +1,60 @@
+{% set nbrPage = (search.total / search.pageSize) | round(0, 'ceil') %}
+
+{% if nbrPage > 1 %}
+    {% set code = null %}
+    {% if organization is defined %}
+        {% set code = organization.code %}
+    {% endif %}
+    <nav aria-label="Page navigation">
+        <ul class="pagination">
+            {% if nbrPage > 1 %}
+                <li>
+                    <a href="{{ path(app.request.attributes.get('_route'), {code: code, page: 1}) }}" aria-label="Précédent">
+                        <span aria-hidden="true">Début</span>
+                    </a>
+                </li>
+            {% endif %}
+            {% if page > 1 %}
+                <li>
+                    <a href="{{ path(app.request.attributes.get('_route'), {code: code, page: page  - 1}) }}" aria-label="Précédent">
+                        <span aria-hidden="true">Précédent</span>
+                    </a>
+                </li>
+            {% endif %}
+
+            {% if page > 2 %}
+                <li class="disabled"><span>...</span></li>
+            {% endif %}
+
+            {% for i in page - 1..page + 3 %}
+                {% if i > 0 and i <= nbrPage %}
+                    <li><a class="{{ i == page ? "active" : "" }}" href="{{ path(app.request.attributes.get('_route'), {code: code, page: i}) }}">{{ i }}</a></li>
+                {% endif %}
+            {% endfor %}
+
+            {% if nbrPage - (page + 3) > 5 %}
+                <li class="disabled"><span>...</span></li>
+            {% endif %}
+
+            {% for i in nbrPage - 4..nbrPage %}
+                {% if i > 5 and i > page + 2 and page + 3 != i %}
+                    <li><a class="{{ i == page ? "active" : "" }}" href="{{ path(app.request.attributes.get('_route'), {code: code, page: i}) }}">{{ i }}</a></li>
+                {% endif %}
+            {% endfor %}
+            {% if page < nbrPage %}
+                <li>
+                    <a href="{{ path(app.request.attributes.get('_route'), {code: code, page: page + 1}) }}" aria-label="Suivant">
+                        <span aria-hidden="true">Suivant</span>
+                    </a>
+                </li>
+            {% endif %}
+            {% if nbrPage > 1 %}
+                <li>
+                    <a href="{{ path(app.request.attributes.get('_route'), {code: code, page: nbrPage}) }}" aria-label="Suivant">
+                        <span aria-hidden="true">Fin</span>
+                    </a>
+                </li>
+            {% endif %}
+        </ul>
+    </nav>
+{% endif %}

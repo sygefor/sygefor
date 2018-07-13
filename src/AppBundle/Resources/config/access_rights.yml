@@ -1,0 +1,6 @@
+services:
+    # inscription access rights
+    app.access_right.trainees_inscription.own.view:
+        class: AppBundle\Security\Authorization\AccessRight\Inscription\OwnTraineeInscriptionViewAccessRight
+        tags:
+            - { name: sygefor_core.right_provider, group: "Inscriptions" }

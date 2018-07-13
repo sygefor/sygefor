@@ -118,10 +118,11 @@ if(isRunViaCLI()){
 			}
 		}
 	}
-	
+
+	// generate files
 	// Now that we have the lock, check again
 	if(
-		(!file_exists($metadataIDPFile) or filemtime($metadataFile) > filemtime($metadataIDPFile)) 
+		(!file_exists($metadataIDPFile) or filemtime($metadataFile) > filemtime($metadataIDPFile))
 		and regenerateMetadata($metadataFile, $defaultLanguage)
 	){
 		

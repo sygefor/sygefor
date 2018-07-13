@@ -1,0 +1,30 @@
+{% extends "taxonomy/layout.html.twig" %}
+
+{% block breadcrumbs %}
+    <ol class="breadcrumb">
+        <li><a href="{{ path('core.index') }}">Accueil</a></li>
+        <li><a href="#">Administration</a></li>
+        <li><a href="{{ path('taxonomy.index') }}">Vocabulaires</a></li>
+        <li><a href="{{ path('taxonomy.view', { 'vocabularyId': vocabulary.vocabularyId }) }}">{{ vocabulary.vocabularyLabel }}</a></li>
+        {% if organization is not null %}
+            <li><a href="{{ path('taxonomy.view', { 'vocabularyId': vocabulary.vocabularyId, 'organizationId': organization_id }) }}">{{ organization.name }}</a></li>
+        {% endif %}
+        <li><a href="{{ path('taxonomy.edit', { 'vocabularyId': vocabulary.vocabularyId, 'organizationId': organization_id, 'id': term.id }) }}">{{ term.name }}</a></li>
+        <li class="active"><a href="#">Supprimer</a></li>
+    </ol>
+{% endblock %}
+
+{% block subcontent %}
+    <h1>Etes-vous certain de vouloir supprimer le terme <em>{{ term.name }}</em> du vocabulaire <em>{{ vocabulary.vocabularyLabel }}</em> ?</h1>
+
+    {{ form_start(form) }}
+    {% if count != 0 %}
+    <div class="alert alert-warning" role="alert"><strong>{{ count }} {{ count > 1 ? 'entités sont associées' : 'entité est associée' }} au terme.</strong> Choisissez un nouveau terme auquel seront associées ces entités :</div>
+    {% endif %}
+    {% for child in form.children%}
+        {{ form_row(child) }}
+    {% endfor %}
+        <a class="btn btn-default" href="#" onclick="history.back(); return false;" role="button">Annuler</a>
+        <input type="submit" class="btn btn-danger" value="Supprimer le terme"/>
+    {{ form_end(form) }}
+{% endblock %}

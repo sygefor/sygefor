@@ -1,0 +1,33 @@
+<ul class="list-inline training-detail-info">
+
+    <!--training type-->
+    <li class="training-detail title-sup session__type" title="Type de formation"><span class="label radius">{{ training.typeLabel }}</span></li>
+
+    <li class="training-detail" title="Export pdf de la formation">
+        <a href="{{ path('front.training.pdf', { id: session.id }) }}"><span class="label radius">PDF</span></a>
+    </li>
+
+    <!-- all -->
+    <li class="training-detail-info" title="Thème"><i class="glyphicon glyphicon-bookmark"></i>&nbsp;&nbsp;{{ training.theme.name }}</li>
+
+    {% if session is defined and session.participations is defined and session.participations | length > 0 %}
+        <li class="training-detail-info" title="Intervenant(s) de la formation"><i class="fa fa-graduation-cap"></i>&nbsp;&nbsp;
+            {% for key, participation in session.participations %}
+                <span>
+                    {% if key > 0 %}<span>, </span>{% endif %}
+                    {{ participation.trainer.fullName }}
+                </span>
+            {% endfor %}
+        </li>
+    {% endif %}
+
+    <!-- all -->
+    {% if training.tags is defined and training.tags | length > 0 %}
+        <li class="training-detail-info" title="Tags"><i class="glyphicon glyphicon-tags"></i>&nbsp;&nbsp;
+            {% for key, tag in training.tags %}
+                {% if key > 0 %}<span>, </span>{% endif %}
+                {{ tag.name }}
+            {% endfor %}
+        </li>
+    {% endif %}
+</ul>

@@ -1,0 +1,32 @@
+.program {
+  h4 {
+    padding-bottom: $padding-base-vertical;
+    padding-top: $padding-base-vertical;
+  }
+
+  form {
+    label {
+      font-size: $font-size-small;
+    }
+
+    input[type="checkbox"] {
+      position: relative;
+      vertical-align: middle;
+      bottom: 2px;
+    }
+
+    .checkbox {
+      margin-top: $padding-small-vertical / 2;
+      margin-bottom: $padding-small-vertical;
+    }
+
+    .label {
+      margin-top: $padding-small-vertical / 2;
+      margin-bottom: 0;
+    }
+
+    button[type="submit"] {
+      margin-top: $padding-large-vertical;
+    }
+  }
+}

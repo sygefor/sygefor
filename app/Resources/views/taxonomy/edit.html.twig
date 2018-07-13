@@ -1,0 +1,65 @@
+{% extends "taxonomy/layout.html.twig" %}
+{% form_theme form 'SygeforCoreBundle:Form:fields.html.twig' %}
+
+{% block breadcrumbs %}
+    <ol class="breadcrumb full-height-item">
+        <li><a href="{{ path('core.index') }}">Accueil</a></li>
+        <li><a href="#">Administration</a></li>
+        <li><a href="{{ path('taxonomy.index') }}">Vocabulaires</a></li>
+        <li><a href="{{ path('taxonomy.view', { 'vocabularyId': vocabulary.vocabularyId }) }}">{{ vocabulary.vocabularyLabel }}</a></li>
+        {% if organization is not null %}
+            <li><a href="{{ path('taxonomy.view', { 'vocabularyId': vocabulary.vocabularyId, organizationId: organization.id }) }}">{{ organization.name }}</a></li>
+        {% elseif vocabulary.vocabularyStatus == 2 %}
+            <li><a href="{{ path('taxonomy.view', { 'vocabularyId': vocabulary.vocabularyId }) }}">Termes nationaux</a></li>
+        {% endif %}
+        <li class="active"><a href="#">{{ term.id ? term.name : "Ajouter un terme" }}</a></li>
+    </ol>
+{% endblock %}
+
+{% block subcontent %}
+
+    {{ form_start(form) }}
+    {% for child in form.children%}
+        {{ form_row(child) }}
+    {% endfor %}
+
+    <div class="form-group">
+        <div class="col-sm-offset-2 col-sm-10">
+            <button type="submit" class="btn btn-primary">Enregistrer</button>
+        </div>
+    </div>
+
+    {{ form_end(form) }}
+
+{% endblock %}
+
+{% block javascripts %}
+    <script src="{{ asset('ckeditor/ckeditor.js') }}"></script>
+    <script src="{{ asset('ckeditor/config.js') }}"></script>
+    <script src="{{ asset('ckeditor/lang/fr.js') }}"></script>
+
+    <script type="application/javascript">
+        (function($) {
+            $('[ckeditor]').each(function () {
+                var config = {
+                    language: 'fr',
+                    extraPlugins: "base64image",
+                    toolbar: [
+                        { name: 'clipboard', items: [ 'Cut', 'Copy', 'Paste', 'PasteText', 'PasteFromWord', '-', 'Undo', 'Redo' ] },
+                        { name: 'editing', items: [ 'Scayt' ] },
+                        { name: 'links', items: [ 'Link', 'Unlink', 'Anchor' ] },
+                        { name: 'insert', items: [ 'base64image', 'Table', 'HorizontalRule', 'SpecialChar' ] },
+                        { name: 'tools', items: [ 'Maximize' ] },
+                        { name: 'document', items: [ 'Source' ] },
+                        '/',
+                        { name: 'basicstyles', items: [ 'Bold', 'Italic', 'Strike', '-', 'RemoveFormat' ] },
+                        { name: 'paragraph', items: [ 'NumberedList', 'BulletedList', '-', 'Outdent', 'Indent', '-', 'Blockquote' ] },
+                        { name: 'styles', items: [ 'Styles', 'Format' ] },
+                        { name: 'about', items: [ 'About' ] }
+                    ]
+                };
+                CKEDITOR.replace(this.id, config);
+            });
+        }(jQuery));
+    </script>
+{% endblock %}

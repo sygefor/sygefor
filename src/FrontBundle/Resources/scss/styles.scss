@@ -1,0 +1,31 @@
+// variables
+@import "settings/variables";
+
+// vendors
+@import "../../../../node_modules/bootstrap-sass/assets/stylesheets/bootstrap";
+
+// bases
+@import "base/scaffolding";
+@import "base/fonts";
+
+// components
+@import "components/breadcrumb";
+@import "components/flashes";
+@import "components/footer";
+@import "components/form";
+@import "components/iframe";
+@import "components/label";
+@import "components/header";
+@import "components/nav";
+@import "components/pagination";
+
+// modules
+@import "modules/attendance";
+@import "modules/contact";
+@import "modules/evaluation";
+@import "modules/inscription";
+@import "modules/pagination";
+@import "modules/profile";
+@import "modules/program";
+@import "modules/session";
+@import "modules/training";

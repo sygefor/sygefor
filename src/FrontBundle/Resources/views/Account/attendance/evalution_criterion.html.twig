@@ -1,0 +1,16 @@
+{% for formTheme in form.children.themes %}
+    <h4>{{ formTheme.vars.data.theme.name }}</h4>
+    <div class="evaluation_theme">
+        {% for criteria in formTheme.children.criteria %}
+            <div class="evaluation_criterion">
+                {{ form_row(criteria.children.criterion) }}
+                {{ form_errors(criteria.children.criterion) }}
+                {{ form_row(criteria.children.note) }}
+                {{ form_errors(criteria.children.note) }}
+            </div>
+        {% endfor %}
+
+        {{ form_row(formTheme.comments) }}
+        {{ form_errors(formTheme.comments) }}
+    </div>
+{% endfor %}

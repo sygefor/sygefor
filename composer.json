@@ -2,9 +2,18 @@
     "name": "conjecto/sygefor3",
     "license": "MIT",
     "type": "project",
+    "keywords": ["sygefor", "formation"],
+    "authors": [
+        {
+            "name": "Conjecto",
+            "homepage": "http://www.conjecto.com"
+        }
+    ],
     "autoload": {
         "psr-4": {
-            "": "src/"
+            "": "src/",
+            "Sygefor\\Bundle\\CoreBundle\\": "common/sygefor/core-bundle",
+            "Sygefor\\Bundle\\ApiBundle\\": "common/sygefor/api-bundle"
         },
         "classmap": [
             "app/AppKernel.php",
@@ -15,46 +24,18 @@
         {
             "type": "vcs",
             "url": "git@github.com:rmoreas/ShibbolethBundle.git"
-        },
-        {
-            "type": "vcs",
-            "url": "git@github.com:sygefor/api-bundle.git"
-        },
-        {
-            "type": "vcs",
-            "url": "git@github.com:sygefor/core-bundle.git"
-        },
-        {
-            "type": "vcs",
-            "url": "git@github.com:sygefor/institution-bundle.git"
-        },
-        {
-            "type": "vcs",
-            "url": "git@github.com:sygefor/inscription-bundle.git"
-        },
-        {
-            "type": "vcs",
-            "url": "git@github.com:sygefor/trainee-bundle.git"
-        },
-        {
-            "type": "vcs",
-            "url": "git@github.com:sygefor/trainer-bundle.git"
-        },
-        {
-            "type": "vcs",
-            "url": "git@github.com:sygefor/training-bundle.git"
         }
     ],
     "require": {
         "php": ">=5.3.9",
         "symfony/symfony": "2.8.9",
-        "doctrine/orm": "^2.4.8",
-        "doctrine/doctrine-bundle": "~1.4",
+        "doctrine/orm": "^2.5.6",
+        "doctrine/doctrine-bundle": "~1.6",
         "symfony/swiftmailer-bundle": "~2.3",
-        "symfony/monolog-bundle": "~2.4",
+        "symfony/monolog-bundle": "~2.11",
         "sensio/distribution-bundle": "~5.0",
         "sensio/framework-extra-bundle": "^3.0.2",
-        "incenteev/composer-parameter-handler": "~2.0",
+        "incenteev/composer-parameter-handler": "~2.1",
         "twig/extensions": "~1.3.0",
         "ruflin/elastica": "~1.4.0",
         "friendsofsymfony/elastica-bundle": "~3.0.12",
@@ -62,7 +43,7 @@
         "friendsofsymfony/oauth-server-bundle": "~1.4.1",
         "doctrine/doctrine-fixtures-bundle": "~2.3.0",
         "knplabs/knp-menu-bundle":"^2.1.1",
-        "knplabs/doctrine-behaviors": "^1.3.2",
+        "knplabs/doctrine-behaviors": "^1.4.0",
         "friendsofsymfony/jsrouting-bundle": "1.5.3",
         "friendsofsymfony/rest-bundle": "^1.7.7",
         "volcanus/csv": "1.1.1",
@@ -78,28 +59,22 @@
         "jms/serializer": "^1.1.0",
         "jms/serializer-bundle": "^1.1.0",
         "jms/security-extra-bundle": "^1.6.0",
-        "mopa/bootstrap-bundle": "^3.0.0",
+        "mopa/bootstrap-bundle": "^3.1.0",
         "ras/flash-alert-bundle": "^2.1",
-
-        "sygefor/api-bundle": "dev-master",
-        "sygefor/core-bundle": "dev-master",
-        "sygefor/inscription-bundle": "dev-master",
-        "sygefor/institution-bundle": "dev-master",
-        "sygefor/trainee-bundle": "dev-master",
-        "sygefor/trainer-bundle": "dev-master",
-        "sygefor/training-bundle": "dev-master"
+        "soundasleep/html2text": "0.5.0",
+        "guzzlehttp/guzzle": "^6.3"
     },
     "require-dev": {
         "sensio/generator-bundle": "~3.0",
         "fzaninotto/faker": "1.3.*@dev",
-        "symfony/phpunit-bridge": "~2.7"
+        "symfony/phpunit-bridge": "~2.7",
+        "friendsofphp/php-cs-fixer": "1.*"
     },
     "scripts": {
         "post-install-cmd": [
             "Incenteev\\ParameterHandler\\ScriptHandler::buildParameters",
             "Sensio\\Bundle\\DistributionBundle\\Composer\\ScriptHandler::buildBootstrap",
             "Sensio\\Bundle\\DistributionBundle\\Composer\\ScriptHandler::clearCache",
-            "Sensio\\Bundle\\DistributionBundle\\Composer\\ScriptHandler::installAssets",
             "Sensio\\Bundle\\DistributionBundle\\Composer\\ScriptHandler::installRequirementsFile",
             "Sensio\\Bundle\\DistributionBundle\\Composer\\ScriptHandler::prepareDeploymentTarget"
         ],
@@ -107,7 +82,6 @@
             "Incenteev\\ParameterHandler\\ScriptHandler::buildParameters",
             "Sensio\\Bundle\\DistributionBundle\\Composer\\ScriptHandler::buildBootstrap",
             "Sensio\\Bundle\\DistributionBundle\\Composer\\ScriptHandler::clearCache",
-            "Sensio\\Bundle\\DistributionBundle\\Composer\\ScriptHandler::installAssets",
             "Sensio\\Bundle\\DistributionBundle\\Composer\\ScriptHandler::installRequirementsFile",
             "Sensio\\Bundle\\DistributionBundle\\Composer\\ScriptHandler::prepareDeploymentTarget"
         ]
