@@ -66,7 +66,7 @@ class LoadUserData extends AbstractDataFixture
         $user->setUsername('admin');
         $encoder = $encoderFactory->getEncoder($user);
         $user->setPassword($encoder->encodePassword('admin', $user->getSalt()));
-        $user->setEmail('admin@sygefor.dev');
+        $user->setEmail('admin@sygefor.com');
         $user->setEnabled(1);
         $user->setRoles(array('ROLE_ADMIN'));
         $user->setAccessRights($this->accessRights);

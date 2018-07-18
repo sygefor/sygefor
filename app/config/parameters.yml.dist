@@ -26,7 +26,7 @@ parameters:
     mailer_encryption:  ~
     mailer_auth_mode:   ~
     mailer_port:        1025
-    mailer_from:        no-reply@sygefor.dev
+    mailer_from:        no-reply@sygefor.com
     mailer_from_name:   Sygefor
 
     # Symfony

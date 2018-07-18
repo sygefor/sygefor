@@ -18,7 +18,7 @@ class LoadOrganizationData extends AbstractTermLoad
             array(
                 'name' => 'Sygefor',
                 'code' => 'sygefor',
-                'email' => 'contact@sygefor.dev',
+                'email' => 'contact@sygefor.com',
                 'address' => '',
                 'zip' => '35000',
                 'city' => 'Rennes',

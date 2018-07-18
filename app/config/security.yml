@@ -6,9 +6,6 @@ security:
             id: sygefor_api.account_repository
         shibboleth:
             id: sygefor_api.shibboleth.user_provider
-        chain_trainee:
-            chain:
-                providers: [trainees, shibboleth]
 
     encoders:
         FOS\UserBundle\Model\UserInterface: sha512
@@ -24,10 +21,6 @@ security:
             form_login:
                 provider: fos_userbundle
                 csrf_provider: form.csrf_provider
-                always_use_default_target_path: true
-                default_target_path: /
-                target_path_parameter: _target_path
-                use_referer: true
             remember_me:
                 key:      "%secret%"
                 lifetime: 86400 # in seconds
@@ -53,34 +46,21 @@ security:
 #            security:   false
 
         # ---
-        # Shibboleth
+        # Front office
         # ---
         front:
             host: "%front_host%"
-            pattern: ^/|^/shibboleth/login|^/account/register
+            pattern: ^/
             shibboleth: ~
-            provider: chain_trainee
+            provider: shibboleth
             form_login:
+                provider: trainees
                 login_path: "/page/login"
                 csrf_provider: form.csrf_provider
-                always_use_default_target_path: true
-                default_target_path: /
-                target_path_parameter: _target_path
-                use_referer: true
             logout:
                 path: /account/logout
                 target: /
             anonymous: ~
-        shibboleth:
-            host: "%front_host%"
-            pattern: ^/api/shibboleth|^/shibboleth/login|^/account|^/training/inscription
-            shibboleth: ~
-            provider: chain_trainee
-            logout:
-                path: /api/shibboleth/logout
-                target: /
-                success_handler: security.logout.handler.shibboleth
-            anonymous: false
 
         # ---
         # API
@@ -97,6 +77,12 @@ security:
         - { host: "%back_host%", path: ^/login$, role: IS_AUTHENTICATED_ANONYMOUSLY }
         - { path: ^/material/[^/]+/get, roles: IS_AUTHENTICATED_ANONYMOUSLY }
         - { host: "%back_host%", path: ^/, role: IS_AUTHENTICATED_FULLY }
+
+        # Front
+        - { host: "%front_host%", path: ^/, role: IS_AUTHENTICATED_ANONYMOUSLY }
+        - { host: "%front_host%", path: ^/account/register, role: IS_AUTHENTICATED_ANONYMOUSLY }
+        - { host: "%front_host%", path: ^/account, role: IS_AUTHENTICATED_FULLY }
+        - { host: "%front_host%", path: ^/training/inscription, role: IS_AUTHENTICATED_FULLY }
 
     role_hierarchy:
         ROLE_TRAINEE:       ROLE_USER

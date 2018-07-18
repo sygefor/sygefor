@@ -88,7 +88,7 @@
             You can also override entityID on /Login query string, or in RequestMap/htaccess.
             -->
             <!--SSO discoveryProtocol="SAMLDS" discoveryURL="https://discovery.renater.fr/test"-->
-            <!--SSO discoveryProtocol="SAMLDS" discoveryURL="http://sygefor.dev/wayf?lang=fr">
+            <!--SSO discoveryProtocol="SAMLDS" discoveryURL="https://sygefor.com/wayf?lang=fr">
               SAML2 SAML1
             </SSO-->
             <SSO discoveryProtocol="SAMLDS" discoveryURL="https://discovery.renater.fr/renater">
@@ -115,7 +115,7 @@
         Allows overriding of error template information/filenames. You can
         also add attributes with values that can be plugged into the templates.
         -->
-        <Errors supportContact="support@sygefor.dev"
+        <Errors supportContact="support@conjecto.com"
             helpLocation="/about.html"
             styleSheet="/shibboleth-sp/main.css"/>
 

@@ -48,7 +48,7 @@ class AnonymousAccountController extends AbstractAnonymousAccountController
      */
     public function shibbolethLoginAction(Request $request)
     {
-        $url = $this->generateUrl('front.account');
+        $url = $this->generateUrl('front.account', array(), UrlGeneratorInterface::ABSOLUTE_URL);
 
         return $this->redirect($this->get('shibboleth')->getLoginUrl($request, $url));
     }
