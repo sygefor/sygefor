@@ -33,7 +33,7 @@ class LoadEmailTemplate extends AbstractTermLoad
 
 <p>Nous vous informons que votre demande d'inscription à l'événement &quot;[session.formation.nom]&quot;, prévu le [session.dateDebut], a été prise en compte et sera traitée dans les plus brefs délais.</p>
 
-<p>Vous pouvez suivre l'évolution de votre demande à partir de votre espace personnel sur notre site : ".$this->container->getParameter('front_host')."/account</p>
+<p>Vous pouvez suivre l'évolution de votre demande à partir de votre espace personnel sur notre site : ".$this->container->getParameter('front_url')."/account</p>
 
 <p>Avec nos cordiales salutations,</p>
 

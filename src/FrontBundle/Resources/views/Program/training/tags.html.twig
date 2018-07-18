@@ -3,9 +3,11 @@
     <!--training type-->
     <li class="training-detail title-sup session__type" title="Type de formation"><span class="label radius">{{ training.typeLabel }}</span></li>
 
-    <li class="training-detail" title="Export pdf de la formation">
-        <a href="{{ path('front.training.pdf', { id: session.id }) }}"><span class="label radius">PDF</span></a>
-    </li>
+    {% if session is defined %}
+        <li class="training-detail" title="Export pdf de la formation">
+            <a href="{{ path('front.training.pdf', { id: session.id }) }}"><span class="label radius">PDF</span></a>
+        </li>
+    {% endif %}
 
     <!-- all -->
     <li class="training-detail-info" title="Thème"><i class="glyphicon glyphicon-bookmark"></i>&nbsp;&nbsp;{{ training.theme.name }}</li>

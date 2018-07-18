@@ -76,15 +76,6 @@
                         <h4 class="mb-base">Site web</h4>
                         <p><a href="{{ training.website }}" target="_blank">{{ training.website }}</a></p>
                     {% endif %}
-                    {% if training.partners is defined and training.partners | length > 0 %}
-                        <h4 class="mb-base">Partenaires</h4>
-                        <p>
-                            {% for key, partner in training.partners %}
-                                {% if key > 0 %}<span>, </span>{% endif %}
-                                {{ partner.name }}
-                            {% endfor %}
-                        </p>
-                    {% endif %}
 
                     <h4 class="mb-base">Informations pratiques</h4>
                     <img class="logo" src="{{ asset('assets/img/organization/' ~ training.organization.code ~ '/logo.png')}}" title="Logo" alt="Logo">

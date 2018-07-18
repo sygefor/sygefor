@@ -69,15 +69,12 @@
                                 {% endif %}
 
                                 <div class="infos">
-                                    <h4>Typologie</h4>
-                                    <p>{% if attendance.typology is not null and attendance.typology | length > 0 %}{{ attendance.typology.name }}{% endif %}</p>
-
                                     <h4>Motivation</h4>
                                     <p>{{ attendance.motivation }}</p>
 
-                                    {% if attendance.price > 0 %}
+                                    {% if attendance.trainee.isPaying > 0 %}
                                         <h4>Frais pédagogiques</h4>
-                                        <p>{{ attendance.price }} &euro;</p>
+                                        <p>{{ attendance.session.price }} &euro;</p>
                                     {% endif %}
                                 </div>
 

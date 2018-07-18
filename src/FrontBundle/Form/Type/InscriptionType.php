@@ -3,14 +3,12 @@
 namespace FrontBundle\Form\Type;
 
 use AppBundle\Entity\Inscription;
-use AppBundle\Entity\Term\Trainee\Typology;
-use Sygefor\Bundle\CoreBundle\Form\Type\EntityHiddenType;
+use Symfony\Component\Form\AbstractType;
+use Symfony\Component\Form\FormBuilderInterface;
 use Sygefor\Bundle\CoreBundle\Entity\AbstractTrainee;
 use Sygefor\Bundle\CoreBundle\Entity\AbstractSession;
-use Symfony\Bridge\Doctrine\Form\Type\EntityType;
-use Symfony\Component\Form\AbstractType;
+use Sygefor\Bundle\CoreBundle\Form\Type\EntityHiddenType;
 use Symfony\Component\Form\Extension\Core\Type\TextareaType;
-use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Component\OptionsResolver\OptionsResolverInterface;
 
 /**
@@ -39,13 +37,6 @@ class InscriptionType extends AbstractType
             ->add('motivation', TextareaType::class, array(
                 'label' => 'Motivation',
                 'attr' => array('placeholder' => 'Expliquez les raisons pour lesquelles vous souhaitez vous inscrire à cette sesssion.'),
-            ))
-            ->add('typology', EntityType::class, array(
-                'label' => 'Typologie',
-                'class' => Typology::class,
-                'choice_label' => function ($typology) {
-                    return $typology->getName().' : '.$typology->getDescription();
-                },
             ));
     }
 

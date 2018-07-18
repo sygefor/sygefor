@@ -73,7 +73,7 @@ class AccountController extends Controller
                 $em->flush();
                 $this->get('session')->getFlashBag()->add('success', 'Votre profil a été mis à jour.');
 
-                return $this->redirectToRoute('front.account');
+                return $this->redirectToRoute('front.account.profile');
             }
         }
 
