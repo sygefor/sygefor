@@ -6,6 +6,9 @@ security:
             id: sygefor_api.account_repository
         shibboleth:
             id: sygefor_api.shibboleth.user_provider
+        chain_trainee:
+            chain:
+                providers: [trainees, shibboleth]
 
     encoders:
         FOS\UserBundle\Model\UserInterface: sha512
@@ -24,12 +27,12 @@ security:
                 always_use_default_target_path: true
                 default_target_path: /
                 target_path_parameter: _target_path
-                use_referer: false
-#            remember_me:
-#                key:      "%secret%"
-#                lifetime: 86400 # in seconds
-#                path:     /
-#                domain:   ~
+                use_referer: true
+            remember_me:
+                key:      "%secret%"
+                lifetime: 86400 # in seconds
+                path:     /
+                domain:   ~
             logout:       true
             anonymous:    true
             switch_user:  true
@@ -54,19 +57,25 @@ security:
         # ---
         front:
             host: "%front_host%"
-            pattern: ^/|^/account/register
+            pattern: ^/|^/shibboleth/login|^/account/register
             shibboleth: ~
-            provider: shibboleth
+            provider: chain_trainee
+            form_login:
+                login_path: "/page/login"
+                csrf_provider: form.csrf_provider
+                always_use_default_target_path: true
+                default_target_path: /
+                target_path_parameter: _target_path
+                use_referer: true
             logout:
-                path: /api/shibboleth/logout
+                path: /account/logout
                 target: /
-                success_handler: security.logout.handler.shibboleth
             anonymous: ~
         shibboleth:
             host: "%front_host%"
-            pattern: ^/api/shibboleth|^/account|^/training/inscription
+            pattern: ^/api/shibboleth|^/shibboleth/login|^/account|^/training/inscription
             shibboleth: ~
-            provider: shibboleth
+            provider: chain_trainee
             logout:
                 path: /api/shibboleth/logout
                 target: /

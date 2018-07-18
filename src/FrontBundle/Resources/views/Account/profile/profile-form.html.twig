@@ -18,28 +18,9 @@
                     return toogleFieldDisplay('profile_publicType', 'profile_otherPublicType');
                 }
 
-                function toogleEmployerDisplay() {
-                    return toogleFieldDisplay('profile_employer', 'profile_otherEmployer');
-                }
-
-                function toogleEndContractDate(e) {
-                    var hide = $('select#' + 'profile_employmentContractType' + ' option:selected').text() === 'Titulaire CNRS';
-                    var endContractDateNode = $('#profile_employmentContractEnd_day').parent().parent().parent().parent();
-                    if (hide) {
-                        endContractDateNode.hide();
-                    }
-                    else {
-                        endContractDateNode.show();
-                    }
-                }
-
                 tooglePublicTypeDisplay();
-                toogleEmployerDisplay();
-                toogleEndContractDate();
 
                 $('#profile_publicType').change(tooglePublicTypeDisplay);
-                $('#profile_employer').change(toogleEmployerDisplay);
-                $('#profile_employmentContractType').change(toogleEndContractDate);
             });
         })(jQuery);
     </script>
@@ -48,7 +29,7 @@
 {{ form_start(form) }}
 <section>
     {# order these fields #}
-    {% for field in ['title', 'lastName', 'firstName', 'email', 'organization'] %}
+    {% for field in ['title', 'lastName', 'firstName', 'email', 'plainPassword', 'organization'] %}
         {% if (form[field] is defined) %}
             {{ form_row(form[field]) }}
             {{ form_errors(form[field]) }}

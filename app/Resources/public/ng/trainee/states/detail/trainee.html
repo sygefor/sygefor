@@ -6,7 +6,7 @@
                 <a class="btn btn-fa" href="" tooltip="{{ trainee.isActive ? 'Désactiver le compte' : 'Activer le compte' }}" ng-if="trainee._accessRights.edit" ng-click="toggleActivation()">
                     <span class="fa" ng-class="{'fa-thumbs-o-up': !trainee.isActive, 'fa-thumbs-o-down': trainee.isActive }"></span>
                 </a>
-                <!--<a class="btn btn-fa" href="" tooltip="Changer le mot de passe" ng-if="trainee._accessRights.edit" ng-click="changePassword()"><span class="fa fa-key"></span></a>-->
+                <a class="btn btn-fa" href="" tooltip="Changer le mot de passe" ng-if="trainee._accessRights.edit" ng-click="changePassword()"><span class="fa fa-key"></span></a>
                 <a class="btn btn-fa" href="" tooltip="Changer le centre de rattachement" ng-if="$user.hasAccessRight('sygefor_core.access_right.trainee.all.update')" ng-click="changeOrganization()"><span class="fa fa-university"></span></a>
                 <a class="btn btn-fa" href="" tooltip="Supprimer" ng-if="trainee._accessRights.delete" ng-click="delete()"><span class="fa fa-trash-o"></span></a>
             </div>

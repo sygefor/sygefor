@@ -23,10 +23,19 @@ class PageController extends Controller
     public function loginAction(Request $request)
     {
         if ($request->get('activated') == 1) {
-            $this->get('session')->getFlashBag()->add('success', 'Votre compte a été vérifié. Vous pouvez maintenant vous connecter en utilisant vos identifiants Janus ou votre compte CRU.');
+            $this->get('session')->getFlashBag()->add('success',
+                'Votre compte a été vérifié. '.
+                'Vous pouvez maintenant vous connecter en utilisant vos identifiants ou votre compte universitaire.');
         }
 
-        return $this->render('@Front/Page/login.html.twig');
+        $authenticationUtils = $this->get('security.authentication_utils');
+        $error = $authenticationUtils->getLastAuthenticationError();
+        $lastUsername = $authenticationUtils->getLastUsername();
+
+        return $this->render('@Front/Page/login.html.twig', array(
+            'last_username' => $lastUsername,
+            'error' => $error,
+        ));
     }
 
     /**

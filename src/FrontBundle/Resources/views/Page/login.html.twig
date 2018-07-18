@@ -15,35 +15,65 @@
 {% block body %}
     <section class="main">
         <div class="container">
-            <div class="row">
+            <div class="row top-margin">
                 <div class="col-lg-8 col-lg-offset-2">
-                    <p>Pour pouvoir vous inscrire aux formations proposées par le CNRS, vous devez être authentifié. Vous pouvez utiliser votre compte Janus ou CRU et créer rapidement un compte SYGEFOR.</p>
+                    <p>Pour pouvoir vous inscrire aux formations proposées, vous devez être authentifié. Vous pouvez utiliser votre compte universitaire ou CRU et créer rapidement un compte SYGEFOR.</p>
 
                     <div class="login-section">
-                        <h3 class="mb-15">J'ai un compte Janus ou CRU</h3>
+                        <h3>J'ai un compte universitaire ou CRU</h3>
                         <div class="row">
                             <div class="col-sm-6">
-                                <p>Vous avez un compte Janus ou CRU : utilisez-le pour créer ou retrouver votre compte SYGEFOR. <a href="{{ path('front.page.faq') }}">Consultez la FAQ</a></p>
+                                <p>Vous avez un compte universitaire ou CRU : utilisez-le pour créer ou retrouver votre compte SYGEFOR. <a href="{{ path('front.page.faq') }}">Consultez la FAQ</a></p>
                             </div>
                             <div class="col-sm-6">
-                                <a href="{{ path('front.account') }}" class="btn btn-primary btn-block">Se connecter avec son compte Janus ou CRU</a>
+                                <a href="{{ path('front.shibboleth.login') }}" class="btn btn-primary btn-block">Se connecter avec son compte universitaire ou CRU</a>
                             </div>
                         </div>
                     </div>
                     <hr/>
 
                     <div class="login-section">
-                        <h3 class="mb-15">Je n'ai pas de compte Janus ou CRU</h3>
                         <div class="row">
                             <div class="col-sm-6">
-                                <p>Vous pouvez créer un &laquo; Compte Réseau Universel &raquo; en moins d'une minute ! <a href="{{ path('front.page.faq') }}">Consultez la FAQ</a></p>
+                                <h3>J'ai un compte SYGEFOR</h3>
+                                <p>Vous avez un compte. Connecter-vous sur SYGEFOR. <a href="{{ path('front.page.faq') }}">Consultez la FAQ</a>
                             </div>
                             <div class="col-sm-6">
-                                <a class="btn btn-primary btn-block" href="https://cru.renater.fr/sac/faces/home.jsp" target="_blank">Créer mon Compte Réseau Universel</a>
+                                <form class="form-login" action="{{ path('fos_user_security_check') }}" method="POST">
+                                    <div class="login-wrap">
+                                        {% if error is defined %}
+                                            {#<div class="alert alert-danger">{{ error|trans([], 'FOSUserBundle') }}</div>#}
+                                        {% endif %}
+                                        <div class="form-group">
+                                            <a href="{{ path('front.account.register') }}" class="pull-right">Pas encore de compte ?</a>
+                                            <label for="email" class="control-label">Courriel</label>
+                                            <input id="username" name="_username" value="{{ last_username }}" type="email" class="form-control" placeholder="Votre courriel">
+                                        </div>
+                                        <div class="form-group">
+                                            <a href="{{ path('front.page.reset_password') }}" class="pull-right">J'ai oublié mon mot de passe !</a>
+                                            <label for="password" class="control-label">Mot de passe</label>
+                                            <input id="password" name="_password" type="password" class="form-control" placeholder="Votre mot de passe">
+                                        </div>
+                                            <input type="hidden" name="_csrf_token" value="{{ csrf_token('authenticate') }}">
+                                        <input type="submit" value="Connexion" class="btn btn-primary btn-block">
+                                    </div>
+                                </form>
                             </div>
                         </div>
                     </div>
+
                     <hr>
+                    <div class="login-section">
+                        <h3>Je n'ai pas encore de compte</h3>
+                        <div class="row">
+                            <div class="col-sm-6">
+                                <p>Vous n'avez pas de compte universitaire : créez vous directement un compte sur SYGEFOR. <a href="{{ path('front.page.faq') }}">Consultez la FAQ</a></p>
+                            </div>
+                            <div class="col-sm-6">
+                                <a href="{{ path('front.account.register') }}" class="btn btn-primary btn-block">Créer un compte</a>
+                            </div>
+                        </div>
+                    </div>
                 </div>
             </div>
         </div>

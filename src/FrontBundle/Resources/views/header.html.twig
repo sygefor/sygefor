@@ -33,11 +33,11 @@
             </ul>
 
             <ul class="nav navbar-nav navbar-right">
-                {% if app.user == 0 %}
-                    <li><a href="{{ path('front.page.login') }}" title="Accéder à votre espace">Espace personnel</a></li>
-                {% else %}
+                {% if app.user.id is defined %}
                     <li><a href="{{ path('front.account') }}">Mon compte</a></li>
                     <li><a href="{{ path('front.account.logout') }}">Se déconnecter</a></li>
+                {% else %}
+                    <li><a href="{{ path('front.page.login') }}" title="Accéder à votre espace">Espace personnel</a></li>
                 {% endif %}
             </ul>
         </div>

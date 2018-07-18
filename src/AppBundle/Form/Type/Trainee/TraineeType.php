@@ -28,7 +28,7 @@ class TraineeType extends AbstractTraineeType
 
         $builder
             ->add('email', EmailType::class, array(
-                'label' => 'Email',
+                'label' => 'Courriel',
             ))
             ->add('phoneNumber', null, array(
                 'label' => 'Numéro de téléphone',
