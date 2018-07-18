@@ -21,10 +21,11 @@ class CrosstabFormatter
     /**
      * @param array $rows
      * @param array $cols
+     * @param string $allValuesMethod
      *
      * @return array
      */
-    public function getInversedRows($rows, &$cols)
+    public function getInversedRows($rows, &$cols, $allValuesMethod)
     {
         $cols = array();
         $new = array();
@@ -48,9 +49,14 @@ class CrosstabFormatter
 
         // recalculate
         foreach ($new as &$item) {
-            $item['value'] = array_sum(array_map(function ($i) {
+            $nbrValues = 0;
+            $item['value'] = array_sum(array_map(function ($i) use ($nbrValues) {
+                ++$nbrValues;
                 return $i['value'];
             }, $item['data']));
+            if ($allValuesMethod === 'AVERAGE' && $nbrValues > 0) {
+                $item['value'] /= $nbrValues;
+            }
         }
 
         $cols = array_values($cols);
@@ -61,16 +67,22 @@ class CrosstabFormatter
     /**
      * @param $data
      * @param $inverse
+     * @param $allValuesMethod
      *
      * @return array
      */
-    public function format($data, $inverse = false)
+    public function format($data, $inverse = false, $allValuesMethod = 'SUM')
     {
-        $rows = $this->getProcessedRows($data, $cols, $inverse);
+        $rows = $this->getProcessedRows($data, $cols, $inverse, $allValuesMethod);
 
         $value = 0;
+        $nbrValues = 0;
         foreach ($cols as $col) {
             $value += $col['value'];
+            ++$nbrValues;
+        }
+        if ($allValuesMethod === 'AVERAGE' && $nbrValues > 0) {
+            $value /= $nbrValues;
         }
 
         return array(
@@ -202,13 +214,14 @@ class CrosstabFormatter
      * @param $data
      * @param $cols
      * @param bool $inverse
+     * @param string $allValuesMethod
      *
      * @return array
      */
-    protected function getProcessedRows($data, &$cols, $inverse = false)
+    protected function getProcessedRows($data, &$cols, $inverse = false, $allValuesMethod)
     {
         $parent = null;
-        $rows = $this->getRows($data, $parent);
+        $rows = $this->getRows($data, $parent, $allValuesMethod, null);
         $agg = $parent['agg'];
 
         $cols = array();
@@ -233,7 +246,7 @@ class CrosstabFormatter
             $rows = $process($rows);
             $cols = end($mapping);
             if ($inverse) {
-                $rows = $this->getInversedRows($rows, $cols);
+                $rows = $this->getInversedRows($rows, $cols, $allValuesMethod);
             }
         }
 
@@ -244,12 +257,13 @@ class CrosstabFormatter
     /**
      * @param $data
      * @param null $parent
-     * @param int  $depth
+     * @param $allValuesMethod
+     * @param int $depth
      * @param null $agg_name
      *
      * @return array
      */
-    protected function getRows($data, &$parent = null, $depth = -1, $agg_name = null)
+    protected function getRows($data, &$parent = null, $allValuesMethod, $depth = -1, $agg_name = null)
     {
         $rows = array();
 
@@ -263,13 +277,18 @@ class CrosstabFormatter
                         'key' => $label,
                         'value' => $bucket['doc_count'],
                     );
-                    $subRows = $this->getRows($bucket, $row, $depth, $agg_name);
+                    $subRows = $this->getRows($bucket, $row, $allValuesMethod, $depth, $agg_name);
                     if ($subRows) {
                         // if there is subrows, get it and calculate sum
                         $row['data'] = $subRows;
-                        $total = array_sum(array_map(function ($row) {
+                        $nbrValues = 0;
+                        $total = array_sum(array_map(function ($row) use ($nbrValues) {
+                            ++$nbrValues;
                             return $row['value'];
                         }, $subRows));
+                        if ($allValuesMethod === 'AVERAGE' && $nbrValues > 0) {
+                            $total /= $nbrValues;
+                        }
                         // if total < parent doc_count, add difference to a 'Autre' facet
                         if ($row['value'] > $total) {
                             $index = $this->getIndexByKey($row['data'], 'Autre');
@@ -286,7 +305,7 @@ class CrosstabFormatter
                     $rows[] = $row;
                 }
             } elseif (is_array($value)) {
-                $_rows = $this->getRows($value, $parent, $depth, $key);
+                $_rows = $this->getRows($value, $parent, $allValuesMethod, $depth, $key);
                 if (count($_rows)) {
                     // if any rows returned, replace the current one
                     $rows = $_rows;

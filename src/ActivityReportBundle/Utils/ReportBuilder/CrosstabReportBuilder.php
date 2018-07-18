@@ -14,6 +14,7 @@ use Elastica\Filter\Ids;
 use Elastica\Filter\Term;
 use Elastica\Filter\BoolAnd;
 use Elastica\Aggregation\Sum;
+use Elastica\Aggregation\Avg;
 use Doctrine\ORM\EntityManager;
 use Elastica\Aggregation\Terms;
 use Elastica\Aggregation\ValueCount;
@@ -143,7 +144,9 @@ class CrosstabReportBuilder extends AbstractReportBuilder
                     $inverse = isset($aggregationTermOptions['inverse']) ? $aggregationTermOptions['inverse'] : true;
                     $_crosstab = clone $crosstab;
                     $_crosstab->addAggregation($aggregation);
-                    $return[$aggregationTermOptions['name']] = $_crosstab->execute($inverse);
+                    $allValuesMethod = $aggregationTermClass === Avg::class ? 'AVERAGE' : 'SUM';
+                    $return[$aggregationTermOptions['name']] = $_crosstab->execute($inverse, $allValuesMethod);
+                    $return[$aggregationTermOptions['name']]['type'] = $allValuesMethod;
                 }
             }
         }

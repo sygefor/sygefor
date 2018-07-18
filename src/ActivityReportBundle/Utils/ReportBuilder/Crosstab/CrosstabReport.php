@@ -46,9 +46,9 @@ class CrosstabReport
 
     /**
      * @param SearchableInterface $index
-     * @param AbstractFilter      $filter
+     * @param AbstractFilter $filter
      */
-    public function __construct(SearchableInterface $index, AbstractFilter $filter = null)
+    function __construct(SearchableInterface $index, AbstractFilter $filter = null)
     {
         $this->index = $index;
         $this->filter = $filter;
@@ -98,9 +98,12 @@ class CrosstabReport
     }
 
     /**
+     * @param bool $inverse
+     * @param string $allValuesMethod
+     *
      * @return array
      */
-    public function execute($inverse = false)
+    public function execute($inverse = false, $allValuesMethod)
     {
         $query = clone $this->query;
 
@@ -136,6 +139,6 @@ class CrosstabReport
         // add specific terms
         $this->formatter->setTerms($this->terms);
 
-        return $this->formatter->format($data, $inverse);
+        return $this->formatter->format($data, $inverse, $allValuesMethod);
     }
 }

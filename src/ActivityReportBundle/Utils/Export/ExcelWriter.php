@@ -3,7 +3,7 @@
 namespace ActivityReportBundle\Utils\Export;
 
 /**
- * Class ExcelWriter.
+ * Class ExcelWriter
  */
 class ExcelWriter
 {
@@ -25,7 +25,7 @@ class ExcelWriter
     /** @var array */
     protected $translationsBySheet;
 
-    public function __construct()
+    function __construct()
     {
         $this->formatExtentions = [
             'Excel2007' => 'xlsx',
@@ -38,11 +38,14 @@ class ExcelWriter
      * @param $variables
      * @param $name
      * @param string $filePath
-     * @param null   $creator
-     * @param null   $description
-     * @param null   $tags
+     * @param null $creator
+     * @param null $description
+     * @param null $tags
      *
      * @return string
+     *
+     * @throws \PHPExcel_Exception
+     * @throws \PHPExcel_Reader_Exception
      */
     public function getXls($variables, $name, $filePath = '', $creator = null, $description = null, $tags = null)
     {
@@ -55,6 +58,8 @@ class ExcelWriter
 
     /**
      * @param $arraysBySheet
+     *
+     * @throws \PHPExcel_Exception
      */
     public function setArraysToSheets($arraysBySheet)
     {
@@ -75,6 +80,8 @@ class ExcelWriter
     /**
      * @param $title
      * @param int $sheet
+     *
+     * @throws \PHPExcel_Exception
      */
     public function setTitleToSheet($title, $sheet = 0)
     {
@@ -85,6 +92,8 @@ class ExcelWriter
     /**
      * @param $values
      * @param $sheet
+     *
+     * @throws \PHPExcel_Exception
      */
     public function setArraysToSheet($values, $sheet)
     {
@@ -95,7 +104,10 @@ class ExcelWriter
 
     /**
      * @param $sheet
+     * @param $arrayName
      * @param $datas
+     *
+     * @throws \PHPExcel_Exception
      */
     public function setDatasArray($sheet, $arrayName, $datas)
     {
@@ -115,19 +127,19 @@ class ExcelWriter
         if (!isset($datas['datas'])) {
             return;
         }
+        $totalFormula = isset($datas['datas']['type']) ? $datas['datas']['type'] : 'SUM';
         foreach ($datas['datas'] as $key => $value) {
             // if value is an array
             if (is_array($value)) {
                 if (!$this->is_empty($value)) {
                     // 1 way crosstab
                     if ($this->is1WayCrosstab($datas['datas'], $value)) {
-                        $this->set1WayCrossTable($datas['datas'], $sheet, $columnBegining);
+                        $this->set1WayCrossTable($datas['datas'], $sheet, $columnBegining, $totalFormula);
                         $arrayType = 0;
-                    } elseif ($this->is2WayCrosstab($datas['datas'], $value)) {
-                        $columnEnd = $this->setAggregatedTable($value, $sheet, $columnBegining);
+                    } else if ($this->is2WayCrosstab($datas['datas'], $value)) {
+                        $columnEnd = $this->setAggregatedTable($value, $sheet, $columnBegining, $totalFormula);
                         $arrayType = 1;
-                    }
-                    // serialized entities
+                    } // serialized entities
                     else {
                         $columnEnd = $this->setEntityTable($value, $sheet, $setEntityTitlesForEntityTables, $columnBegining);
                         $setEntityTitlesForEntityTables = false;
@@ -135,7 +147,7 @@ class ExcelWriter
                     }
                 }
             } // just a key value input
-            elseif ($key !== 'value') {
+            else if ($key !== 'value' && $key !== 'type') {
                 $columnEnd = $this->setSummaryTable($sheet, $key, $value, $columnBegining);
                 $arrayType = 3;
             }
@@ -269,6 +281,8 @@ class ExcelWriter
      * @param $ligneBegining
      * @param $ligneEnd
      * @param $sheet
+     *
+     * @throws \PHPExcel_Exception
      */
     public function setArrayStyle($arrayType, $columnBegining, $columnEnd, $ligneBegining, $ligneEnd, $sheet)
     {
@@ -320,35 +334,40 @@ class ExcelWriter
     }
 
     /**
+     * @param $key
      * @param $value
      * @param $sheet
+     * @param $columnBegining
+     * @param $totalFormula
+     *
+     * @throws \PHPExcel_Exception
      */
-    public function setCrossTable($key, $value, $sheet, $columnBegining)
+    public function setCrossTable($key, $value, $sheet, $columnBegining, $totalFormula)
     {
         $ews = $this->getSheet($sheet);
         $column = ord($columnBegining);
-        $ews->setCellValue(chr($column).strval($this->positionInSheets[$sheet]++), "$key");
+        $ews->setCellValue(chr($column) . strval($this->positionInSheets[$sheet]++), "$key");
         $ligne = $this->positionInSheets[$sheet];
         $cptTitle = 0;
         foreach ($value['cols'] as $col) {
             // set col title
             // +1 is because the first ligne cell is empty to permit ligne titles
-            $ews->setCellValue(chr($column + $cptTitle++ + 1).strval($ligne), $col['label']);
+            $ews->setCellValue(chr($column + $cptTitle++ + 1) . strval($ligne), $col['label']);
         }
 
         $rowLigneCpt = 1;
         foreach ($value['rows'] as $key => $row) {
             $rowColumnCpt = 0;
             // set ligne title
-            $ews->setCellValue(chr($column + $rowColumnCpt).strval($ligne + $rowLigneCpt), $row['label']);
+            $ews->setCellValue(chr($column + $rowColumnCpt) . strval($ligne + $rowLigneCpt), $row['label']);
             foreach ($row['data'] as $data) {
                 // set value
-                $ews->setCellValue(chr($column + ++$rowColumnCpt).strval($ligne + $rowLigneCpt), $data['value']);
+                $ews->setCellValue(chr($column + ++$rowColumnCpt) . strval($ligne + $rowLigneCpt), $data['value']);
             }
             ++$rowLigneCpt;
         }
         // add sum formlulas to lignes and columns
-        $this->addSumFormulaToTable($sheet, $column, $column + $rowColumnCpt, $ligne, $ligne + $rowLigneCpt, true);
+        $this->addTotalFormulaToTable($sheet, $column, $column + $rowColumnCpt, $ligne, $ligne + $rowLigneCpt, true, $totalFormula);
         // register the max nb of rows for autosize
         $this->setMaxNbRowBySheet($sheet, $rowLigneCpt);
         // keep position in the sheet
@@ -361,8 +380,11 @@ class ExcelWriter
      * @param $data
      * @param $sheet
      * @param $columnBegining
+     * @param $totalFormula
+     *
+     * @throws \PHPExcel_Exception
      */
-    public function set1WayCrossTable($data, $sheet, $columnBegining)
+    public function set1WayCrossTable($data, $sheet, $columnBegining, $totalFormula)
     {
         $ews = $this->getSheet($sheet);
         $column = ord($columnBegining);
@@ -373,16 +395,16 @@ class ExcelWriter
         $rowLigneCpt = 0;
         foreach ($data['rows'] as $key => $row) {
             // set ligne title
-            $ews->setCellValue(chr($column).strval($ligne + ++$rowLigneCpt), $row['label']);
-            $ews->setCellValue(chr($column + 1).strval($ligne + $rowLigneCpt), $row['value']);
+            $ews->setCellValue(chr($column) . strval($ligne + ++$rowLigneCpt), $row['label']);
+            $ews->setCellValue(chr($column + 1) . strval($ligne + $rowLigneCpt), $row['value']);
             $this->setNumberFormat($sheet, chr($column + 1), strval($ligne + $rowLigneCpt));
         }
 
         // set bottom sum
-        $this->addSumFormulaToTable($sheet, $column, $column + 1, $ligne, $ligne + ++$rowLigneCpt, false);
+        $this->addTotalFormulaToTable($sheet, $column, $column + 1, $ligne, $ligne + ++$rowLigneCpt, false, $totalFormula);
         $this->setNumberFormat($sheet, chr($column + 1), strval($ligne + $rowLigneCpt));
-        $ews->getStyle(chr($column + 1).strval($ligne + $rowLigneCpt))->applyFromArray(array(
-                'alignment' => array('horizontal' => \PHPExcel_Style_Alignment::HORIZONTAL_RIGHT),
+        $ews->getStyle(chr($column + 1) . strval($ligne + $rowLigneCpt))->applyFromArray(array(
+            'alignment' => array('horizontal' => \PHPExcel_Style_Alignment::HORIZONTAL_RIGHT)
         ));
 
         // register the max nb of rows for autosize
@@ -409,7 +431,7 @@ class ExcelWriter
         // bold and center titles
         $cell = "$column$ligne";
         $style = array(
-            'NumberFormat' => \PHPExcel_Style_NumberFormat::FORMAT_NUMBER_COMMA_SEPARATED1,
+            'NumberFormat' => \PHPExcel_Style_NumberFormat::FORMAT_NUMBER_00,
             'alignment' => array('horizontal' => \PHPExcel_Style_Alignment::HORIZONTAL_RIGHT),
         );
         $ews->getStyle($cell)->applyFromArray($style);
@@ -419,10 +441,13 @@ class ExcelWriter
      * @param $value
      * @param $sheet
      * @param $columnBegining
+     * @param $totalFormula
      *
      * @return string
+     *
+     * @throws \PHPExcel_Exception
      */
-    public function setAggregatedTable($value, $sheet, $columnBegining)
+    public function setAggregatedTable($value, $sheet, $columnBegining, $totalFormula)
     {
         $ews = $this->getSheet($sheet);
         $column = ord($columnBegining);
@@ -438,15 +463,15 @@ class ExcelWriter
         foreach ($value as $array) {
             if (!isset($array['data'])) {
                 if (isset($array['label'])) {
-                    $ews->setCellValue(chr($column + 1 + $cptColumnTitle).strval($ligne), $array['label']);
+                    $ews->setCellValue(chr($column + 1 + $cptColumnTitle) . strval($ligne), $array['label']);
                     ++$cptColumnTitle;
                 }
             } else {
                 $hasDatas = true;
-                $ews->setCellValue(chr($column).strval($ligne + $cptRow), $array['label']);
+                $ews->setCellValue(chr($column) . strval($ligne + $cptRow), $array['label']);
                 $cptDataColumn = 0;
                 foreach ($array['data'] as $data) {
-                    $ews->setCellValue(chr($column + ++$cptDataColumn).strval($ligne + $cptRow), $data['value']);
+                    $ews->setCellValue(chr($column + ++$cptDataColumn) . strval($ligne + $cptRow), $data['value']);
                 }
                 $datasColumnsCpt = $cptDataColumn;
             }
@@ -454,7 +479,7 @@ class ExcelWriter
         }
         // add sum formlulas to lignes and columns
         if ($hasDatas) {
-            $this->addSumFormulaToTable($sheet, $column, $column + $datasColumnsCpt, $ligne - 1, $ligne + $cptRow, true);
+            $this->addTotalFormulaToTable($sheet, $column, $column + $datasColumnsCpt, $ligne - 1, $ligne + $cptRow, true, $totalFormula);
         }
 
         // register the max nb of rows for autosize
@@ -472,6 +497,8 @@ class ExcelWriter
      * @param $columnBegining
      *
      * @return string
+     *
+     * @throws \PHPExcel_Exception
      */
     public function setEntityTable($value, $sheet, $setTitles, $columnBegining)
     {
@@ -486,16 +513,16 @@ class ExcelWriter
                     if (!empty($stringVal)) {
                         $stringVal += ', ';
                     }
-                    $stringVal .= (string) $part;
+                    $stringVal .= (string)$part;
                 }
                 $val = $stringVal;
             }
             // set title property
             if ($setTitles) {
-                $ews->setCellValue(chr($column + $propertyCpt).strval($this->positionInSheets[$sheet]), $property);
+                $ews->setCellValue(chr($column + $propertyCpt) . strval($this->positionInSheets[$sheet]), $property);
             }
             // set property value
-            $ews->setCellValue(chr($column + $propertyCpt).strval($this->positionInSheets[$sheet] + ($setTitles ? 1 : 0)), $val);
+            $ews->setCellValue(chr($column + $propertyCpt) . strval($this->positionInSheets[$sheet] + ($setTitles ? 1 : 0)), $val);
             ++$propertyCpt;
         }
         // register the max nb of rows for autosize
@@ -512,6 +539,8 @@ class ExcelWriter
      * @param $column
      *
      * @return string
+     *
+     * @throws \PHPExcel_Exception
      */
     public function setSummaryTable($sheet, $key, $value, $column)
     {
@@ -519,10 +548,10 @@ class ExcelWriter
         // set title if $key is a string
         if (is_string($key)) {
             // set title
-            $ews->setCellValue($column.strval($this->positionInSheets[$sheet]), $key);
+            $ews->setCellValue($column . strval($this->positionInSheets[$sheet]), $key);
         }
         // set value
-        $ews->setCellValue(chr(ord($column) + (is_string($key) ? 1 : 0)).strval($this->positionInSheets[$sheet]++), $value);
+        $ews->setCellValue(chr(ord($column) + (is_string($key) ? 1 : 0)) . strval($this->positionInSheets[$sheet]++), $value);
         // register the max nb of rows for autosize
         $this->setMaxNbRowBySheet($sheet, ord($column) - 65 + (is_string($key) ? 2 : 1));
 
@@ -537,27 +566,33 @@ class ExcelWriter
      * @param $ligne
      * @param $ligneEnd
      * @param $lignesTotal
+     * @param $totalFormula
+     *
+     * @throws \PHPExcel_Exception
      */
-    public function addSumFormulaToTable($sheet, $columnBegining, $columnEnd, $ligne, $ligneEnd, $lignesTotal)
+    public function addTotalFormulaToTable($sheet, $columnBegining, $columnEnd, $ligne, $ligneEnd, $lignesTotal, $totalFormula)
     {
         $ews = $this->getSheet($sheet);
 
         // add total title to cols
-        $ews->setCellValue(chr($columnBegining).strval($ligneEnd), 'Total');
+        $ews->setCellValue(chr($columnBegining) . strval($ligneEnd), 'Total');
         // add cols sums
         for ($col = $columnBegining + 1; $col <= $columnEnd; ++$col) {
-            $ews->setCellValue(chr($col).strval($ligneEnd), '=SUM('.chr($col).strval($ligne + 1).':'.chr($col).strval($ligneEnd - 1).')');
+            $ews->setCellValue(chr($col) . strval($ligneEnd), '=' . $totalFormula . '(' . chr($col) . strval($ligne + 1) . ':' . chr($col) . strval($ligneEnd - 1) . ')');
+            $this->setNumberFormat($sheet, chr($col), strval($ligneEnd));
         }
 
         if ($lignesTotal) {
             // add total title to lignes
-            $ews->setCellValue(chr($columnEnd + 1).strval($ligne), 'Total');
+            $ews->setCellValue(chr($columnEnd + 1) . strval($ligne), 'Total');
             // add ligne sums
             for ($ligne = $ligne + 1; $ligne < $ligneEnd; ++$ligne) {
-                $ews->setCellValue(chr($columnEnd + 1).strval($ligne), '=SUM('.chr($columnBegining + 1).strval($ligne).':'.chr($columnEnd).strval($ligne).')');
+                $ews->setCellValue(chr($columnEnd + 1) . strval($ligne), '=' . $totalFormula . '(' . chr($columnBegining + 1) . strval($ligne) . ':' . chr($columnEnd) . strval($ligne) . ')');
+                $this->setNumberFormat($sheet, chr($columnEnd + 1), strval($ligne));
             }
             // cell sum of all values
-            $ews->setCellValue(chr($columnEnd + 1).strval($ligneEnd), '=SUM('.chr($columnBegining + 1).strval($ligneEnd).':'.chr($columnEnd).strval($ligneEnd).')');
+            $ews->setCellValue(chr($columnEnd + 1) . strval($ligneEnd), '=' . $totalFormula . '(' . chr($columnBegining + 1) . strval($ligneEnd) . ':' . chr($columnEnd) . strval($ligneEnd) . ')');
+            $this->setNumberFormat($sheet, chr($columnEnd + 1), strval($ligneEnd));
         }
 
         // save position in sheet
@@ -566,13 +601,17 @@ class ExcelWriter
 
     /**
      * @param $sheet
+     *
+     * @throws \PHPExcel_Exception
      */
     public function autosizeColumns($sheet)
     {
         if (isset($this->nbRowBySheet[$sheet])) {
             $ews = $this->getSheet($sheet);
             for ($col = 0; $col <= $this->nbRowBySheet[$sheet]; ++$col) {
-                $ews->getColumnDimension(chr($col + 65))->setAutoSize(true);
+                if ($col < 26) {
+                    $ews->getColumnDimension(chr($col + 65))->setAutoSize(true);
+                }
             }
         }
     }
@@ -674,6 +713,7 @@ class ExcelWriter
      * @return string
      *
      * @throws \PHPExcel_Reader_Exception
+     * @throws \PHPExcel_Writer_Exception
      */
     public function saveFile($name, $filePath = '', $format = 'Excel2007')
     {

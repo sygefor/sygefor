@@ -35,9 +35,10 @@ class XlsExportPaginer
             $alignedSummaries[$key] = $summary;
         }
 
-        $alignedSummaries = $this->transformSummaries($alignedSummaries);
+        $alignedSummaries = $this->roundFloatValues($this->transformSummaries($alignedSummaries));
         $crosstabs = $this->transformCrosstabs($variables['report']['crosstabs']);
         $listings = $this->transformListings($variables['report']['listings']);
+        $crosstabs = $this->roundFloatValues($crosstabs);
 
         // return datas by page
         $arraysBySheet = array(
@@ -273,5 +274,43 @@ class XlsExportPaginer
         }
 
         return $transformedArray;
+    }
+
+    /**
+     * @param array $values
+     *
+     * @return array
+     */
+    protected function roundFloatValues($values)
+    {
+        foreach ($values as $key => $value) {
+            if (is_array($value)) {
+                $values[$key] = $this->roundFloatValues($value);
+            }
+            if (is_float($values) || is_double($value)) {
+                $values[$key] = round($value, 2);
+            }
+        }
+
+        return $values;
+    }
+
+    /**
+     * @param $crosstabs
+     * @param $key
+     * @param $labels
+     */
+    protected function overrideLabels(&$crosstabs, $key, $labels)
+    {
+        foreach (['cols', 'rows'] as $column) {
+            if (isset($crosstabs[$key]['datas'][$column])) {
+                foreach ($crosstabs[$key]['datas'][$column] as $keyLabel => $label) {
+                    if (in_array($label['label'], array_keys($labels))) {
+                        $crosstabs[$key]['datas'][$column][$keyLabel]['label'] = $labels[$crosstabs[$key]['datas'][$column][$keyLabel]['label']];
+                        $crosstabs[$key]['datas'][$column][$keyLabel]['key'] = $labels[$crosstabs[$key]['datas'][$column][$keyLabel]['key']];
+                    }
+                }
+            }
+        }
     }
 }

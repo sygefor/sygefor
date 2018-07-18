@@ -15,10 +15,13 @@ sygeforApp.directive("reportCrosstab", [function () {
 
             // replace col label if labels are passed
             if (typeof scope.labels !== "undefined") {
-                for (var i in scope.data['rows']) {
-                    for (var j in scope.labels) {
-                        if (j == scope.data['rows'][i]['label']) {
-                            scope.data['rows'][i]['label'] = scope.labels[j];
+                var keys = ['cols', 'rows'];
+                for (var key in keys) {
+                    for (var i in scope.data[keys[key]]) {
+                        for (var j in scope.labels) {
+                            if (j == scope.data[keys[key]][i]['label']) {
+                                scope.data[keys[key]][i]['label'] = scope.labels[j];
+                            }
                         }
                     }
                 }
