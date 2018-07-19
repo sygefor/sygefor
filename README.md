@@ -76,7 +76,28 @@ du protocole Shibboleth. Il faut donc installer un Service Provider sur le serve
 
 [Installation d'un SP Shibboleth](https://services.renater.fr/federation/docs/installation/sp#test_dans_la_federation_de_test)
 
-[Monter un image docker](https://github.com/sygefor/docker-shibboleth)
+### Docker
+------------
+
+Vous pouvez utiliser docker pour lancer les services nécessaires à Sygefor3. 
+Le docker-compose.yml contient les containers déjà configurés.
+Avant de lancer docker vous devrez construire votre image [Shibboleth](https://github.com/sygefor/docker-shibboleth)
+et associer les droits d'écriture à l'utilisateur www-data pour les répertoires suivants :
+ - app/cache
+ - app/logs
+ - var/Material
+ - var/Publipost
+ 
+Vous pouvez ensuite exécuter la commande docker-compose up pour lancer les containers.
+Attention à renseigner les bons paramètres dans app/config/parameters.yml. Vous pouvez remplacer :
+ - database_host par mysql
+ - elasticsearch_host par elasticsearch
+ - mailer_host par mailcatcher 
+
+[Installer docker](https://docs.docker.com/install/)
+
+[Installer docker-compose](https://docs.docker.com/compose/install/#prerequisites)
+
 
 Installation de Sygefor3
 ------------
@@ -85,7 +106,11 @@ Installation de Sygefor3
 
 - Composer installé : http://www.coolcoyote.net/php-mysql/installation-de-composer-sous-linux-et-windows
 - Openssl installé
-- npm, bower, yarn installé (sudo npm install yarn bower -g)
+- npm installé
+    - curl -sL https://deb.nodesource.com/setup_6.x | bash -
+    - apt-get install npm
+- yarn, bower, gulp et n installés (sudo npm install yarn bower gulp@3.9.1 n -g)
+- Node avec la version 6.8 (sudo n 6.8.0)
 - Visual Studio Redistributables installé pour Windows
 - libssl-dev installé pour linux
 - Rewrite module activé

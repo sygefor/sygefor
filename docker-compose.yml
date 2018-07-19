@@ -23,6 +23,26 @@ services:
     volumes:
         - ./var/elasticsearch:/var/lib/elasticsearch
 
+  # @See https://github.com/sygefor/docker-shibboleth
+  shibboleth_isp:
+    container_name: "sygefor_shibboleth"
+    image: sygefor/shibboleth_isp
+    volumes:
+        # Sources
+        - ./:/var/www/sygefor
+
+        # Apache volumes
+        - ./common/docker/apache2/sites-enabled:/etc/apache2/sites-enabled
+        - ./common/docker/apache2/certificates:/etc/apache2/certificates
+        - ./var/log/apache2/:/var/log/apache2
+
+        # Shibboleth volumes
+        - ./common/docker/shibboleth-sp/:/etc/shibboleth/
+        - ./var/log/shibboleth/:/var/log/shibboleth
+    ports:
+        - "80:80"
+        - "443:443"
+
   mailcatcher:
     container_name: "sygefor_mailcatcher"
     image: schickling/mailcatcher
