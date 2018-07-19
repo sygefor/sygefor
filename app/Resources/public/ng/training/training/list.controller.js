@@ -73,13 +73,11 @@ sygeforApp.controller('TrainingListController', ['$scope', '$user', '$injector',
             label: 'Semestre'
         },
         'training.theme.name.source': {
-            label: 'Domaine de connaissance'
+            label: 'Thème'
         },
-        'training.trainingCode.autocomplete': {
-            label: 'Code de formation'
-        },
-        'trainers.fullName': {
-            label: 'Intervenant'
+        'training.number' : {
+            label: 'Numéro',
+            items: []
         },
         'training.typeLabel.source': {
             label: 'Type'

@@ -13,6 +13,7 @@ sygeforApp.config(["$listStateProvider", "$dialogProvider", "$widgetProvider", f
             search: function ($searchFactory, $stateParams, $user) {
                 var search = $searchFactory('session.search');
                 search.query.filters = {
+                    'training.organization.name.source': $user.organization.name,
                     'year': moment().format('YYYY'),
                     'semester': Math.ceil(moment().format('M')/6)
                 };

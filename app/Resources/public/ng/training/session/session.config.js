@@ -20,6 +20,7 @@ sygeforApp.config(["$listStateProvider", "$dialogProvider", "$widgetProvider", f
                 var search = $searchFactory('session.search');
                 search.query.sorts = {'dateBegin': 'desc'};
                 search.query.filters = {
+                    'training.organization.name.source': $user.organization.name,
                     'year': moment().format('YYYY'),
                     'semester': Math.ceil(moment().format('M')/6)
                 };

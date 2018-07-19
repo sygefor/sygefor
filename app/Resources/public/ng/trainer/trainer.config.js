@@ -25,6 +25,7 @@ sygeforApp.config(["$listStateProvider", "$dialogProvider",  function($listState
                 if(session) {
                     search.filters["sessions.id"] = session.id;
                 }
+                search.query.filters['organization.name.source'] = $user.organization.name;
                 //search.query.filters['isArchived'] = false;
                 search.extendQueryFromJson($stateParams.q);
                 return search.search().then(function() { return search; });

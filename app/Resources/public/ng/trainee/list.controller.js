@@ -56,19 +56,18 @@ sygeforApp.controller('TraineeListController', ['$scope', '$user', '$injector', 
         'title' : {
             label: 'Civilité'
         },
-        'institution.code.source' : {
-            label: 'Code unité',
-            size: 999
-        },
         'createdAt' : {
             label: 'Inscription',
             type: 'range'
         },
         'publicType.source': {
-            label: 'Catégorie de public'
+            label: 'Type de public'
         },
-        'employmentContractType.source': {
-            label: 'Nature de personnel'
+        'disciplinaryDomain.source' : {
+            label: 'Domaine disciplinaire'
+        },
+        'disciplinary.source' : {
+            label: 'Discipline'
         },
         'isActive': {
             label: 'Validé',

@@ -50,6 +50,12 @@
                                 <li><label>Fonction</label> <span sf-xeditable="form.children.function">{{ trainee.function }}</span></li>
                             </ul>
                         </div>
+                        <div class="col-lg-6">
+                            <ul class="summary">
+                                <li><label>Domaine disciplinaire</label> <span sf-xeditable="form.children.disciplinaryDomain" on-change="unset('disciplinary')">{{ trainee.disciplinaryDomain.name }}</span></li>
+                                <li ng-show="form.children.disciplinary"><label>Discipline</label> <span sf-xeditable="form.children.disciplinary">{{ trainee.disciplinary.name }}</span></li>
+                            </ul>
+                        </div>
                     </div>
                 </div>
             </div>

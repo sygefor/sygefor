@@ -305,8 +305,11 @@ fos_elastica:
                             type: string
                             fields:
                                 source: { type: string, index: not_analyzed }
+                        disciplinaryDomain:
+                            type: string
+                            fields:
+                                source: { type: string, index: not_analyzed }
                         disciplinary:
-                            index: not_analyzed
                             type: string
                             fields:
                                 source: { type: string, index: not_analyzed }

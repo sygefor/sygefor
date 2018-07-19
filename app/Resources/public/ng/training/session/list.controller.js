@@ -93,10 +93,7 @@ sygeforApp.controller('SessionListController', ['$scope', '$state', '$injector',
             label: 'Semestre'
         },
         'training.theme.name.source' : {
-            label: 'Domaine de connaissance'
-        },
-        'training.typeLabel.source' : {
-            label: 'Type'
+            label: 'Thème'
         },
         'registration' : {
             label: 'Inscriptions',
@@ -128,11 +125,8 @@ sygeforApp.controller('SessionListController', ['$scope', '$state', '$injector',
         'place.source' : {
             label: 'Lieu de formation'
         },
-        'training.institution.source' : {
-            label: 'Responsable'
-        },
         'training.user' : {
-            label: 'Assistante'
+            label: 'Assistant'
         },
         'dateBegin' : {
             label: 'Date',

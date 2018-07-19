@@ -35,6 +35,8 @@ sygeforApp.config(["$listStateProvider", "$dialogProvider", "$widgetProvider", f
                     search.filters["session.id"] = session.id;
                 } else if(trainee) {
                     search.filters["trainee.id"] = trainee.id;
+                } else {
+                    search.query.filters['session.training.organization.name.source'] = $user.organization.name;
                 }
                 if($stateParams.status && inscriptionStatusList[$stateParams.status]) {
                     search.query.filters["inscriptionStatus.name.source"] = inscriptionStatusList[$stateParams.status].name;

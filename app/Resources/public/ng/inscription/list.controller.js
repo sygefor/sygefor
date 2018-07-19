@@ -157,7 +157,7 @@ sygeforApp.controller('InscriptionListController', ['$scope', '$user', 'growl', 
      * Facets
      */
     $scope.facets = {
-        'trainee.organization.name.source' : {
+        'session.training.organization.name.source' : {
             label: 'Centre'
         },
         'inscriptionStatus.name.source' : {
@@ -166,27 +166,12 @@ sygeforApp.controller('InscriptionListController', ['$scope', '$user', 'growl', 
         'presenceStatus.name.source' : {
             label: 'Statut présence'
         },
-        'institution.name.source' : {
-            label: 'Unité',
-            size: 10
-        },
-        'trainee.institution.name.source' : {
-            label: 'Unité actuelle',
-            size: 10
-        },
-        'priority.description.source' : {
-            label: 'Priorité',
-            size: 10
-        },
         'hasEvaluated' : {
             label: 'Evaluation complétée',
             values: {
                 'T': 'Oui',
                 'F': 'Non'
             }
-        },
-        'trainee.employer.source' : {
-            label: 'Employeur'
         },
         'trainee.fullName.source' : {
             label: 'Stagiaire'
