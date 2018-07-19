@@ -33,6 +33,8 @@ Configuration requise
 * version 5.3.9 minimum (sauf 5.3.16). Php7 n'est pas compatible pour le moment.
 * extensions :
     * json
+    * xml
+    * zip
     * ctype
 * modules :
     * pdo_mysql
@@ -56,6 +58,9 @@ Sygefor3 s'appuie sur un serveur [ElasticSearch](http://www.elasticsearch.org/) 
 des éléments.
 
 * version 1.4
+   - Ajouter le fichier [elasticsearch.repo](https://github.com/sygefor/sygefor/blob/master/external_conf/elasticsearch.repo) dans le répertoire /etc/yum.repos.d/ pour CentOS
+   - Ajouter "deb http://packages.elasticsearch.org/elasticsearch/1.4/debian stable main" dans /etc/apt/sources.list pour Debian
+   - Installer le paquet elasticsearch
 
 ### Unoconv
 
@@ -64,23 +69,15 @@ qui doit donc être installée sur le serveur.
 
 * version 0.7
 
-### Accès interactif
-
-Sygefor3 est livré avec un outil en ligne de commande qui permet d'automatiser certaines opérations d'installation et
-de maintenance. Il faut donc un accès interactif du type SSH.
-
-### Certificat SSL
-
-Il est fortemment recommandé d'installer un certificat SSL et d'utiliser HTTPS pour l'ensemble des communications avec l'application.
-
 ### Shibboleth
 
 Sygefor3 utilise la Fédération d'identité Education-Recherche de Renater pour permettre aux stagiaires de s'inscrire, au travers
 du protocole Shibboleth. Il faut donc installer un Service Provider sur le serveur et le déclarer auprés de Renater :
 
 [Installation d'un SP Shibboleth](https://services.renater.fr/federation/docs/installation/sp#test_dans_la_federation_de_test)
+[Monter un image docker](https://github.com/sygefor/docker-shibboleth)
 
-Installation
+Installation de Sygefor3
 ------------
 
 ### Prérequis
@@ -96,6 +93,7 @@ Installation
 
 - git clone https://github.com/sygefor/sygefor.git
 - cd sygefor
+- git submodule update --init
 - composer install
     - Renseigner les paramètres symfony
 - yarn install
@@ -107,15 +105,26 @@ Installation
 - gulp build:dist
 - php app/console fos:elastica:populate
 - php app/console server:run 127.0.0.1:8000
-- Se rendre sur localhost:8000 avec votre navigateur
+- Se rendre sur localhost:8000 avec votre navigateur pour accéder au BO
 - Se connecter avec les identifiants admin/admin
+- Ajouter une entrée dans votre fichier host pour faire pointer sygefor.com vers 127.0.0.1
+- Se rendre sur sygefor.com:8000 avec votre navigateur pour accéder au FO
+
+### API
+
+Sygefor3 intègre une API disponible dans ApiBundle. Il est possible de réserver certaines parties de l'API aux utilisateurs connectés en OAuth2 ou via Shibboleth.
+L'API permet notamment d'exporter [les formations](http://sygefor.com:8000/api/training) et [les sessions de formations](http://sygefor.com:8000/api/training/session).
+
+### Export LHEO
+
+Sygefor3 intègre un export [LHEO](http://lheo.gouv.fr/description) des formations.
 
 ### Etendre
 
-Le coeur de Sygefor3 est intégré dans les vendors du projet. Ce coeur déclare des classes et des controlleurs abstraits. Vous devez étendre
+Le coeur de Sygefor3 est intégré dans les sous-modules du projet. Ce coeur déclare des classes et des controlleurs abstraits. Vous devez étendre
 ces classes et controlleurs pour faire fonctionner l'application.
-Le bundle App intègre ces extentions. Vous pourrez comprendre comment étendre Sygefor3 en regardant ce bundle.
+Le AppBundle intègre ces extentions. Vous pourrez comprendre comment étendre Sygefor3 en regardant ce bundle.
 
-Vous pouvez également adapter l'interface privée de gestion en modifiant les templates AngularJS contenus dans le répertoire app/Resources/public/ng.
+Vous pouvez également adapter l'interface privée de gestion en modifiant les modèles AngularJS contenus dans le répertoire app/Resources/public/ng.
 Le module FrontBundle intègre une version publique et allégée de Sygefor permettant aux stagiaires de s'inscrire aux différents stages.
 Vous pourrez aussi retrouver un module Bilan basé sur ElasticSearch.
