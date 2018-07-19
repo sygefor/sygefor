@@ -1,0 +1,42 @@
+services:
+    app.email_inscription.orm.listener:
+        class: AppBundle\EventListener\ORM\InscriptionEmailListener
+        tags:
+            - { name: doctrine.event_subscriber, connection: default }
+
+    sygefor_core.organization_changed.orm.listener:
+        class: AppBundle\EventListener\ORM\OrganizationChangedListener
+        tags:
+            - { name: doctrine.event_subscriber, connection: default }
+
+    app.trainee_inscription.orm.listener:
+        class: AppBundle\EventListener\ORM\TraineeInscriptionListener
+        arguments: ['@service_container']
+        tags:
+            - { name: doctrine.event_subscriber, connection: default }
+
+    app.trainer_participation.orm.listener:
+        class: AppBundle\EventListener\ORM\TrainerParticipationListener
+        tags:
+            - { name: doctrine.event_subscriber, connection: default }
+
+    app.session_day_number.orm.listener:
+        class: AppBundle\EventListener\ORM\SessionDayNumberListener
+        tags:
+            - { name: doctrine.event_subscriber, connection: default }
+
+    app.session.orm.listener:
+        class: AppBundle\EventListener\ORM\SessionListener
+        tags:
+            - { name: doctrine.event_subscriber, connection: default }
+
+    app.session.serializer.listener:
+        class: AppBundle\EventListener\SessionEventSubscriber
+        arguments: ["@service_container"]
+        tags:
+            - { name: jms_serializer.event_subscriber }
+
+    app.uppercase.orm.listener:
+        class: AppBundle\EventListener\UppercaseListener
+        tags:
+            - { name: doctrine.event_subscriber, connection: default }

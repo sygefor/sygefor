@@ -1,0 +1,31 @@
+services:
+    sygefor_activity_report.builder_factory:
+        class: ActivityReportBundle\Utils\ActivityReportBuilderFactory
+        arguments:
+            - "@fos_elastica.index"
+            - "@doctrine.orm.entity_manager"
+
+    sygefor_activity_report.configure_menu_listener:
+        class: ActivityReportBundle\EventListener\ConfigureMenuListener
+        arguments:
+            - "@security.context"
+            - "@router"
+        tags:
+            - { name: kernel.event_listener, event: sygefor_core.menu_configure, method: onMenuConfigure }
+
+    sygefor_excel_writer:
+        class: ActivityReportBundle\Utils\Export\ExcelWriter
+
+    sygefor_xls_paginer:
+        class: ActivityReportBundle\Utils\Export\XlsExportPaginer
+
+    sygefor_activity_report.twig_extension.report_value:
+            class: ActivityReportBundle\Twig\ReportValueFilter
+            public: false
+            tags:
+                - { name: twig.extension }
+
+    sygefor_activity_report.rights.balance:
+        class: ActivityReportBundle\Security\Authorization\AccessRight\BalanceAccessRight
+        tags:
+            - { name: sygefor_core.right_provider, group: "Bilans" }

@@ -1,0 +1,110 @@
+<form sf-xeditable-form="form" sf-href='trainee.view({id: trainee.id})' on-success="onSuccess(data)">
+    <div class="row">
+        <div class="col-md-8">
+
+            <div class="btn-group pull-right">
+                <a class="btn btn-fa" href="" tooltip="{{ trainee.isActive ? 'Désactiver le compte' : 'Activer le compte' }}" ng-if="trainee._accessRights.edit" ng-click="toggleActivation()">
+                    <span class="fa" ng-class="{'fa-thumbs-o-up': !trainee.isActive, 'fa-thumbs-o-down': trainee.isActive }"></span>
+                </a>
+                <a class="btn btn-fa" href="" tooltip="Changer le mot de passe" ng-if="trainee._accessRights.edit" ng-click="changePassword()"><span class="fa fa-key"></span></a>
+                <a class="btn btn-fa" href="" tooltip="Changer le centre de rattachement" ng-if="$user.hasAccessRight('sygefor_core.access_right.trainee.all.update')" ng-click="changeOrganization()"><span class="fa fa-university"></span></a>
+                <a class="btn btn-fa" href="" tooltip="Supprimer" ng-if="trainee._accessRights.delete" ng-click="delete()"><span class="fa fa-trash-o"></span></a>
+            </div>
+
+            <div class="pre-title">Inscrit le {{ trainee.createdAt|date: 'dd/MM/yyyy' }} - {{ trainee.organization.name }}</div>
+
+            <h2><span>{{ trainee.fullName }} <span ng-if="!trainee.isActive">(compte non validé)</span></span></h2>
+
+            <div class="row">
+                <div class="col-lg-12">
+                    <h3>Informations personnelles</h3>
+                    <hr>
+                    <div class="row">
+                        <div class="col-lg-6">
+                            <ul class="summary">
+                                <li><label>Civilité</label> <span sf-xeditable="form.children.title">{{ trainee.title.name }}</span></li>
+                                <li><label>Nom</label> <span sf-xeditable="form.children.lastName">{{ trainee.lastName }}</span></li>
+                                <li><label>Prénom</label> <span sf-xeditable="form.children.firstName">{{ trainee.firstName }}</span></li>
+                            </ul>
+                        </div>
+                        <div class="col-lg-6">
+                            <ul class="summary">
+                                <li><label>Email</label> <span sf-xeditable="form.children.email">{{ trainee.email }}</span></li>
+                                <li><label>Téléphone</label> <span sf-xeditable="form.children.phoneNumber">{{ trainee.phoneNumber }}</span></li>
+                            </ul>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="row mb-1">
+                <div class="col-lg-12">
+                    <h3>Informations professionnelles</h3>
+                    <hr>
+                    <div class="row">
+                        <div class="col-lg-6">
+                            <ul class="summary">
+                                <li><label>Type de personnel</label> <span sf-xeditable="form.children.publicType">{{ trainee.publicType.name }}</span></li>
+                                <li ng-show="trainee.publicType.machineName === 'other'"><label>Autre cat. de public</label> <span sf-xeditable="form.children.otherPublicType">{{ trainee.otherPublicType }}</span></li>
+                                <li><label>Statut</label> <span sf-xeditable="form.children.status">{{ trainee.status }}</span></li>
+                                <li><label>Fonction</label> <span sf-xeditable="form.children.function">{{ trainee.function }}</span></li>
+                            </ul>
+                        </div>
+                        <div class="col-lg-6">
+                            <ul class="summary">
+                                <li><label>Domaine disciplinaire</label> <span sf-xeditable="form.children.disciplinaryDomain" on-change="unset('disciplinary')">{{ trainee.disciplinaryDomain.name }}</span></li>
+                                <li ng-show="form.children.disciplinary"><label>Discipline</label> <span sf-xeditable="form.children.disciplinary">{{ trainee.disciplinary.name }}</span></li>
+                            </ul>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <ul class="nav nav-tabs">
+                <li ng-click="tab = 'inscriptions'" class="active"><a href="" data-toggle="tab"><span class="fa fa-graduation-cap"></span> Inscriptions ({{ trainee.inscriptions.length }})</a></li>
+                <li ng-click="tab = 'messages'"><a href="" data-toggle="tab"><span class="fa fa-send"></span> Messages ({{ trainee.messages.length ? trainee.messages.length : 0 }})</a></li>
+            </ul>
+
+            <!--
+            INSCRIPTIONS
+            -->
+            <div ng-show="!tab || tab === 'inscriptions'">
+                <div ng-if="!trainee.inscriptions.length" class="well well-empty well-sm">
+                    Il n'y a aucune inscription pour ce stagiaire.
+                </div>
+
+                <table ng-if="trainee.inscriptions.length" class="table table-hover table-condensed table-responsive table-nohead">
+                    <!--<thead>-->
+                        <!--<th>Date d'inscription</th>-->
+                        <!--<th>Centre</th>-->
+                        <!--<th>Fiche de l'inscription</th>-->
+                        <!--<th>Fiche de la session</th>-->
+                        <!--<th>Statut d'inscription</th>-->
+                        <!--<th>Statut de présence</th>-->
+                    <!--</thead>-->
+                    <tbody>
+                    <tr ng-repeat="inscription in trainee.inscriptions | filter:isViewable | orderBy:'createdAt':true">
+                        <td>{{ inscription.createdAt | date:'dd/MM/yy' }}</td>
+                        <td>{{ inscription.session.training.organization.name }}</td>
+                        <td><a ui-sref-access="inscription._accessRights.view" ui-sref="inscription.detail.view({id: inscription.id, session: session.id})">{{ inscription.session.training.name }}</a></td>
+                        <td>{{ inscription.session.training.typeLabel }} - Session du <a ui-sref-access="inscription.session._accessRights.view" ui-sref="session.detail.view({id: inscription.session.id})">{{ inscription.session.dateBegin | date:'dd/MM/yyyy' }}</a></td>
+                        <td><span class="label" ng-class="$root.presenceStatusClass(inscription.presenceStatus.status)">{{ inscription.presenceStatus.name }}</span></td>
+                        <td><span class="label" ng-hide="inscription.presenceStatus" ng-class="$root.inscriptionStatusClass(inscription.inscriptionStatus.status)">{{ inscription.inscriptionStatus.name }}</span></td>
+                    </tr>
+                    </tbody>
+                </table>
+            </div>
+
+            <!--
+             Emails
+            -->
+            <div ng-show="tab === 'messages'">
+                <div class="row mb-1">
+                    <div class="col-lg-12">
+                        <div entity-emails trainee="trainee.id"></div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</form>

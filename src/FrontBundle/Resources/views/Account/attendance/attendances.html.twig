@@ -1,0 +1,70 @@
+{% extends "@Front/base.html.twig" %}
+
+{% block header %}
+    <header>
+        <div class="container">
+            <div class="row">
+                <div class="col-lg-12">
+                    <h1>Mon compte</h1>
+                </div>
+            </div>
+            {% include '@Front/Account/menu.html.twig' %}
+        </div>
+    </header>
+{% endblock %}
+
+{% block body %}
+    <div class="container">
+        <section>
+            <div class="row">
+                <div class="col-md-12">
+                    {% if attendances | length == 0 %}
+                        <blockquote class="small">Vous n'avez participé à aucun évènement.</blockquote>
+                    {% else %}
+                        <div class="responsive-table-wrapper">
+                            <table class="table table-hover table-condensed table-responsive">
+                                <thead>
+                                <tr>
+                                    <th>Date de la session</th>
+                                    <th>Formation</th>
+                                    <th>Lieu</th>
+                                    <th></th>
+                                </tr>
+                                </thead>
+                                <tbody>
+                                {% for attendance in attendances | orderBy('session.dateBegin') %}
+                                    <tr>
+                                        <td>{{ attendance.session.dateBegin | date('d/m/Y') }}</td>
+                                        <td>
+                                            <a href="{{ path('front.program.training', {id: attendance.session.training.id}) }}">{{ attendance.session.training.name }}</a>
+                                            <br>
+                                                {% for key, part in attendance.session.participations %}
+                                                    {% if key > 0 %}<span>, </span>{% endif %}
+                                                    <span>{{ part.trainer.fullName }}</span>
+                                              {% endfor %}
+                                        </td>
+                                        <td>
+                                            {% if attendance.session.place | length > 0 %}
+                                                {{ attendance.session.place.name }}
+                                            {% endif %}
+                                        </td>
+                                        <td>
+                                            <span class="pull-right">
+                                                <a href="{{ path('front.account.attendance.attestation', {session: attendance.session.id}) }}" class="small"><i class="glyphicon glyphicon-save-file"></i> Télécharger mon attestation</a><br/>
+                                                {% if attendance.evaluation is null %}
+                                                    <a href="{{ path('front.account.attendance.evaluation', {id: attendance.id}) }}" class="small"><i class="glyphicon glyphicon-pencil"></i> Remplir mon évaluation</a>
+                                                {% endif %}
+                                            </span>
+                                        </td>
+                                        <td><a class="button tiny right radius no-mb pull-right" href="{{ path('front.account.attendance', { session: attendance.session.id }) }}" title="Pour retrouver le support de la formation, remplir la fiche d'évaluation, télécharger l'attestation de présence">Accèder à l'espace dédié</a></td>
+                                    </tr>
+                                {% endfor %}
+                                </tbody>
+                            </table>
+                        </div>
+                    {% endif %}
+                </div>
+            </div>
+        </section>
+    </div>
+{% endblock body %}

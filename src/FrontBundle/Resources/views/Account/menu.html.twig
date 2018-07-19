@@ -1,0 +1,6 @@
+<ul class="nav nav-tabs">
+    {% set route = app.request.attributes.get('_route') %}
+    <li class="{{ 'front.account.profile' in route ? 'active' }}"><a href="{{ path('front.account.profile') }}" class="button secondary">Mon profil</a></li>
+    <li class="{{ 'front.account.registrations' in route ? 'active' }}"><a href="{{ path('front.account.registrations') }}" title="Pour gérer vos demandes d'inscription en cours et retrouver vos anciennes demandes" class="button secondary">Mes demandes d'inscription</a></li>
+    <li class="{{ 'front.account.attendance' in route ? 'active' }}"><a href="{{ path('front.account.attendances') }}" title="Pour retrouver toutes les formations suivies et accéder à leurs documents" class="button secondary">Mes formations suivies</a></li>
+</ul>

@@ -1,0 +1,49 @@
+services:
+    app.trainee_type:
+        class: AppBundle\Form\Type\Trainee\TraineeType
+        abstract: false
+        parent: sygefor_core.trainee_type
+        tags:
+            - { name: form.type }
+
+    app.trainer_type:
+        class: AppBundle\Form\Type\Trainer\TrainerType
+        abstract: false
+        parent: sygefor_core.trainer_type
+        tags:
+            - { name: form.type }
+
+    app.training_type:
+        class: AppBundle\Form\Type\Training\AbstractTrainingType
+        abstract: true
+        arguments:
+            - "@sygefor_core.access_right_registry"
+
+    app.internship_type:
+        class: AppBundle\Form\Type\Training\InternshipType
+        abstract: false
+        parent: app.training_type
+        tags:
+            - { name: form.type }
+
+    app.criterion_type:
+        class: AppBundle\Form\Type\CriterionType
+        arguments:
+            - "@sygefor_core.access_right_registry"
+        tags:
+            - { name: form.type }
+
+    # taxonomy form types
+    app.form_type.menu_item:
+        class: AppBundle\Form\Type\MenuItemType
+        arguments:
+            - "@security.context"
+            - "@sygefor_core.access_right_registry"
+        tags:
+            - { name: form.type }
+
+    app.form.entity_tags_type:
+        class: AppBundle\Form\Type\Training\EntityTagsType
+        arguments: ["@doctrine"]
+        tags:
+            - { name: form.type }

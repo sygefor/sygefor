@@ -1,0 +1,11 @@
+.label {
+ color: inherit;
+ border: 1px solid #ddd;
+ padding: $padding-base-vertical;
+ display: inline-block;
+ margin-top: -3px;
+}
+
+.radius {
+ border-radius: 3px;
+}

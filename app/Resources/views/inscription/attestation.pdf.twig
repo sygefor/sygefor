@@ -1,0 +1,62 @@
+{% set organization = inscription.session.training.organization %}
+{% extends "SygeforCoreBundle::layout.pdf.twig" %}
+
+{% block head %}
+<style>
+    h1, h2, h3, h4, h5 {
+        text-align: center;
+    }
+    .signature {
+        text-align: center;
+    }
+    .signature img {
+        width:180px;
+    }
+</style>
+{% endblock  %}
+
+{% block body %}
+    <p>&nbsp;</p>
+
+    <h2>Attestation de présence</h2>
+    <p>&nbsp;</p>
+    <p>&nbsp;</p>
+
+    <p>Nous certifions que :</p>
+    <h3>{{ inscription.trainee.fullName }}</h3>
+    <p>&nbsp;</p>
+
+    <p>a bien suivi le stage :</p>
+    <p>&nbsp;</p>
+    <h3>{{ inscription.session.training.name }}</h3>
+
+    {% if inscription.session.dateEnd and (inscription.session.dateBegin | date("d/m/Y")) != (inscription.session.dateEnd | date("d/m/Y")) %}
+        <h4>du {{ inscription.session.dateBegin | date("d/m/Y") }} au {{ inscription.session.dateEnd | date("d/m/Y")  }}</h4>
+    {% else %}
+        <h4>le {{ inscription.session.dateBegin | date("d/m/Y") }}</h4>
+    {% endif %}
+
+    {% if inscription.session.getSchedule %}
+        <p><center>[Horaires : {{ inscription.session.getSchedule }} ]</center></p>
+    {% endif %}
+    <p>&nbsp;</p>
+
+    {% if inscription.session.participations|length %}
+        <p>animé par :</p>
+        {% for participation in inscription.session.participations %}
+            <h4>{{ participation.trainer.fullName }}</h4>
+        {% endfor %}
+    {% endif %}
+    <p>&nbsp;</p>
+    <p>&nbsp;</p>
+
+    <h5>Certifié Sincère et Véritable,</h5>
+    {% if signature is defined and signature | length > 0 %}
+        <p class="signature"><img src="{{ app.request.getSchemeAndHttpHost() ~ asset(signature) }}" /></p>
+        <p>&nbsp;</p>
+    {% else %}
+    <p>&nbsp;</p>
+    <p>&nbsp;</p>
+    {% endif %}
+    <h5>Fait à {{ inscription.session.training.organization.city | replace({'CEDEX': ''}) | trim }}, le {% if inscription.session.dateEnd %}{{ inscription.session.dateEnd | date("d/m/Y") }}{% else %}{{ inscription.session.dateBegin | date("d/m/Y") }}{% endif %}</h5>
+{% endblock %}

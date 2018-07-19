@@ -1,0 +1,41 @@
+{% extends "SygeforCoreBundle::layout.html.twig" %}
+
+{% block breadcrumbs %}
+    <ol class="breadcrumb full-height-item">
+        <li><a href="{{ path('core.index') }}">Accueil</a></li>
+        <li><a href="#">Administration</a></li>
+        <li class="active"><a href="{{ path('organization.index') }}">Centres</a></li>
+    </ol>
+{% endblock %}
+
+{% block content %}
+    <div class="list-view full-height-item is-grow">
+        <div class="full-height-container is-absolute is-full-width">
+            <div class="col-xs-12">
+                <table class="table table-search table-hover">
+                    <thead>
+                        <tr>
+                            <th>Nom</th>
+                            <th>Code</th>
+                            <th>Email</th>
+                            <th>Numéro de téléphone</th>
+                            <th>Site internet</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                    {% for organization in organizations %}
+                        <tr>
+                            <td><a href="{{ path('organization.edit', { 'id': organization.id }) }}">{{ organization.name }}</a></td>
+                            <td>{{ organization.code }}</td>
+                            <td><a href="mailto:{{ organization.email }}">{{ organization.email }}</a></td>
+                            <td>{{ organization.phoneNumber }}</td>
+                            <td><a href="{{ organization.website }}" target="_blank">{{ organization.website }}</a></td>
+                        </tr>
+                    {% endfor %}
+                    </tbody>
+                </table>
+                <a class="btn btn-primary" href="{{ path('organization.add') }}" role="button"><i class="fa fa-plus"></i> Ajouter un centre</a>
+            </div>
+        </div>
+    </div>
+{% endblock %}

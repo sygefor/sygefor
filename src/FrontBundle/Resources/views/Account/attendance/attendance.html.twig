@@ -1,0 +1,156 @@
+{% extends "@Front/base.html.twig" %}
+
+{% block header %}
+    <header>
+        <div class="container">
+            <div class="row">
+                <div class="col-lg-12">
+                    <h1>Mon compte</h1>
+                </div>
+            </div>
+            {% include '@Front/Account/menu.html.twig' %}
+        </div>
+    </header>
+{% endblock %}
+
+{% block breadcrumbs %}
+    <div class="breadcrumb">
+        <div class="container">
+            <ol class="breadcrumb">
+                <li><a href="{{ path('front.program.index') }}">Accueil</a></li>
+                <li><a href="{{ path('front.account') }}">Mon compte</a></li>
+                <li><a href="{{ path('front.account.attendances') }}">Mes formations suivies</a></li>
+                <li><a class="active" href="">{{ attendance.session.training.name }}</a></li>
+            </ol>
+        </div>
+    </div>
+{% endblock breadcrumbs %}
+
+{% block body %}
+    <div class="container">
+        <section>
+            <div class="row">
+                <div class="col-md-12 columns">
+                    <section>
+                        <div class="row attendances {{ attendance.session.training.type }}">
+                            <div class="col-md-5">
+                                {% set training = attendance.session.training %}
+                                {% include '@Front/Program/training/tags.html.twig' %}
+
+                                <!-- Titre -->
+                                <div class="session__type">
+                                    <h3>{{ attendance.session.training.name }}</h3>
+                                </div>
+
+                                <!-- Date(s) -->
+                                <div title="Date de la session">
+                                    <i class="glyphicon glyphicon-calendar"></i>&nbsp;&nbsp;
+                                    <span>{{ attendance.session.dateBegin | date('l') | trans }} {{ attendance.session.dateBegin | date('d') }} {{ attendance.session.dateBegin | date('F') | trans }} {{ attendance.session.dateBegin | date('Y') }}</span>
+                                </div>
+
+                                <!-- Intervenant(s) -->
+                                <div title="Intervenants">
+                                    {% if attendance.session.participations is defined and attendance.session.participations | length > 0 %}
+                                        <i class="glyphicon glyphicon-info-sign"></i>&nbsp;&nbsp;
+                                        {% for key, part in attendance.session.participations %}
+                                            {% if key > 0 %}<span>, </span>{% endif %}
+                                            <span>{{ part.trainer.fullName }}</span>
+                                        {% endfor %}
+                                    {% endif %}
+                                </div>
+
+                                <!-- Lieu, Horaire -->
+                                {% if attendance.session.place is defined and attendance.session.place.name is defined %}
+                                    <div title="Lieu de la session"><i class="glyphicon glyphicon-map-marker"></i>&nbsp;&nbsp;{{ attendance.session.place.name }}</div>
+                                {% endif %}
+
+                                {% if attendance.session.schedule is defined and attendance.session.schedule | length > 0 %}
+                                    <div title="Horaires de la session"><i class="glyphicon glyphicon-time"></i>&nbsp;&nbsp;{{ attendance.session.schedule }}</div>
+                                {% endif %}
+
+                                <div class="infos">
+                                    <h4>Motivation</h4>
+                                    <p>{{ attendance.motivation }}</p>
+
+                                    {% if attendance.trainee.isPaying > 0 %}
+                                        <h4>Frais pédagogiques</h4>
+                                        <p>{{ attendance.session.price }} &euro;</p>
+                                    {% endif %}
+                                </div>
+
+                                <a href="{{ path('front.program.training', {id: attendance.session.training.id, sessionId: attendance.session.id }) }}" class="btn btn-default">Voir la fiche descriptive</a>
+                            </div>
+                            <div class="col-md-7">
+                                <!-- Téléchargement de l'attestation -->
+                                <h4 class="mb-base">Attestation de présence</h4>
+                                <a href="{{ path('front.account.attendance.attestation', {session: attendance.session.id}) }}" class="button btn btn-default"><i class="glyphicon glyphicon-save-file"></i> Télécharger mon attestation</a>
+
+                                <h4 class="mb-base">Votre évaluation</h4>
+                                {% if attendance.evaluation is null %}
+                                    <a href="{{ path('front.account.attendance.evaluation', {id: attendance.id}) }}" class="button btn btn-default"><i class="glyphicon glyphicon-pencil"></i> Remplir mon évaluation</a>
+                                {% else %}
+                                    <blockquote>
+                                        {% for theme in attendance.evaluation.themes %}
+                                            <h4>{{ theme.theme.name }}</h4>
+                                            {% for notedCriteria in theme.criteria %}
+                                                <small>
+                                                    {{ notedCriteria.criterion.name }}
+                                                    {% for i in 0..notedCriteria.note %}
+                                                        <i class="glyphicon glyphicon-star"></i>
+                                                    {% endfor %}
+                                                    {% if 2-notedCriteria.note > 0 %}
+                                                        {% for i in 1..2-notedCriteria.note %}
+                                                            <i class="glyphicon glyphicon-star-empty"></i>
+                                                        {% endfor %}
+                                                    {% endif %}
+                                                </small>
+                                            {% endfor %}
+                                            {% if theme.comments | length > 0 %}
+                                                <small>Commentaires : {{ theme.comments }}</small>
+                                            {% endif %}
+                                        {% endfor %}
+
+                                        <h4>Commentaires généraux</h4>
+                                        <small>Les points forts de la formation : {{ attendance.evaluation.goodPoints }}</small>
+                                        <small>Les points à améliorer : {{ attendance.evaluation.badPoints }}</small>
+                                        <small>Plan d’action et suggestions éventuelles : {{ attendance.evaluation.suggestions }}</small>
+                                    </blockquote>
+                                {% endif %}
+
+                                {% if attendance.session.allPrivateMaterials | length > 0 %}
+                                    <h4>Documents de la formation</h4>
+                                    <ul class="list-unstyled">
+                                        {% for material in attendance.session.allPrivateMaterials  %}
+                                            <li>
+                                                {% if material.type == 'file' %}
+                                                    <a href="{{ path('material.get', {id: material.id}) }}">{{ material.name }}</a>
+                                                {% elseif material.type == 'link' %}
+                                                    <a href="{{ material.url }}" target="_blank">{{ material.name }}</a>
+                                                {% endif %}
+                                            </li>
+                                        {% endfor %}
+                                    </ul>
+                                {% endif %}
+
+                                {% if attendance.session.allPublicMaterials | length > 0 %}
+                                    <h4>Documents téléchargeables</h4>
+                                    <ul class="list-unstyled">
+                                        {% for material in attendance.session.allPublicMaterials  %}
+                                            <li>
+                                                {% if material.type == 'file' %}
+                                                    <a href="{{ path('material.get', {id: material.id}) }}">{{ material.name }}</a>
+                                                {% elseif material.type == 'link' %}
+                                                    <a href="{{ material.url }}" target="_blank">{{ material.name }}</a>
+                                                {% endif %}
+                                            </li>
+                                        {% endfor %}
+                                    </ul>
+                                {% endif %}
+                            </div>
+                        </div>
+                    </section>
+                </div>
+            </div>
+        </section>
+    </div>
+{% endblock body %}

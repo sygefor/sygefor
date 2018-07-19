@@ -1,0 +1,31 @@
+<div class="row">
+    <div class="col-md-10">
+        <h1 class="mt-0">Activités de formation</h1>
+
+        <h2>Croisements</h2>
+    </div>
+</div>
+
+<h3>Evénements</h3>
+<div report-crosstab caption="Répartition des thèmes par type de formation" data="report.crosstabs.theme_type"></div>
+<div report-crosstab caption="Répartition des lieux de formation par type de formation" data="report.crosstabs.place_type"></div>
+
+<h3>Inscriptions</h3>
+<div class="row">
+    <div class="col-md-6">
+        <div report-crosstab caption="Répartition des inscriptions par type de formation" data="report.crosstabs.inscription_organization" template="1way"></div>
+    </div>
+    <div class="col-md-6">
+        <div report-crosstab caption="Répartition des heures-personnes par type de formation" data="report.crosstabs.inscription_hours" template="1way"></div>
+    </div>
+</div>
+
+<h3>Coûts / rémunérations</h3>
+<div class="row">
+    <div class="col-md-6">
+        <div report-crosstab caption="Répartition des coûts par type de formation" data="report.crosstabs.totalCost_type" template="1way"></div>
+    </div>
+    <div class="col-md-6">
+        <div report-crosstab caption="Répartition des recettes par type de formation" data="report.crosstabs.totalTaking_type" template="1way"></div>
+    </div>
+</div>

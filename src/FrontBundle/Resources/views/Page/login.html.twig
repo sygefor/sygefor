@@ -1,0 +1,83 @@
+{% extends "@Front/base.html.twig" %}
+
+{% block header %}
+    <header>
+        <div class="container">
+            <div class="row">
+                <div class="col-lg-8 col-lg-offset-2">
+                    <h1>Connexion à votre compte</h1>
+                </div>
+            </div><!-- /row -->
+        </div> <!-- /container -->
+    </header>
+{% endblock %}
+
+{% block body %}
+    <section class="main">
+        <div class="container">
+            <div class="row top-margin">
+                <div class="col-lg-8 col-lg-offset-2">
+                    <p>Pour pouvoir vous inscrire aux formations proposées, vous devez être authentifié. Vous pouvez utiliser votre compte universitaire ou CRU et créer rapidement un compte SYGEFOR.</p>
+
+                    <div class="login-section">
+                        <h3>J'ai un compte universitaire ou CRU</h3>
+                        <div class="row">
+                            <div class="col-sm-6">
+                                <p>Vous avez un compte universitaire ou CRU : utilisez-le pour créer ou retrouver votre compte SYGEFOR. <a href="{{ path('front.page.faq') }}">Consultez la FAQ</a></p>
+                            </div>
+                            <div class="col-sm-6">
+                                <a href="{{ path('front.shibboleth.login') }}" class="btn btn-primary btn-block">Se connecter avec son compte universitaire ou CRU</a>
+                            </div>
+                        </div>
+                    </div>
+                    <hr/>
+
+                    <div class="login-section">
+                        <div class="row">
+                            <div class="col-sm-6">
+                                <h3>J'ai un compte SYGEFOR</h3>
+                                <p>Vous avez un compte. Connecter-vous sur SYGEFOR. <a href="{{ path('front.page.faq') }}">Consultez la FAQ</a>
+                            </div>
+                            <div class="col-sm-6">
+                                <form class="form-login" action="{{ path('fos_user_security_check') }}" method="POST">
+                                    <div class="login-wrap">
+                                        <div class="form-group">
+                                            <a href="{{ path('front.account.register') }}" class="pull-right">Pas encore de compte ?</a>
+                                            <label for="email" class="control-label">Courriel</label>
+                                            <input id="username" name="_username" value="{{ last_username }}" type="email" class="form-control" placeholder="Votre courriel">
+                                        </div>
+                                        <div class="form-group">
+                                            <a href="{{ path('front.page.reset_password') }}" class="pull-right">J'ai oublié mon mot de passe !</a>
+                                            <label for="password" class="control-label">Mot de passe</label>
+                                            <input id="password" name="_password" type="password" class="form-control" placeholder="Votre mot de passe">
+                                        </div>
+
+                                        {% if error %}
+                                            <div class="alert alert-danger">{{ error.message|trans([], 'FOSUserBundle') }}</div>
+                                        {% endif %}
+
+                                        <input type="hidden" name="_csrf_token" value="{{ csrf_token('authenticate') }}">
+                                        <input type="submit" value="Connexion" class="btn btn-primary btn-block">
+                                    </div>
+                                </form>
+                            </div>
+                        </div>
+                    </div>
+
+                    <hr>
+                    <div class="login-section">
+                        <h3>Je n'ai pas encore de compte</h3>
+                        <div class="row">
+                            <div class="col-sm-6">
+                                <p>Vous n'avez pas de compte universitaire : créez vous directement un compte sur SYGEFOR. <a href="{{ path('front.page.faq') }}">Consultez la FAQ</a></p>
+                            </div>
+                            <div class="col-sm-6">
+                                <a href="{{ path('front.account.register') }}" class="btn btn-primary btn-block">Créer un compte</a>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+{% endblock body %}

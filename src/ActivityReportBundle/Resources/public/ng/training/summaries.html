@@ -1,0 +1,212 @@
+<h1 class="mt-0">Activités de formation</h1>
+<h2>Synthèse</h2>
+<div class="row">
+    <div class="col-xs-6">
+        <h3>Bilans des stages</h3>
+        <table class="table table-hover">
+            <tr>
+                <td>Nombre de stages</td>
+                <td class="text-right"><strong>{{ report.summaries.internship.trainings }}</strong></td>
+            </tr>
+            <tr>
+                <td>Nombre de sessions</td>
+                <td class="text-right"><strong>{{ report.summaries.internship.sessions }}</strong></td>
+            </tr>
+            <tr>
+                <td>Nombre d’heures de stage</td>
+                <td class="text-right"><strong>{{ report.summaries.internship.hours | number : 2 }} h</strong></td>
+            </tr>
+            <tr>
+                <td>Nombre de personnes formées</td>
+                <td class="text-right"><strong>{{ report.summaries.internship.participations }}</strong></td>
+            </tr>
+            <tr>
+                <td>Nombre d'heures-personnes</td>
+                <td class="text-right"><strong>{{ report.summaries.internship.hours_participant | number : 2 }} h</strong></td>
+            </tr>
+            <tr>
+                <td>Coût global des actions nationales</td>
+                <td class="text-right"><strong>{{ report.summaries.internship.totalCost | number : 2 }} €</strong></td>
+            </tr>
+            <tr>
+                <td>Coût moyen par stagiaire formé</td>
+                <td class="text-right">
+                    <strong ng-if="report.summaries.internship.participations > 0">
+                        {{ report.summaries.internship.totalCost / report.summaries.internship.participations | number : 2 }} €
+                    </strong>
+                </td>
+            </tr>
+            <tr>
+                <td>Coût moyen des sessions</td>
+                <td class="text-right">
+                    <strong ng-if="report.summaries.internship.sessions > 0">
+                        {{ report.summaries.internship.totalCost / report.summaries.internship.sessions | number : 2 }} €
+                    </strong>
+                </td>
+            </tr>
+            <tr>
+                <td>Recettes globales des stages</td>
+                <td class="text-right">
+                    <strong>
+                        <span>{{ report.summaries.internship.taking | number : 2 }} €</span>
+                    </strong>
+                </td>
+            </tr>
+        </table>
+    </div>
+    <div class="col-xs-6">
+        <h3>Bilans des formation longues</h3>
+        <table class="table table-hover">
+            <tr>
+                <td>Nombre de formation longues</td>
+                <td class="text-right"><strong>{{ report.summaries.long_training.trainings }}</strong></td>
+            </tr>
+            <tr>
+                <td>Nombre de sessions</td>
+                <td class="text-right"><strong>{{ report.summaries.long_training.sessions }}</strong></td>
+            </tr>
+            <tr>
+                <td>Nombre d’heures de formation longue</td>
+                <td class="text-right"><strong>{{ report.summaries.long_training.hours | number : 2 }} h</strong></td>
+            </tr>
+            <tr>
+                <td>Nombre de personnes formées</td>
+                <td class="text-right"><strong>{{ report.summaries.long_training.participations }}</strong></td>
+            </tr>
+            <tr>
+                <td>Nombre d'heures-personnes</td>
+                <td class="text-right"><strong>{{ report.summaries.long_training.hours_participant | number : 2 }} h</strong></td>
+            </tr>
+            <tr>
+                <td>Coût global des actions nationales</td>
+                <td class="text-right"><strong>{{ report.summaries.long_training.totalCost | number : 2 }} €</strong></td>
+            </tr>
+            <tr>
+                <td>Coût moyen par stagiaire formé</td>
+                <td class="text-right">
+                    <strong ng-if="report.summaries.long_training.participations > 0">
+                        {{ report.summaries.long_training.totalCost / report.summaries.long_training.participations | number : 2 }} €
+                    </strong>
+                </td>
+            </tr>
+            <tr>
+                <td>Coût moyen des sessions</td>
+                <td class="text-right">
+                    <strong ng-if="report.summaries.long_training.sessions > 0">
+                        {{ report.summaries.long_training.totalCost / report.summaries.long_training.sessions | number : 2 }} €
+                    </strong>
+                </td>
+            </tr>
+            <tr>
+                <td>Recettes globales des formation longues</td>
+                <td class="text-right">
+                    <strong>
+                        <span>{{ report.summaries.long_training.taking | number : 2 }} €</span>
+                    </strong>
+                </td>
+            </tr>
+        </table>
+    </div>
+    <div class="col-xs-6">
+        <h3>Bilans des rencontres scientifiques</h3>
+        <table class="table table-hover">
+            <tr>
+                <td>Nombre de rencontres scientifiques</td>
+                <td class="text-right"><strong>{{ report.summaries.meeting.trainings }}</strong></td>
+            </tr>
+            <tr>
+                <td>Nombre de sessions</td>
+                <td class="text-right"><strong>{{ report.summaries.meeting.sessions }}</strong></td>
+            </tr>
+            <tr>
+                <td>Nombre d’heures de rencontre scientifique</td>
+                <td class="text-right"><strong>{{ report.summaries.meeting.hours | number : 2 }} h</strong></td>
+            </tr>
+            <tr>
+                <td>Nombre de personnes formées</td>
+                <td class="text-right"><strong>{{ report.summaries.meeting.participations }}</strong></td>
+            </tr>
+            <tr>
+                <td>Nombre d'heures-personnes</td>
+                <td class="text-right"><strong>{{ report.summaries.meeting.hours_participant | number : 2 }} h</strong></td>
+            </tr>
+            <tr>
+                <td>Coût global des actions nationales</td>
+                <td class="text-right"><strong>{{ report.summaries.meeting.totalCost | number : 2 }} €</strong></td>
+            </tr>
+            <tr>
+                <td>Coût moyen par stagiaire formé</td>
+                <td class="text-right">
+                    <strong ng-if="report.summaries.meeting.participations > 0">
+                        {{ report.summaries.meeting.totalCost / report.summaries.meeting.participations | number : 2 }} €
+                    </strong>
+                </td>
+            </tr>
+            <tr>
+                <td>Coût moyen des sessions</td>
+                <td class="text-right">
+                    <strong ng-if="report.summaries.meeting.sessions > 0">
+                        {{ report.summaries.meeting.totalCost / report.summaries.meeting.sessions | number : 2 }} €
+                    </strong>
+                </td>
+            </tr>
+            <tr>
+                <td>Recettes globales des rencontres scientifiques</td>
+                <td class="text-right">
+                    <strong>
+                        <span>{{ report.summaries.meeting.taking | number : 2 }} €</span>
+                    </strong>
+                </td>
+            </tr>
+        </table>
+    </div>
+    <div class="col-xs-6">
+        <h3>Bilans des formations</h3>
+        <table class="table table-hover">
+            <tr>
+                <td>Nombre de formations</td>
+                <td class="text-right"><strong>{{ report.summaries.all.trainings }}</strong></td>
+            </tr>
+            <tr>
+                <td>Nombre de sessions</td>
+                <td class="text-right"><strong>{{ report.summaries.all.sessions }}</strong></td>
+            </tr>
+            <tr>
+                <td>Nombre d'heures de formation</td>
+                <td class="text-right"><strong>{{ report.summaries.all.hours | number : 2 }} h</strong></td>
+            </tr>
+            <tr>
+                <td>Nombre de personnes formées</td>
+                <td class="text-right"><strong>{{ report.summaries.all.participations }}</strong></td>
+            </tr>
+            <tr>
+                <td>Nombre d'heures-personnes</td>
+                <td class="text-right"><strong>{{ report.summaries.all.hours_participant | number : 2 }} h</strong></td>
+            </tr>
+            <tr>
+                <td>Coût global des formations</td>
+                <td class="text-right"><strong>{{ report.summaries.all.totalCost | number : 2 }} €</strong></td>
+            </tr>
+            <tr>
+                <td>Coût moyen par stagiaire formé</td>
+                <td class="text-right" ng-if="report.summaries.all.participations > 0">
+                    <strong>{{ report.summaries.all.totalCost / report.summaries.all.participations | number : 2 }} €</strong>
+                </td>
+            </tr>
+            <tr>
+                <td>Coût moyen des sessions</td>
+                <td class="text-right" ng-if="report.summaries.all.sessions > 0">
+                    <strong>{{ report.summaries.all.totalCost / report.summaries.all.sessions | number : 2 }} €</strong>
+                </td>
+            </tr>
+            <tr>
+                <td>Recettes globales des formations</td>
+                <td class="text-right">
+                    <strong>
+                        <span>{{ report.summaries.all.taking | number : 2 }} €</span>
+                    </strong>
+                </td>
+            </tr>
+        </table>
+    </div>
+</div>

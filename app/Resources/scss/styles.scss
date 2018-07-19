@@ -7,6 +7,7 @@
 @import "base/common";
 @import "base/blocks";
 @import "base/icons";
+@import "base/label";
 @import "base/buttons";
 @import "base/displays";
 @import "base/paginations";
@@ -16,8 +17,12 @@
 @import "base/xeditable";
 @import "base/scrollbar";
 @import "base/dashboard";
+@import "base/table";
 @import "modules/login";
 @import "modules/list";
+@import "modules/institution";
+@import "modules/taxonomy";
+@import "modules/training";
 
 body {
   padding-top: $navbar-height;

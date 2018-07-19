@@ -1,0 +1,23 @@
+<div class="block block-session">
+    <div class="block-title">
+        <div class="full-width">
+            <span class="h4"><span class="fa fa-calendar"></span> {{ session.training.name }}{{ session.name ? ' - ' + session.name : '' }}</span>
+        </div>
+    </div>
+    <div class="block-body">
+        <ul class="summary">
+            <li><label>Thématique</label> {{ session.training.theme.name }} </li>
+            <li><label>Date(s)</label> {{ session.dateRange }}</li>
+            <li><label>Horaires</label> {{ session.schedule }}</li>
+            <li>
+                <label>Durée</label>
+                <div>
+                    <span ng-if="session.hourNumber !== undefined">{{ session.hourNumber  + ' heure(s)' }}</span>
+                    <span ng-if="session.hourNumber !== undefined && session.dayNumber !== undefined"> sur </span>
+                    <span ng-if="session.dayNumber !== undefined">{{ session.dayNumber + ' jour(s)' }}</span>
+                </div>
+            </li>
+            <li><label>Lieu</label> {{ session.place.name }}</li>
+        </ul>
+    </div>
+</div>

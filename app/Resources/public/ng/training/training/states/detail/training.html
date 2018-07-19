@@ -1,0 +1,13 @@
+<div ng-if="training" class="row" xmlns="http://www.w3.org/1999/html">
+    <div class="col-md-8">
+        <form sf-xeditable-form="form" sf-href='training.view({id: training.id})' on-success="onSuccess(data)">
+            <span ng-include="'training/training/states/detail/partials/training.form.html'"></span>
+        </form>
+    </div>
+    <div class="col-md-4 sidebar">
+        <ng-include src="'training/training/states/detail/partials/sessions.block.html'"></ng-include>
+        <div materials-block="training" entity-type="training.type" is-public="0"></div>
+        <div materials-block="training" entity-type="training.type" is-public="1"></div>
+        <ng-include src="'training/training/states/detail/partials/comments.block.html'"></ng-include>
+    </div>
+</div>

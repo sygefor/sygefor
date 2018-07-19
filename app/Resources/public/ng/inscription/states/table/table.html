@@ -1,0 +1,55 @@
+<div class="full-height-container is-full-width is-absolute is-direction-column">
+
+    <!-- Results -->
+    <div ng-if="search.result.total" class="full-height-item is-full-width is-grow">
+        <div class="col-xs-12">
+            <table search-table ng-class="{loading: search.processing}">
+                <thead>
+                    <tr>
+                        <th></th>
+                        <th search-table-th field="session.dateBegin">Date</th>
+                        <th search-table-th field="session.training.organization.name.source">Délégation</th>
+                        <th ng-hide="$stateParams.trainee" search-table-th field="trainee.lastName.source">Nom</th>
+                        <th ng-hide="$stateParams.trainee" search-table-th field="trainee.firstName.source">Prénom</th>
+                        <th ng-hide="$stateParams.session" search-table-th field="session.training.name.source">Session</th>
+                        <th search-table-th field="trainee.employer.source">Employeur</th>
+                        <th search-table-th field="inscriptionStatus.name.source">Inscription</th>
+                        <th search-table-th field="presenceStatus.name.source">Présence</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr ng-repeat="item in search.result.items" ng-class="{warning: isSelected(item.id)}">
+                        <td ng-click="switchSelect(item.id)" stop-event><i class="fa" ng-class="{'fa-square-o': !isSelected(item.id), 'fa-check-square-o': isSelected(item.id)}"></i></td>
+                        <td><a href="" ui-sref="inscription.detail.view({ id: item.id })">{{ item.session.dateBegin|date: 'dd/MM/yyyy' }}</a></td>
+                        <td>{{ item.trainee.organization.name }}</td>
+                        <td ng-hide="$stateParams.trainee"><a href="" ui-sref="trainee.detail.view({ id: item.trainee.id })">{{ item.trainee.lastName }}</a></td>
+                        <td ng-hide="$stateParams.trainee"><a href="" ui-sref="trainee.detail.view({ id: item.trainee.id })">{{ item.trainee.firstName }}</a></td>
+                        <td ng-hide="$stateParams.session">
+                            <span ng-if="!$user.hasAccessRight('sygefor_core.access_right.session.own.view') && !$user.hasAccessRight('sygefor_core.access_right.session.all.view')">
+                                {{ item.session.training.name }}
+                            </span>
+                            <span ng-if="$user.hasAccessRight('sygefor_core.access_right.session.own.view') || $user.hasAccessRight('sygefor_core.access_right.session.all.view')">
+                                <a href="" ui-sref="session.detail.view({ id: item.session.id })">{{ item.session.training.name }}</a>
+                            </span>
+                        </td>
+                        <td>{{ item.trainee.employer.name ? item.trainee.employer.name : item.trainee.employer }}</td>
+                        <td><span class="label label-lg" ng-class="$root.inscriptionStatusClass(item.inscriptionStatus.status)">{{ item.inscriptionStatus.name }}</span></td>
+                        <td><span class="label label-lg" ng-class="$root.presenceStatusClass(item.presenceStatus.status)" ng-if="item.presenceStatus">{{ item.presenceStatus.name }}</span></td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+    </div>
+    <div ng-if="search.result.total" class="full-height-item is-full-width">
+        <div search-table-controls></div>
+    </div>
+
+    <!-- No results -->
+    <div class="full-height-item is-full-width is-grow" ng-if="search.executed && !search.result.total">
+        <div class="col-xs-12">
+            <h1>Oops!</h1>
+            <p>Il n'y a aucune inscription correspondante à votre recherche.</p>
+        </div>
+    </div>
+
+</div>

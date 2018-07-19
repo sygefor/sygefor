@@ -208,6 +208,12 @@ to prevent collapsing during animation*/
       font-size: $font-p-size;
       transition: $transition-bg;
 
+      &.alert-danger {
+
+        background-color: $state-danger-bg;
+        color: $state-danger-text !important;
+      }
+
       &:hover {
         background-color: $table-bg-hover;
       }
@@ -282,5 +288,14 @@ to prevent collapsing during animation*/
   .post-title {
     margin-bottom: $line-height-computed*1.2;
     margin-top: $line-height-computed*-1;
+  }
+}
+
+.list-circle {
+  padding-left: 2em;
+  list-style: circle;
+
+  li {
+    padding: 3px 0px;
   }
 }

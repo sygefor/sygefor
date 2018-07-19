@@ -1,0 +1,19 @@
+{% extends "@Front/base.html.twig" %}
+
+{% block header %}
+    <header>
+        <div class="container">
+            <div class="row">
+                <div class="col-lg-12">
+                    <h1>Création d'un nouveau compte sur Sygefor3</h1>
+                </div>
+            </div>
+        </div>
+    </header>
+{% endblock %}
+
+{% block body %}
+    <div class="container">
+        {% include('@Front/Account/profile/profile-form.html.twig') %}
+    </div>
+{% endblock body %}

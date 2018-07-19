@@ -1,0 +1,26 @@
+<div class="btn-group pull-right">
+    <a class="btn btn-fa" href="" tooltip="Bilan" ng-if="training.sessions.length && training._accessRights.view" ng-click="getBalanceSheet()"><span class="fa fa-file-excel-o"></span></a>
+    <a class="btn btn-fa" href="" tooltip="Dupliquer" ng-if="training._accessRights.edit" ng-click="duplicate()"><span class="fa fa-copy"></span></a>
+    <a class="btn btn-fa" href="" tooltip="Supprimer" ng-if="training._accessRights.delete" ng-click="delete()"><span class="fa fa-trash-o"></span></a>
+</div>
+
+<div class="pre-title">{{ training.typeLabel }} {{ training.trainingCode }} -  {{ training.organization.name }}</div>
+
+<h2><span sf-xeditable="form.children.name" data-type="text">{{ training.name }}<!-- action button --></span></h2>
+
+<div class="infos">
+    <label>Thème :</label> <span sf-xeditable="form.children.theme" data-type="select">{{ training.theme.name }}</span><br/>
+    <div><label>Tags :</label> <span sf-xeditable="form.children.tags" data-type="select2">{{ training.tags|joinObjects:'name' }}</span></div>
+    <span ng-if="headerListAdditionalFields.length > 0" ng-repeat="field in headerListAdditionalFields">
+        <label>{{ field.label }} :</label> <span sf-xeditable="form.children[field.field]" data-type="select">{{ training[field.field].name }}</span><br/>
+    </span>
+</div>
+
+<h3>Objectifs</h3><hr>
+<p><span sf-xeditable="form.children.description" data-type="ckeditor" ng-bind-html="training.description"></span></p>
+
+<h3>Programme</h3><hr>
+<p><span sf-xeditable="form.children.program" data-type="ckeditor" ng-bind-html="training.program"></span></p>
+
+<h3>Méthodes pédagogiques</h3><hr>
+<p><span sf-xeditable="form.children.teachingMethods" data-type="ckeditor" ng-bind-html="training.teachingMethods"></span></p>

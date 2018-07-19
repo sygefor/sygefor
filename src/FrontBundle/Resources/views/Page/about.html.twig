@@ -1,0 +1,115 @@
+{% extends "@Front/base.html.twig" %}
+
+{% block header %}
+    <header>
+        <div class="container">
+            <div class="row">
+                <div class="col-md-12 col-xs-12">
+                    <h3>Bienvenue sur la plateforme formation open source Sygefor3</h3>
+                    <h1>A propros de Sygefor3</h1>
+                </div>
+            </div><!-- /row -->
+        </div> <!-- /container -->
+    </header>
+{% endblock %}
+
+{% block body %}
+    <div class="container">
+        <section>
+            <div class="outer-wrap">
+                <div class="inner-wrap">
+                    <!-- RESULTS -->
+                    <div class="row">
+                        <div class="col-lg-12">
+                            <h1>Qu'est-ce que SYGEFOR ?</h1>
+                            <p>
+                                SYGEFOR (SYstème de GEstion des FORmations) est une application web déployée en 2005 dans les sept URFIST (<a href="https://sygefor.reseau-urfist.fr/?department=10&organization=6#!/aru" target="_blank">Unités Régionales de Formation à l’Information Scientifique et Technique</a>).
+                                SYGEFOR 3 est une nouvelle version en <a href="https://github.com/sygefor/sygefor" target="_blank">open source</a>, dédiée à la gestion des actions de formation.
+                                Le <a href="http://www.cnrs.fr" target="_blank">CNRS</a> a souhaité réutiliser le code libre de SYGEFOR 3 afin de répondre à leurs propres besoins.
+                            </p>
+                            <h3>Quelles sont les principales fonctionnalités de SYGEFOR 3 ?</h3>
+                            <ul class="stylized-list">
+                                <li><strong>La gestion de tout le processus d’inscription à une formation :</strong> gestion des inscriptions (mise sur
+                                    liste d’attente, validation ou refus des demandes d’inscription, gestion des désistements), distinction entre inscrits
+                                    et présents, publipostage, gestion de plusieurs sessions d’une même action, duplication des descriptifs d’actions...</li>
+                                <li><strong>La fourniture de services personnalisés aux usagers :</strong> authentification par les identifiants de son
+                                    université, téléchargement de documents administratifs, récapitulatif des stages suivis, accès aux supports de formation...</li>
+                                <li><strong>De nombreuses fonctionnalités de recherche :</strong>
+                                    <ul>
+                                        <li>sur l'interface utilisateur : recherches sur toutes les formations passées et à venir,  plusieurs possibilités de
+                                            filtrage sur différentes facettes ;</li>
+                                        <li>sur l'interface administrateur : recherches sur tous les événements organisés, sur les publics, les intervenants ;
+                                            nombreux filtrages possibles ;</li>
+                                    </ul>
+                                </li>
+                                <li><strong>La constitution des archives de son service :</strong> archivage des programmes des années précédentes, constitution
+                                    de bases sur les stagiaires, les intervenants, les rencontres scientifiques...</li>
+                                <li><strong>La création automatique des bilans de toutes les actions de formation :</strong> édition de bilans complets
+                                    des actions de formation, nombreux croisements sur les données...</li>
+                                <li><strong>Le traitement par lots :</strong> sur l'interface administrateur, nombreuses fonctionnalités sur des lots de fiches ;</li>
+                                <li><strong>Les exports de données :</strong> possibilités d'export et d'édition de données (sous CSV et PDF) : fiche
+                                    d'une formation, programme entier, listes de stagiaires,  bilans...</li>
+                                <li><strong>Le publipostage de documents :</strong> édition automatisée des documents de formation (attestation de
+                                    présence, liste d'émargement, demande d'autorisation...), paramétrage personnalisé des modèles de publipostage ;</li>
+                                <li><strong>L'envoi de mailings :</strong> paramétrage des mels automatiques, possibilités d'envoi en masse de mels ;</li>
+                                <li><strong>Une meilleure visibilité des actions de formation :</strong> fonctionnalités sémantiques (à venir), meilleure
+                                    indexation des actions de formation sur les outils du web, exports automatiques possibles vers le portail de formation
+                                    Bibdoc ou d’autres sites...</li>
+                                <li><strong>La personnalisation de l’outil selon ses besoins :</strong> SYGEFOR 3 étant en open source, adaptation possible
+                                    du code source pour des développements répondant à des besoins spécifiques</li>
+                            </ul>
+
+                            <h3>Quels sont les acteurs ?</h3>
+                            <ul class="stylized-list">
+                                <li><strong>L'Association du Réseau des URFIST :</strong> SYGEFOR 3 est une application conçue par, et développée pour,
+                                    l’<a href="https://sygefor.reseau-urfist.fr/?department=10&organization=6#!/aru" target="_blank">Association du Réseau des URFIST (ARU)</a>. </li>
+                                <li><strong>L'adCRFCB :</strong> Sygefor3 est repris et complété en 2016.</li>
+                                <li><strong>La délégation Côte D'Azur (DR20) du CNRS :</strong> Sygefor3 est repris et complété en 2016.</li>
+                                <li><strong>La délégation IFSeM du CNRS (DR1) :</strong> Sygefor3 est repris et complété en 2017.</li>
+                                <li><strong>Conjecto :</strong> la société <a href="http://www.conjecto.com" target="_blank">Conjecto</a>, start-up informatique
+                                    de Rennes, a réalisé le logiciel SYGEFOR 3. L'équipe de Conjecto a développé une application faisant appel aux technologies
+                                    les plus récentes (notamment le moteur de recherche à facettes ElasticSearch) et a créé un outil de gestion efficace et facile
+                                    à prendre en mains, dont l’originalité réside sans aucun doute dans le caractère modulaire.</li>
+                            </ul>
+
+                            <h3>Un outil open source</h3>
+                            <p>SYGEFOR 3 est un <strong>logiciel en open source, gratuit</strong> et téléchargeable sur les
+                                <a href="https://github.com/sygefor/sygefor" target="_blank">plateformes de logiciels libres</a>, selon les conditions habituelles
+                                de l’open source (sous licence <a href="http://www.cecill.info/licences/Licence_CeCILL-C_V1-fr.html" target="_blank">CeCILL-C</a>).
+                            </p>
+
+                            <strong>Toute réutilisation de SYGEFOR 3, par quelque organisme que ce soit et quelle que soient les conditions de cette
+                                réutilisation, doit comporter, dans les Mentions légales, la mention de paternité suivante :</strong>
+                            <blockquote>
+                                <ul>
+                                    <li>SYGEFOR3 est un logiciel développé par CONJECTO à l’initiative de l’Association du Réseau des URFIST (ARU).</li>
+                                    <li>SYGEFOR est une marque déposée par l’ARU à l’INPI sous le N°14.4.065.612, le 3 février 2014.</li>
+                                </ul>
+                            </blockquote>
+
+                            <p>
+                                Si l'outil peut être téléchargé gratuitement et modifié, sous les conditions de la licence CeCILL-C, les organismes intéressés
+                                devront prendre en charge les adaptations à leurs besoins et à leur environnement. Deux possibilités se présentent :
+                            <ul class="stylized-list">
+                                <li>Soit les organismes de formation du secteur public, intéressés par SYGEFOR 3, contactent directement la société
+                                    <a href="http://www.conjecto.com/" target="_blank">Conjecto</a>, pour demander les adaptations nécessaires ;</li>
+                                <li>Soit les organismes de formation, du secteur public comme du secteur privé, contactent un autre prestataire. Si ce
+                                    prestataire souhaite utiliser le nom SYGEFOR, il devra contacter l'Association du Réseau des URFIST pour demander
+                                    un contrat de licence de marque.</li>
+                            </ul>
+                            </p>
+
+                            <p>Dans tous les cas, l'Association du Réseau des URFIST n’intervient pas dans la définition des spécifications fonctionnelles
+                                dans le cadre d’un projet particulier. Les actions de formation interne nécessaires sont également à la charge de chaque
+                                organisme de formation souhaitant déployer SYGEFOR 3.</p>
+
+                            <p>Pour avoir plus d'informations sur l'historique du projet, voir le billet <a href="http://urfistinfo.hypotheses.org/2730" target="_blank">SYGEFOR 3, la nouvelle plateforme nationale
+                                    du Réseau des URFIST</a>, sur le blog des URFIST, <strong>UrfistInfo</strong>.</p>
+
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+    </div>
+{% endblock body %}

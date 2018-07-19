@@ -1,0 +1,21 @@
+.attendances {
+  i, span ~label {
+    line-height: 22px;
+  }
+
+  .col-md-6 a {
+    margin-top: $padding-large-vertical;
+  }
+
+  blockquote small:before {
+    content : none !important;
+  }
+
+  .glyphicon.glyphicon-star {
+    color: #ff913e;
+  }
+
+  .infos {
+    margin-top: $padding-large-vertical;
+  }
+}

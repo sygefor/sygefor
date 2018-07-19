@@ -1,0 +1,14 @@
+body .content {
+  background-color: white;
+  min-height: 70rem;
+  padding-bottom: $padding-large-vertical;
+}
+
+.well {
+  padding: 0 $padding-base-horizontal 0 $padding-base-horizontal;
+  margin: 0;
+}
+
+section {
+  padding-top: $padding-large-vertical;
+}

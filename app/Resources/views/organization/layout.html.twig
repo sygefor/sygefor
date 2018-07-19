@@ -1,0 +1,33 @@
+{% extends "SygeforCoreBundle::layout.html.twig" %}
+
+{% block breadcrumbs %}
+    <ol class="breadcrumb full-height-item">
+        <li><a href="{{ path('core.index') }}">Accueil</a></li>
+        <li><a href="#">Administration</a></li>
+        <li><a href="{{ path('organization.index') }}">Centres</a></li>
+        {% if not organization.id %}
+            <li class="active"><a href="{{ path('organization.add') }}">Ajouter un centre</a></li>
+        {% endif %}
+        {% if organization.id %}
+            <li><a href="{{ path('organization.edit', {id: organization.id}) }}">{{ organization.name }}</a></li>
+            {% if breadcrumb_item %}
+                <li class="active"><a href="{{ path(app.request.attributes.get('_route'), {id: organization.id}) }}">{{ breadcrumb_item }}</a></li>
+            {% endif %}
+        {% endif %}
+    </ol>
+{% endblock %}
+
+{% block content %}
+    {#{% if organization.id and organization.id != app.organization.id  %}#}
+        {#<ul class="nav nav-tabs">#}
+            {#<li{% if app.request.attributes.get('_route') == 'organization.edit' %} class="active"{% endif %}><a href="{{ path('organization.edit', {id: organization.id}) }}">Centre</a></li>#}
+        {#</ul>#}
+    {#{% endif %}#}
+    <div class="list-view full-height-item is-grow">
+        <div class="full-height-container is-absolute is-full-width">
+            <div class="col-xs-12" ui-view>
+                {{ block('subcontent') }}
+            </div>
+        </div>
+    </div>
+{% endblock %}

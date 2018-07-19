@@ -63,7 +63,7 @@
     Resource requests are mapped by the RequestMapper to an applicationId that
     points into to this section (or to the defaults here).
     -->
-    <ApplicationDefaults entityID="https://sygefor.dev"
+    <ApplicationDefaults entityID="https://aaa.sygefor.reseau-urfist.fr"
                          REMOTE_USER="eppn persistent-id targeted-id">
 
     <!--ApplicationDefaults entityID="https://aaa.sygefor.reseau-urfist.fr"
@@ -88,12 +88,12 @@
             You can also override entityID on /Login query string, or in RequestMap/htaccess.
             -->
             <!--SSO discoveryProtocol="SAMLDS" discoveryURL="https://discovery.renater.fr/test"-->
-            <SSO discoveryProtocol="SAMLDS" discoveryURL="http://sygefor.dev/wayf?lang=fr">
+            <!--SSO discoveryProtocol="SAMLDS" discoveryURL="https://sygefor.com/wayf?lang=fr">
               SAML2 SAML1
-            </SSO>
-            <!--SSO discoveryProtocol="SAMLDS" discoveryURL="https://discovery.renater.fr/renater">
-                SAML2 SAML1
             </SSO-->
+            <SSO discoveryProtocol="SAMLDS" discoveryURL="https://discovery.renater.fr/renater">
+                SAML2 SAML1
+            </SSO>
 
             <!-- SAML and local-only logout. -->
             <Logout>SAML2 Local</Logout>
@@ -115,26 +115,26 @@
         Allows overriding of error template information/filenames. You can
         also add attributes with values that can be plugged into the templates.
         -->
-        <Errors supportContact="support@sygefor.dev"
+        <Errors supportContact="support@conjecto.com"
             helpLocation="/about.html"
             styleSheet="/shibboleth-sp/main.css"/>
 
         <!-- prod metadata. -->
-        <MetadataProvider type="XML" uri="https://federation.renater.fr/renater/renater-metadata.xml"
+        <!--MetadataProvider type="XML" uri="https://federation.renater.fr/renater/renater-metadata.xml"
               backingFilePath="renater-metadata.xml" reloadInterval="7200">
             <MetadataFilter type="RequireValidUntil" maxValidityInterval="2419200"/>
             <MetadataFilter type="Signature" certificate="metadata-federation-renater.crt"/>
             <!--<MetadataFilter type="Whitelist">-->
               <!--<Include>IPD Entity ID</Include>-->
             <!--</MetadataFilter>-->
-        </MetadataProvider>
+        <!--/MetadataProvider-->
 
 	    <!-- test metadata -->
-        <!--MetadataProvider type="XML" uri="https://federation.renater.fr/test/renater-test-metadata.xml"
-              backingFilePath="renater-testmetadata.xml" reloadInterval="7200">
+        <MetadataProvider type="XML" uri="https://federation.renater.fr/test/renater-test-metadata.xml"
+              backingFilePath="renater-test-metadata.xml" reloadInterval="7200">
             <MetadataFilter type="RequireValidUntil" maxValidityInterval="2419200"/>
             <MetadataFilter type="Signature" certificate="metadata-federation-renater.crt"/>
-        </MetadataProvider-->
+        </MetadataProvider>
 
 	<!-- cru metadata -->
 	<MetadataProvider type="XML" uri="https://cru.renater.fr/idp/profile/Metadata/SAML"

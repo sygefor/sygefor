@@ -1,0 +1,16 @@
+services:
+    app.configure_menu_listener:
+        class: AppBundle\EventListener\ConfigureMenuListener
+        arguments:
+            - "@security.context"
+            - "@router"
+            - "@doctrine.orm.entity_manager"
+        tags:
+            - { name: kernel.event_listener, event: sygefor_core.menu_configure, method: onMenuConfigure }
+            - { name: kernel.event_listener, event: sygefor_core.menu_alter, method: onAlterConfigure }
+
+    # Email CC resolvers
+    app.email_resolver.trainer:
+        class: AppBundle\Utils\EmailCCResolver\TraineeResolver
+        tags:
+            - { name: sygefor_core.email_resolver }

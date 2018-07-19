@@ -1,0 +1,29 @@
+<div class="block block-participations">
+    <div class="block-title">
+        <a class="btn btn-link h4" ui-sref="session.table({trainer: trainer.id})"><span class="fa fa-calendar-o"></span>Sessions</a>
+        <div class="pull-right">
+            <span class="badge ng-binding">{{ search.result.total ? search.result.total : 0 }}</span>
+        </div>
+    </div>
+
+    <div class="block-body">
+        <div ng-if="!search.result.total" class="well well-empty well-sm">
+            {{ emptyMsg }}
+        </div>
+        <div ng-if="search.result.total">
+            <table class="table table-condensed table-nohead">
+                <tbody>
+                <tr ng-repeat="participation in search.result.items" class="row">
+                    <td class="col-xs-3"><span class="text-gray-light text-small">{{ participation.session.dateBegin | date:'dd/MM/yy' }}</span></td>
+                    <td class="col-xs-9"><a ui-sref="session.detail.view({id: participation.session.id})">{{ participation.session.training.name }}</a><br>
+                        <span class="text-light text-gray-light">{{ participation.session.training.typeLabel }}</span>
+                    </td>
+                </tr>
+                </tbody>
+            </table>
+        </div>
+        <div ng-if="search.result.total > search.query.size" class="full-height-item is-full-width">
+            <div search-table-controls></div>
+        </div>
+    </div>
+</div>

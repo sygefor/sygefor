@@ -1,0 +1,9 @@
+[submodule "common/sygefor/core-bundle"]
+	path = common/sygefor/core-bundle
+	url = git@github.com:sygefor/core-bundle.git
+[submodule "common/sygefor/api-bundle"]
+	path = common/sygefor/api-bundle
+	url = git@github.com:sygefor/api-bundle.git
+[submodule "common/docker"]
+	path = common/docker
+	url = git@github.com:sygefor/docker-shibboleth.git

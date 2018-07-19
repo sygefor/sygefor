@@ -1,0 +1,73 @@
+<div class="panel-group" id="accordion" role="tablist" aria-multiselectable="true">
+    <div class="panel panel-default">
+        <div class="panel-heading" role="tab" id="headingOne">
+            <p class="panel-title text-center">
+                <a role="button" data-toggle="collapse" data-parent="#accordion" href="#session{{ upcomingSession.id }}" aria-expanded="true" aria-controls="collapseOne">
+                    {{ upcomingSession.dateBegin | date('l') | trans }} {{ upcomingSession.dateBegin | date('d') }} {{ upcomingSession.dateBegin | date('F') | trans }} {{ upcomingSession.dateBegin | date('Y') }}
+                </a>
+            </p>
+        </div>
+        <div id="session{{ upcomingSession.id }}" class="panel-collapse collapse {{ session | length > 0 and upcomingSession.id == session.id ? 'in' : '' }}" role="tabpanel" aria-labelledby="headingOne">
+            <div class="panel-body">
+                <ul class="list-unstyled text-center">
+                    {% if upcomingSession.name is defined and upcomingSession.name != "" %}
+                        <li title="Intitulé de la session"><h4>{{ upcomingSession.name }}</h4></li>
+                    {% endif %}
+                    {% if upcomingSession.place.name is defined %}
+                        <li title="Lieu de la session"><i class="glyphicon glyphicon-map-marker"></i>&nbsp;&nbsp; <a href="{{ path('front.program.session.place', {id: upcomingSession.id}) }}">{{ upcomingSession.place.name }}</a></li>
+                    {% endif %}
+                    {% if upcomingSession.room | length > 0 %}
+                        <li title="Salle"><i class="glyphicon glyphicon-map-marker"></i>&nbsp;&nbsp; {{ upcomingSession.room }}</li>
+                    {% endif %}
+                    {% if upcomingSession.hourNumber > 0 or upcomingSession.dayNumber > 0 %}
+                        <li title="Durée de la session"><i class="glyphicon glyphicon-calendar"></i>&nbsp;&nbsp;
+                            {% if upcomingSession.hourNumber > 0 %}
+                                {{ upcomingSession.hourNumber }}
+                            {% endif %}
+                            {% if upcomingSession.hourNumber > 0 and upcomingSession.dayNumber > 0 %}
+                                heure(s) sur
+                            {% endif %}
+                            {% if upcomingSession.dayNumber > 0 %}
+                                {{ upcomingSession.dayNumber }} jour(s)
+                            {% endif %}
+                        </li>
+                    {% endif %}
+                    {% if (upcomingSession.datePrecisions is defined) and (upcomingSession.datePrecisions|length > 0) %}
+                        <li title="Précisions sur les dates"><i class="glyphicon glyphicon-calendar"></i>&nbsp;&nbsp;{{ upcomingSession.datePrecisions }}</li>
+                    {% endif %}
+                    {% if (upcomingSession.schedule is defined) and (upcomingSession.schedule|length > 0) %}
+                        <li title="Horaires de la session"><i class="glyphicon glyphicon-time"></i>&nbsp;&nbsp;{{ upcomingSession.schedule }}</li>
+                    {% endif %}
+                    {% if upcomingSession.maximumNumberOfRegistrations is defined and upcomingSession.maximumNumberOfRegistrations > 0 and upcomingSession.availablePlaces is defined %}
+                        <li title="Nombre maximum d'inscrits ({{ upcomingSession.availablePlaces }} places disponibles)"><i class="glyphicon glyphicon-user"></i>&nbsp;&nbsp;{{ upcomingSession.maximumNumberOfRegistrations }} inscriptions max.</li>
+                    {% endif %}
+                    {% if upcomingSession.limitRegistrationDate is defined and upcomingSession.isPublic and upcomingSession.availablePlaces > 0 and upcomingSession.limitRegistrationDate %}
+                        <li title="Le {{ upcomingSession.limitRegistrationDate | date('l') | trans }} {{ upcomingSession.limitRegistrationDate | date('d') }} {{ upcomingSession.limitRegistrationDate | date('F') | trans }} {{ upcomingSession.limitRegistrationDate | date('Y') }}" class="text-center">
+                            <div class="alert-danger">
+                                <span class="label radius text-center">Clôture des inscriptions {{ upcomingSession.limitRegistrationDate | time_diff }}</span>
+                            </div>
+                        </li>
+                    {% endif %}
+                    {% if upcomingSession.isPublic and upcomingSession.availablePlaces <= 0 %}
+                        <li class="text-center">
+                            <div class="alert-danger">
+                                <span class="label radius">Il n'y plus de place disponible</span>
+                            </div>
+                        </li>
+                    {% endif %}
+                </ul>
+
+                <!--infos-->
+                {% if upcomingSession.isRegistered is defined %}
+                    {% if upcomingSession.registrable and not upcomingSession.isRegistered and (upcomingSession.availablePrivateSession or upcomingSession.isPublic) %}
+                        <a href="{{ path('front.program.session.inscription', {'id': training.id, 'sessionId': upcomingSession.id, token: token}) }}" class="btn btn-primary btn-lg btn-group-justified radius">S'inscrire à cette session</a>
+                    {% elseif upcomingSession.isRegistered %}
+                        <a href="{{ path('front.account.registrations') }}" class="btn btn-primary btn-lg btn-group-justified radius" >Voir l'état de mon inscription</a>
+                    {% elseif not upcomingSession.registrable and not upcomingSession.isRegistered %}
+                        <a href="" class="btn btn-primary btn-lg disabled btn-group-justified radius">Inscriptions closes</a>
+                    {% endif %}
+                {% endif %}
+            </div>
+        </div>
+    </div>
+</div>

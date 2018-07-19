@@ -1,0 +1,15 @@
+services:
+    app.training_type.internship:
+        class: AppBundle\Entity\Training\Internship
+        tags:
+            - { name: sygefor_core.training_type }
+
+    app.training_type.long_training:
+        class: AppBundle\Entity\Training\LongTraining
+        tags:
+            - { name: sygefor_core.training_type }
+
+    app.training_type.meeting:
+        class: AppBundle\Entity\Training\Meeting
+        tags:
+            - { name: sygefor_core.training_type }

@@ -1,0 +1,24 @@
+{% if training.description is defined and training.description | length > 0 %}
+    <h4>Objectifs</h4>
+    <p>{{ training.description | raw }}</p>
+{% endif %}
+
+{% if training.publicTypes is defined and training.publicTypes | length > 0 %}
+    <h4>Public</h4>
+    <p>{{ training.publicTypes | raw }}</p>
+{% endif %}
+
+{% if training.prerequisites is defined and training.prerequisites | length > 0 %}
+    <h4>Pré-requis</h4>
+    <p>{{ training.prerequisites | raw }}</p>
+{% endif %}
+
+{% if training.program is defined and training.program | length > 0 %}
+    <h4>Programme</h4>
+    <p>{{ training.program | raw }}</p>
+{% endif %}
+
+{% if training.teachingMethods is defined and training.teachingMethods | length > 0 %}
+    <h4>Méthodes pédagogiques</h4>
+    <p>{{ training.teachingMethods | raw }}</p>
+{% endif %}

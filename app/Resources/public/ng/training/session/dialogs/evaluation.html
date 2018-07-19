@@ -1,0 +1,36 @@
+<div class="modal-header">
+    <button type="button" class="close" ng-click="dialog.dismiss()" aria-hidden="true">×</button>
+    <h4 class="modal-title" id="myModalLabel">{{ dialog.params.session.training.name }} - {{ dialog.params.session.dateBegin | date }}</h4>
+</div>
+
+<div class="modal-body center-block">
+    <strong>
+        {{ nbrEvaluation }} évaluations complétées pour {{ nbrPresentInscription }} stagiaires présents
+        <span ng-if="nbrEvaluation > 0 && nbrPresentInscription > 0">({{ (nbrEvaluation / nbrPresentInscription) * 100 | number : 0 }}%)</span>.<br/>
+        Formateur(s) : <span ng-repeat="(key, participation) in dialog.params.session.participations"><span ng-if="key > 0">, </span>{{ participation.trainer.fullName }}</span>
+    </strong>
+
+    <div ng-if="!displayComments" ng-repeat="(theme, criterion) in evaluations.summary">
+        <h2>{{ theme }}</h2>
+        <div ng-repeat="(criteria, note) in criterion">
+            {{ criteria }} : {{ note }} / 3
+        </div>
+    </div>
+
+    <div ng-if="displayComments" ng-repeat="(name, comments) in evaluations.comments">
+        <div ng-if="comments.length > 0">
+            <h2>{{ name }}</h2>
+            <ul>
+                <li ng-repeat="comment in comments track by $index">{{ comment }}</li>
+            </ul>
+        </div>
+    </div>
+</div>
+
+<div class="modal-footer">
+    <a class="btn btn-primary" ng-click="getEvaluationSheet()">Télécharger le détail</a>
+    <button class="btn btn-default" ng-click="displayComments = !displayComments" ng-init="displayComments = false">
+        {{ displayComments ? 'Afficher la moyenne des notes' : 'Afficher les commentaires' }}
+    </button>
+    <a class="btn btn-default" ng-click="dialog.dismiss()">Fermer</a>
+</div>

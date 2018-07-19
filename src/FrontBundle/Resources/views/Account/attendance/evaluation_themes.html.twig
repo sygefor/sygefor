@@ -1,0 +1,12 @@
+<h4>Commentaires généraux</h4>
+<div class="evaluation_theme">
+    {% for key in ['goodPoints', 'badPoints', 'suggestions'] %}
+        <div class="form-group">
+            <label class="col-sm-4 control-label" for="evaluation_goodPoints">{{ form[key].vars.label }}</label>
+            <div class="col-sm-8">
+                {{ form_widget(form[key]) }}
+                {{ form_errors(form[key]) }}
+            </div>
+        </div>
+    {% endfor %}
+</div>

@@ -1,0 +1,22 @@
+<div class="block block-materials">
+    <div class="block-title">
+        <div class="full-width">
+            <span class="h4"><span class="fa fa-paperclip"></span> Documents {{ isPublic == true ? 'publics' : 'de la formation' }}</span>
+            <div class="pull-right">
+                <a ng-if="entity._accessRights.edit" tooltip="Gérer les documents" ng-click="manage()" href="" class="btn btn-fa btn-sm"><span class="fa fa-folder-open-o"></span></a>
+                <span class="badge">{{ materials.length }}</span>
+            </div>
+        </div>
+    </div>
+    <div class="block-body">
+        <div class="well well-empty well-sm" ng-if="materials.length == 0">
+            {{ emptyMsg }}
+        </div>
+        <ul class="list-unstyled">
+            <li ng-repeat="material in materials">
+                <a href="" ng-click="getMaterial(material)" ng-if="!material.url">{{ material.fileName }}</a>
+                <a href="{{material.url}}" target="_blank" ng-if="material.url">{{ material.name }}</a>
+            </li>
+        </ul>
+    </div>
+</div>

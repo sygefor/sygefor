@@ -1,0 +1,53 @@
+{% extends "@Front/base.html.twig" %}
+
+{% block header %}
+    <header>
+        <div class="container">
+            <div class="row">
+                <div class="col-lg-12">
+                    <h1>Mon compte</h1>
+                </div>
+            </div>
+            {% include '@Front/Account/menu.html.twig' %}
+        </div>
+    </header>
+{% endblock %}
+
+{% block breadcrumbs %}
+    <div class="breadcrumb">
+        <div class="container">
+            <ol class="breadcrumb">
+                <li><a href="{{ path('front.program.index') }}">Accueil</a></li>
+                <li><a href="{{ path('front.account') }}">Mon compte</a></li>
+                <li><a href="{{ path('front.account.registrations') }}">Mes demandes d'inscription</a></li>
+                <li><a class="active" href="">Désistement de &laquo; {{ registration.session.training.name }} 	&raquo;</a></li>
+            </ol>
+        </div>
+    </div>
+{% endblock breadcrumbs %}
+
+{% block body %}
+<div class="container">
+  <section>
+    <div class="row">
+      <div class="col-md-12 columns">
+              <h3>{{ registration.pending ? 'Annuler une demande' : 'Déclarer un désistement'}}</h3>
+              <p>Pour confirmer votre désistement et libérer un place cliquer sur le bouton ci-dessous.</p>
+
+              <blockquote class="small">
+                {{ registration.session.training.name }}<br>
+                {{ registration.session.dateRange | replace('le' , '') }}
+              </blockquote>
+
+              <div class="row">
+                  <div class="col-md-12">
+                      <form method="POST">
+                          <input type="submit" class="btn btn-danger" value="Se désister"/>
+                      </form>
+                  </div>
+              </div>
+        </div>
+    </div>
+  </section>
+</div>
+{% endblock %}

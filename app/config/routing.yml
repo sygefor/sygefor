@@ -1,55 +1,41 @@
-sygefor_lhoe:
-    resource: "@SygeforLheoBundle/Controller/"
-    type:     annotation
-    prefix:   /
-
 sygefor_core:
     resource: "@SygeforCoreBundle/Controller/"
     type:     annotation
+    host:     "%back_host%"
     prefix:   /
 
-sygefor_list:
-    resource: "@SygeforListBundle/Controller/"
+app:
+    resource: "@AppBundle/Controller/"
+    host:     "%back_host%"
     type:     annotation
     prefix:   /
 
-sygefor_taxonomy:
-    resource: "@SygeforTaxonomyBundle/Controller/"
+activity_report:
+    resource: "@ActivityReportBundle/Controller/"
     type:     annotation
+    host:     "%back_host%"
     prefix:   /
-
-sygefor_training:
-    resource: "@SygeforTrainingBundle/Controller/"
-    type:     annotation
-    prefix:   /
-
-sygefor_trainee:
-    resource: "@SygeforTraineeBundle/Controller/"
-    type:     annotation
-    prefix:   /
-
-sygefor_trainer:
-    resource: "@SygeforTrainerBundle/Controller/"
-    type:     annotation
-    prefix:   /
-
-sygefor_user:
-    resource: "@SygeforUserBundle/Controller/"
-    type:     annotation
-    prefix:   /admin
 
 sygefor_api:
     resource: "@SygeforApiBundle/Controller/"
     type:     annotation
+    host:     "%front_host%"
     prefix:   /
 
-sygefor_activity_report:
-    resource: "@SygeforActivityReportBundle/Controller/"
+lheo:
+    resource: "@LheoBundle/Controller/"
     type:     annotation
     prefix:   /
 
+front:
+    resource: "@FrontBundle/Controller/"
+    type:     annotation
+    host:     "%front_host%"
+    prefix:   /
+
 shibboleth_logout:
-    path:   /api/shibboleth/logout
+    path:   /shibboleth/logout
+    host:     "%front_host%"
 
 fos_user_security:
     resource: "@FOSUserBundle/Resources/config/routing/security.xml"
@@ -74,7 +60,9 @@ fos_js_routing:
     resource: "@FOSJsRoutingBundle/Resources/config/routing/routing.xml"
 
 fos_oauth_server_token:
+    host:     "%front_host%"
     resource: "@FOSOAuthServerBundle/Resources/config/routing/token.xml"
 
 fos_oauth_server_authorize:
+    host:     "%front_host%"
     resource: "@FOSOAuthServerBundle/Resources/config/routing/authorize.xml"

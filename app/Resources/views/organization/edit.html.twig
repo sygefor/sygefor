@@ -1,0 +1,23 @@
+{% extends "organization/layout.html.twig" %}
+{% set breadcrumb_item = '' %}
+
+{% block subcontent %}
+    {{ form_start(form) }}
+    {{ form_row(form.name) }}
+    {{ form_row(form.code) }}
+    {{ form_row(form.email) }}
+    {{ form_row(form.phoneNumber) }}
+    {{ form_row(form.address) }}
+    {{ form_row(form.zip) }}
+    {{ form_row(form.city) }}
+    {{ form_row(form.website) }}
+    {{ form_row(form.traineeRegistrable) }}
+
+    <div class="form-group">
+        <div class="col-sm-offset-2 col-sm-10">
+            <button type="submit" class="btn btn-primary">Enregistrer</button>
+        </div>
+    </div>
+    {{ form_widget(form._token) }}
+    {{ form_end(form, {'render_rest': false}) }}
+{% endblock %}

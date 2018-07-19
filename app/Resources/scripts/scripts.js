@@ -1,0 +1,40 @@
+/** vendors **/
+//=require ../../../node_modules/jquery/dist/jquery.js
+//=require ../../../node_modules/bootstrap/dist/js/bootstrap.js
+//=require ../../../bower_components/angular/angular.js
+//=require ../../../bower_components/angular-resource/angular-resource.js
+//=require ../../../bower_components/angular-animate/angular-animate.js
+//=require ../../../node_modules/angular-ui-router/release/angular-ui-router.js
+//=require ../../../node_modules/angular-ui-bootstrap/ui-bootstrap-tpls.js
+//=require ../../../node_modules/bootstrap-datepicker/js/bootstrap-datepicker.js
+//=require ../../../node_modules/bootstrap-datepicker/js/locales/bootstrap-datepicker.fr.js
+//=require ../../../node_modules/X-editable/dist/bootstrap3-editable/js/bootstrap-editable.js
+//=require ../../../node_modules/angular-loading-bar/build/loading-bar.js
+//=require ../../../node_modules/jquery-autosize/jquery.autosize.js
+//=require ../../../node_modules/Select2/select2.js
+//=require ../../../node_modules/Select2/select2_locale_fr.js
+//=require ../../../node_modules/angular-ui-select2/src/select2.js
+//=require ../../../node_modules/moment/moment.js
+//=require ../../../node_modules/moment/lang/fr.js
+//=require ../../../node_modules/angular-hotkeys/build/hotkeys.js
+//=require ../../../node_modules/checklist-model/checklist-model.js
+//=require ../../../node_modules/angular-growl/build/angular-growl.js
+//=require ../../../node_modules/jquery-slimscroll/jquery.slimscroll.js
+//=require ../../../node_modules/angularjssearchbox/build/angularjssearchbox.deps.js
+//=require ../../../node_modules/blueimp-file-upload/js/vendor/jquery.ui.widget.js
+//=require ../../../node_modules/blueimp-file-upload/js/jquery.fileupload.js
+//=require ../../../node_modules/blueimp-file-upload/js/jquery.fileupload-process.js
+//=require ../../../node_modules/blueimp-file-upload/js/jquery.fileupload-angular.js
+//=require ../../../node_modules/zeroclipboard/dist/ZeroClipboard.js
+//=require ../../../node_modules/angular-zeroclipboard/src/angular-zeroclipboard.js
+//=require ../../../node_modules/ngstorage/ngStorage.js
+//=require ../../../node_modules/timepicker/jquery.timepicker.js
+//=require ../../../vendor/friendsofsymfony/jsrouting-bundle/FOS/JsRoutingBundle/Resources/public/js/router.js
+//=require ../../../web/js/fos_js_routes.js
+// ../../../common/sygefor/core-bundle/Resources/scripts/jquery.nestable.js
+//=require ../../../common/sygefor/core-bundle/Resources/scripts/modernizr-custom.js
+
+/** sygefor **/
+//=require ../../../common/sygefor/core-bundle/Resources/public/ng/**/*.js
+//=require ../../../app/Resources/public/ng/**/*.js
+//=require ../../../src/ActivityReportBundle/Resources/public/ng/**/*.js

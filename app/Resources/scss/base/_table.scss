@@ -1,0 +1,24 @@
+.list-view {
+  .table {
+    tr.locked {
+      background: $gray-lighter;
+
+      a {
+        color: $gray-dark;
+      }
+
+      .badge {
+        color: $gray-dark;
+      }
+    }
+  }
+
+  .list-group {
+    .list-group-item.locked {
+      background-color: $gray-lighter;
+      &.active {
+        background-color: $gray-light;
+      }
+    }
+  }
+}

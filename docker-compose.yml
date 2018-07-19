@@ -1,0 +1,51 @@
+version: "3.1"
+services:
+
+  mysql:
+    container_name: "sygefor_mysql"
+    image: library/mysql:5.6
+    environment:
+        - MYSQL_USER=dev
+        - MYSQL_PASSWORD=dev
+        - MYSQL_ROOT_PASSWORD=root
+        - MYSQL_DATABASE=sygefor3
+    ports:
+        - "3306:3306"
+    volumes:
+        - ./var/mysql:/var/lib/mysql
+
+  elasticsearch:
+    container_name: "sygefor_elasticsearch"
+    image: elasticsearch:1.4.5
+#    command: bin/plugin -install mobz/elasticsearch-head
+    ports:
+        - "9200:9200"
+    volumes:
+        - ./var/elasticsearch:/var/lib/elasticsearch
+
+  # @See https://github.com/sygefor/docker-shibboleth
+  shibboleth_isp:
+    container_name: "sygefor_shibboleth"
+    image: sygefor/shibboleth_isp
+    volumes:
+        # Sources
+        - ./:/var/www/sygefor
+
+        # Apache volumes
+        - ./common/docker/apache2/sites-enabled:/etc/apache2/sites-enabled
+        - ./common/docker/apache2/certificates:/etc/apache2/certificates
+        - ./var/log/apache2/:/var/log/apache2
+
+        # Shibboleth volumes
+        - ./common/docker/shibboleth-sp/:/etc/shibboleth/
+        - ./var/log/shibboleth/:/var/log/shibboleth
+    ports:
+        - "80:80"
+        - "443:443"
+
+  mailcatcher:
+    container_name: "sygefor_mailcatcher"
+    image: schickling/mailcatcher
+    ports:
+        - "1025:1025"
+        - "1080:1080"

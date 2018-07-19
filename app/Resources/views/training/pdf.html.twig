@@ -1,0 +1,49 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>{{ training.name }}</title>
+    <link href='https://fonts.googleapis.com/css?family=Open+Sans:400,300,600' rel='stylesheet' type='text/css'>
+    <link href="{{ link }}\build\styles.css" rel="stylesheet" type='text/css'>
+</head>
+<body style="background-color: white">
+<div class="pre-title">{{ training.typeLabel }} n°{{ training.trainingCode }} - {{ training.organization.name }}</div>
+<h2><span>{{ training.name }}</span></h2>
+<div class="infos">
+    <div><span>Thème : </span> <span>{{ training.theme.name }}</span></div>
+    {% if training.tags.count > 0 %}
+        <div><span>Tags : </span> <span>{{ training.tags | join('name') }}</span></div>
+    {% endif %}
+</div>
+
+<h3><span>Programme</span></h3>
+<p><span class="text-justify">{{ training.program|ckeditor|raw }}</span></p>
+
+<h3><span>Méthodes pédagogiques</span></h3>
+<p><span class="text-justify">{{ training.teachingMethods|ckeditor|raw }}</span></p>
+
+<h3><span>Action : {{ training.typeLabel }}</span></h3>
+<div class="row">
+    <div class="col-md-12">
+        <ul class="summary">
+            <li><label>Prérequis</label> <span>{{ training.prerequisites }}</span></li>
+        </ul>
+    </div>
+</div>
+
+<h4>Sessions <span>({{ training.sessions|length}})</span></h4>
+{% if training.sessions|length == 0 %}
+    <div class="well well-sm">
+        Il n'y a aucune session.
+    </div>
+{% endif %}
+<ul class="list list-grid">
+    {% for session in training.sessions %}
+        <li>
+            {{ session.dateBegin |date("d/m/Y") }}
+        </li>
+    {% endfor %}
+</ul>
+</body>
+</html>

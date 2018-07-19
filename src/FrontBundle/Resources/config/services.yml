@@ -1,0 +1,59 @@
+services:
+    sygefor_api.account_repository:
+        class: Sygefor\Bundle\ApiBundle\Repository\AccountRepository
+        factory_service:  doctrine
+        factory_method:   getRepository
+        arguments:
+            - 'AppBundle\Entity\Trainee\Trainee'
+
+    front.access_training_voter:
+        class: FrontBundle\Security\Authorization\Voter\AccessTrainingVoter
+        public: false
+        tags:
+            - { name:security.voter }
+
+    twig.extension.text:
+            class: Twig_Extensions_Extension_Text
+            tags:
+                - { name: twig.extension }
+
+    twig.extension.date:
+            class: Twig_Extensions_Extension_Date
+            arguments:
+                - "@translator.default"
+            tags:
+                - { name: twig.extension }
+
+    twig.extension.md5:
+            class: FrontBundle\Twig\Md5
+            tags:
+                - { name: twig.extension }
+
+    twig.extension.ckeditor:
+            class: FrontBundle\Twig\CkEditor
+            tags:
+                - { name: twig.extension }
+
+    sygefor_front.twig_extension.order_by:
+            class: FrontBundle\Twig\OrderBy
+            public: false
+            tags:
+                - { name: twig.extension }
+
+    sygefor_front.twig_extension.session_status_label:
+            class: FrontBundle\Twig\SessionStatusLabel
+            public: false
+            tags:
+                - { name: twig.extension }
+
+    sygefor_api.training:
+        class: FrontBundle\Controller\API\TrainingController
+        arguments:
+            - "@service_container"
+
+    # session access voter
+    sygefor_front.access_session_voter:
+        class: FrontBundle\Security\Authorization\Voter\SessionVoter
+        public: false
+        tags:
+            - { name:security.voter }

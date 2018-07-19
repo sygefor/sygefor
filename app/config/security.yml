@@ -3,80 +3,94 @@ security:
         fos_userbundle:
             id: fos_user.user_provider.username
         trainees:
-            id: sygefor_trainee.user_provider
+            id: sygefor_api.account_repository
         shibboleth:
             id: sygefor_api.shibboleth.user_provider
 
     encoders:
         FOS\UserBundle\Model\UserInterface: sha512
-        Sygefor\Bundle\TraineeBundle\Entity\Trainee: sha512
+        AppBundle\Entity\Trainee\Trainee: sha512
 
     firewalls:
         # ---
-        # OAuth
-        # ---
-        oauth_authorize:
-            pattern:    ^/oauth/v2/auth
-            form_login:
-                provider: trainees
-                check_path: api.oauth.auth_login_check
-                login_path: api.oauth.auth_login
-            anonymous: true
-        oauth_token:
-            pattern:    ^/oauth/v2/token
-            security:   false
-        # ---
-        # Shibboleth
-        # ---
-        shibboleth:
-            #shibboleth authentification
-            pattern:    ^/api/shibboleth
-            shibboleth: ~
-            logout:
-                path: /api/shibboleth/logout
-                target: /
-                success_handler: security.logout.handler.shibboleth
-            provider: shibboleth
-        shibboleth_register:
-            # needed to get the shibboleth session during registration
-            pattern:    ^/api/account/register
-            shibboleth: ~
-            provider: shibboleth
-            anonymous: true
-        # ---
-        # API
-        # ---
-        api:
-            pattern:    ^/api
-            fos_oauth:  true
-            stateless:  true
-            anonymous:  true
-        # ---
-        # Main
+        # Back FOS User
         # ---
         main:
+            host: "%back_host%"
             pattern: ^/
             form_login:
                 provider: fos_userbundle
                 csrf_provider: form.csrf_provider
-                always_use_default_target_path: true
-                default_target_path: /
-                target_path_parameter: _target_path
-                use_referer: false
+            remember_me:
+                key:      "%secret%"
+                lifetime: 86400 # in seconds
+                path:     /
+                domain:   ~
             logout:       true
             anonymous:    true
+            switch_user:  true
+
+        # ---
+        # OAuth authentication
+        # ---
+#        oauth_authorize:
+#            host: "%front_host%"
+#            pattern:    ^/oauth/v2/auth
+#            form_login:
+#                provider: trainees
+#                check_path: api.oauth.auth_login_check
+#                login_path: api.oauth.auth_login
+#            anonymous: true
+#        oauth_token:
+#            pattern:    ^/oauth/v2/token
+#            security:   false
+
+        # ---
+        # Front office
+        # ---
+        front:
+            host: "%front_host%"
+            pattern: ^/
+            shibboleth: ~
+            provider: shibboleth
+            form_login:
+                provider: trainees
+                login_path: "/page/login"
+                csrf_provider: form.csrf_provider
+            logout:
+                path: /account/logout
+                target: /
+            anonymous: ~
+
+        # ---
+        # API
+        # ---
+        api:
+            host: "%front_host%"
+            pattern:    ^/api
+#            fos_oauth:  true
+            stateless:  true
+            anonymous:  ~
 
     access_control:
-        - { path: ^/api, roles: IS_AUTHENTICATED_ANONYMOUSLY }
-        - { path: ^/login$, role: IS_AUTHENTICATED_ANONYMOUSLY }
-        - { path: ^/oauth, role: IS_AUTHENTICATED_ANONYMOUSLY }
-        - { path: ^/, role: IS_AUTHENTICATED_FULLY }
+        # Back
+        - { host: "%back_host%", path: ^/login$, role: IS_AUTHENTICATED_ANONYMOUSLY }
+        - { path: ^/material/[^/]+/get, roles: IS_AUTHENTICATED_ANONYMOUSLY }
+        - { host: "%back_host%", path: ^/, role: IS_AUTHENTICATED_FULLY }
+
+        # Front
+        - { host: "%front_host%", path: ^/, role: IS_AUTHENTICATED_ANONYMOUSLY }
+        - { host: "%front_host%", path: ^/account/register, role: IS_AUTHENTICATED_ANONYMOUSLY }
+        - { host: "%front_host%", path: ^/account, role: IS_AUTHENTICATED_FULLY }
+        - { host: "%front_host%", path: ^/training/inscription, role: IS_AUTHENTICATED_FULLY }
 
     role_hierarchy:
+        ROLE_TRAINEE:       ROLE_USER
+        ROLE_COFO:          ROLE_USER
         ROLE_EDITEUR:       ROLE_USER
         ROLE_GESTIONNAIRE:  ROLE_USER
-        ROLE_ADMIN:         ROLE_USER
-        ROLE_SUPER_ADMIN:   ROLE_ADMIN
+        ROLE_ADMIN:         [ROLE_USER, ROLE_ALLOWED_TO_SWITCH]
+        ROLE_SUPER_ADMIN:   [ROLE_ADMIN, ROLE_ALLOWED_TO_SWITCH]
 
 # OAuth Configuration
 fos_oauth_server:
@@ -86,16 +100,16 @@ fos_oauth_server:
     refresh_token_class: Sygefor\Bundle\ApiBundle\Entity\RefreshToken
     auth_code_class:     Sygefor\Bundle\ApiBundle\Entity\AuthCode
     service:
-        user_provider: sygefor_trainee.user_provider
+        user_provider: sygefor_api.account_repository
 #        options:
 #            access_token_lifetime: 90
 #        options:
 #            supported_scopes: user
 
-#Schibboleth
+#Shibboleth
 shibboleth:
     handler_path: /Shibboleth.sso
-    secured_handler: true
+    secured_handler: "%shibboleth_secured_handler%"
     session_initiator_path: /Login
     username_attribute: mail
     use_headers: true
@@ -104,64 +118,18 @@ shibboleth:
             header: targeted-id
         persistent-id:
             header: persistent-id
-        o:
-            header: o
         eppn:
             header: eppn
-        facsimileTelephoneNumber:
-            header: facsimileTelephoneNumber
         givenName:
             header: givenName
-        givenName:
-            header: givenName
-        mail:
-            header: mail
-        mobile:
-            header: mobile
-        postalAddress:
-            header: postalAddress
-        street:
-            header: street
-        postOfficeBox:
-            header: postOfficeBox
-        postalCode:
-            header: postalCode
         sn:
             header: sn
+        mail:
+            header: mail
         telephoneNumber:
             header: telephoneNumber
-        title:
-            header: title
-        uid:
-            header: uid
-        unscoped-affiliation:
-            header: unscoped-affiliation
-        affiliation:
-            header: affiliation
-        primary-affiliation:
-            header: primary-affiliation
-        primary-orgunit-dn:
-            header: primary-orgunit-dn
-        org-dn:
-            header: org-dn
-        supannActivite:
-            header: supannActivite
-        supannCivilite:
-            header: supannCivilite
-        supannEntiteAffectation:
-            header: supannEntiteAffectation
-        supannEtablissement:
-            header: supannEtablissement
-        supannRoleEntite:
-            header: supannRoleEntite
-        supannRoleGenerique:
-            header: supannRoleGenerique
-        supannEtuCursusAnnee:
-            header: supannEtuCursusAnnee
-        supannEtuDiplome:
-            header: supannEtuTypeDiplome
-        supannEtuTypeDiplome:
-            header: supannEtuDiplome
+        ou:
+            header: ou
 # CORS
 nelmio_cors:
     defaults:
@@ -172,16 +140,3 @@ nelmio_cors:
         expose_headers: []
         max_age: 0
         hosts: []
-    paths:
-        '^/api/':
-            allow_origin: ['*']
-#            allow_headers: ['X-Custom-Auth']
-#            allow_methods: ['POST', 'PUT', 'GET', 'DELETE']
-            allow_headers: ['*']
-            allow_methods: ['POST', 'PUT', 'GET', 'DELETE']
-            max_age: 3600
-        '^/oauth/':
-            allow_origin: ['*']
-            allow_headers: ['*']
-            allow_methods: ['POST', 'PUT', 'GET', 'DELETE']
-            max_age: 3600

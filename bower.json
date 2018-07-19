@@ -1,14 +1,15 @@
 {
   "name": "sygefor3",
-  "version": "1.0.0",
-  "authors": [
-    "Blaise <bdecarne@gmail.com>"
-  ],
-  "description": "",
-  "main": "",
-  "moduleType": [],
+  "description": "sygefor3 Application",
+  "version": "3.2.0",
+  "type": "project",
   "license": "MIT",
-  "homepage": "",
+  "authors": [
+    {
+      "name": "Conjecto",
+      "homepage": "http://www.conjecto.com"
+    }
+  ],
   "private": true,
   "ignore": [
     "**/.*",
@@ -20,6 +21,8 @@
   "dependencies": {
     "angular": "angular/bower-angular#v1.3.0-build.2687+sha.ac37915",
     "angular-resource": "angular/bower-angular-resource#v1.3.0-build.2687+sha.ac37915",
-    "angular-animate": "angular/bower-angular-animate#v1.3.0-build.2687+sha.ac37915"
+    "angular-animate": "angular/bower-angular-animate#v1.3.0-build.2687+sha.ac37915",
+    "base64image": "nmmf/base64image",
+    "ckeditor": "ckeditor/ckeditor-releases#4.7.0"
   }
 }

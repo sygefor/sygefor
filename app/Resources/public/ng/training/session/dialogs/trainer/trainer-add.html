@@ -1,0 +1,31 @@
+<div class="modal-header">
+    <button type="button" class="close" ng-click="dialog.dismiss()" aria-hidden="true">×</button>
+    <h4 class="modal-title"><i class="fa fa-user"></i> Associer un intervenant à une session</h4>
+</div>
+
+<form sf-href="participation.add({session: dialog.params.session.id})" sf-form="form" json-path="form" on-success="onSuccess(data)" class="form-horizontal" novalidate>
+    <div class="modal-body">
+        <div class="form-group" ng-class="{'has-error': form.children.trainer.errors.length || form.trainer.errors.length }">
+            <label class="col-sm-3 control-label" for="{{ form.children.trainer.id }}">{{ form.children.trainer.label }}</label>
+            <div class="col-sm-9">
+                <input placeholder="Cliquez pour rechercher un intervenant..." type="text" typeahead-template-url="trainer/dialogs/typeahead-trainer.html" typeahead-wait-ms="200" typeahead="choice as choice.label for choice in getTrainerList($viewValue)" typeahead-editable="false" typeahead-on-select="setTrainer($item)" class="form-control" ng-model="$parent.selectedTrainer" />
+                <div ng-if="error.length" ng-repeat="error in form.children.session.errors" class="help-block">{{ error }}</div>
+                <div ng-if="error.length" ng-repeat="error in form.children.trainer.errors" class="help-block">{{ error }}</div>
+                <div ng-if="error.length" ng-repeat="error in form.trainer.errors" class="help-block">{{ error }}</div>
+            </div>
+        </div>
+        <div ng-repeat="key in ['travellingCosts', 'accommodationCosts', 'cateringCosts']">
+            <div class="form-group" ng-if="form.children[key]" ng-class="{'has-error': form.children[key].errors.length }">
+                <label class="col-sm-3 control-label" for="{{ form.children[key].id }}">{{ form.children[key].label }}</label>
+                <div class="col-sm-9">
+                    <span sf-form-widget="form.children[key]" class="form-control"/>
+                    <div ng-if="error.length" ng-if="error.length" ng-repeat="error in form.children[key].errors" class="help-block">{{ error }}</div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="modal-footer">
+        <a class="btn btn-default" ng-click="dialog.dismiss()">Annuler</a>
+        <input class="btn btn-primary" type="submit" value="Ajouter" />
+    </div>
+</form>
