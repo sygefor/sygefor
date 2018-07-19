@@ -75,6 +75,7 @@ Sygefor3 utilise la Fédération d'identité Education-Recherche de Renater pour
 du protocole Shibboleth. Il faut donc installer un Service Provider sur le serveur et le déclarer auprés de Renater :
 
 [Installation d'un SP Shibboleth](https://services.renater.fr/federation/docs/installation/sp#test_dans_la_federation_de_test)
+
 [Monter un image docker](https://github.com/sygefor/docker-shibboleth)
 
 Installation de Sygefor3
@@ -115,9 +116,9 @@ Installation de Sygefor3
 Sygefor3 intègre une API disponible dans ApiBundle. Il est possible de réserver certaines parties de l'API aux utilisateurs connectés en OAuth2 ou via Shibboleth.
 L'API permet notamment d'exporter [les formations](http://sygefor.com:8000/api/training) et [les sessions de formations](http://sygefor.com:8000/api/training/session).
 
-### Export LHEO
+### Export [LHEO](http://lheo.gouv.fr/description)
 
-Sygefor3 intègre un export [LHEO](http://lheo.gouv.fr/description) des formations.
+Sygefor3 intègre un [export LHEO](http://sygefor.com:8000/api/lheo/sygefor) des formations.
 
 ### Etendre
 
