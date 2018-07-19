@@ -87,6 +87,7 @@ et associer les droits d'écriture à l'utilisateur www-data pour les répertoir
  - app/logs
  - var/Material
  - var/Publipost
+ - /tmp/sygefor dans le container
  
 Vous pouvez ensuite exécuter la commande docker-compose up pour lancer les containers.
 Attention à renseigner les bons paramètres dans app/config/parameters.yml. Vous pouvez remplacer :
