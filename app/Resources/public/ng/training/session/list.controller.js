@@ -122,7 +122,7 @@ sygeforApp.controller('SessionListController', ['$scope', '$state', '$injector',
         'training.name.source' : {
             label: 'Formation'
         },
-        'place.source' : {
+        'place.name.source' : {
             label: 'Lieu de formation'
         },
         'training.user' : {
