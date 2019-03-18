@@ -18,7 +18,7 @@ monolog:
             type:               fingers_crossed
             action_level:       info
             handler:            grouped
-            channels:           [!trainee_merge, !api, !batch_operation]
+            channels:           [!trainee_merge, !api, !batch_operation, !elastica]
         grouped:
             type:               group
             #members:            [streamed, buffered]
