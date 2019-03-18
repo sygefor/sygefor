@@ -53,7 +53,7 @@
                             {% if session.place is defined and session.place | length > 0 %}
                                 <div class="session__place" ng-if="session.place.length" title="Lieu de la formation">
                                     <i class="glyphicon glyphicon-map-marker"></i>&nbsp;
-                                        {{ session.place }}
+                                        {{ session.place.name }}
                                 </div>
                             {% endif %}
                             {% if session.hourNumber > 0 or session.dayNumber > 0 %}
