@@ -27,7 +27,7 @@
                         {% include '@Front/Account/registration/inscription-status-label.html.twig' %}
                     </td>
                     <td>
-                        {% if registration.inscriptionStatus.name == "Accepté" or registration.inscriptionStatus.name == "Convoqué" %}
+                        {% if registration.inscriptionStatus.status == 2 and registration.session.allPrivateMaterials | length > 0 %}
                             <a href="{{ path('front.program.training', {
                                     id: registration.session.training.id,
                                     sessionId: registration.session.id,
