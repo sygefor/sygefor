@@ -16,6 +16,7 @@ sygeforApp.controller(
         $scope.changeOrganization = function () {
             $dialog.open('trainer.changeOrg', {trainer: $scope.trainer}).then(function(data) {
                 $scope.trainer = data.trainer;
+                $scope.form = data.form.form;
             });
         };
 

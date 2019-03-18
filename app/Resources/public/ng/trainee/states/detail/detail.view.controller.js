@@ -60,6 +60,7 @@ sygeforApp.controller('TraineeDetailViewController', ['$scope', '$taxonomy', '$d
     $scope.changeOrganization = function () {
         $dialog.open('trainee.changeOrg', {trainee: $scope.trainee}).then(function(data) {
             $scope.trainee = data.form.value;
+            $scope.form = data.form.form;
         });
     };
 
