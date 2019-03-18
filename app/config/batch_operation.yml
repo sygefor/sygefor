@@ -16,78 +16,121 @@ sygefor_core:
                 class: 'AppBundle\Entity\Session\Session'
                 filename: 'session.csv'
                 fields:
-                    id: "Numéro"
-                    training.name: "Formation"
-                    name: "Intitulé"
+                    id: "Identifiant de la session"
+                    training.id: "Identifiant de la formation"
+                    training.name: "Intitulé de la formation"
+                    name: "Intitulé de la session"
                     dateBegin: { label: "Date de début", type: "date" }
                     dateEnd: { label: "Date de fin", type: "date" }
+                    datePrecisions: { label: "Précisions" }
+                    schedule: { label: "Horaires" }
                     place.name: 'Lieu'
                     price: 'Tarif'
+                    participations: { label: 'Formateurs', subProperty: "trainer.fullName" }
+                    inscriptions: { label: 'Inscriptions', subProperty: "id" }
                     maximumNumberOfRegistrations: 'Nombre de places'
                     numberOfRegistrations: "Nombre d'inscrits"
                     numberOfParticipants: 'Nombre de présents'
                     registration: 'Inscriptions'
+                    promote: {label: 'Promotion', type: 'boolean'}
                     displayOnline: {label: 'Afficher en ligne', type: 'boolean'}
                     hourNumber: "Nombre d'heures"
                     dayNumber: 'Nombre de jours'
+                    reprographyCost: 'Frais de repographie'
+                    otherCost: 'Autres frais'
+                    subscriptionRightTaking: "Droit d'inscription"
+                    otherTaking: 'Autres entrées'
             semestered_training:
                 class: 'AppBundle\Model\SemesteredTraining'
                 filename: 'formation.csv'
                 fields:
+                    training.typeLabel: { label: 'Type de formation' }
                     training.id: { label: 'Identifiant' }
+                    training.name: { label: 'Intitulé' }
+                    training.number: { label: 'Numéro' }
+                    training.organization.name: { label: 'Centre' }
+                    sessionsCount: { label: 'nombre de sessions' }
+                    nextSession.id: "Identifiant de la prochaine session"
+                    nextSession.dateBegin: { label: 'Prochaine', type: 'date' }
+                    lastSession.id: "Identifiant de la dernière session"
+                    lastSession.dateBegin: { label: 'Dernière', type: 'date' }
                     year: { label: 'Année' }
                     semester: { label: 'Semestre' }
-                    training.name: { label: 'Intitulé' }
-                    training.theme: { label: 'Thématique' }
-                    sessionsCount: { label: 'nombre de sessions' }
-                    nextSession.dateBegin: { label: 'Prochaine', type: 'date' }
-                    lastSession.dateBegin: { label: 'Dernière', type: 'date' }
+                    training.theme: { label: 'Thème' }
+                    training.program: { label: 'Programme' }
+                    training.description: { label: 'Objectifs' }
+                    training.teachingMethods: { label: 'Méthodes pédagogiques' }
+                    training.user.username: { label: 'Assistant' }
+                    training.tags: { label: 'Tags', subProperty: "name" }
+                    # Internship | Long training
+                    training.publicTypes: { label: 'Types de public', subProperty: "name" }
+                    training.prerequisites: { label: 'Prérequis' }
+                    # Long training
+                    training.modules: { label: 'Modules', subProperty: "name" }
+                    # Meeting
+                    training.national: { label: 'National', type: 'boolean' }
             trainee:
                 class: 'AppBundle\Entity\Trainee\Trainee'
                 filename: 'stagiaire.csv'
                 fields:
+                    id: "Identifiant"
+                    organization.name: "Centre"
                     createdAt: { label: "Date de création", type: "date" }
                     title: "Civilité"
                     lastName: "Nom"
                     firstName: "Prénom"
                     email: "Email"
-                    organization.name: "Délégation"
-                    employmentContractType: "Nature de personnel"
-                    function: "Fonction"
-            trainer:
-                class: 'AppBundle\Entity\Trainer'
-                filename: 'formateur.csv'
-                fields:
-                    createdAt: { label: "Date d'inscription", type: "date" }
-                    title: "Civilité"
-                    fullName: "Nom"
-                    organization.name: "Centre"
-                    email: "Email"
-                    phoneNumber: "Téléphone"
-                    webSite: "Site Web"
-                    address: "Adresse"
-                    zip: "Code postal"
-                    city: "Ville"
+                    inscriptions: { label: 'Inscriptions', subProperty: "id" }
+                    disciplinary.name: { label: 'Domaine disciplinaire' }
+                    publicType.name: { label: 'Type de personnel' }
+                    otherPublicType: { label: 'Autre type de personnel' }
+                    function: { label: 'Statut' }
+                    status: { label: 'Fonction' }
             inscription:
                 class: 'AppBundle\Entity\Inscription'
                 filename: 'inscription.csv'
                 fields:
+                    id: "Identifiant"
+                    trainee.organization.name: "Centre"
                     trainee.title: "Civilité"
                     trainee.lastName: "Nom"
                     trainee.firstName: "Prénom"
                     trainee.email: "Email"
-                    session.training.name: "Intitulé de la formation"
+                    session.training.id: "Identifiant de la formation"
+                    session.training.name: "Formation"
+                    session.id: "Identifiant de la session"
                     session.name: "Intitulé de la session"
-                    session.dateRange: "Session"
-                    trainee.organization.name: "Délégation"
-                    workplace: "Lieu de travail"
-                    employmentContractType: "Nature de personnel"
-                    function: "Fonction"
-                    createdAt: { label: "Date d'inscription", type: "date" }
-                    motivation: "Motivation agent"
+                    session.dateRange: "Dates de la session"
                     inscriptionStatus: "Statut de l'inscription"
-                    presenceStatus: "Statut de présence"
+                    motivation: "Motivation"
                     personHours: "Heures-personne"
+                    presenceStatus: "Statut de présence"
+                    createdAt: { label: "Date d'inscription", type: "date" }
+                    disciplinary.name: { label: 'Domaine disciplinaire historisé' }
+                    publicType.name: { label: 'Type de personnel historisé' }
+                    otherPublicType: { label: 'Autre type de personnel historisé' }
+                    function: { label: 'Statut historisé' }
+                    status: { label: 'Fonction historisée' }
+            trainer:
+                class: 'AppBundle\Entity\Trainer'
+                filename: 'formateur.csv'
+                fields:
+                    id: "Identifiant"
+                    organization.name: "Centre"
+                    title: "Civilité"
+                    lastName: "Nom"
+                    firstName: "Prénom"
+                    email: "Email"
+                    phoneNumber: "Téléphone"
+                    address: "Adresse"
+                    zip: "Code postal"
+                    city: "Ville"
+                    status: "Fonction, statut"
+                    responsabilities: "Responsabilités"
+                    observations: "Observations"
+                    participations: { label: 'Sessions', subProperty: "session.id" }
+                    isArchived: { label: "Archivé", type: "boolean" }
+                    createdAt: { label: "Date de création", type: "date" }
         mailing:
             # session dates
             stdClass:
