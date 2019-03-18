@@ -27,7 +27,9 @@
                         Programme par centre <span class="caret"></span>
                     </a>
                     <ul class="dropdown-menu">
-                        <li><a href="{{ path('front.program.organization', {code: 'sygefor'}) }}">Sygefor</a></li>
+                        {% for organization in allOrganizations() %}
+                            <li><a href="{{ path('front.program.organization', {code: organization.code}) }}">{{ organization.name }}</a></li>
+                        {% endfor %}
                     </ul>
                 </li>
             </ul>

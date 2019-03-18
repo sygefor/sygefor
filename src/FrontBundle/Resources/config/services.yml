@@ -34,6 +34,13 @@ services:
             tags:
                 - { name: twig.extension }
 
+    twig.extension.organization:
+            class: FrontBundle\Twig\Organization
+            arguments:
+                - "@doctrine.orm.default_entity_manager"
+            tags:
+                - { name: twig.extension }
+
     sygefor_front.twig_extension.order_by:
             class: FrontBundle\Twig\OrderBy
             public: false
