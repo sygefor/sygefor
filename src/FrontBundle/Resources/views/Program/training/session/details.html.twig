@@ -44,7 +44,7 @@
                     {% if upcomingSession.limitRegistrationDate is defined and upcomingSession.isPublic and upcomingSession.availablePlaces > 0 and upcomingSession.limitRegistrationDate %}
                         <li title="Le {{ upcomingSession.limitRegistrationDate | date('l') | trans }} {{ upcomingSession.limitRegistrationDate | date('d') }} {{ upcomingSession.limitRegistrationDate | date('F') | trans }} {{ upcomingSession.limitRegistrationDate | date('Y') }}" class="text-center">
                             <div class="alert-danger">
-                                <span class="label radius text-center">Clôture des inscriptions {{ upcomingSession.limitRegistrationDate | time_diff }}</span>
+                                <span class="label radius text-center">Clôture des inscriptions {{ upcomingSession.limitRegistrationDate | date_modify("+1 day") | time_diff }}</span>
                             </div>
                         </li>
                     {% endif %}
