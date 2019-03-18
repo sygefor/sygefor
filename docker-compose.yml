@@ -26,7 +26,7 @@ services:
   # @See https://github.com/sygefor/docker-shibboleth
   shibboleth_isp:
     container_name: "sygefor_shibboleth"
-    image: sygefor/shibboleth_isp
+    image: sygefor/shibboleth_sp
     volumes:
         # Sources
         - ./:/var/www/sygefor
