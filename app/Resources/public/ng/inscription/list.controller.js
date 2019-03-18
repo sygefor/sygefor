@@ -90,16 +90,6 @@ sygeforApp.controller('InscriptionListController', ['$scope', '$user', 'growl', 
             }
         },
         {
-            icon: 'fa-envelope',
-            label: 'Envoyer aux IRPS',
-            execute: function (items, $dialog) {
-                return $dialog.open('inscription.batch.irps', {items: items});
-            },
-            available: function () {
-                return $user.hasAccessRight('app.access_right.irps');
-            }
-        },
-        {
             icon: 'fa-file-pdf-o',
             label: 'Attestation de présence',
             execute: function (items, $dialog) {

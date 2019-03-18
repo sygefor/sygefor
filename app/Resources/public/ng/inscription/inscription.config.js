@@ -164,22 +164,6 @@ sygeforApp.config(["$listStateProvider", "$dialogProvider", "$widgetProvider", f
         }
     });
 
-    // update status dialog
-    $dialogProvider.dialog("inscription.batch.irps", /* @ngInject */ {
-        controller: 'IRPSController',
-        templateUrl: 'inscription/batch/irps/irps.html',
-        resolve: {
-            config: function ($http) {
-                var url = Routing.generate('sygefor_core.batch_operation.modal_config', {service: 'app.batch.irps'});
-                var optionsArray = {targetClass: "AppBundle\\Entity\\Inscription"};
-
-                return $http.get(url, {params: {options: optionsArray}}).then(function (response) {
-                    return response.data;
-                });
-            }
-        }
-    });
-
     // detail dialog
     $dialogProvider.dialog('inscription.irps.result' /* @ngInject */, {
         controller: function($scope, $modalInstance, $dialogParams) {
