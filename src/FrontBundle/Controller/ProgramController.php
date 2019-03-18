@@ -94,7 +94,7 @@ class ProgramController extends Controller
     }
 
     /**
-     * @Route("/delegation/{code}/{page}", name="front.program.organization", requirements={"page": "\d+"})
+     * @Route("/organization/{code}/{page}", name="front.program.organization", requirements={"page": "\d+"})
      * @ParamConverter("organization", class="AppBundle:Organization", options={"code" = "code"})
      *
      * @param Request      $request
@@ -121,7 +121,7 @@ class ProgramController extends Controller
         $this->formFilter($search, $request, $form);
         $search = $search->search();
 
-        return $this->render('@Front/Program/delegation.html.twig', array(
+        return $this->render('@Front/Program/organization.html.twig', array(
             'form' => $form->createView(),
             'search' => $search,
             'organization' => $organization,

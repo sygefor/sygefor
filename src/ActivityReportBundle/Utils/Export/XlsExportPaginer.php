@@ -81,8 +81,8 @@ class XlsExportPaginer
 
         $crosstabs = array(
             'Thèmes par types de formation' => $crosstabs['theme_type'],
-            'Répartition des inscriptions par délégation' => $crosstabs['inscription_organization'],
-            'Répartition des heures-personnes par délégation' => $crosstabs['inscription_hours'],
+            'Répartition des inscriptions par centre' => $crosstabs['inscription_organization'],
+            'Répartition des heures-personnes par centre' => $crosstabs['inscription_hours'],
             'Répartition des coûts par type de formation' => $crosstabs['totalCost_type'],
             'Répartition des recettes par type de formation' => $crosstabs['totalTaking_type'],
         );

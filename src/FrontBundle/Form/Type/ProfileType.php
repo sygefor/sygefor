@@ -2,8 +2,6 @@
 
 namespace FrontBundle\Form\Type;
 
-use Symfony\Component\Form\FormEvent;
-use Symfony\Component\Form\FormEvents;
 use AppBundle\Form\Type\Trainee\TraineeType;
 use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Component\Validator\Constraints\Length;
@@ -28,7 +26,6 @@ class ProfileType extends TraineeType
     {
         parent::buildForm($builder, $options);
 
-        $builder->addEventListener(FormEvents::POST_SET_DATA, array($this, 'updateFieldOptions'));
         $builder->remove('status');
         $builder->remove('function');
         $builder->remove('isPaying');
@@ -56,25 +53,6 @@ class ProfileType extends TraineeType
                 'first_options' => array('label' => 'Mot de passe'),
                 'second_options' => array('label' => 'Confirmation'),
             ]);
-        }
-    }
-
-    /**
-     * @param FormEvent $event
-     */
-    public function updateFieldOptions(FormEvent $event)
-    {
-        $form = $event->getForm();
-        if ($form->has('organization')) {
-            $field = $form->get('organization');
-            $config = $field->getConfig();
-            $options = $config->getOptions();
-            $form->add($field->getName(), $config->getType()->getName(), array(
-                'label' => 'Délégation',
-                'class' => $options['class'],
-                'query_builder' => $options['query_builder'],
-                'required' => $options['required'],
-            ));
         }
     }
 

@@ -40,7 +40,7 @@
                 <div class="col-md-12">
             {% endif %}
             {% if organization is defined and organization | length > 0 %}
-                <h3>Contacter la délégation {{ organization.name }}</h3>
+                <h3>Contacter {{ organization.name }}</h3>
                 <div><label>Email :</label> <span><a href="mailto:{{ organization.email }}">{{ organization.email }}</a></span></div>
                 <div><label>Téléphone :</label> <span><a href="tel:{{ organization.phoneNumber }}">{{ organization.phoneNumber }}</a></span></div>
                 <div><label>Adresse :</label> <span>{{ organization.fullAddress }}</span></div>
