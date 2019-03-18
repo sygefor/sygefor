@@ -25,8 +25,8 @@
 //=require ../../../node_modules/blueimp-file-upload/js/jquery.fileupload.js
 //=require ../../../node_modules/blueimp-file-upload/js/jquery.fileupload-process.js
 //=require ../../../node_modules/blueimp-file-upload/js/jquery.fileupload-angular.js
-//=require ../../../node_modules/zeroclipboard/dist/ZeroClipboard.js
-//=require ../../../node_modules/angular-zeroclipboard/src/angular-zeroclipboard.js
+//=require ../../../node_modules/clipboard/dist/clipboard.js
+//=require ../../../node_modules/ngclipboard/dist/ngclipboard.js
 //=require ../../../node_modules/ngstorage/ngStorage.js
 //=require ../../../node_modules/timepicker/jquery.timepicker.js
 //=require ../../../vendor/friendsofsymfony/jsrouting-bundle/FOS/JsRoutingBundle/Resources/public/js/router.js

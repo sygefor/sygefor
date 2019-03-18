@@ -1,7 +1,7 @@
 /**
  * Created by maxime on 15/07/14.
  */
-sygeforApp.controller('TrainingDetailViewController', ['$scope', '$taxonomy', '$utils', '$dialog', '$http', '$window', '$user', '$state', '$sce', 'search', 'data', function($scope, $taxonomy, $utils, $dialog, $http, $window, $user, $state, $sce, search, data) {
+sygeforApp.controller('TrainingDetailViewController', ['$scope', '$taxonomy', '$utils', '$dialog', '$http', '$window', '$user', '$state', '$sce', 'search', 'data', '$timeout', function($scope, $taxonomy, $utils, $dialog, $http, $window, $user, $state, $sce, search, data, $timeout) {
     $scope.training = data.training;
     $scope.form = data.form ? data.form : false;
     $scope.$moment = moment;
@@ -159,5 +159,13 @@ sygeforApp.controller('TrainingDetailViewController', ['$scope', '$taxonomy', '$
     $scope.getBalanceSheet = function () {
         var url = Routing.generate('training.balancesheet', {id: $scope.training.id});
         $window.location = url;
+    };
+
+    $scope.onLinkCopy = function() {
+        var link = angular.element(document.querySelector('#session-link'));
+        link.fadeOut();
+        $timeout(function() {
+            link.fadeIn();
+        });
     };
 }]);

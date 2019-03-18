@@ -96,7 +96,15 @@
             -->
             <div class="block">
                 <div class="block-body">
-                    <div input-copy-clipboard="session.frontUrl"></div>
+                    <div id="session-link">
+                        <!-- Target -->
+                        <input id="fo-session-link" class="form-control input-sm" value="{{ session.frontUrl }}">
+
+                        <!-- Trigger -->
+                        <button class="btn" ngclipboard ngclipboard-success="onLinkCopy();" data-clipboard-target="#fo-session-link">
+                            <i class="fa fa-paste"></i>
+                        </button>
+                    </div>
                 </div>
             </div>
 

@@ -1,7 +1,7 @@
 /**
  * SessionDetailViewController
  */
-sygeforApp.controller('SessionDetailViewController', ['$scope', '$taxonomy', '$dialog', '$utils', '$user', '$state', '$window','search', 'data', function($scope, $taxonomy, $dialog, $utils, $user, $state, $window, search, data)
+sygeforApp.controller('SessionDetailViewController', ['$scope', '$taxonomy', '$dialog', '$utils', '$user', '$state', '$window','search', 'data', '$timeout', function($scope, $taxonomy, $dialog, $utils, $user, $state, $window, search, data, $timeout)
 {
     $scope.session = data.session;
     $scope.$utils = $utils;
@@ -71,5 +71,13 @@ sygeforApp.controller('SessionDetailViewController', ['$scope', '$taxonomy', '$d
     $scope.getEvaluationSheet = function () {
         var url = Routing.generate('session.evaluations', {id: $scope.session.id});
         $window.location = url;
+    };
+
+    $scope.onLinkCopy = function() {
+        var link = angular.element(document.querySelector('#session-link'));
+        link.fadeOut();
+        $timeout(function() {
+            link.fadeIn();
+        });
     };
 }]);

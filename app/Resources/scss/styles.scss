@@ -3,24 +3,26 @@
 @import "../../../node_modules/font-awesome/scss/font-awesome.scss";
 
 //@import "normalize";
-@import "base/fonts";
-@import "base/common";
 @import "base/blocks";
+@import "base/buttons";
+@import "base/common";
+@import "base/dashboard";
+@import "base/displays";
+@import "base/dropdowns";
+@import "base/fonts";
+@import "base/forms";
 @import "base/icons";
 @import "base/label";
-@import "base/buttons";
-@import "base/displays";
-@import "base/paginations";
-@import "base/forms";
-@import "base/dropdowns";
 @import "base/navbar";
-@import "base/xeditable";
+@import "base/paginations";
 @import "base/scrollbar";
-@import "base/dashboard";
 @import "base/table";
-@import "modules/login";
-@import "modules/list";
+@import "base/xeditable";
+
 @import "modules/institution";
+@import "modules/list";
+@import "modules/login";
+@import "modules/session";
 @import "modules/taxonomy";
 @import "modules/training";
 
