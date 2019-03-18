@@ -133,8 +133,30 @@ class XmlWriter
         $this->addChildLimitedString($action, 'conditions-specifiques', $training['prerequisites'], 1, 3000, $cdata = false, $mandatory = true);
         $action->addChild('prise-en-charge-frais-possible', '1');
         $formationPlace = $action->addChild('lieu-de-formation');
-        $this->fillCoordonates($formationPlace, $organizationCoordinates, null, $organizationCoordinates['name'], null, $session['place'], $organizationCoordinates['phoneNumber'], null,
-            $organizationCoordinates['email'], $organizationCoordinates['website']);
+	    $coordinates = [];
+	    foreach ($organizationCoordinates as $key => $value) {
+		    $coordinates[$key] = $value;
+	    }
+	    $place = $session['place'];
+	    if ($place && !empty($place['address'])) {
+		    $coordinates['name'] = $place['name'];
+		    $coordinates['address'] = $place['address'];
+		    $coordinates['zip'] = $place['postal'];
+		    $coordinates['city'] = $place['city'];
+	    }
+	    $this->fillCoordonates(
+		    $formationPlace,
+		    $coordinates,
+		    null,
+		    $place ? $place['name'] : $organizationCoordinates['name'],
+		    null,
+		    null,
+		    $organizationCoordinates['phoneNumber'],
+		    null,
+		    null,
+		    $organizationCoordinates['email'],
+		    $organizationCoordinates['website']
+	    );
         $action->addChild('modalites-entrees-sorties', 0);
         $addressInscription = $action->addChild('adresse-inscription');
         $this->fillAddress($addressInscription, $organizationCoordinates['address'], $organizationCoordinates['zip'], $organizationCoordinates['region'], $organizationCoordinates['city']);
@@ -144,7 +166,7 @@ class XmlWriter
         $action->addChild('langue-formation', 'fr');
         $action->addChild('frais-restants', $session['price']);
         $action->addChild('date-limite-inscription')->addChild('date', $this->formatDate($session['limitRegistrationDate']));
-        $this->fillTrainerOrganization($action, $organizationCoordinates);
+	    $this->fillTrainerOrganization($action, $session, $organizationCoordinates);
     }
 
     /**
@@ -171,18 +193,33 @@ class XmlWriter
 
     /**
      * @param $node
+     * @param $session
      * @param $organizationCoordinates
      */
-    protected function fillTrainerOrganization(&$node, $organizationCoordinates)
+	protected function fillTrainerOrganization(&$node, $session, $organizationCoordinates)
     {
         $trainerOrganization = $node->addChild('organisme-formateur');
         $trainterSiret       = $trainerOrganization->addChild('SIRET-formateur');
         $this->addSiret($trainterSiret, $organizationCoordinates['siret']);
         $this->addChildLimitedString($trainerOrganization, 'raison-sociale-formateur', $organizationCoordinates['name'], 0, 250, $cdata = false, $mandatory = true);
-        $contactTrainer = $trainerOrganization->addChild('contact-formateur');
-        $this->fillCoordonates($contactTrainer, $organizationCoordinates, null, $organizationCoordinates['name'], null, $organizationCoordinates['address'], $organizationCoordinates['phoneNumber'], null,
-            $organizationCoordinates['email'], $organizationCoordinates['website']);
-        $potential = $trainerOrganization->addChild('potentiel');
+
+	    $trainer = (count($session['participations']) > 0 ? $session['participations'][0]['trainer'] : null);
+	    $contactTrainer = $trainerOrganization->addChild('contact-formateur');
+	    $this->fillCoordonates(
+		    $contactTrainer,
+		    $organizationCoordinates,
+		    $trainer ? $trainer['title'] : null,
+		    $trainer ? $trainer['lastName'] : $organizationCoordinates['name'],
+		    $trainer ? $trainer['firstName'] : null,
+		    null,
+		    $organizationCoordinates['phoneNumber'],
+		    null,
+		    null,
+		    $trainer ? $trainer['email'] : $organizationCoordinates['email'],
+		    $organizationCoordinates['website']
+	    );
+
+	    $potential = $trainerOrganization->addChild('potentiel');
         $this->addChildLimitedString($potential, 'code-FORMACODE', $organizationCoordinates['FORMACODE'], 5, 5);
     }
 
@@ -204,7 +241,7 @@ class XmlWriter
         $coordonnates = $node->addChild('coordonnees');
         if ($civility) $this->addChildLimitedString($coordonnates, 'civilite', $civility, 1, 50);
         if ($name) $this->addChildLimitedString($coordonnates, 'nom', $name, 1, 50);
-        if ($firstName) $this->addChildLimitedString($coordonnates, $firstName, 'value', 1, 50);
+	    if ($firstName) $this->addChildLimitedString($coordonnates, 'firstName', $firstName, 1, 50);
         if ($street) $this->addStreet($coordonnates, $street);
         if ($organizationCoordinates) {
             $this->fillAddress($coordonnates, $organizationCoordinates['address'], $organizationCoordinates['zip'], $organizationCoordinates['region'], $organizationCoordinates['city']);
@@ -255,7 +292,6 @@ class XmlWriter
     {
         $value = str_replace('&', 'et', $value);
         $value = trim(strip_tags($value));
-
         if (is_int($value)) {
             $value = intval($value);
         }

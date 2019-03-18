@@ -178,9 +178,16 @@ fos_elastica:
                             _private: true
                             index: not_analyzed
                         place:
-                            type: string
-                            fields:
-                                source: { type: string, index: not_analyzed }
+                            type: object
+                            properties:
+                                id: { index: not_analyzed }
+                                name:
+                                    type: string
+                                    fields:
+                                        source: { type: string, index: not_analyzed }
+                                address: { type: string, index: not_analyzed }
+                                postal: { type: string, index: not_analyzed }
+                                city: { type: string, index: not_analyzed }
                         registration: { index: not_analyzed }
                         status: { index: not_analyzed }
                         displayOnline: { type: boolean }
@@ -214,9 +221,14 @@ fos_elastica:
                                 trainer:
                                     type: object
                                     properties:
-                                      id: { index: not_analyzed }
-                                      isOrganization: { index: not_analyzed }
-                                      fullName: { index: not_analyzed }
+                                        id: { index: not_analyzed }
+                                        isOrganization: { index: not_analyzed }
+                                        title: { index: not_analyzed }
+                                        firstName: { index: not_analyzed }
+                                        lastName: { index: not_analyzed }
+                                        fullName: { index: not_analyzed }
+                                        trainerType: { index: not_analyzed }
+                                        email: { index: not_analyzed }
                         promote: { index: not_analyzed }
                         totalCost:
                             type: float
