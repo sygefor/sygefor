@@ -21,30 +21,45 @@
                 tooglePublicTypeDisplay();
 
                 $('#profile_publicType').change(tooglePublicTypeDisplay);
+
+                function managePasswordField(field1, fiel2) {
+					$(field1).keyup(function() {
+						$help = $('.password-help');
+						$help.show();
+						if ($(field1).val() === $(fiel2).val() && $(field1).val().length >= 8) {
+							$help.hide();
+						}
+					});
+                }
+
+                $('#profile_plainPassword_first').keyup(managePasswordField('#profile_plainPassword_first', '#profile_plainPassword_second'));
+                $('#profile_plainPassword_second').keyup(managePasswordField('#profile_plainPassword_second', '#profile_plainPassword_first'));
+                $('.password-help').hide();
             });
         })(jQuery);
     </script>
 {% endblock %}
 
 {{ form_start(form) }}
-<section>
-    {# order these fields #}
-    {% for field in ['title', 'lastName', 'firstName', 'email', 'plainPassword', 'organization'] %}
-        {% if (form[field] is defined) %}
-            {{ form_row(form[field]) }}
-            {{ form_errors(form[field]) }}
-        {% endif %}
-    {% endfor %}
-    {% for child in form.children %}
-        {{ form_row(child) }}
-        {{ form_errors(child) }}
-    {% endfor %}
-</section>
-<section>
-    <div class="row">
-        <div class="col-md-12">
-            <button type="submit" class="btn btn-primary btn-block">Enregistrer</button>
+    <section>
+        {# order these fields #}
+        {% for field in ['title', 'lastName', 'firstName', 'email', 'plainPassword', 'organization'] %}
+            {% if (form[field] is defined) %}
+                {{ form_row(form[field]) }}
+                {{ form_errors(form[field]) }}
+            {% endif %}
+        {% endfor %}
+        {% for child in form.children %}
+            {{ form_row(child) }}
+            {{ form_errors(child) }}
+        {% endfor %}
+    </section>
+
+    <section>
+        <div class="row">
+            <div class="col-md-12">
+                <button type="submit" class="btn btn-primary btn-block">Enregistrer</button>
+            </div>
         </div>
-    </div>
-</section>
+    </section>
 {{ form_end(form) }}

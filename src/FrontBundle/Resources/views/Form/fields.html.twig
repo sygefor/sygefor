@@ -1,0 +1,44 @@
+{%- block cgu_row -%}
+    <div class="form-group">
+        <label class="control-label col-sm-2 control-label {{ form.vars.required ? 'required' : '' }}">
+            {{ form.vars.label }}
+        </label>
+        <div class="col-sm-10">
+            {{ form_widget(form) }}
+            <p class="help-block">Spécifiez ici vos conditions d'utilisation.</p>
+            {{ form_errors(form) }}
+        </div>
+    </div>
+{% endblock %}
+
+{%- block consent_row -%}
+    <div class="form-group">
+        <label class="control-label col-sm-2 control-label {{ form.vars.required ? 'required' : '' }}">
+            {{ form.vars.label }}
+        </label>
+        <div class="col-sm-10">
+            {{ form_widget(form) }}
+            <p class="help-block">Explicitez ici dans quels buts les données de l'utilisateur sont utilisées.</p>
+            {{ form_errors(form) }}
+        </div>
+    </div>
+{% endblock %}
+
+{%- block strong_password_row -%}
+    {{- block('form_rows') -}}
+    <div class="password-help col-sm-offset-2">
+        <span class="text-left"><i class="fa fa-info-circle"></i> Le mot de passe doit respecter les règles suivantes :</span>
+        <ul>
+            <li>Au moins 8 caractères</li>
+            <li>Ne doit pas contenir votre prénom ou votre nom</li>
+            <li>Doit contenir au moins 3 des 4 éléments suivants :
+                <ul>
+                    <li>Une lettre minuscule</li>
+                    <li>Une lettre majuscule</li>
+                    <li>Un chiffre</li>
+                    <li>Un caractère spécial</li>
+                </ul>
+            </li>
+        </ul>
+    </div>
+{%- endblock strong_password_row -%}

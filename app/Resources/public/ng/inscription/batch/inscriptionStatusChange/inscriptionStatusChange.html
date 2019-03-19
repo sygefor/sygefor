@@ -4,6 +4,7 @@
     <h4 class="modal-title" ng-if="presenceStatus">Modification du statut de présence</h4>
 </div>
 <div class="modal-body">
+    <div class="alert alert-danger text-center" ng-show="error">Une erreur est survenue pendant l'envoi des courriels.</div>
     <form novalidate class="form-horizontal" role="form">
         <div class="form-group">
             <label class="col-sm-3 control-label">Nombre de stagiaires </label>
@@ -23,80 +24,90 @@
                 <span class="form-control">{{ presenceStatus.name }}</span>
             </div>
         </div>
-        <div class="form-group">
-            <div class="col-sm-3">
-            </div>
-            <div class="col-sm-9">
-                <input type="checkbox" ng-model="send.Mail" id="send_mail"/>
-                <label class="control-label" for="send_mail">Envoyer un email</label>
-            </div>
-        </div>
-        <div ng-show="send.Mail">
-            <div class="form-group">
-                <label for="subject" class="col-sm-3 control-label">Modèle </label>
-                <div class="col-sm-9">
-                    <select type="text" class="form-control" id="template" ng-options="template.label for template in templates" ng-model="message.template" placeholder="Modèle du mail">
-                    </select>
-                </div>
-            </div>
-            <div class="form-group animate-show">
-                <label for="subject" class="col-sm-3 control-label">Sujet </label>
-                <div class="col-sm-9">
-                    <input type="text" class="form-control" id="subject" ng-model="message.subject" placeholder="Sujet du mail">
-                </div>
-            </div>
-            <div class="form-group" ng-if="objectLength(message.cc) > 0">
-                <label for="cc" class="col-sm-3 control-label">CC</label>
-                <div class="col-sm-9">
-                <span ng-repeat="(name, checked) in message.cc">
-                    <input type="checkbox" ng-model="message.cc[name]" ng-checked="checked" id="cc_{{ name }}">
-                    <label class="control-label" for="cc_{{ name }}">{{ name }}</label>&nbsp;
-                </span>
-                </div>
-            </div>
-            <div class="form-group">
-                <label for="additionalCC" class="col-sm-3 control-label">{{ objectLength(message.cc) > 0 ? 'Autres ' : '' }}CC </label>
-                <div class="col-sm-9">
-                    <input type="text" class="form-control" id="additionalCC" ng-model="message.additionalCC" placeholder="prenom@domaine.fr; nom@domaine.fr">
-                </div>
-            </div>
-            <div class="form-group">
-                <label for="message" class="col-sm-3 control-label">Message </label>
-                <div class="col-sm-9">
-                    <textarea class="form-control" rows="10" id="message" ckeditor ng-model="message.body"  placeholder="Message du mail"></textarea>
-                </div>
-            </div>
-            <div class="form-group" ng-show='attCheckList.length'>
-                <div class="col-sm-3 control-label"><b>Pièces jointes</b> </div>
-                <div class="col-sm-5">
-                    <div ng-repeat="attachmentTemplate in attCheckList">
-                        <input type="checkbox" ng-model="attachmentTemplate.selected" id="attachment_{{ attachmentTemplate.id }}"/>
-                        <label class="control-label" for="attachment_{{ attachmentTemplate.id }}">{{ attachmentTemplate.name }}</label><a href="" class="pull-right" ng-click="previewAttachment(attachmentTemplate)"><i class="fa fa-download"></i> Prévisualiser</a>
-                    </div>
-                </div>
-            </div>
-            <div class="form-group" ng-if="message.attachments.length > 0">
-                <div class="col-sm-3 control-label"><b>Pièce{{ message.attachments.length > 1 ? 's' : '' }} jointe{{ message.attachments.length > 1 ? 's' : '' }} supplémentaire{{ message.attachments.length > 1 ? 's' : '' }}</b></div>
-                <div class="col-sm-9">
-                    <div ng-repeat="(id, attachment) in message.attachments track by $index">
-                        <label class="control-label" for="attachment_{{ id }}">{{attachment.name}}</label>&nbsp;
-                        <a href="" ng-click="removeAttachment(id)">&nbsp;x&nbsp;</a>
-                    </div>
-                </div>
-            </div>
-
-            <div class="form-group">
-                <div class="col-sm-3 control-label"><b>Ajouter des pièces jointes</b> </div>
-                <div class="col-sm-9">
-                    <input multiple type="file" class="form-control" onChange="angular.element(this).scope().fileChanged(this,angular.element(this).scope())" id="inputAttachment"/>
-                </div>
-            </div>
-
+        <div ng-show="!sending">
             <div class="form-group">
                 <div class="col-sm-3">
                 </div>
                 <div class="col-sm-9">
-                    <button type="button" class="btn" ng-click="preview()">Prévisualiser</button>
+                    <input type="checkbox" ng-model="send.Mail" id="send_mail"/>
+                    <label class="control-label" for="send_mail">Envoyer un email</label>
+                </div>
+            </div>
+            <div ng-show="send.Mail">
+                <div class="form-group">
+                    <label for="subject" class="col-sm-3 control-label">Modèle </label>
+                    <div class="col-sm-9">
+                        <select type="text" class="form-control" id="template" ng-options="template.label for template in templates" ng-model="message.template" placeholder="Modèle du mail">
+                        </select>
+                    </div>
+                </div>
+                <div class="form-group animate-show">
+                    <label for="subject" class="col-sm-3 control-label">Sujet </label>
+                    <div class="col-sm-9">
+                        <input type="text" class="form-control" id="subject" ng-model="message.subject" placeholder="Sujet du mail">
+                    </div>
+                </div>
+                <div class="form-group" ng-if="objectLength(message.cc) > 0">
+                    <label for="cc" class="col-sm-3 control-label">CC</label>
+                    <div class="col-sm-9">
+                <span ng-repeat="(name, checked) in message.cc">
+                    <input type="checkbox" ng-model="message.cc[name]" ng-checked="checked" id="cc_{{ name }}">
+                    <label class="control-label" for="cc_{{ name }}">{{ name }}</label>&nbsp;
+                </span>
+                    </div>
+                </div>
+                <div class="form-group">
+                    <label for="additionalCC" class="col-sm-3 control-label">{{ objectLength(message.cc) > 0 ? 'Autres ' : '' }}CC </label>
+                    <div class="col-sm-9">
+                        <input type="text" class="form-control" id="additionalCC" ng-model="message.additionalCC" placeholder="prenom@domaine.fr; nom@domaine.fr">
+                    </div>
+                </div>
+                <div class="form-group">
+                    <label for="message" class="col-sm-3 control-label">Message </label>
+                    <div class="col-sm-9">
+                        <textarea class="form-control" rows="10" id="message" ckeditor ng-model="message.body"  placeholder="Message du mail"></textarea>
+                    </div>
+                </div>
+                <div class="form-group" ng-show='attCheckList.length'>
+                    <div class="col-sm-3 control-label"><b>Pièces jointes</b> </div>
+                    <div class="col-sm-5">
+                        <div ng-repeat="attachmentTemplate in attCheckList">
+                            <input type="checkbox" ng-model="attachmentTemplate.selected" id="attachment_{{ attachmentTemplate.id }}"/>
+                            <label class="control-label" for="attachment_{{ attachmentTemplate.id }}">{{ attachmentTemplate.name }}</label><a href="" class="pull-right" ng-click="previewAttachment(attachmentTemplate)"><i class="fa fa-download"></i> Prévisualiser</a>
+                        </div>
+                    </div>
+                </div>
+                <div class="form-group" ng-if="message.attachments.length > 0">
+                    <div class="col-sm-3 control-label"><b>Pièce{{ message.attachments.length > 1 ? 's' : '' }} jointe{{ message.attachments.length > 1 ? 's' : '' }} supplémentaire{{ message.attachments.length > 1 ? 's' : '' }}</b></div>
+                    <div class="col-sm-9">
+                        <div ng-repeat="(id, attachment) in message.attachments track by $index">
+                            <label class="control-label" for="attachment_{{ id }}">{{attachment.name}}</label>&nbsp;
+                            <a href="" ng-click="removeAttachment(id)">&nbsp;x&nbsp;</a>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="form-group">
+                    <div class="col-sm-3 control-label"><b>Ajouter des pièces jointes</b> </div>
+                    <div class="col-sm-9">
+                        <input multiple type="file" class="form-control" onChange="angular.element(this).scope().fileChanged(this,angular.element(this).scope())" id="inputAttachment"/>
+                    </div>
+                </div>
+
+                <div class="form-group">
+                    <div class="col-sm-3">
+                    </div>
+                    <div class="col-sm-9">
+                        <button type="button" class="btn" ng-click="preview()">Prévisualiser</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div ng-show="sending">
+            <div class="widget loading">
+                <div class="form-group">
+                    <div class="widget-body-loading"><i class="fa fa-refresh fa-spin"></i></div>
+                    <div class="widget-body" widget-body><div class="col-sm-3 control-label"><b>Envoi de{{ items.length > 1 ? 's' :'' }} {{ items.length }} courriel{{ items.length > 1 ? 's' :'' }}</b></div></div>
                 </div>
             </div>
         </div>

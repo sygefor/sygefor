@@ -9,3 +9,17 @@
 label.label-red {
   color: #d13737;
 }
+
+.profile label p.help-block {
+  color: inherit;
+}
+
+.checkbox .help-block {
+  margin-top: inherit;
+}
+
+.password-help {
+  position: relative;
+  top: $padding-large-vertical * -1.5;
+  padding-left: $padding-large-vertical;
+}

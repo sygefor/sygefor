@@ -2,7 +2,7 @@
  * Created by maxime on 12/06/14.
  */
 /**
- * BatchMailingController
+ * SessionRegistrationChange
  */
 sygeforApp.controller('SessionRegistrationChange', ['$scope', '$http', '$window','$modalInstance', '$dialogParams', function($scope, $http, $window, $modalInstance, $dialogParams)
 {

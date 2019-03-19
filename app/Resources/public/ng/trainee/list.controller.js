@@ -5,14 +5,20 @@ sygeforApp.controller('TraineeListController', ['$scope', '$user', '$injector', 
     $injector.invoke(BaseListController, this, {key: 'trainee', $scope: $scope, $search: search});
 
     // batch operations
-    $scope.batchOperations = [
-        {
-        icon: 'fa-envelope-o',
-        label: 'Envoyer un email',
-        execute: function(items, $dialog) {
-            return $dialog.open('batch.email', { items: items, targetClass: "AppBundle\\Entity\\Trainee\\Trainee" })
-        }
-        },
+    $scope.batchOperations = [{
+            icon: 'fa-envelope-o',
+            label: 'Envoyer un email',
+                execute: function(items, $dialog) {
+                    return $dialog.open('batch.email', { items: items, targetClass: "AppBundle\\Entity\\Trainee\\Trainee" })
+                        .then(function(data) {
+                            growl.addSuccessMessage(
+                                parseInt(data) > 1 ?
+                                    data + " messages ont été ajoutés à la liste d'envoi." :
+                                    data + " message a été ajouté à la liste d'envoi."
+                            );
+                        });
+                }
+            },
             {
             icon: 'fa-download',
             label: 'Exporter',

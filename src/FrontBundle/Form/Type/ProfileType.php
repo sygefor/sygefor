@@ -3,12 +3,12 @@
 namespace FrontBundle\Form\Type;
 
 use AppBundle\Form\Type\Trainee\TraineeType;
+use Sygefor\Bundle\ApiBundle\Form\Type\CguType;
 use Symfony\Component\Form\FormBuilderInterface;
-use Symfony\Component\Validator\Constraints\Length;
-use Symfony\Component\Validator\Constraints\NotBlank;
+use Sygefor\Bundle\ApiBundle\Form\Type\ConsentType;
 use Symfony\Component\OptionsResolver\OptionsResolver;
-use Symfony\Component\Form\Extension\Core\Type\PasswordType;
-use Symfony\Component\Form\Extension\Core\Type\RepeatedType;
+use Sygefor\Bundle\ApiBundle\Form\Type\NewsletterType;
+use Sygefor\Bundle\CoreBundle\Form\Type\StrongPasswordType;
 
 /**
  * Class ProfileType.
@@ -26,33 +26,39 @@ class ProfileType extends TraineeType
     {
         parent::buildForm($builder, $options);
 
-        $builder->remove('status');
-        $builder->remove('function');
         $builder->remove('isPaying');
         $builder->remove('isActive');
 
-        $builder
-            ->add('status', null, array(
-                'required' => false,
-                'label' => 'Statut',
-            ))
-            ->add('function', null, array(
-                'required' => false,
-                'label' => 'Fonction',
-            ));
+        $builder->add('newsletter', NewsletterType::class, [
+	        'label' => 'Lettres d\'informations',
+	        'widget_checkbox_label' => 'label',
+	        'help_block' => 'En me désabonnant des lettres d\'informations, je recevrai toujours les notifications relatives à mes demandes d\'inscription.',
+	        'required' => false,
+        ]);
+
+        $trainee = $options['data'];
+        if (!$trainee->getId() || !$trainee->getCgu()) {
+        	$builder->add('cgu', CguType::class, [
+		        'label' => 'Conditions générales d\'utilisation',
+		        'widget_checkbox_label' => 'label',
+		        'help_block' => 'J\'accepte les conditions générales d\'utilisation de la plateforme.'
+	        ]);
+        }
+        if (!$trainee->getId() || !$trainee->getConsent()) {
+        	$builder->add('consent', ConsentType::class, [
+	            'label' => 'Consentement de l\'utilisation de mes données',
+		        'widget_checkbox_label' => 'label',
+		        'help_block' => 'Je consent à l\'utilisation de mes données à des fins statistiques (anonymisées) ou de gestion de mes inscriptions.'
+	        ]);
+        }
 
         // not a shibboleth account
-        if (!$options['data']->getId() && !$options['data']->getShibbolethPersistentId()) {
-            $builder->add('plainPassword', RepeatedType::class, [
-                'type' => PasswordType::class,
-                'constraints' => array(
-                    new Length(array('min' => 8)),
-                    new NotBlank(),
-                ),
-                'invalid_message' => 'Les mots de passe doivent correspondre',
-                'first_options' => array('label' => 'Mot de passe'),
-                'second_options' => array('label' => 'Confirmation'),
-            ]);
+        if (!$trainee->getId() && !$trainee->getShibbolethPersistentId()) {
+            $builder->add('plainPassword', StrongPasswordType::class);
+        }
+
+        if ($trainee->getShibbolethPersistentId()) {
+        	$builder->get('email')->setDisabled(true);
         }
     }
 

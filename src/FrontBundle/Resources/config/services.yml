@@ -64,3 +64,10 @@ services:
         public: false
         tags:
             - { name:security.voter }
+
+    sygefor_front.form.type.profile:
+        class: FrontBundle\Form\Type\ProfileType
+        arguments:
+            - "@Sygefor_core.access_right_registry"
+        tags:
+            - { name: form.type }

@@ -37,6 +37,7 @@ twig:
     strict_variables: "%kernel.debug%"
     form_themes:
         - SygeforCoreBundle:Form:fields.html.twig
+        - FrontBundle:Form:fields.html.twig
     date:
         timezone: "%timezone%"
 

@@ -13,6 +13,7 @@ use AppBundle\Entity\Trainee\Trainee;
 use FrontBundle\Form\Type\ProfileType;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
+use Sygefor\Bundle\ApiBundle\Form\Type\RgpdType;
 use Symfony\Component\HttpFoundation\RedirectResponse;
 use Symfony\Bundle\FrameworkBundle\Controller\Controller;
 use KULeuven\ShibbolethBundle\Security\ShibbolethUserToken;
@@ -82,6 +83,34 @@ class AccountController extends Controller
             'form' => $form->createView(),
         );
     }
+
+	/**
+	 * @var Request $request
+	 *
+	 * @Route("/rgpd", name="api.account.rgpd")
+	 * @Template("@Front/Account/profile/rgpd.html.twig")
+	 *
+	 * @return mixed
+	 */
+	public function rgpdAction(Request $request)
+	{
+		/** @var Trainee $trainee */
+		$trainee = $this->getUser();
+		$form = $this->createForm(new RgpdType(), $trainee);
+		if ($request->getMethod() == 'POST') {
+			$form->handleRequest($request);
+			if ($form->isValid()) {
+				$this->getDoctrine()->getManager()->flush();
+				$this->get('session')->getFlashBag()->add('success', 'Votre compte a été mis à jour.');
+
+				return $this->redirectToRoute('front.account');
+			}
+		}
+
+		return array(
+			'form' => $form->createView(),
+		);
+	}
 
     /**
      * @param Request $request

@@ -99,17 +99,18 @@ class TraineeType extends AbstractTraineeType
     {
         if ($disciplinaryDomain && $disciplinaryDomain->hasChildren()) {
             $form->add('disciplinary', EntityType::class, array(
-                    'class' => Disciplinary::class,
-                    'required' => false,
-                    'label' => "Discipline",
-                    'query_builder' => function (EntityRepository $er) use ($disciplinaryDomain) {
-                        return $er->createQueryBuilder('d')
-                            ->where('d.parent = :parent')
-                            ->setParameter('parent', $disciplinaryDomain)
-                            ->orderBy('d.' . Disciplinary::orderBy());
-                    })
+                'class' => Disciplinary::class,
+                'required' => false,
+                'label' => "Discipline",
+                'query_builder' => function (EntityRepository $er) use ($disciplinaryDomain) {
+                    return $er->createQueryBuilder('d')
+                        ->where('d.parent = :parent')
+                        ->setParameter('parent', $disciplinaryDomain)
+                        ->orderBy('d.' . Disciplinary::orderBy());
+                })
             );
-        } else {
+        }
+        else {
             $form->remove('disciplinary');
         }
     }

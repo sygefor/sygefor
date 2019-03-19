@@ -34,6 +34,9 @@ class Trainee extends AbstractTrainee implements \Serializable, UserInterface, A
         $this->isActive = true;
         $this->sendCredentialsMail = true;
         $this->sendActivationMail = true;
+	    $this->cgu = false;
+	    $this->consent = false;
+	    $this->newsletter = true;
     }
 
     /**

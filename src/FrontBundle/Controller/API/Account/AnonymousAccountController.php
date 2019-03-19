@@ -12,21 +12,19 @@ namespace FrontBundle\Controller\API\Account;
 use Monolog\Logger;
 use Html2Text\Html2Text;
 use Html2Text\Html2TextException;
+use Symfony\Component\Form\FormError;
 use AppBundle\Entity\Trainee\Trainee;
 use FrontBundle\Form\Type\ProfileType;
-use Symfony\Component\Form\FormError;
 use Symfony\Component\HttpFoundation\Request;
 use Sygefor\Bundle\CoreBundle\Entity\Term\Title;
 use FOS\RestBundle\Controller\Annotations as Rest;
-use Symfony\Component\Validator\Constraints\Length;
 use Sygefor\Bundle\CoreBundle\Entity\AbstractTrainee;
 use Symfony\Component\HttpFoundation\RedirectResponse;
 use Symfony\Component\Form\Extension\Core\Type\EmailType;
 use Sygefor\Bundle\CoreBundle\Entity\AbstractOrganization;
+use Sygefor\Bundle\CoreBundle\Form\Type\UpdatePasswordType;
 use KULeuven\ShibbolethBundle\Security\ShibbolethUserToken;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
-use Symfony\Component\Form\Extension\Core\Type\PasswordType;
-use Symfony\Component\Form\Extension\Core\Type\RepeatedType;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Template;
 use Symfony\Component\Routing\Generator\UrlGeneratorInterface;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\ParamConverter;
@@ -146,9 +144,10 @@ class AnonymousAccountController extends AbstractAnonymousAccountController
         if ($token !== $hash) {
             throw new BadRequestHttpException('Invalid token');
         }
-        $trainee->setIsActive(true);
-        $trainee->setSendCredentialsMail(true);
-        $em->flush();
+	    $trainee->setSendCredentialsMail(!$trainee->getIsActive());
+	    $trainee->setIsActive(true);
+	    $trainee->updateTimestamps();
+	    $em->flush();
 
         return $this->redirectToRoute('front.page.login', array('activated' => 1));
     }
@@ -220,21 +219,7 @@ class AnonymousAccountController extends AbstractAnonymousAccountController
      */
     public function choosePasswordAction(Request $request, Trainee $trainee, $token)
     {
-        $form = $this->createFormBuilder()
-            ->add('plainPassword', PasswordType::class, [
-                'label' => 'Votre mot de passe actuel',
-                'constraints' => new Length(array('min' => 8)),
-            ])
-            ->add('newPassword', RepeatedType::class, [
-                'type' => PasswordType::class,
-                'constraints' => new Length(array('min' => 8)),
-                'invalid_message' => 'Les mots de passe doivent correspondre',
-                'first_options' => array('label' => 'Mot de passe'),
-                'second_options' => array('label' => 'Confirmation'),
-                'mapped' => false,
-            ])
-            ->getForm();
-
+	    $form = $this->createForm(new UpdatePasswordType(), $trainee);
         if ($request->getMethod() === 'POST') {
             $form->handleRequest($request);
             if ($form->isValid()) {

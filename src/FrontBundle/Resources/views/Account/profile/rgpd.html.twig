@@ -1,0 +1,47 @@
+{% extends "@Front/base.html.twig" %}
+
+{% block cgu_row %}
+    <p>Conditions générales d'utilisations</p>
+    <p>toto</p>
+{% endblock %}
+
+{% block form_consent %}
+    <p>Consentement éclairé</p>
+{% endblock %}
+
+{% block form_newsletter %}
+    <p>Newletters</p>
+{% endblock %}
+
+{% block header %}
+    <header>
+        <div class="container">
+            <div class="row">
+                <div class="col-lg-12">
+                    <h1>Mon compte</h1>
+                </div>
+            </div>
+            {% include '@Front/Account/menu.html.twig' %}
+        </div>
+    </header>
+{% endblock %}
+
+{% block body %}
+    <div class="container profile">
+        {{ form_start(form) }}
+        <section>
+            {% for child in form.children %}
+                {{ form_row(child) }}
+                {{ form_errors(child) }}
+            {% endfor %}
+        </section>
+        <section>
+            <div class="row">
+                <div class="col-md-12">
+                    <button type="submit" class="btn btn-primary btn-block">Accepter</button>
+                </div>
+            </div>
+        </section>
+        {{ form_end(form) }}
+    </div>
+{% endblock body %}

@@ -1,7 +1,7 @@
 /**
- * BatchMailingController
+ * InscriptionStatusChange
  */
-sygeforApp.controller('InscriptionStatusChange', ['$scope', '$http', '$window', '$modalInstance', '$dialogParams', '$dialog', 'config', '$filter', 'growl', function ($scope, $http, $window, $modalInstance, $dialogParams, $dialog, config, $filter, growl)
+sygeforApp.controller('InscriptionStatusChange', ['$scope', '$http', '$window', '$modalInstance', '$dialogParams', '$dialog', 'config', '$filter', '$q', function ($scope, $http, $window, $modalInstance, $dialogParams, $dialog, config, $filter, $q)
 {
     $scope.service = 'sygefor_core.batch.inscription_status_change';
     $scope.dialog = $modalInstance;
@@ -14,6 +14,8 @@ sygeforApp.controller('InscriptionStatusChange', ['$scope', '$http', '$window', 
     $scope.attachments = [];
     $scope.attCheckList = $scope.attachmentTemplates;
     $scope.formError = '';
+    $scope.sending = false;
+    $scope.error = false;
 
     // building templates contents
     $scope.templates = [];
@@ -91,7 +93,7 @@ sygeforApp.controller('InscriptionStatusChange', ['$scope', '$http', '$window', 
                 additionalCC: $scope.message.additionalCC,
                 message: $scope.message.body,
                 attachmentTemplates: attTemplates,
-                objects: {"AppBundle\\Entity\\Session": ($dialogParams.session) ? $dialogParams.session.id : 0}
+                objects: {'AppBundle\\Entity\\Session': ($dialogParams.session) ? $dialogParams.session.id : 0}
             },
             attachments: $scope.message.attachments,
             ids: $scope.items.join(",")
@@ -105,6 +107,9 @@ sygeforApp.controller('InscriptionStatusChange', ['$scope', '$http', '$window', 
             data['options']['presenceStatus'] = $scope.presenceStatus.id
         }
 
+        var deferred = $q.defer();
+        $scope.sending = true;
+        $scope.error = false;
         $http({
             method: 'POST',
             url: url,
@@ -122,19 +127,11 @@ sygeforApp.controller('InscriptionStatusChange', ['$scope', '$http', '$window', 
             },
             headers: {'Content-Type': undefined},
             data: data
-        }).success(function(data) {
-            if (data.length === 0) {
-                growl.addErrorMessage("Aucune inscription n'a été mise à jour.");
-            }
-            else if (data.length === 1) {
-                growl.addSuccessMessage(data.length + " inscription a été mise à jour.");
-            }
-            else if (data.length > 1) {
-                growl.addSuccessMessage(data.length + " inscriptions ont été mises à jour.");
-            }
-            $scope.dialog.close(data);
+        }).success(function() {
+            $modalInstance.close(deferred.resolve(data));
         }).error(function() {
-            growl.addErrorMessage("Les inscriptions n'ont pas été mises à jour.");
+            $scope.sending = false;
+            $scope.error = true;
         });
     };
 
@@ -144,8 +141,6 @@ sygeforApp.controller('InscriptionStatusChange', ['$scope', '$http', '$window', 
             options: {
                 targetClass: 'AppBundle:Inscription',
                 subject: $scope.message.subject,
-                cc: $scope.message.cc,
-                additionalCC: $scope.message.additionalCC,
                 message: $scope.message.body,
                 templateAttachments: $filter('filter')($scope.attCheckList, {selected: true})
             },
@@ -203,7 +198,7 @@ sygeforApp.controller('InscriptionStatusChange', ['$scope', '$http', '$window', 
      */
     $scope.$watch('message.template', function (newValue) {
         if (newValue) {
-            //replacing values
+            // replacing values
             $scope.message.subject = newValue.subject;
             $scope.message.cc = $scope.replaceCCFormat(newValue.cc);
             $scope.message.body = newValue.body;

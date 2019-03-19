@@ -32,6 +32,20 @@
   color:$gray-light;
 }
 
+.widget-body-loading {
+  position: absolute;
+  height: 28%;
+  width: 59%;
+  font-size: 25px;
+  .fa {
+    position: absolute;
+    top: 50%;
+    margin-top: -15px;
+    left: 50%;
+    margin-left: -15px;
+  }
+}
+
 .widget-loading {
   position: absolute;
   background: rgba(255,255,255,.8);

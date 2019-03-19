@@ -147,6 +147,7 @@ sygeforApp.config(["$listStateProvider", "$dialogProvider", "$widgetProvider", f
         controller: 'InscriptionStatusChange',
         templateUrl: 'inscription/batch/inscriptionStatusChange/inscriptionStatusChange.html',
         size: 'lg',
+        backdrop: 'static',
         resolve: {
             config: function ($http, $dialogParams) {
                 var url = Routing.generate('sygefor_core.batch_operation.modal_config', {service: 'sygefor_core.batch.inscription_status_change'});

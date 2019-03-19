@@ -21,23 +21,15 @@ sygeforApp.controller('InscriptionListController', ['$scope', '$user', 'growl', 
                         label: item.name,
                         execute: function (items, $dialog) {
                             return $dialog
-                                .open('inscription.changeStatus', {
-                                    items: items,
-                                    inscriptionStatus: item,
-                                    presenceStatus: undefined,
-                                    session: ( session ) ? session.id : 0
-                                })
-                                .then(function (data) {
+                                .open('inscription.changeStatus', {items: items, inscriptionStatus: item, session: (session) ? session.id : 0})
+                                .then(function(data) {
                                     // on success, reload the search page
-                                    //search.search();
-
-                                    for (var keySearch in $scope.search.result.items) {
-                                        for (var keyItem in data) {
-                                            if (data[keyItem].id == $scope.search.result.items[keySearch].id) {
-                                                $scope.search.result.items[keySearch].inscriptionStatus = data[keyItem].inscriptionStatus;
-                                            }
-                                        }
-                                    }
+                                    search.search();
+                                    growl.addSuccessMessage(
+                                        parseInt(data.length) > 1 ?
+                                            data + " inscriptions ont été mises à jour." :
+                                            data + " inscription a été mise à jour."
+                                    );
                                 });
                         }
                     });
@@ -58,23 +50,15 @@ sygeforApp.controller('InscriptionListController', ['$scope', '$user', 'growl', 
                         label: item.name,
                         execute: function (items, $dialog) {
                             return $dialog
-                                .open('inscription.changeStatus', {
-                                    items: items,
-                                    presenceStatus: item,
-                                    inscriptionStatus: undefined,
-                                    session: ( session ) ? session.id : 0
-                                })
-                                .then(function (data) {
+                                .open('inscription.changeStatus', {items: items, presenceStatus: item, session: (session) ? session.id : 0})
+                                .then(function(data) {
                                     // on success, reload the search page
-                                    //search.search();
-
-                                    for (var keySearch in $scope.search.result.items) {
-                                        for (var keyItem in data) {
-                                            if (data[keyItem].id == $scope.search.result.items[keySearch].id) {
-                                                $scope.search.result.items[keySearch].presenceStatus = data[keyItem].presenceStatus;
-                                            }
-                                        }
-                                    }
+                                    search.search();
+                                    growl.addSuccessMessage(
+                                        parseInt(data.length) > 1 ?
+                                            data + " inscriptions ont été mises à jour." :
+                                            data + " inscription a été mise à jour."
+                                    );
                                 });
                         }
                     });
