@@ -8,10 +8,10 @@
 
 namespace FrontBundle\Form\Type;
 
-use Doctrine\Common\Collections\ArrayCollection;
 use Symfony\Component\Form\AbstractType;
-use Symfony\Component\Form\Extension\Core\Type\ChoiceType;
+use Doctrine\Common\Collections\ArrayCollection;
 use Symfony\Component\Form\FormBuilderInterface;
+use Symfony\Component\Form\Extension\Core\Type\ChoiceType;
 use Symfony\Component\OptionsResolver\OptionsResolverInterface;
 
 /**
@@ -58,6 +58,7 @@ class ProgramFilterType extends AbstractType
                 'attr' => array(
                     'count' => $this->getFacetCount($key),
                 ),
+	            'data' => isset($options[$key]) ? json_decode($options[$key]) : null,
             ));
         }
     }
@@ -71,6 +72,8 @@ class ProgramFilterType extends AbstractType
             'facets',
             'entities',
         ));
+
+	    $resolver->setOptional(array_keys($this->keyNames));
     }
 
     /**

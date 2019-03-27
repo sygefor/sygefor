@@ -9,18 +9,17 @@
 
 namespace FrontBundle\Controller;
 
-use AppBundle\Entity\Term\Session\Place;
-use AppBundle\Entity\Trainee\Trainee;
 use Elastica\Facet\Terms;
 use Elastica\Filter\BoolNot;
 use Elastica\Filter\Term;
 use Elastica\Filter\Range;
 use Elastica\Filter\BoolAnd;
 use Doctrine\ORM\EntityManager;
-use KULeuven\ShibbolethBundle\Security\ShibbolethUserToken;
 use Symfony\Component\Form\Form;
 use AppBundle\Entity\Inscription;
 use AppBundle\Entity\Organization;
+use FrontBundle\Utils\FormPagination;
+use AppBundle\Entity\Term\Session\Place;
 use AppBundle\Entity\Term\Training\Theme;
 use FrontBundle\Form\Type\InscriptionType;
 use FrontBundle\Form\Type\ProgramFilterType;
@@ -46,11 +45,11 @@ use Symfony\Component\Config\Definition\Exception\ForbiddenOverwriteException;
  */
 class ProgramController extends Controller
 {
-    protected $delegationFacets;
+    protected $organizationFacets;
 
     public function __construct()
     {
-        $this->delegationFacets = [
+        $this->organizationFacets = [
             'theme' => 'training.theme.id',
             'place' => 'place.source',
             'year' => 'year',
@@ -105,28 +104,45 @@ class ProgramController extends Controller
      */
     public function organizationAction(Request $request, Organization $organization, $page = 1)
     {
-        $search = $this->get('sygefor_training.session.search');
-        $filters = $this->getSessionFilters($search, $page, $organization->getCode());
-        $search->filterQuery($filters);
-        $this->addFacets($search);
+	    // get pagination form options
+	    $paginationParams = $request->query->all();
+	    $paginationParams = $this->getFormPaginationValue($paginationParams);
 
-        $result = $search->search();
-        $form = $this->createForm(ProgramFilterType::class, null, array(
-            'facets' => $result['facets'],
-            'entities' => [
-                'place' => $this->getDoctrine()->getRepository(Place::class)->findAll(),
-                'theme' => $this->getDoctrine()->getRepository(Theme::class)->findAll(),
-            ],
-        ));
-        $this->formFilter($search, $request, $form);
-        $search = $search->search();
+	    // init search request
+	    $search = $this->get('sygefor_training.session.search');
+	    $filters = $this->getSessionFilters($search, $page, $organization->getCode());
+	    $search->filterQuery($filters);
+	    $this->addFacets($search);$result = $search->search();
 
-        return $this->render('@Front/Program/organization.html.twig', array(
-            'form' => $form->createView(),
-            'search' => $search,
-            'organization' => $organization,
-            'page' => $page,
-        ));
+	    // handle form options
+	    $form = $this->createForm(ProgramFilterType::class, null, array_merge($paginationParams, array(
+			    'facets' => $result['facets'],
+			    'entities' => [
+				    'place' => $this->getDoctrine()->getRepository(Place::class)->findAll(),
+				    'theme' => $this->getDoctrine()->getRepository(Theme::class)->findAll(),
+			    ])
+	    ));
+
+	    // if get form options have been overriden by post form options
+	    $beforeHandleOptions = FormPagination::getFormValues($form);
+	    $this->formFilter($search, $form, $request, $paginationParams);
+	    $afterHandleOptions = FormPagination::getFormValues($form);
+	    // force first page
+	    if ($beforeHandleOptions !== $afterHandleOptions) {
+		    $page = 1;
+		    $search->setPage(1);
+	    }
+	    // search
+	    $search = $search->search();
+
+	    return $this->render('@Front/Program/organization.html.twig', array(
+		    'form' => $form->createView(),
+		    'search' => $search,
+		    'organization' => $organization,
+		    'page' => $page,
+		    'user' => $this->getUser(),
+		    'paginationFormFilters' => FormPagination::getPaginationFieldValues($form)
+	    ));
     }
 
     /**
@@ -354,33 +370,46 @@ class ProgramController extends Controller
      */
     protected function addFacets(SearchService $search)
     {
-        foreach ($this->delegationFacets as $name => $field) {
+        foreach ($this->organizationFacets as $name => $field) {
             $facet = new Terms($name);
             $facet->setField($field);
             $search->getQuery()->addFacet($facet);
         }
     }
 
-    /**
-     * @param SearchService $search
-     * @param Request       $request
-     * @param Form          $form
-     */
-    protected function formFilter(SearchService $search, Request $request, Form $form)
-    {
-        $boolAnd = new BoolAnd();
-        $form = $form->handleRequest($request);
-        if ($form->isSubmitted() && $form->isValid()) {
-            foreach ($form->getData() as $field => $data) {
-                if (!empty($data)) {
-                    $term = new \Elastica\Filter\Terms($this->delegationFacets[$field], $data);
-                    $boolAnd->addFilter($term);
-                }
-            }
+	/**
+	 * @param SearchService $search
+	 * @param Form          $form
+	 * @param Request       $request
+	 * @param array         $paginationParams
+	 */
+	protected function formFilter(SearchService $search, Form $form, Request $request, $paginationParams)
+	{
+		$boolAnd = new BoolAnd();
+		$form = $form->handleRequest($request);
+		$fields = $paginationParams;
+		if ($form->isSubmitted() && $form->isValid() && $form->getData()) {
+			$fields = array_merge($paginationParams, $form->getData());
+		}
+		foreach ($fields as $field => $data) {
+			if (!empty($data)) {
+				if (is_string($data)) {
+					$data = json_decode($data, true);
+				}
+				$term = new \Elastica\Filter\Terms($this->organizationFacets[$field], $data);
+				$boolAnd->addFilter($term);
+			}
+		}
 
-            if (count($boolAnd->getFilters()) > 0) {
-                $search->addFilter('filters', $boolAnd);
-            }
-        }
-    }
+		if (count($boolAnd->getFilters()) > 0) {
+			$search->addFilter('filters', $boolAnd);
+		}
+	}
+
+	protected function getFormPaginationValue($paginationParams)
+	{
+		unset($paginationParams['page']);
+
+		return $paginationParams;
+	}
 }
