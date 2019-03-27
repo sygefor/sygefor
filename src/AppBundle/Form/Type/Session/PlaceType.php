@@ -55,7 +55,7 @@ class PlaceType extends VocabularyType
             'label' => 'Balise HTML intégrée',
             'required' => false,
             'attr' => array(
-                'placeholder' => 'Exemple : <iframe src="https://www.google.com/maps/embed?pb=!1m14!1m8!1m3!1d92956.81247576859!2d5.2941472!3d43.2744626!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x12c9bf62615b8fa1%3A0x390b19c849bd126e!2sCNRS!5e0!3m2!1sfr!2sfr!4v1486475591657" width="600" height="450" frameborder="0" style="border:0" allowfullscreen></iframe>',
+                'placeholder' => 'Exemple : <iframe src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d2663.8625952973134!2d-1.6634308839527325!3d48.11288627922153!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x480ee08757b33171%3A0xad6d63fc9041898a!2sConjecto!5e0!3m2!1sfr!2sfr!4v1553686671404" width="600" height="450" frameborder="0" style="border:0" allowfullscreen></iframe>',
             ),
         ));
     }

@@ -26,7 +26,7 @@ class LoadTheme extends AbstractTermLoad
             array('name' => 'Techniques spécifiques'),
             array('name' => 'Informatique (conception des outils)'),
             array('name' => 'Bureautique (utilisation des outils)'),
-            array('name' => 'Utilisation d\'applications spécialisées CNRS'),
+            array('name' => 'Utilisation d\'applications spécialisées'),
             array('name' => 'Prévention et sécurité / Ethique'),
             array('name' => 'Partenariat et valorisation'),
             array('name' => 'Finances, comptabilité'),

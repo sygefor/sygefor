@@ -1,5 +1,5 @@
 parameters:
-    app.taxonomy_group: "CNRS"
+    app.taxonomy_group: "Autre"
     app.session.taxonomy_group: "Session"
     app.trainee.taxonomy_group: "Public"
     app.trainer.taxonomy_group: "Intervenant"
