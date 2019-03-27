@@ -35,7 +35,7 @@ class Organization extends \Twig_Extension
 	public function getFunctions()
 	{
 		return [
-			new \Twig_SimpleFunction('allOrganizations', array($this, 'getAllOrganizations'), ['needs_environment' => true]),
+			new \Twig_SimpleFunction('allOrganizations', array($this, 'getAllOrganizations')),
 		];
 	}
 
