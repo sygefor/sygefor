@@ -3,6 +3,7 @@
 namespace AppBundle\Form\Type\Trainer;
 
 use AppBundle\Entity\Trainer;
+use Symfony\Component\Form\Extension\Core\Type\CheckboxType;
 use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Component\OptionsResolver\OptionsResolver;
 use Symfony\Component\Form\Extension\Core\Type\UrlType;
@@ -50,25 +51,24 @@ class TrainerType extends AbstractTrainerType
             ->add('city', null, array(
                 'label' => 'Ville',
             ))
-            ->add('status', null, array(
-                'label' => 'Statut',
-            ))
-            ->add('isArchived', null, array(
-                'label' => 'Archivé',
-            ))
-            ->add('isAllowSendMail', null, array(
-                'label' => 'Autoriser les courriels',
-            ))
-            ->add('isOrganization', null, array(
-                'label' => 'Intervenant interne',
-            ))
-            ->add('isPublic', null, array(
-                'label' => 'Publié sur le web',
-            ))
-            ->add('responsabilities', null, array(
-                'label' => 'Responsabilités',
-                'required' => false,
-            ));
+	        ->add('service', null, array(
+		        'label'    => 'Service',
+		        'required' => false,
+	        ))
+	        ->add('position', null, array(
+		        'label'    => 'Fonction',
+		        'required' => false,
+	        ))
+	        ->add('isArchived', CheckboxType::class, array(
+		        'label' => 'Archivé',
+	        ))
+	        ->add('isOrganization', CheckboxType::class, array(
+		        'label' => 'Intervenant interne',
+	        ))
+	        ->add('responsabilities', null, array(
+		        'label' => 'Responsabilités',
+		        'required' => false,
+	        ));
     }
 
 	/**

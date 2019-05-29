@@ -1,0 +1,22 @@
+{% extends "email/_layout.html.twig" %}
+
+{% block subject -%}
+    SYGEFOR : votre compte a été supprimé pour cause d'inactivité
+{%- endblock %}
+
+{% block body %}
+    <p>{{ recipient.fullName }},</p>
+
+    <p>Votre compte SYGEFOR n'a pas été utilisé depuis plus de 5 ans. A ce titre, nous vous informons que celui-ci a été supprimé de nos bases de données.</p>
+
+    <p>Avec nos cordiales salutations,</p>
+    <p>
+        <img src="{{ absolute_url('/assets/img/organization/' ~ recipient.organization.code ~ '/logo.png') }}"><br/>
+        L'équipe de l'{{ recipient.organization.name }}
+    </p>
+    <p>
+        {{ recipient.organization.fullAddress | nl2br }}<br/>
+        Tel : 33 {{ recipient.organization.phoneNumber }}<br/>
+        <a href="{{ recipient.organization.website }}">{{ recipient.organization.website }}</a><br/>
+    </p>
+{% endblock %}

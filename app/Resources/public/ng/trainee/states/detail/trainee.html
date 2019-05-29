@@ -13,25 +13,30 @@
 
             <div class="pre-title">Inscrit le {{ trainee.createdAt|date: 'dd/MM/yyyy' }} - {{ trainee.organization.name }}</div>
 
-            <h2><span>{{ trainee.fullName }} <span ng-if="!trainee.isActive">(compte non validé)</span></span></h2>
+            <h2><span>{{ trainee.fullName }} <span ng-if="!trainee.isActive">(compte non validé)</span><span ng-if="trainee.isArchived">(compte anonymisé)</span></span></h2>
 
             <div class="row">
                 <div class="col-lg-12">
-                    <h3>Informations personnelles</h3>
-                    <hr>
                     <div class="row">
                         <div class="col-lg-6">
+                            <h3>Informations personnelles</h3>
+                            <hr>
                             <ul class="summary">
                                 <li><label>Civilité</label> <span sf-xeditable="form.children.title">{{ trainee.title.name }}</span></li>
                                 <li><label>Nom</label> <span sf-xeditable="form.children.lastName">{{ trainee.lastName }}</span></li>
                                 <li><label>Prénom</label> <span sf-xeditable="form.children.firstName">{{ trainee.firstName }}</span></li>
+                                <li><label>Email</label> <span sf-xeditable="form.children.email">{{ trainee.email }}</span></li>
+                                <li tooltip="Abonné aux lettres d'informations"><label>Lettre d'information</label> <span>{{ trainee.newsletter ? 'Oui' : 'Non' }}</span></li>
                             </ul>
                         </div>
                         <div class="col-lg-6">
+                            <h3>Coordonnées</h3>
+                            <hr>
                             <ul class="summary">
-                                <li><label>Email</label> <span sf-xeditable="form.children.email">{{ trainee.email }}</span></li>
+                                <li><label>Adresse</label> <span sf-xeditable="form.children.address" data-type="textarea">{{ trainee.address }}</span></li>
+                                <li><label>Code postal</label> <span sf-xeditable="form.children.zip">{{ trainee.zip }}</span></li>
+                                <li><label>Ville</label> <span sf-xeditable="form.children.city">{{ trainee.city }}</span></li>
                                 <li><label>Téléphone</label> <span sf-xeditable="form.children.phoneNumber">{{ trainee.phoneNumber }}</span></li>
-	                            <li tooltip="Abonné aux lettres d'informations"><label>Lettre d'information</label> <span>{{ trainee.newsletter ? 'Oui' : 'Non' }}</span></li>
                             </ul>
                         </div>
                     </div>
@@ -45,16 +50,17 @@
                     <div class="row">
                         <div class="col-lg-6">
                             <ul class="summary">
+                                <li><label>Domaine disciplinaire</label> <span sf-xeditable="form.children.disciplinaryDomain" on-change="unset('disciplinary')">{{ trainee.disciplinaryDomain.name }}</span></li>
+                                <li ng-show="form.children.disciplinary"><label>Discipline</label> <span sf-xeditable="form.children.disciplinary">{{ trainee.disciplinary.name }}</span></li>
+                                <li><label>Service</label> <span sf-xeditable="form.children.service">{{ trainee.service }}</span></li>
+                                <li><label>Fonction</label> <span sf-xeditable="form.children.position">{{ trainee.position }}</span></li>
                                 <li><label>Type de personnel</label> <span sf-xeditable="form.children.publicType">{{ trainee.publicType.name }}</span></li>
-                                <li ng-show="trainee.publicType.machineName === 'other'"><label>Autre cat. de public</label> <span sf-xeditable="form.children.otherPublicType">{{ trainee.otherPublicType }}</span></li>
-                                <li><label>Statut</label> <span sf-xeditable="form.children.status">{{ trainee.status }}</span></li>
-                                <li><label>Fonction</label> <span sf-xeditable="form.children.function">{{ trainee.function }}</span></li>
+                                <li ng-show="trainee.publicType.machineName === 'other'"><label>Autre type</label> <span sf-xeditable="form.children.otherPublicType">{{ trainee.otherPublicType }}</span></li>
+                                <li><label>Cat. de personnel</label> <span sf-xeditable="form.children.publicCategory">{{ trainee.publicCategory.name }}</span></li>
                             </ul>
                         </div>
                         <div class="col-lg-6">
                             <ul class="summary">
-                                <li><label>Domaine disciplinaire</label> <span sf-xeditable="form.children.disciplinaryDomain" on-change="unset('disciplinary')">{{ trainee.disciplinaryDomain.name }}</span></li>
-                                <li ng-show="form.children.disciplinary"><label>Discipline</label> <span sf-xeditable="form.children.disciplinary">{{ trainee.disciplinary.name }}</span></li>
                             </ul>
                         </div>
                     </div>

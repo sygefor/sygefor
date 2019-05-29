@@ -50,6 +50,13 @@ class NotedCriterion
      */
     protected $note;
 
+	public function __construct($theme = null, $criterion = null, $note = null)
+	{
+		$this->theme = $theme;
+		$this->criterion =$criterion;
+		$this->note = $note;
+	}
+
     /**
      * @return mixed
      */

@@ -32,3 +32,11 @@ notification:
                 template: email/trainee/reset-password.html.twig
                 additionalParams:
                     populate: 0
+            trainee.not_used:
+                template: email/trainee/not_used.html.twig
+                additionalParams:
+                    populate: 1
+            trainee.anonymized:
+                template: email/trainee/anonymized.html.twig
+                additionalParams:
+                    populate: 1

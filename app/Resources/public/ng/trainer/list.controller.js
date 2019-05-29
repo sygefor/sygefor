@@ -30,26 +30,33 @@ sygeforApp.controller('TrainerListController', ['$scope', '$user', '$injector', 
 
     // batch operations
     $scope.batchOperations = [{
-        icon: 'fa-envelope-o',
-        label: 'Envoyer un Email',
-        execute: function(items, $dialog) {
-            return $dialog.open('batch.email', { items: items, targetClass: "AppBundle\\Entity\\Trainer" })
-        }
-    },{
-        icon: 'fa-download',
-        label: 'Exporter',
-        subitems: [
-            {
-                icon: 'fa-file-excel-o',
-                label: 'CSV',
-                execute: function(items, $dialog) {
-                    return $dialog.open('batch.export.csv', { items: items, service: 'trainer' })
-                }
+            icon: 'fa-envelope-o',
+            label: 'Envoyer un Email',
+            execute: function(items, $dialog) {
+                return $dialog.open('batch.email', { items: items, targetClass: "AppBundle\\Entity\\Trainer" })
             }
-        ]
-
-    }
-        ];
+        },
+        {
+            icon: 'fa-download',
+            label: 'Exporter',
+            subitems: [
+                {
+                    icon: 'fa-file-excel-o',
+                    label: 'CSV',
+                    execute: function(items, $dialog) {
+                        return $dialog.open('batch.export.csv', { items: items, service: 'trainer' })
+                    }
+                },
+                {
+                    icon: 'fa-external-link',
+                    label: 'Publipostage',
+                    execute: function(items, $dialog) {
+                        return $dialog.open('batch.publipost', { items: items, service: 'trainer' })
+                    }
+                }
+            ]
+        }
+    ];
 
     // add operations
     $scope.addOperations = [{

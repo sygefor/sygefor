@@ -96,7 +96,7 @@ class Trainer extends AbstractTrainer implements MailerRecipientInterface
     /**
      * @return bool
      */
-    public function isIsArchived()
+    public function isArchived()
     {
         return $this->isArchived;
     }

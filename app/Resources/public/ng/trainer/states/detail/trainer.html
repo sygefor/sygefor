@@ -2,7 +2,7 @@
     <div class="row">
         <div class="col-md-8">
             <div class="btn-group pull-right">
-                <a class="btn btn-fa" href="" tooltip="Changer le centre de rattachement" ng-if="$user.hasAccessRight('sygefor_core.access_right.trainer.all.update')" ng-click="changeOrganization()"><span class="fa fa-university"></span></a>
+                <a class="btn btn-fa" href="" tooltip="Changer le service organisateur de rattachement" ng-if="$user.hasAccessRight('sygefor_core.access_right.trainer.all.update')" ng-click="changeOrganization()"><span class="fa fa-university"></span></a>
                 <a class="btn btn-fa" href="" tooltip="Supprimer" ng-if="trainer._accessRights.delete" ng-click="delete()"><span class="fa fa-trash-o"></span></a>
             </div>
 
@@ -20,8 +20,6 @@
                         <li><label>Email</label> <span sf-xeditable="form.children.email">{{ trainer.email }}</span></li>
                         <li><label>Téléphone</label> <span sf-xeditable="form.children.phoneNumber">{{ trainer.phoneNumber }}</span></li>
                         <li><label>Archivé</label> <span sf-xeditable="form.children.isArchived">{{ trainer.isArchived ? 'Oui' : 'Non' }}</span></li>
-                        <!--<li><label>Publié sur le web</label>  <span sf-xeditable="form.children.isPublic">{{ trainer.isPublic ? 'Oui' : 'Non' }}</span></li>-->
-                        <!--<li title="Autoriser l'envoie de courriels pour les stagiaires"><label>Autoriser les courriels</label> <span sf-xeditable="form.children.isAllowSendMail">{{ trainer.isAllowSendMail === true || trainer.isAllowSendMail === undefined ? 'Oui' : 'Non' }}</span></li>-->
                     </ul>
                 </div>
 
@@ -29,6 +27,7 @@
                     <h3>Adresse</h3>
                     <hr>
                     <ul class="summary">
+                        <li><label>Type d'adresse</label> <span sf-xeditable="form.children.addressType">{{ trainer.addressType ? 'Adresse professionnelle' : 'Adresse personnelle' }}</span></li>
                         <li><label>Adresse</label> <span sf-xeditable="form.children.address" data-type="textarea">{{ trainer.address }}</span></li>
                         <li><label>Code postal</label> <span sf-xeditable="form.children.zip">{{ trainer.zip }}</span></li>
                         <li><label>Ville</label> <span sf-xeditable="form.children.city">{{ trainer.city }}</span></li>
@@ -43,7 +42,8 @@
                     <ul class="summary">
                         <li><label>Intervenant interne</label> <span sf-xeditable="form.children.isOrganization">{{ trainer.isOrganization ? 'Oui' : 'Non' }}</span></li>
                         <li><label>Responsabilités</label> <span sf-xeditable="form.children.responsabilities">{{ trainer.responsabilities }}</span></li>
-                        <li><label>Fonction, statut</label>  <span sf-xeditable="form.children.status">{{ trainer.status }}</span></li>
+                        <li><label>Service</label> <span sf-xeditable="form.children.service">{{ trainer.service }}</span></li>
+                        <li><label>Fonction</label> <span sf-xeditable="form.children.position">{{ trainer.position }}</span></li>
                     </ul>
                 </div>
                 <div class="col-lg-6">

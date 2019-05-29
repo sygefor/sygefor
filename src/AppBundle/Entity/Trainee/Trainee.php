@@ -5,6 +5,7 @@ namespace AppBundle\Entity\Trainee;
 use Doctrine\ORM\Mapping as ORM;
 use AppBundle\Entity\CoordinatesTrait;
 use AppBundle\Form\Type\Trainee\TraineeType;
+use JMS\Serializer\Annotation as Serializer;
 use AppBundle\Entity\ProfessionalSituationTrait;
 use Sygefor\Bundle\ApiBundle\Entity\AccountTrait;
 use Sygefor\Bundle\CoreBundle\Entity\AbstractTrainee;
@@ -27,6 +28,12 @@ class Trainee extends AbstractTrainee implements \Serializable, UserInterface, A
     use DisciplinaryTrait;
     use ProfessionalSituationTrait;
 
+	/**
+	 * @ORM\Column(name="is_archived", type="boolean", options={"default": false})
+	 * @Serializer\Groups({"trainee"})
+	 */
+	private $isArchived;
+
     public function __construct()
     {
         parent::__construct();
@@ -38,7 +45,24 @@ class Trainee extends AbstractTrainee implements \Serializable, UserInterface, A
 	    $this->cgu = false;
 	    $this->consent = false;
 	    $this->newsletter = true;
+	    $this->isArchived = false;
     }
+
+	/**
+	 * @return mixed
+	 */
+	public function isArchived()
+	{
+		return $this->isArchived;
+	}
+
+	/**
+	 * @param mixed $isArchived
+	 */
+	public function setArchived($isArchived)
+	{
+		$this->isArchived = $isArchived;
+	}
 
     /**
      * {@inheritdoc}

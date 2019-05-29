@@ -16,40 +16,48 @@ use Symfony\Component\PropertyAccess\PropertyAccessor;
  */
 trait ProfessionalSituationTrait
 {
-    /**
-     * @var PublicType
-     * @ORM\ManyToOne(targetEntity="AppBundle\Entity\Term\PublicType")
-     * @ORM\JoinColumn(nullable=true)
-     * @Serializer\Groups({"trainee", "trainer", "inscription", "api.profile"})
-     */
-    protected $publicType;
+	/**
+	 * @var PublicType
+	 * @ORM\ManyToOne(targetEntity="AppBundle\Entity\Term\PublicType")
+	 * @ORM\JoinColumn(nullable=true, onDelete="SET NULL")
+	 * @Serializer\Groups({"Default", "trainee","inscription", "api.profile"})
+	 */
+	protected $publicType;
 
-    /**
-     * @var string
-     * @ORM\Column(name="otherPublicType", type="string", length=255, nullable=true)
-     * @Serializer\Groups({"trainee", "trainer", "inscription", "api.profile"})
-     */
-    protected $otherPublicType;
+	/**
+	 * @var string
+	 * @ORM\Column(name="otherPublicType", type="string", length=255, nullable=true)
+	 * @Serializer\Groups({"Default", "trainee", "inscription", "api.profile"})
+	 */
+	protected $otherPublicType;
 
-    /**
-     * @var string
-     * @ORM\Column(name="function", type="string", length=255, nullable=true)
-     * @Serializer\Groups({"trainee", "trainer", "inscription", "api.profile"})
-     */
-    protected $function;
+	/**
+	 * @var PublicType
+	 * @ORM\ManyToOne(targetEntity="AppBundle\Entity\Term\Trainee\PublicCategory")
+	 * @ORM\JoinColumn(nullable=true, onDelete="SET NULL")
+	 * @Serializer\Groups({"Default", "trainee", "inscription", "api.profile"})
+	 */
+	protected $publicCategory;
 
-    /**
-     * @var string
-     * @ORM\Column(name="status", type="string", length=512, nullable=true)
-     * @Serializer\Groups({"trainee", "trainer", "inscription", "api.profile"})
-     */
-    protected $status;
+	/**
+	 * @var string
+	 * @ORM\Column(name="position", type="string", length=256, nullable=true)
+	 * @Serializer\Groups({"Default", "trainee", "trainer", "inscription", "api.profile"})
+	 */
+	protected $position;
 
-    /**
-     * @ORM\Column(name="is_paying", type="boolean")
-     * @Serializer\Groups({"trainee", "inscription", "api.profile","api.token"})
-     */
-    protected $isPaying = false;
+	/**
+	 * @var string service
+	 * @ORM\Column(name="service", type="string", length=255, nullable=true)
+	 * @Serializer\Groups({"Default", "trainee", "trainer", "inscription", "api.profile"})
+	 */
+	protected $service;
+
+	/**
+	 * @ORM\Column(name="is_paying", type="boolean")
+	 * @Serializer\Groups({"Default", "trainee", "inscription", "api.profile", "api.token"})
+	 */
+	protected $isPaying = false;
 
     /**
      * Copy professional situation informations from another entity.
@@ -61,11 +69,12 @@ trait ProfessionalSituationTrait
     {
         $propertyAccessor = new PropertyAccessor();
         $properties = array(
-            'publicType',
-            'otherPublicType',
-            'function',
-            'status',
-            'isPaying',
+	        'service',
+	        'publicType',
+	        'otherPublicType',
+	        'publicCategory',
+	        'position',
+	        'isPaying',
         );
 
         foreach ($properties as $property) {
@@ -76,83 +85,99 @@ trait ProfessionalSituationTrait
         }
     }
 
-    /**
-     * @param PublicType
-     */
-    public function setPublicType($publicType)
-    {
-        $this->publicType = $publicType;
-    }
+	/**
+	 * @return string
+	 */
+	public function getService()
+	{
+		return $this->service;
+	}
 
-    /**
-     * @return PublicType
-     */
-    public function getPublicType()
-    {
-        return $this->publicType;
-    }
+	/**
+	 * @param string $service
+	 */
+	public function setService($service)
+	{
+		$this->service = $service;
+	}
 
-    /**
-     * @return string
-     */
-    public function getOtherPublicType()
-    {
-        return $this->otherPublicType;
-    }
+	/**
+	 * @param PublicType
+	 */
+	public function setPublicType($publicType)
+	{
+		$this->publicType = $publicType;
+	}
 
-    /**
-     * @param string $otherPublicType
-     */
-    public function setOtherPublicType($otherPublicType)
-    {
-        $this->otherPublicType = $otherPublicType;
-    }
+	/**
+	 * @return PublicType
+	 */
+	public function getPublicType()
+	{
+		return $this->publicType;
+	}
 
-    /**
-     * @return string
-     */
-    public function getFunction()
-    {
-        return $this->function;
-    }
+	/**
+	 * @return string
+	 */
+	public function getOtherPublicType()
+	{
+		return $this->otherPublicType;
+	}
 
-    /**
-     * @param string $function
-     */
-    public function setFunction($function)
-    {
-        $this->function = $function;
-    }
+	/**
+	 * @param string $otherPublicType
+	 */
+	public function setOtherPublicType($otherPublicType)
+	{
+		$this->otherPublicType = $otherPublicType;
+	}
 
-    /**
-     * @param string $status
-     */
-    public function setStatus($status)
-    {
-        $this->status = $status;
-    }
+	/**
+	 * @return PublicType
+	 */
+	public function getPublicCategory()
+	{
+		return $this->publicCategory;
+	}
 
-    /**
-     * @return string
-     */
-    public function getStatus()
-    {
-        return $this->status;
-    }
+	/**
+	 * @param PublicType $publicCategory
+	 */
+	public function setPublicCategory($publicCategory)
+	{
+		$this->publicCategory = $publicCategory;
+	}
 
-    /**
-     * @return bool
-     */
-    public function getIsPaying()
-    {
-        return $this->isPaying;
-    }
+	/**
+	 * @return string
+	 */
+	public function getPosition()
+	{
+		return $this->position;
+	}
 
-    /**
-     * @param bool $isPaying
-     */
-    public function setIsPaying($isPaying)
-    {
-        $this->isPaying = $isPaying;
-    }
+	/**
+	 * @param string $position
+	 */
+	public function setPosition($position)
+	{
+		$this->position = $position;
+	}
+
+	/**
+	 * @return bool
+	 */
+	public function getIsPaying()
+	{
+		return $this->isPaying;
+	}
+
+	/**
+	 * @param bool $isPaying
+	 */
+	public function setIsPaying($isPaying)
+	{
+		$this->isPaying = $isPaying;
+	}
 }

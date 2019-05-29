@@ -1,0 +1,30 @@
+{% extends "email/_layout.html.twig" %}
+
+{% block subject -%}
+    SYGEFOR : votre compte est inactif depuis {% if additionalParams.period == 'un an' %}4 ans{% else %}bientôt 5 ans{% endif %}
+{%- endblock %}
+
+{% block body %}
+    <p>{{ recipient.title.name }},</p>
+    <p>En raison de la mise en place du Règlement Général sur la Protection des Données (RGPD), nous procédons, dorénavant, à l’anonymisation des comptes de nos utilisateurs au bout de cinq années d’inactivité, cette période étant calculée à partir de la date de la dernière inscription, quelle que soit son issue (refusée, mise sur liste d’attente ou acceptée) et que la personne ait été présente ou pas.</p>
+    <p>L’objet de ce message est de vous avertir de la procédure d’anonymisation qu’il va subir dans un délai de {{ additionalParams.period }}.</p>
+    {% if additionalParams.period == 'un an' %}
+        <p>Vous recevrez une nouvelle relance dans 9 mois. D'ici un an, votre compte sera définitivement anonymisé.</p>
+    {% else %}
+        <p><strong>Ce message est votre dernière relance. D'ici trois mois, votre compte sera définitivement anonymisé.</strong></p>
+    {% endif %}
+    <p>Une fois votre compte anonymisé, <span style="background: #f0d388;">si vous souhaitez assister de nouveau à des événements organisés par le réseau des URFIST, il vous faudra recréer un compte ou renseigner de nouveau les éléments de votre profil en cas d’utilisation de votre compte universitaire.</span></p>
+    <p>Par ailleurs, au-delà de cette période d'inactivité de 5 ans, nous ne serons plus en mesure de vous fournir d'attestations de présence à nos stages et événements auxquels vous auriez pu assister.</p>
+    <p>Alors, n’hésitez pas à profiter de {% if additionalParams.period == 'un an' %}cette année{% else %}ces trois mois{% endif %} pour (re)découvrir le programme de nos événements au bout de ce lien : <a href="https://sygefor.reseau-urfist.fr/#/training">https://sygefor.reseau-urfist.fr/#/training</a> et à vous inscrire. Nous serons heureux de vous accueillir de nouveau parmi nos publics !</p>
+    <p>Dans l’attente, nous restons à votre disposition pour tout complément d’information.</p>
+    <p>Avec nos cordiales salutations,</p>
+    <p>
+        <img src="{{ absolute_url('/assets/img/organization/' ~ recipient.organization.code ~ '/logo.png') }}"><br/>
+        L'équipe de l'{{ recipient.organization.name }}
+    </p>
+    <p>
+        {{ recipient.organization.fullAddress | nl2br }}<br/>
+        Tel : 33 {{ recipient.organization.phoneNumber }}<br/>
+        <a href="{{ recipient.organization.website }}">{{ recipient.organization.website }}</a><br/>
+    </p>
+{% endblock %}

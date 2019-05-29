@@ -64,8 +64,9 @@ class Evaluation
      */
     protected $suggestions;
 
-    public function __construct()
+    public function __construct(Inscription $inscription = null)
     {
+	    $this->inscription = $inscription;
         $this->themes = new ArrayCollection();
     }
 

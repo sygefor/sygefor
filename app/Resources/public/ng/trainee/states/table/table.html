@@ -12,6 +12,8 @@
                         <th search-table-th field="lastName.source">Nom</th>
                         <th search-table-th field="createdAt">Inscription</th>
                         <th search-table-th field="publicType.source">Catégorie de personnel</th>
+                        <th search-table-th field="isActive">Actif</th>
+                        <th search-table-th field="isArchived">Archivé</th>
                     </tr>
                 </thead>
                 <tbody>
@@ -22,6 +24,8 @@
                         <td><a href="" ui-sref="trainee.detail.view({ id: item.id })">{{ item.fullName }}</a></td>
                         <td>{{ item.createdAt | date: 'dd/MM/yyyy' }}</td>
                         <td>{{ item.publicType.name ? item.publicType.name : item.publicType }}</td>
+                        <td>{{ item['isActive'] ? 'Oui' : 'Non' }}</td>
+                        <td>{{ item['isArchived'] ? 'Oui' : 'Non' }}</td>
                     </tr>
                 </tbody>
             </table>

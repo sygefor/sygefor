@@ -330,6 +330,8 @@ fos_elastica:
                             type: boolean
                         isActive:
                             type: boolean
+                        isArchived:
+                            type: boolean
                         createdAt: { type: date, index: not_analyzed }
                     persistence:
                         driver: orm # orm, mongodb, propel are available

@@ -11,7 +11,6 @@
                         <th search-table-th field="lastName.source">Nom</th>
                         <th search-table-th field="isOrganization">Statut</th>
                         <th search-table-th field="isArchived">Archivé</th>
-                        <th search-table-th field="isPublic">Publié</th>
                     </tr>
                 </thead>
                 <tbody>
@@ -21,7 +20,6 @@
                         <td><a href="" ui-sref="trainer.detail.view({ id: item.id })">{{ item.fullName }}</a></td>
                         <td>{{ item.isOrganization ? 'Intervenant interne' : 'Intervenant externe' }}</td>
                         <td><span ng-class="{'label label-lg label-danger': item.isArchived}">{{ item.isArchived === true ? 'Oui' : 'Non' }}</span></td>
-                        <td><span class="label label-lg" ng-class="{'label-success': item.isPublic, 'label-danger': !item.isPublic}">{{ item.isPublic ? 'Publié' : 'Non publié' }}</span></td>
                     </tr>
                 </tbody>
             </table>

@@ -56,9 +56,12 @@ class EvaluatedTheme
      */
     protected $comments;
 
-    public function __construct()
+    public function __construct($evaluation = null, $theme = null, $criteria = null, $comments = null)
     {
-        $this->criteria = new ArrayCollection();
+    	$this->evaluation = $evaluation;
+    	$this->theme = $theme;
+        $this->criteria = ($criteria ?: new ArrayCollection());
+	    $this->comments = $comments;
     }
 
     /**

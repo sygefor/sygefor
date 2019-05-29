@@ -40,3 +40,10 @@ services:
         class: AppBundle\EventListener\UppercaseListener
         tags:
             - { name: doctrine.event_subscriber, connection: default }
+
+    sygefor_api.account.orm.listener:
+        class: AppBundle\EventListener\ORM\AccountListener
+        arguments:
+            - "@service_container"
+        tags:
+            - { name: doctrine.event_subscriber, connection: default }

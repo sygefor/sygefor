@@ -9,6 +9,7 @@
 
 namespace AppBundle\Form\Type\Trainee;
 
+use AppBundle\Entity\Term\Trainee\PublicCategory;
 use Doctrine\ORM\EntityRepository;
 use Symfony\Component\Form\FormEvent;
 use AppBundle\Entity\Term\PublicType;
@@ -34,6 +35,10 @@ class TraineeType extends AbstractTraineeType
         parent::buildForm($builder, $options);
 
         $builder
+	        ->add('service', null, array(
+		        'label'    => 'Service',
+		        'required' => false,
+	        ))
             ->add('email', EmailType::class, array(
                 'label' => 'Courriel',
             ))
@@ -41,6 +46,15 @@ class TraineeType extends AbstractTraineeType
                 'label' => 'Numéro de téléphone',
                 'required' => false,
             ))
+	        ->add('address', null, array(
+		        'label' => 'Adresse',
+	        ))
+	        ->add('zip', null, array(
+		        'label' => 'Code postal',
+	        ))
+	        ->add('city', null, array(
+		        'label' => 'Ville',
+	        ))
             ->add('disciplinaryDomain', EntityType::class, array(
                 'label' => "Domaine disciplinaire",
                 'class' => Disciplinary::class,
@@ -49,7 +63,7 @@ class TraineeType extends AbstractTraineeType
                     return $er->createQueryBuilder('d')
                         ->where('d.parent IS NULL')
                         ->orderBy('d.' . Disciplinary::orderBy(), 'ASC');
-                }))
+            }))
             ->add('publicType', EntityType::class, array(
                 'label' => 'Type de personnel',
                 'class' => PublicType::class,
@@ -62,14 +76,15 @@ class TraineeType extends AbstractTraineeType
                 'label' => 'Autre type de personnel',
                 'required' => false,
             ))
-            ->add('status', null, array(
-                'label' => 'Statut',
-                'required' => false,
-            ))
-            ->add('function', null, array(
-                'label' => 'Fonction',
-                'required' => false,
-            ))
+	        ->add('publicCategory', EntityType::class, array(
+		        'label'    => 'Catégorie de personnel',
+		        'class'    => PublicCategory::class,
+		        'required' => false,
+	        ))
+	        ->add('position', null, array(
+		        'label'    => 'Fonction',
+		        'required' => false,
+	        ))
             ->add('isPaying', CheckboxType::class, array(
                 'label' => 'Payant',
                 'required' => false,

@@ -75,8 +75,15 @@ sygeforApp.controller('TraineeListController', ['$scope', '$user', '$injector', 
         'disciplinary.source' : {
             label: 'Discipline'
         },
-        'isActive': {
-            label: 'Validé',
+        'isActive' : {
+            label: 'Actif',
+            values: {
+                'T': 'Oui',
+                'F': 'Non'
+            }
+        },
+        'isArchived' : {
+            label: 'Archivé',
             values: {
                 'T': 'Oui',
                 'F': 'Non'
