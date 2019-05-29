@@ -38,7 +38,7 @@
                         {% endif %}
                     </td>
                     <td>
-                        {% if registration.pending and registration.upcoming and registration.inscriptionStatus.status < 3 %}
+                        {% if registration.pending and registration.upcoming %}
                             <a href="{{ path('front.account.registration.desist', {id: registration.id}) }}" class="btn btn-danger btn-xs pull-right">
                                 {{ registration.inscriptionStatus.id == 1 ? 'Annuler cette demande' : 'Déclarer un désistement' }}
                             </a>

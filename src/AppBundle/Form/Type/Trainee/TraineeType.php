@@ -11,13 +11,13 @@ namespace AppBundle\Form\Type\Trainee;
 
 use Doctrine\ORM\EntityRepository;
 use Symfony\Component\Form\FormEvent;
-use Symfony\Component\Form\FormEvents;
 use AppBundle\Entity\Term\PublicType;
 use AppBundle\Entity\Trainee\Trainee;
+use Symfony\Component\Form\FormEvents;
+use Symfony\Component\Form\FormInterface;
 use AppBundle\Entity\Term\Trainee\Disciplinary;
 use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Bridge\Doctrine\Form\Type\EntityType;
-use Symfony\Component\Form\FormInterface;
 use Symfony\Component\OptionsResolver\OptionsResolver;
 use Symfony\Component\Form\Extension\Core\Type\TextType;
 use Symfony\Component\Form\Extension\Core\Type\EmailType;
@@ -115,15 +115,15 @@ class TraineeType extends AbstractTraineeType
         }
     }
 
-    /**
-     * @param $resolver
-     */
-    public function configureOptions(OptionsResolver $resolver)
-    {
-        $resolver->setDefaults(array(
-            'data_class' => Trainee::class,
-            'validation_groups' => array('Default', 'trainee'),
-            'enable_security_check' => true,
-        ));
-    }
+	/**
+	 * @param OptionsResolver $resolver
+	 */
+	public function configureOptions(OptionsResolver $resolver)
+	{
+		parent::configureOptions($resolver);
+
+		$resolver->setDefaults([
+			'data_class', Trainee::class,
+		]);
+	}
 }

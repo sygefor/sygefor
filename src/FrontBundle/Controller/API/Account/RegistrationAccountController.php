@@ -70,7 +70,7 @@ class RegistrationAccountController extends AbstractRegistrationAccountControlle
         $past = array();
         $now = new \DateTime();
         foreach ($inscriptions as $inscription) {
-            $inscription->pending = $inscription->getInscriptionStatus()->getId() === 1;
+	        $inscription->pending = $inscription->getInscriptionStatus()->getStatus() <= InscriptionStatus::STATUS_WAITING;
             if ($inscription->getSession()->getDateBegin() < $now) {
                 $past[] = $inscription;
                 $inscription->upcoming = false;
@@ -94,7 +94,7 @@ class RegistrationAccountController extends AbstractRegistrationAccountControlle
     {
         $em = $this->getDoctrine()->getManager();
         $registration = $em->getRepository($this->inscriptionClass)->find($id);
-        $registration->pending = $registration->getInscriptionStatus()->getId() === 1;
+	    $registration->pending = $registration->getInscriptionStatus()->getStatus() <= InscriptionStatus::STATUS_WAITING;
 
         if (!$registration->pending) {
             throw new AccessDeniedException();
@@ -116,10 +116,11 @@ class RegistrationAccountController extends AbstractRegistrationAccountControlle
             }
 
             // ok, let's go
-            if ($registration->getInscriptionStatus()->getStatus() <= InscriptionStatus::STATUS_WAITING) {
+	        if ($registration->getInscriptionStatus()->getStatus() === InscriptionStatus::STATUS_PENDING) {
                 // if the inscription is pending, just delete it
                 $em->remove($registration);
-            } else {
+            }
+	        else {
                 // else set the status to "Desist"
                 $status = $this->getDesistInscriptionStatus($this->getUser());
                 $registration->setInscriptionStatus($status);

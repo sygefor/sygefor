@@ -67,6 +67,10 @@ sygeforApp.controller('InscriptionStatusChange', ['$scope', '$http', '$window', 
      * if mail sending is performed without errors, the file is asked for download
      */
     $scope.ok = function () {
+        if ($scope.getAttachmentTotalSize() > 10000000) {
+            return;
+        }
+
         if ($scope.send.Mail && !($scope.message.subject || $scope.message.message)) {
             $scope.formError = 'Pas de corps de message';
             return;
@@ -92,7 +96,7 @@ sygeforApp.controller('InscriptionStatusChange', ['$scope', '$http', '$window', 
                 cc: $scope.message.cc,
                 additionalCC: $scope.message.additionalCC,
                 message: $scope.message.body,
-                attachmentTemplates: attTemplates,
+                templateAttachments: attTemplates,
                 objects: {'AppBundle\\Entity\\Session': ($dialogParams.session) ? $dialogParams.session.id : 0}
             },
             attachments: $scope.message.attachments,
@@ -107,7 +111,6 @@ sygeforApp.controller('InscriptionStatusChange', ['$scope', '$http', '$window', 
             data['options']['presenceStatus'] = $scope.presenceStatus.id
         }
 
-        var deferred = $q.defer();
         $scope.sending = true;
         $scope.error = false;
         $http({
@@ -127,8 +130,8 @@ sygeforApp.controller('InscriptionStatusChange', ['$scope', '$http', '$window', 
             },
             headers: {'Content-Type': undefined},
             data: data
-        }).success(function() {
-            $modalInstance.close(deferred.resolve(data));
+        }).success(function(data) {
+            $modalInstance.close(data);
         }).error(function() {
             $scope.sending = false;
             $scope.error = true;
@@ -159,24 +162,23 @@ sygeforApp.controller('InscriptionStatusChange', ['$scope', '$http', '$window', 
             ids: $scope.items[0]
         };
 
-        $http(
-            {
-                method: 'POST',
-                url: url,
-                transformRequest: function (data) {
-                    var formData = new FormData();
-                    //need to convert our json object to a string version of json otherwise
-                    // the browser will do a 'toString()' on the object which will result
-                    // in the value '[Object object]' on the server.
-                    formData.append("options", angular.toJson(data.options));
-                    //now add all of the assigned files
-                    formData.append("ids", angular.toJson(data.ids));
+        $http({
+            method: 'POST',
+            url: url,
+            transformRequest: function (data) {
+                var formData = new FormData();
+                //need to convert our json object to a string version of json otherwise
+                // the browser will do a 'toString()' on the object which will result
+                // in the value '[Object object]' on the server.
+                formData.append("options", angular.toJson(data.options));
+                //now add all of the assigned files
+                formData.append("ids", angular.toJson(data.ids));
 
-                    return formData;
-                },
-                headers: {'Content-Type': undefined},
-                data: data
-            }).success(
+                return formData;
+            },
+            headers: {'Content-Type': undefined},
+            data: data
+        }).success(
             function (data) { //response should contain the file url
                 if (data.fileUrl) {
                     var url = Routing.generate('sygefor_core.batch_operation.get_file', {
@@ -185,11 +187,53 @@ sygeforApp.controller('InscriptionStatusChange', ['$scope', '$http', '$window', 
                         filename: attachmentTemplate.fileName,
                         pdf: true
                     });
-                    // changin location :
+                    // changing location
                     $window.location = url;
                 }
             });
+    };
 
+    $scope.getNumberOfSelectedPublipostTemplates = function() {
+        var i = 0;
+        if (typeof $scope.attCheckList != 'undefined') {
+            for (var key in $scope.attCheckList) {
+                if ($scope.attCheckList[key].selected === true) {
+                    ++i;
+                }
+            }
+        }
+
+        return i;
+    };
+
+    $scope.getAttachmentTotalSize = function() {
+        var totalSize = 0;
+        if (typeof $scope.attCheckList != 'undefined') {
+            for (var key in $scope.attCheckList) {
+                if ($scope.attCheckList[key].selected === true) {
+                    totalSize += $scope.attCheckList[key].fileSize;
+                }
+            }
+        }
+
+        return totalSize;
+    };
+
+    $scope.getAttachmentTotalSize = function() {
+        var totalSize = 0;
+        if (typeof $scope.attCheckList != 'undefined') {
+            for (var key in $scope.attCheckList) {
+                if ($scope.attCheckList[key].selected === true) {
+                    totalSize += $scope.attCheckList[key].fileSize;
+                }
+            }
+        }
+
+        for (var key in $scope.message.attachments) {
+            totalSize += $scope.message.attachments[key].size;
+        }
+
+        return totalSize;
     };
 
     /**

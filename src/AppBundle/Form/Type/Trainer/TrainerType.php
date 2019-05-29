@@ -3,12 +3,12 @@
 namespace AppBundle\Form\Type\Trainer;
 
 use AppBundle\Entity\Trainer;
-use Sygefor\Bundle\CoreBundle\Form\Type\AbstractTrainerType;
-use Symfony\Component\Form\Extension\Core\Type\ChoiceType;
-use Symfony\Component\Form\Extension\Core\Type\EmailType;
-use Symfony\Component\Form\Extension\Core\Type\UrlType;
 use Symfony\Component\Form\FormBuilderInterface;
-use Symfony\Component\OptionsResolver\OptionsResolverInterface;
+use Symfony\Component\OptionsResolver\OptionsResolver;
+use Symfony\Component\Form\Extension\Core\Type\UrlType;
+use Symfony\Component\Form\Extension\Core\Type\EmailType;
+use Symfony\Component\Form\Extension\Core\Type\ChoiceType;
+use Sygefor\Bundle\CoreBundle\Form\Type\AbstractTrainerType;
 
 /**
  * Class TrainerType.
@@ -71,13 +71,15 @@ class TrainerType extends AbstractTrainerType
             ));
     }
 
-    /**
-     * @param OptionsResolverInterface $resolver
-     */
-    public function setDefaultOptions(OptionsResolverInterface $resolver)
-    {
-        $resolver->setDefaults(array(
-            'data_class' => Trainer::class,
-        ));
-    }
+	/**
+	 * @param OptionsResolver $resolver
+	 */
+	public function configureOptions(OptionsResolver $resolver)
+	{
+		parent::configureOptions($resolver);
+
+		$resolver->setDefaults([
+			'data_class', Trainer::class,
+		]);
+	}
 }

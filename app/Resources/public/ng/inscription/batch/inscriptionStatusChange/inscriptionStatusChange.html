@@ -68,12 +68,19 @@
                         <textarea class="form-control" rows="10" id="message" ckeditor ng-model="message.body"  placeholder="Message du mail"></textarea>
                     </div>
                 </div>
+                <div class="form-group" ng-show="message.attachments.length > 0 || getNumberOfSelectedPublipostTemplates() > 0">
+                    <div class="col-sm-offset-3 col-sm-9">
+                        <span class="alert-warning"><i class="fa fa-warning"></i> La taille totale des fichiers joints ou générés ne doit pas excéder 10Mo.</span>
+                    </div>
+                </div>
                 <div class="form-group" ng-show='attCheckList.length'>
                     <div class="col-sm-3 control-label"><b>Pièces jointes</b> </div>
                     <div class="col-sm-5">
                         <div ng-repeat="attachmentTemplate in attCheckList">
                             <input type="checkbox" ng-model="attachmentTemplate.selected" id="attachment_{{ attachmentTemplate.id }}"/>
-                            <label class="control-label" for="attachment_{{ attachmentTemplate.id }}">{{ attachmentTemplate.name }}</label><a href="" class="pull-right" ng-click="previewAttachment(attachmentTemplate)"><i class="fa fa-download"></i> Prévisualiser</a>
+                            <label class="control-label" for="attachment_{{ attachmentTemplate.id }}">{{ attachmentTemplate.name }}</label>
+                            <span>&nbsp;({{ attachmentTemplate.fileSize | fileSize }})&nbsp;</span>
+                            <a href="" class="pull-right" ng-click="previewAttachment(attachmentTemplate)"><i class="fa fa-download"></i> Prévisualiser</a>
                         </div>
                     </div>
                 </div>
@@ -81,12 +88,12 @@
                     <div class="col-sm-3 control-label"><b>Pièce{{ message.attachments.length > 1 ? 's' : '' }} jointe{{ message.attachments.length > 1 ? 's' : '' }} supplémentaire{{ message.attachments.length > 1 ? 's' : '' }}</b></div>
                     <div class="col-sm-9">
                         <div ng-repeat="(id, attachment) in message.attachments track by $index">
-                            <label class="control-label" for="attachment_{{ id }}">{{attachment.name}}</label>&nbsp;
+                            <label class="control-label" for="attachment_{{ id }}">{{attachment.name}}</label>
+                            <span>&nbsp;({{ attachment.size | fileSize }})&nbsp;</span>
                             <a href="" ng-click="removeAttachment(id)">&nbsp;x&nbsp;</a>
                         </div>
                     </div>
                 </div>
-
                 <div class="form-group">
                     <div class="col-sm-3 control-label"><b>Ajouter des pièces jointes</b> </div>
                     <div class="col-sm-9">
@@ -107,14 +114,14 @@
             <div class="widget loading">
                 <div class="form-group">
                     <div class="widget-body-loading"><i class="fa fa-refresh fa-spin"></i></div>
-                    <div class="widget-body" widget-body><div class="col-sm-3 control-label"><b>Envoi de{{ items.length > 1 ? 's' :'' }} {{ items.length }} courriel{{ items.length > 1 ? 's' :'' }}</b></div></div>
+                    <div ng-if="send.Mail" class="widget-body" widget-body><div class="col-sm-3 control-label"><b>Envoi de{{ items.length > 1 ? 's' :'' }} {{ items.length }} courriel{{ items.length > 1 ? 's' :'' }}</b></div></div>
+                    <div ng-if="!send.Mail" class="widget-body" widget-body><div class="col-sm-3 control-label"><b>Mise à jour de {{ items.length }} inscription{{ items.length > 1 ? 's' :'' }}</b></div></div>
                 </div>
             </div>
         </div>
-        <div class="alert alert-danger" ng-show="formError != ''">{{ formError }}</div>
     </form>
 </div>
 <div class="modal-footer">
     <a class="btn btn-default" ng-click="dialog.dismiss()">Annuler</a>
-    <a class="btn btn-primary" ng-click="ok()">Valider</a>
+    <a class="btn btn-primary" ng-disabled="getAttachmentTotalSize() > 10000000" ng-click="ok()">Valider</a>
 </div>
