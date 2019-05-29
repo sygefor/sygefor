@@ -95,14 +95,9 @@
                                             {% for notedCriteria in theme.criteria %}
                                                 <small>
                                                     {{ notedCriteria.criterion.name }}
-                                                    {% for i in 0..notedCriteria.note %}
+                                                    {% for i in 1..notedCriteria.note %}
                                                         <i class="glyphicon glyphicon-star"></i>
                                                     {% endfor %}
-                                                    {% if 2-notedCriteria.note > 0 %}
-                                                        {% for i in 1..2-notedCriteria.note %}
-                                                            <i class="glyphicon glyphicon-star-empty"></i>
-                                                        {% endfor %}
-                                                    {% endif %}
                                                 </small>
                                             {% endfor %}
                                             {% if theme.comments | length > 0 %}
