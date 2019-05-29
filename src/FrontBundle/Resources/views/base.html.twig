@@ -18,15 +18,36 @@
     <!-- global scripts -->
     <script src="{{ asset('assets/front/scripts.js') }}"></script>
     <script type="application/javascript">
-        (function($) {
-            $(document).ready(function() {
-                jQuery.cookieBar({
-                    'message': "Cette plateforme utilise des cookies pour vous assurer la meilleure expérience de visite possible.",
-                    'acceptText': "Je comprends"
-                });
-            });
-        })(jQuery);
+		(function($) {
+			$(document).ready(function() {
+				tarteaucitron.init({
+					// "privacyUrl": "/page/rgpd", /* Privacy policy url */
+
+					"hashtag": "#tarteaucitron", /* Open the panel with this hashtag */
+					"cookieName": "tarteaucitron", /* Cookie name */
+
+					"showAlertSmall": false, /* Show the small banner on bottom right */
+					"cookieslist": true, /* Show the cookie list */
+
+					"removeCredit": false, /* Remove credit link */
+					"moreInfoLink": true, /* Show more info link */
+					"useExternalCss": true, /* If false, the tarteaucitron.css file will be loaded */
+				});
+			});
+		})(jQuery);
     </script>
+
+    {#<script type="text/javascript">#}
+        {#tarteaucitron.user.matomoId = SITE_ID;#}
+        {#tarteaucitron.user.matomoHost = "YOUR_MATOMO_URL";#}
+        {#(tarteaucitron.job = tarteaucitron.job || []).push('matomo');#}
+    {#</script>#}
+
+    {#<script type="text/javascript">#}
+        {#tarteaucitron.user.gajsUa = 'UA-XXXXXXXX-X';#}
+        {#tarteaucitron.user.gajsMore = function () { /* add here your optionnal _ga.push() */ };#}
+        {#(tarteaucitron.job = tarteaucitron.job || []).push('gajs');#}
+    {#</script>#}
     <!-- page scripts -->
     {% block javascripts %}{% endblock %}
     <link rel="icon" type="image/x-icon" href="{{ asset('favicon.ico') }}"/>
