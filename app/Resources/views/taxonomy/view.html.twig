@@ -75,6 +75,9 @@
     {% elseif organization is null and (userVocabularyAccessRights.nationalEdit or userVocabularyAccessRights.allEdit) %}
         <a class="btn btn-primary" href="{{ path('taxonomy.edit', { 'vocabularyId': vocabulary.vocabularyId }) }}">Ajouter un terme</a>
     {% endif %}
+    {% if vocabulary.vocabularyId == 'sygefor_core.vocabulary_publipost_template' or vocabulary.vocabularyId == 'sygefor_core.vocabulary_email_template' %}
+        <a href="{{ asset(publipost_document) }}" class="pull-right">Télécharger l'aide pour la création des modèles d'email et de publipostage</a>
+    {% endif %}
 {% endblock %}
 
 {# MACRO : PANEL  #}

@@ -1,0 +1,33 @@
+{% extends "email/_layout.html.twig" %}
+
+{% block subject -%}
+    Bienvenue sur SYGEFOR !
+{%- endblock %}
+
+{% block body %}
+    <p>Bienvenue sur SYGEFOR !</p>
+
+    <p>Votre nouveau compte vient d'être associé à votre compte d'établissement.</p>
+
+    <p>Vous pouvez dès maintenant vous connecter sur votre espace dédié pour suivre vos demandes et consulter l'historique des formations suivies :
+        <a href="{{ front_url }}/account/registrations">{{ front_url }}/account/registrations</a>.</p>
+
+    <table border="0" cellpadding="0" cellspacing="0" class="btn btn-primary">
+        <tbody>
+        <tr>
+            <td align="left">
+                <table border="0" cellpadding="0" cellspacing="0">
+                    <tbody>
+                    <tr>
+                        <td><a href="{{ front_url }}/account/registrations" target="_blank">Me connecter</a></td>
+                    </tr>
+                    </tbody>
+                </table>
+            </td>
+        </tr>
+        </tbody>
+    </table>
+
+    <p>Avec nos cordiales salutations,</p>
+    <p>L'équipe de {{ app_name }}.</p>
+{% endblock %}

@@ -35,6 +35,7 @@ sygeforApp.directive('entityEmails', ['$searchFactory', function($searchFactory)
     function link(scope, element, $user)
     {
         var search = $searchFactory('email.search');
+        search.query.filters['populate'] = true;
         if (scope.trainee) {
             search.query.filters['trainee.id'] = scope.trainee;
             search.query.filters['userFrom.organization.id'] = scope.$user.organization.id;

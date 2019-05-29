@@ -1,0 +1,28 @@
+{% extends "email/_layout.html.twig" %}
+
+{% block subject -%}
+    SYGEFOR : activation de votre compte
+{%- endblock %}
+
+{% block body %}
+<p>{{ trainee.fullName }},</p>
+<p>Un administrateur de la plateforme <a href="{{ front_url }}" target="_blank">{{ app_name }}</a> vient d'activer votre compte. Vous pouvez vous connecter avec votre email <b>{{ trainee.email }}</b> à l'adresse suivante :</p>
+
+<table border="0" cellpadding="0" cellspacing="0" class="btn btn-primary">
+    <tbody>
+    <tr>
+        <td align="left">
+            <table border="0" cellpadding="0" cellspacing="0">
+                <tbody>
+                <tr>
+                    <td> <a href="{{ front_url }}/login?email={{ trainee.email }}" target="_blank">Me connecter</a> </td>
+                </tr>
+                </tbody>
+            </table>
+        </td>
+    </tr>
+    </tbody>
+</table>
+
+<p>L'équipe de {{ app_name }}.</p>
+{% endblock %}

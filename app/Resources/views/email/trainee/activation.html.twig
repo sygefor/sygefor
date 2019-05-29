@@ -1,0 +1,36 @@
+{% extends "email/_layout.html.twig" %}
+
+{% block subject -%}
+    SYGEFOR : activation de votre compte
+{%- endblock %}
+
+{% block body %}
+    <p>Bienvenue sur SYGEFOR !</p>
+
+    <p>Afin de pouvoir utiliser votre compte vous devez d'abord l'activer en utilisant le lien suivant : </p>
+
+    <table border="0" cellpadding="0" cellspacing="0" class="btn btn-primary">
+        <tbody>
+        <tr>
+            <td align="left">
+                <table border="0" cellpadding="0" cellspacing="0">
+                    <tbody>
+                    <tr>
+                        <td> <a href="{{ url }}" target="_blank">Activer mon compte</a> </td>
+                    </tr>
+                    </tbody>
+                </table>
+            </td>
+        </tr>
+        </tbody>
+    </table>
+
+    <p>
+        Attention ! A ce stade, aucune pré-inscription à un événement URFIST n'est encore enregistrée par SYGEFOR :
+        Vous serez redirigé(e) vers une page permettant de vous connecter à votre compte et de vous pré-inscrire
+        à un ou plusieurs événements de notre programme.
+    </p>
+
+    <p>Avec nos cordiales salutations,</p>
+    <p>L'équipe de {{ app_name }}.</p>
+{% endblock %}

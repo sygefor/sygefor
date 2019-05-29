@@ -1,0 +1,34 @@
+notification:
+    # mail templates
+    mailer:
+        sender:
+            name: '%app_name%'
+            address: '%mailer_from%'
+        subject_template: "%mailer_from_name%"
+        emails:
+            batch.email:
+                template: email/batch.html.twig
+            # inscription
+            inscription.status_changed:
+                template: email/inscription/status-changed.html.twig
+            # trainee
+            trainee.activated:
+                template: email/trainee/activated.html.twig
+                additionalParams:
+                    populate: 0
+            trainee.activation:
+                template: email/trainee/activation.html.twig
+                additionalParams:
+                    populate: 0
+            trainee.welcome:
+                template: email/trainee/welcome.html.twig
+                additionalParams:
+                    populate: 0
+            trainee.welcome_shibboleth:
+                template: email/trainee/welcome.shibboleth.html.twig
+                additionalParams:
+                    populate: 0
+            trainee.reset_password:
+                template: email/trainee/reset-password.html.twig
+                additionalParams:
+                    populate: 0

@@ -3,6 +3,7 @@ imports:
     - { resource: batch_operation.yml }
     - { resource: parameters.yml }
     - { resource: security.yml }
+    - { resource: notification.yml }
     - { resource: ../../vendor/knplabs/doctrine-behaviors/config/orm-services.yml }
 
 parameters:
@@ -40,6 +41,10 @@ twig:
         - FrontBundle:Form:fields.html.twig
     date:
         timezone: "%timezone%"
+    globals:
+        app_name: "%app_name%"
+        front_url: "%front_url%"
+        publipost_document: "Publipostage.pdf"
 
 # Doctrine Configuration
 doctrine:

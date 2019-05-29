@@ -14,7 +14,8 @@
         "psr-4": {
             "": "src/",
             "Sygefor\\Bundle\\CoreBundle\\": "common/sygefor/core-bundle",
-            "Sygefor\\Bundle\\ApiBundle\\": "common/sygefor/api-bundle"
+            "Sygefor\\Bundle\\ApiBundle\\": "common/sygefor/api-bundle",
+            "NotificationBundle\\": "common/sygefor/notification-bundle"
         },
         "classmap": [
             "app/AppKernel.php",
@@ -32,7 +33,7 @@
         "symfony/symfony": "2.8.9",
         "doctrine/orm": "^2.5.6",
         "doctrine/doctrine-bundle": "~1.6",
-        "symfony/swiftmailer-bundle": "~2.3",
+        "symfony/swiftmailer-bundle": "2.6",
         "symfony/monolog-bundle": "~2.11",
         "sensio/distribution-bundle": "~5.0",
         "sensio/framework-extra-bundle": "^3.0.2",
@@ -63,7 +64,10 @@
         "mopa/bootstrap-bundle": "^3.1.0",
         "ras/flash-alert-bundle": "^2.1",
         "soundasleep/html2text": "0.5.0",
-        "guzzlehttp/guzzle": "^6.3"
+        "guzzlehttp/guzzle": "^6.3",
+        "swiftmailer/swiftmailer": "5.4",
+        "egulias/email-validator": "2.1",
+        "pelago/emogrifier": "1.2"
     },
     "require-dev": {
         "sensio/generator-bundle": "~3.0",

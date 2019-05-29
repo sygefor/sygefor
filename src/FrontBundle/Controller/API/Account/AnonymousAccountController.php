@@ -179,24 +179,15 @@ class AnonymousAccountController extends AbstractAnonymousAccountController
                         'email' => $email,
                         'token' => $token
                     ],UrlGeneratorInterface::ABSOLUTE_URL);
-                    // send the mail
-                    $message = \Swift_Message::newInstance(null, null, 'text/html', null)
-                        ->setFrom($this->container->getParameter('mailer_from'), $this->container->getParameter('mailer_from_name'))
-                        ->setReplyTo($trainee->getOrganization()->getEmail())
-                        ->setSubject('SYGEFOR : Réinitialisation de votre mot de passe')
-                        ->setTo($trainee->getEmail())
-                        ->setBody($this->renderView('trainee/reset-password.html.twig', [
-                            'trainee' => $trainee,
-                            'resetUrl' => $resetUrl
-                        ]));
-                    try {
-                        $message->addPart(Html2Text::convert($message->getBody()), 'text/plain');
-                    } catch (Html2TextException $e) {}
 
-                    $sent = $this->get('mailer')->send($message);
+	                $sent = $this->container->get('notification.mailer')->send('trainee.reset_password', $trainee, [
+		                'resetUrl' => $resetUrl,
+		                'recipient' => $trainee,
+	                ]);
                     if ($sent) {
                         $this->get('session')->getFlashBag()->add('success', 'Veuillez consulter vos courriels.');
-                    } else {
+                    }
+                    else {
                         $this->get('session')->getFlashBag()->add('error', 'Une erreur est survenue pendant la procédure.');
                     }
                 }

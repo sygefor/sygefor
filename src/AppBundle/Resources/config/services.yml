@@ -14,3 +14,9 @@ services:
         class: AppBundle\Utils\EmailCCResolver\TraineeResolver
         tags:
             - { name: sygefor_core.email_resolver }
+    notification.mailer:
+        class: AppBundle\Utils\Mailer
+        arguments: ["@mailer", "@twig", "%mailer.emails%", "@service_container"]
+        public: true
+        calls:
+            - [ setSender, ["%mailer.sender_address%", "%mailer.sender_name%"] ]

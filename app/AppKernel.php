@@ -33,6 +33,7 @@ class AppKernel extends Kernel
             new Nelmio\CorsBundle\NelmioCorsBundle(),
             new Liuggio\ExcelBundle\LiuggioExcelBundle(),
             new KULeuven\ShibbolethBundle\ShibbolethBundle(),
+	        new NotificationBundle\NotificationBundle(),
 
             // project bundles
             new Sygefor\Bundle\CoreBundle\SygeforCoreBundle(),

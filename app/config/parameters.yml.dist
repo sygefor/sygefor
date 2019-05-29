@@ -1,9 +1,10 @@
 parameters:
     # Application
+    app_name:		   'Sygefor3'
     front_url:         'http://sygefor.com'
     front_host:        'sygefor.com'
     back_host:         'localhost'
-    scheme:            'http'
+    scheme:            'https'
     oauthId:           '5cn6gjovjzks48ckkowkgko8owk8o8ccwow8o4w0c84c40kwsk'
 
     # Mysql
@@ -34,7 +35,7 @@ parameters:
     secret:            ThisTokenIsNotSoSecretChangeIt
     trusted_hosts: ["127.0.0.1", "localhost", "sygefor.com"]
     trusted_proxies: ["127.0.0.1"]
-    shibboleth_secured_handler: false
+    shibboleth_secured_handler: true
 
     # Binaries
     wkhtmltopdf_bin: ../bin/wkhtmltopdf-amd64

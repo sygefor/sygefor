@@ -4,6 +4,7 @@ namespace AppBundle\Entity;
 
 use Doctrine\ORM\Mapping as ORM;
 use AppBundle\Form\Type\OrganizationType;
+use NotificationBundle\Mailer\MailerRecipientInterface;
 use Sygefor\Bundle\CoreBundle\Entity\AbstractOrganization;
 
 /**
@@ -18,7 +19,7 @@ use Sygefor\Bundle\CoreBundle\Entity\AbstractOrganization;
  * @ORM\Table(name="organization")
  * @ORM\Entity
  */
-class Organization extends AbstractOrganization
+class Organization extends AbstractOrganization implements MailerRecipientInterface
 {
     use CoordinatesTrait;
 

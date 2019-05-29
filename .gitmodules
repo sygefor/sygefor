@@ -7,3 +7,6 @@
 [submodule "common/docker"]
 	path = common/docker
 	url = https://github.com/sygefor/docker-shibboleth.git
+[submodule "common/sygefor/notification-bundle"]
+	path = common/sygefor/notification-bundle
+	url = git@github.com:sygefor/notification-bundle.git

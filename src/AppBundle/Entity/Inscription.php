@@ -13,6 +13,7 @@ use AppBundle\Entity\Term\Training\Theme;
 use Doctrine\ORM\Event\LifecycleEventArgs;
 use AppBundle\Entity\Evaluation\Evaluation;
 use JMS\Serializer\Annotation as Serializer;
+use NotificationBundle\Mailer\MailerRecipientInterface;
 use Sygefor\Bundle\CoreBundle\Entity\AbstractInscription;
 use Sygefor\Bundle\CoreBundle\Entity\Term\PresenceStatus;
 use Sygefor\Bundle\CoreBundle\Utils\Search\SearchService;
@@ -22,7 +23,7 @@ use Sygefor\Bundle\CoreBundle\Utils\Search\SearchService;
  * @ORM\Entity
  * @ORM\HasLifecycleCallbacks()
  */
-class Inscription extends AbstractInscription
+class Inscription extends AbstractInscription implements MailerRecipientInterface
 {
     use CoordinatesTrait;
     use ProfessionalSituationTrait;

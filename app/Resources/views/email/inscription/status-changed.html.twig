@@ -1,0 +1,15 @@
+{% extends "email/_layout.html.twig" %}
+
+{% block subject -%}
+    {{ status.name }}
+{%- endblock %}
+
+{% block body %}
+    <p>Bonjour,</p>
+    <p>
+        Le status de l'inscription de &laquo;&nbsp;<a href="{{ url('core.index') }}#/trainee/detail/{{ inscription.trainee.id }}">{{ inscription.trainee.fullName }}</a>&nbsp;&raquo;
+        à la session du <a href="{{ url('core.index') }}#/training/session/detail/{{ inscription.session.id }}">{{ inscription.session.dateBegin | date('d/m/Y') }}</a>
+        de la formation intitulée &laquo;&nbsp;<a href="{{ url('core.index') }}#/training/detail/{{ inscription.session.training.id }}">{{ inscription.session.training.name }}</a>&nbsp;&raquo;
+        est passé à &laquo;&nbsp;<a href="{{ url('core.index') }}#/inscription/detail/{{ inscription.id }}">{{ status.name }}</a>&nbsp;&raquo;.
+    </p>
+{% endblock %}

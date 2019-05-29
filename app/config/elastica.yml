@@ -11,6 +11,7 @@ fos_elastica:
     indexes:
         sygefor3:
             client: default
+            index_name: "sygefor3_github"
             settings:
                 index:
                     analysis:
@@ -527,6 +528,7 @@ fos_elastica:
                                                 id: { index: not_analyzed }
                         subject: { index: not_analyzed }
                         sendAt: { type: date, index: not_analyzed }
+                        populate: { type: boolean, index: not_analyzed }
                   persistence:
                       driver: orm # orm, mongodb, propel are available
                       model: Sygefor\Bundle\CoreBundle\Entity\Email

@@ -11,6 +11,7 @@ use Sygefor\Bundle\CoreBundle\Entity\AbstractTrainee;
 use Symfony\Component\Validator\Mapping\ClassMetadata;
 use Symfony\Component\Validator\Constraints as Assert;
 use Symfony\Component\Security\Core\User\UserInterface;
+use NotificationBundle\Mailer\MailerRecipientInterface;
 use Symfony\Component\Security\Core\User\AdvancedUserInterface;
 use Symfony\Bridge\Doctrine\Validator\Constraints\UniqueEntity;
 
@@ -19,7 +20,7 @@ use Symfony\Bridge\Doctrine\Validator\Constraints\UniqueEntity;
  * @ORM\Entity(repositoryClass="Sygefor\Bundle\ApiBundle\Repository\AccountRepository")
  * @UniqueEntity(fields={"email"}, message="Cette adresse email est déjà utilisée.")
  */
-class Trainee extends AbstractTrainee implements \Serializable, UserInterface, AdvancedUserInterface
+class Trainee extends AbstractTrainee implements \Serializable, UserInterface, AdvancedUserInterface, MailerRecipientInterface
 {
     use AccountTrait;
     use CoordinatesTrait;

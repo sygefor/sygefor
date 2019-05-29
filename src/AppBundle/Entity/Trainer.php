@@ -9,6 +9,7 @@ use AppBundle\Form\Type\Trainer\TrainerType;
 use Sygefor\Bundle\CoreBundle\Entity\AbstractTrainer;
 use Symfony\Component\Validator\Mapping\ClassMetadata;
 use Symfony\Component\Validator\Constraints as Assert;
+use NotificationBundle\Mailer\MailerRecipientInterface;
 use Symfony\Bridge\Doctrine\Validator\Constraints\UniqueEntity;
 
 /**
@@ -16,7 +17,7 @@ use Symfony\Bridge\Doctrine\Validator\Constraints\UniqueEntity;
  * @ORM\Entity
  * @UniqueEntity(fields={"email", "organization"}, message="Cette adresse email est déjà utilisée.", ignoreNull=true, groups={"Default", "trainer"})
  */
-class Trainer extends AbstractTrainer
+class Trainer extends AbstractTrainer implements MailerRecipientInterface
 {
     use CoordinatesTrait;
     use ProfessionalSituationTrait;
