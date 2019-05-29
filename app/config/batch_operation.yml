@@ -80,12 +80,16 @@ sygefor_core:
                     lastName: "Nom"
                     firstName: "Prénom"
                     email: "Email"
+                    phoneNumber: "Téléphone"
+                    address: "Adresse"
+                    zip: "Code postal"
+                    city: "Ville"
                     inscriptions: { label: 'Inscriptions', subProperty: "id" }
-                    disciplinary.name: { label: 'Domaine disciplinaire' }
                     publicType.name: { label: 'Type de personnel' }
                     otherPublicType: { label: 'Autre type de personnel' }
-                    function: { label: 'Statut' }
-                    status: { label: 'Fonction' }
+                    position: { label: 'Fonction' }
+                    service: { label: 'Service' }
+                    newsletter: { label: "Lettre d'information" }
             inscription:
                 class: 'AppBundle\Entity\Inscription'
                 filename: 'inscription.csv'
@@ -96,6 +100,7 @@ sygefor_core:
                     trainee.lastName: "Nom"
                     trainee.firstName: "Prénom"
                     trainee.email: "Email"
+                    trainee.phoneNumber: "Téléphone"
                     session.training.id: "Identifiant de la formation"
                     session.training.name: "Formation"
                     session.id: "Identifiant de la session"
@@ -109,8 +114,8 @@ sygefor_core:
                     disciplinary.name: { label: 'Domaine disciplinaire historisé' }
                     publicType.name: { label: 'Type de personnel historisé' }
                     otherPublicType: { label: 'Autre type de personnel historisé' }
-                    function: { label: 'Statut historisé' }
-                    status: { label: 'Fonction historisée' }
+                    position: { label: 'Fonction historisé' }
+                    service: { label: 'Service historisée' }
             trainer:
                 class: 'AppBundle\Entity\Trainer'
                 filename: 'formateur.csv'
@@ -125,10 +130,11 @@ sygefor_core:
                     address: "Adresse"
                     zip: "Code postal"
                     city: "Ville"
-                    status: "Fonction, statut"
-                    responsabilities: "Responsabilités"
+                    position: "Service"
+                    function: "Fonction"
                     observations: "Observations"
                     participations: { label: 'Sessions', subProperty: "session.id" }
+                    isOrganization: { label: "Intervenant interne", type: "boolean" }
                     isArchived: { label: "Archivé", type: "boolean" }
                     createdAt: { label: "Date de création", type: "date" }
         mailing:
@@ -147,8 +153,10 @@ sygefor_core:
                 fields:
                     nom: { property: name }
                     code: { property: code }
+                    email: { property: email }
                     adresse: { property: fullAddress }
-                    ville: { property: city }
+                    telephone: { property: phoneNumber }
+                    site: { property: website }
             inscription:
                 class: 'AppBundle\Entity\Inscription'
                 emailPath: 'trainee.email'
@@ -164,8 +172,8 @@ sygefor_core:
                     stagiaire: { property: trainee }
                     statutInscription: { property: inscriptionStatus.name }
                     statutPresence: { property: presenceStatus.name }
-                    evaluationUrl: { property: "evaluationUrl" }
-                    motivation: { property: "motivation" }
+                    motivation: { property: 'motivation' }
+                    evaluationUrl: { property: 'evaluationUrl' }
             trainee:
                 class: 'AppBundle\Entity\Trainee\Trainee'
                 alias: 'stagiaire'
@@ -185,9 +193,10 @@ sygefor_core:
                     email: { property: email }
                     telephone: { property: phoneNumber }
                     # ProfessionalSituationTrait
-                    service: { property: service }
                     public: { property: publicType.name }
-                    statut: { property: status }
+                    categorie: { property: publicCategory.name }
+                    service: { property: service }
+                    fonction: { property: position }
                     payant: { property: isPaying }
                     # Trainee
                     inscriptions: { property: inscriptions }
@@ -204,12 +213,14 @@ sygefor_core:
                     prenom: { property: firstName }
                     # CoordinatesTrait
                     adresse: { property: address }
+                    adresseComplete: { property: fullAddress }
                     codePostal: { property: zip }
                     ville: { property: city }
                     email: { property: email }
+                    telephone: { property: phoneNumber }
                     #coordinatesTrait
                     service: { property: service }
-                    statut: { property: status }
+                    fonction: { property: position }
                     # other fields
                     sessions: { property: sessions }
             session:
@@ -251,15 +262,14 @@ sygefor_core:
                 fields:
                     # Training
                     nom: { property: name }
-                    domaine: { property: theme.name}
+                    theme: { property: theme.name}
                     centre: { property: organization }
-                    numero: { property: trainingCode }
+                    numero: { property: number }
                     sessions: { property: sessions }
                     programme: { property: program, type: "ckeditor" }
                     objectifs: { property: description, type: "ckeditor" }
                     methodes: { property: teachingMethods, type: "ckeditor" }
                     gestionnaire: { property: user }
-                    # Internship
                     prerequis: { property: prerequisites }
                     publics: { property: publicTypes }
                     # Long training
@@ -284,7 +294,7 @@ sygefor_core:
                     sessions: { property: sessions}
                     semestre: { property: 'semester' }
                     intitule: { property: 'training.name' }
-                    domaine: { property: 'training.theme' }
+                    theme: { property: 'training.theme' }
                     nombreSessions: { property: 'sessionsCount' }
                     prochaineSession: { property: 'nextSession.dateBegin', type:'date', format: 'd/m/Y' }
                     derniereSession: { property: 'lastSession.dateBegin', type:'date', format: 'd/m/Y' }
