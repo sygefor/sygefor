@@ -373,6 +373,7 @@ class ProgramController extends Controller
         foreach ($this->organizationFacets as $name => $field) {
             $facet = new Terms($name);
             $facet->setField($field);
+	        $facet->setSize(999);
             $search->getQuery()->addFacet($facet);
         }
     }
