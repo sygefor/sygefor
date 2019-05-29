@@ -1,6 +1,10 @@
 .navbar {
   margin-bottom: 0;
 
+  .navbar-brand.logo {
+    padding-top: $padding-large-vertical;
+  }
+
   .navbar-collapse {
     padding-left: 0;
     padding-right: 0;
