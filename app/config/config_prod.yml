@@ -15,7 +15,8 @@ monolog:
     handlers:
         # channel : main
         main:
-            type:               fingers_crossed
+            type:               rotating_file
+            max_files:          30
             action_level:       info
             handler:            grouped
             channels:           [!trainee_merge, !api, !batch_operation, !elastica]
