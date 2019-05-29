@@ -60,7 +60,7 @@ function initConfigOptions(){
 
 	// Set independet default configuration options
 	$defaults = array();
-	$defaults['mainDomain'] = isset($_GET['entityID']) && $_GET['entityID'] === "https://aaa.sygefor.reseau-urfist.fr" ? "http://sygefor.com" : "http://sygefor.com";
+	$defaults['mainDomain'] = isset($_GET['entityID']) && $_GET['entityID'] === "https://aaa.sygefor.reseau-urfist.fr" ? "https://sygefor.com" : "https://prod.conjecto.com";
 	$defaults['instanceIdentifier'] = 'wayf';
 	$defaults['defaultLanguage'] = 'fr';
 	$defaults['commonDomain'] = getTopLevelDomain($_SERVER['SERVER_NAME']);
@@ -94,7 +94,7 @@ function initConfigOptions(){
 	$defaults['cssURL'] = 'https://'.$_SERVER['SERVER_NAME'].dirname($_SERVER['SCRIPT_NAME']).'/css';
 	$defaults['IDPConfigFile'] = 'IDProvider.conf.php';
 	$defaults['backupIDPConfigFile'] = 'IDProvider.conf.php';
-	$defaults['metadataFile'] = '/etc/shibboleth/shibboleth-sp/renater-test-metadata.xml';
+	$defaults['metadataFile'] = '/etc/shibboleth/main-all-renater-metadata.xml';
 	$defaults['metadataIDPFile'] = 'IDProvider.metadata.php';
 	$defaults['metadataSPFile'] = 'SProvider.metadata.php';
 	$lockFileName = preg_replace('/[^-_\.a-zA-Z]/', '', $defaults['instanceIdentifier']);
@@ -104,7 +104,7 @@ function initConfigOptions(){
 	$defaults['developmentMode'] = isset($_GET['entityID']) && $_GET['entityID'] === "https://aaa.sygefor.reseau-urfist.fr";
 
 	// Initialize independent defaults
-	foreach($defaults as $key => $value){
+	foreach($defaults as $key => $value) {
 		if (!isset($$key)){
 			$$key = $value;
 		}
@@ -116,7 +116,7 @@ function initConfigOptions(){
 	$defaults['redirectStateCookieName'] = $cookieNamePrefix.'_redirection_state';
 	$defaults['SAMLDomainCookieName'] = $cookieNamePrefix.'_saml_idp';
 	$defaults['SPCookieName'] = $cookieNamePrefix.'_saml_sp';
-	$defaults['logoURL'] = $imageURL.'/cnrs.jpg';
+	$defaults['logoURL'] = $imageURL.'/logo.png';
 	$defaults['smallLogoURL'] = $imageURL.'/small-federation-logo.png';
 	$defaults['organizationLogoURL'] = $imageURL.'/renater.png';
 	
