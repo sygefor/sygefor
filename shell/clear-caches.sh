@@ -1,14 +1,16 @@
 #!/bin/sh
 
+sudo chown conjecto:www-data ../app/cache ../app/logs ../var/Material ../var/Publipost ../web -R
+sudo chmod g+rwx ../app/cache ../app/logs ../var/Material ../var/Publipost ../web -R
 php ../app/console cache:clear
 php ../app/console cache:clear --env=prod
-if [ "$#" -eq "0" ] ; then
-    chown www-data:www-data ../app/cache ../app/logs ../var/Material ../var/Partner ../var/Templates -R
-else
-    chown $1:$1 ../app/cache ../app/logs ../var/Material ../var/Partner ../var/Templates -R
-fi
-# php ../app/console fos:js-routing:dump
-# gulp build && gulp build
-service php5-fpm restart
-service apache2 restart
-service nginx restart
+
+php ../app/console fos:js-routing:dump
+gulp build:dist && gulp build:dist
+php ../app/console doctrine:schema:update --complete --dump-sql
+sudo chown conjecto:www-data ../app/cache ../app/logs ../var/Material ../var/Publipost ../web -R
+sudo chmod g+rwx ../app/cache ../app/logs ../var/Material ../var/Publipost ../web -R
+
+sudo service php5-fpm restart
+sudo service apache2 restart
+sudo service nginx restart
