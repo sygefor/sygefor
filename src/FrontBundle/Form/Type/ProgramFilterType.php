@@ -1,145 +1,150 @@
 <?php
-/**
- * Created by PhpStorm.
- * User: erwan
- * Date: 8/10/17
- * Time: 5:53 PM.
- */
+	/**
+	 * Created by PhpStorm.
+	 * User: erwan
+	 * Date: 8/10/17
+	 * Time: 5:53 PM.
+	 */
 
-namespace FrontBundle\Form\Type;
+	namespace FrontBundle\Form\Type;
 
-use Symfony\Component\Form\AbstractType;
-use Doctrine\Common\Collections\ArrayCollection;
-use Symfony\Component\Form\FormBuilderInterface;
-use Symfony\Component\Form\Extension\Core\Type\ChoiceType;
-use Symfony\Component\OptionsResolver\OptionsResolverInterface;
+	use Symfony\Component\Form\AbstractType;
+	use Doctrine\Common\Collections\ArrayCollection;
+	use Symfony\Component\Form\FormBuilderInterface;
+	use Symfony\Component\Form\Extension\Core\Type\ChoiceType;
+	use Symfony\Component\OptionsResolver\OptionsResolverInterface;
 
-/**
- * Class ProgramFilterType.
- */
-class ProgramFilterType extends AbstractType
-{
-    /** @var array */
-    protected $keyNames;
+	/**
+	 * Class ProgramFilterType.
+	 */
+	class ProgramFilterType extends AbstractType
+	{
+		/** @var array */
+		protected $keyNames;
 
-    /** @var array */
-    protected $facets;
+		/** @var array */
+		protected $facets;
 
-    /** @var ArrayCollection */
-    protected $entities;
+		/** @var ArrayCollection */
+		protected $entities;
 
-    public function __construct()
-    {
-        $this->keyNames = array(
-            'theme' => ['key' => 'getId', 'label' => 'getName', 'name' => 'Thème'],
-            'typeLabel' => ['name' => 'Type de formation'],
-            'place' => ['key' => 'getName', 'label' => 'getName', 'name' => 'Lieu de formation'],
-            'year' => ['name' => 'Année'],
-            'semester' => ['name' => 'Semestre'],
-        );
-    }
+		public function __construct()
+		{
+			$this->keyNames = array(
+				'organization' => ['key' => 'getId', 'label' => 'getName', 'name' => 'Centre'],
+				'theme' => ['key' => 'getId', 'label' => 'getName', 'name' => 'Thème'],
+				'typeLabel' => ['name' => 'Type de formation'],
+				'place' => ['key' => 'getName', 'label' => 'getName', 'name' => 'Lieu de formation'],
+				'year' => ['name' => 'Année'],
+				'semester' => ['name' => 'Semestre'],
+			);
+		}
 
-    /**
-     * @param FormBuilderInterface $builder
-     * @param array                $options
-     */
-    public function buildForm(FormBuilderInterface $builder, array $options)
-    {
-        $this->facets = $options['facets'];
-        $this->entities = $options['entities'];
+		/**
+		 * @param FormBuilderInterface $builder
+		 * @param array                $options
+		 */
+		public function buildForm(FormBuilderInterface $builder, array $options)
+		{
+			$this->facets = $options['facets'];
+			$this->entities = $options['entities'];
 
-        foreach ($this->keyNames as $key => $values) {
-            $builder->add($key, ChoiceType::class, array(
-                'label' => $values['name'],
-                'choices' => $this->getFacetChoices($key),
-                'expanded' => true,
-                'multiple' => true,
-                'required' => false,
-                'attr' => array(
-                    'count' => $this->getFacetCount($key),
-                ),
-	            'data' => isset($options[$key]) ? json_decode($options[$key]) : null,
-            ));
-        }
-    }
+			foreach ($this->keyNames as $key => $values) {
+				$builder->add($key, ChoiceType::class, array(
+					'label' => $values['name'],
+					'choices' => $this->getFacetChoices($key),
+					'expanded' => true,
+					'multiple' => true,
+					'required' => false,
+					'attr' => array(
+						'count' => $this->getFacetCount($key),
+					),
+					'data' => isset($options[$key]) ? json_decode($options[$key]) : null,
+				));
+			}
+		}
 
-    /**
-     * @param OptionsResolverInterface $resolver
-     */
-    public function setDefaultOptions(OptionsResolverInterface $resolver)
-    {
-        $resolver->setRequired(array(
-            'facets',
-            'entities',
-        ));
+		/**
+		 * @param OptionsResolverInterface $resolver
+		 */
+		public function setDefaultOptions(OptionsResolverInterface $resolver)
+		{
+			$resolver->setRequired(array(
+				'facets',
+				'entities',
+			));
 
-	    $resolver->setOptional(array_keys($this->keyNames));
-    }
+			$resolver->setOptional(array_keys($this->keyNames));
+		}
 
-    /**
-     * @param $field
-     *
-     * @return array
-     */
-    protected function getFacetChoices($field)
-    {
-        $choices = array();
-        foreach ($this->facets[$field]['terms'] as $facet) {
-            $choices[$facet['term']] = $this->getLabel($this->entities, $field, $facet['term']);
-        }
+		/**
+		 * @param $field
+		 *
+		 * @return array
+		 */
+		protected function getFacetChoices($field)
+		{
+			$choices = array();
+			if (isset($this->facets[$field])) {
+				foreach ($this->facets[$field]['terms'] as $facet) {
+					$choices[$facet['term']] = $this->getLabel($this->entities, $field, $facet['term']);
+				}
+			}
 
-        return $choices;
-    }
+			return $choices;
+		}
 
-    /**
-     * @param $field
-     *
-     * @return array
-     */
-    protected function getFacetCount($field)
-    {
-        $counts = array();
-        foreach ($this->facets[$field]['terms'] as $facet) {
-            $counts[$facet['term']] = $facet['count'];
-        }
+		/**
+		 * @param $field
+		 *
+		 * @return array
+		 */
+		protected function getFacetCount($field)
+		{
+			$counts = array();
+			if (isset($this->facets[$field])) {
+				foreach ($this->facets[$field]['terms'] as $facet) {
+					$counts[$facet['term']] = $facet['count'];
+				}
+			}
 
-        return $counts;
-    }
+			return $counts;
+		}
 
-    /**
-     * @param $entities
-     * @param $name
-     * @param $key
-     *
-     * @return mixed
-     */
-    protected function getLabel($entities, $name, $key)
-    {
-        if (isset($this->keyNames[$name]['key'])) {
-            $keyFunc = $this->keyNames[$name]['key'];
-            $labelFunc = $this->keyNames[$name]['label'];
-            foreach ($entities[$name] as $entity) {
-                if ($entity->$keyFunc() === $key) {
-                    return $entity->$labelFunc();
-                }
-            }
-        }
+		/**
+		 * @param $entities
+		 * @param $name
+		 * @param $key
+		 *
+		 * @return mixed
+		 */
+		protected function getLabel($entities, $name, $key)
+		{
+			if (isset($this->keyNames[$name]['key'])) {
+				$keyFunc = $this->keyNames[$name]['key'];
+				$labelFunc = $this->keyNames[$name]['label'];
+				foreach ($entities[$name] as $entity) {
+					if ($entity->$keyFunc() === $key) {
+						return $entity->$labelFunc();
+					}
+				}
+			}
 
-        return $this->overrideName($name, $key);
-    }
+			return $this->overrideName($name, $key);
+		}
 
-    /**
-     * @param $name
-     * @param $key
-     *
-     * @return string
-     */
-    protected function overrideName($name, $key)
-    {
-        if ($name == 'semester') {
-            $key = ($key == 1 ? '1er' : '2ème').' semestre';
-        }
+		/**
+		 * @param $name
+		 * @param $key
+		 *
+		 * @return string
+		 */
+		protected function overrideName($name, $key)
+		{
+			if ($name == 'semester') {
+				$key = ($key == 1 ? '1er' : '2ème').' semestre';
+			}
 
-        return $key;
-    }
-}
+			return $key;
+		}
+	}

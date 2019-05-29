@@ -5,7 +5,7 @@
                 <!-- time  -->
                 <time class="session__date">
                     {% if session.datePrecisions | length == 0 %}
-                        {% if session.dateEnd is not null and session.dateBegin | date('d/m/Y') == session.dateEnd | date('d/m/Y') %}
+                        {% if session.dateEnd is null or (session.dateEnd is not null and session.dateBegin | date('d/m/Y') == session.dateEnd | date('d/m/Y')) %}
                             <div>le {{ session.dateBegin | date('d') }} {{ session.dateBegin | date('F') | trans }} {{ session.dateBegin | date('Y') }}</div>
                         {% else %}
                             <div>du {{ session.dateBegin | date('d') }} {{ session.dateBegin | date('F') | trans }} {{ session.dateBegin | date('Y') }}</div>
@@ -25,9 +25,13 @@
                         <div>{{ session.limitRegistrationDate | date('d') }} {{ session.limitRegistrationDate | date('F') | trans }} {{ session.limitRegistrationDate | date('Y') }}</div>
                     </span>
                 </div>
+                {% if organization is not defined or organization is null %}
+                    <div class="session__institutions">
+                        {{ session.training.organization.name }}
+                    </div>
+                {% endif %}
             </small>
         </div>
-
 
         <div class="col-lg-9">
             <!-- title  -->
@@ -53,7 +57,7 @@
                             {% if session.place is defined and session.place | length > 0 %}
                                 <div class="session__place" ng-if="session.place.length" title="Lieu de la formation">
                                     <i class="glyphicon glyphicon-map-marker"></i>&nbsp;
-                                        {{ session.place.name }}
+                                    {{ session.place.name }}
                                 </div>
                             {% endif %}
                             {% if session.hourNumber > 0 or session.dayNumber > 0 %}
@@ -75,7 +79,7 @@
                                     {% for key, participation in session.participations %}
                                         {% if participation is defined %}
                                             {% if key > 0 %}, {% endif %}
-                                            {{ participation.trainer.fullName }}
+                                            {{ participation.trainer }}
                                         {% endif %}
                                     {% endfor %}
                                 </div>

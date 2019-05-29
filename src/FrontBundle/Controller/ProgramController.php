@@ -50,6 +50,7 @@ class ProgramController extends Controller
     public function __construct()
     {
         $this->organizationFacets = [
+	        'organization' => 'training.organization.name.source',
             'theme' => 'training.theme.id',
             'place' => 'place.source',
             'year' => 'year',
@@ -58,92 +59,121 @@ class ProgramController extends Controller
         ];
     }
 
-    /**
-     * @Route("/{page}", name="front.program.index", requirements={"page": "\d+"})
-     *
-     * @param Request $request
-     * @param int     $page
-     *
-     * @return Response
-     */
-    public function indexAction(Request $request, $page = 1)
-    {
-        if ($request->get('shibboleth') == 1) {
-            if ($request->get('error') == 'activation') {
-                $this->get('session')->getFlashBag()->add('warning', 'Votre compte n\'est pas activé.');
-            }
-        }
+	/**
+	 * @Route("/program/{page}", name="front.program.index", requirements={"page": "\d+"}, defaults={"id": null})
+	 * @Route("/centre/{code}/{page}", name="front.program.organization", requirements={"page": "\d+"})
+	 * @ParamConverter("organization", class="AppBundle:Organization", options={"code" = "code"}, isOptional=true)
+	 *
+	 * @param Request      $request
+	 * @param Organization $organization
+	 * @param int          $page
+	 *
+	 * @return Response
+	 */
+	public function indexAction(Request $request, Organization $organization = null, $page = 1)
+	{
+		$this->noneActiveUser(null, null, null, false, $request);
 
-        $search = $this->get('sygefor_training.session.search');
-        $filters = $this->getSessionFilters($search, $page);
+		// get pagination form options
+		$paginationParams = $request->query->all();
+		$paginationParams = $this->getFormPaginationValue($paginationParams);
 
-        $promote = new Term(array('promote' => true));
-        $filters->addFilter($promote);
+		if ($organization) {
+			unset($this->organizationFacets['organization']);
+		}
 
-        $notCancelled = new BoolNot(new Term(array('status' => AbstractSession::STATUS_CANCELED)));
-        $filters->addFilter($notCancelled);
+		// init search request
+		$search = $this->get('sygefor_training.session.search');
+		$filters = $this->getSessionFilters($search, $page, ($organization ? $organization->getCode() : null));
+		$search->filterQuery($filters);
+		$this->addFacets($search);
+		$result = $search->search();
 
-        $search->addFilter('filters', $filters);
-        $search = $search->search();
+		// handle form options
+		$form = $this->createForm(ProgramFilterType::class, null, array_merge($paginationParams, array(
+				'facets' => $result['facets'],
+				'entities' => [
+					'organization' => $this->getDoctrine()->getRepository(Organization::class)->findAll(),
+					'place' => $this->getDoctrine()->getRepository(Place::class)->findAll(),
+					'theme' => $this->getDoctrine()->getRepository(Theme::class)->findAll(),
+				], )
+		));
 
-        return $this->render('@Front/Program/index.html.twig', array(
-            'search' => $search,
-            'page' => $page,
-        ));
-    }
+		// if get form options have been overriden by post form options
+		$beforeHandleOptions = FormPagination::getFormValues($form);
+		$this->formFilter($search, $form, $request, $paginationParams);
+		$afterHandleOptions = FormPagination::getFormValues($form);
+		// force first page
+		if ($beforeHandleOptions !== $afterHandleOptions) {
+			$page = 1;
+			$search->setPage(1);
+		}
+		// search
+		$search = $search->search();
 
-    /**
-     * @Route("/organization/{code}/{page}", name="front.program.organization", requirements={"page": "\d+"})
-     * @ParamConverter("organization", class="AppBundle:Organization", options={"code" = "code"})
-     *
-     * @param Request      $request
-     * @param Organization $organization
-     * @param int          $page
-     *
-     * @return Response
-     */
-    public function organizationAction(Request $request, Organization $organization, $page = 1)
-    {
-	    // get pagination form options
-	    $paginationParams = $request->query->all();
-	    $paginationParams = $this->getFormPaginationValue($paginationParams);
+		return $this->render('@Front/Program/program.html.twig', array(
+			'form' => $form->createView(),
+			'search' => $search,
+			'organization' => $organization,
+			'page' => $page,
+			'user' => $this->getUser(),
+			'paginationFormFilters' => FormPagination::getPaginationFieldValues($form),
+		));
+	}
 
-	    // init search request
-	    $search = $this->get('sygefor_training.session.search');
-	    $filters = $this->getSessionFilters($search, $page, $organization->getCode());
-	    $search->filterQuery($filters);
-	    $this->addFacets($search);$result = $search->search();
+	/**
+	 * @Route("/{page}", name="front.program.promoted", requirements={"page": "\d+"})
+	 *
+	 * @param Request $request
+	 * @param int     $page
+	 *
+	 * @return Response
+	 */
+	public function promotedAction(Request $request, $page = 1)
+	{
+		$this->noneActiveUser(null, null, null, false, $request);
 
-	    // handle form options
-	    $form = $this->createForm(ProgramFilterType::class, null, array_merge($paginationParams, array(
-			    'facets' => $result['facets'],
-			    'entities' => [
-				    'place' => $this->getDoctrine()->getRepository(Place::class)->findAll(),
-				    'theme' => $this->getDoctrine()->getRepository(Theme::class)->findAll(),
-			    ])
-	    ));
+		// init search request
+		$search = $this->get('sygefor_training.session.search');
+		$filters = $this->getSessionFilters($search, $page, null, 10);
+		$notCancelled = new BoolNot(new Term(array('status' => AbstractSession::STATUS_CANCELED)));
+		$filters->addFilter($notCancelled);
 
-	    // if get form options have been overriden by post form options
-	    $beforeHandleOptions = FormPagination::getFormValues($form);
-	    $this->formFilter($search, $form, $request, $paginationParams);
-	    $afterHandleOptions = FormPagination::getFormValues($form);
-	    // force first page
-	    if ($beforeHandleOptions !== $afterHandleOptions) {
-		    $page = 1;
-		    $search->setPage(1);
-	    }
-	    // search
-	    $search = $search->search();
+		// get promoted sessions
+		$promotedFilters = clone $filters;
+		$promote = new Term(array('promote' => true));
+		$promotedFilters->addFilter($promote);
+		$search->addFilter('filters', $promotedFilters);
+		$promotedResults = $search->search();
 
-	    return $this->render('@Front/Program/organization.html.twig', array(
-		    'form' => $form->createView(),
-		    'search' => $search,
-		    'organization' => $organization,
-		    'page' => $page,
-		    'user' => $this->getUser(),
-		    'paginationFormFilters' => FormPagination::getPaginationFieldValues($form)
-	    ));
-    }
+		// get non promoted sessions
+		$notPromotedFilters = clone $filters;
+		$promote = new Term(array('promote' => false));
+		$notPromotedFilters->addFilter($promote);
+		$search->addFilter('filters', $notPromotedFilters);
+		$notPromotedResults = $search->search();
+
+		// return 10 results with promoted sessions first and none promoted ones to complete if necessary
+		$totalItemNumber = count($promotedResults['items']) + count($notPromotedResults['items']);
+		if ($totalItemNumber > 10) {
+			for ($i = 10 - count($promotedResults['items']); $i < 10; $i++) {
+				array_pop($notPromotedResults['items']);
+			}
+		}
+		$allItems = array_merge($promotedResults['items'], $notPromotedResults['items']);
+		usort($allItems, function($a, $b) {
+			return $a['dateBegin'] > $b['dateBegin'];
+		});
+
+		return $this->render('@Front/Program/index.html.twig', array(
+			'search' => [
+				'total' => count($promotedResults['items']) + count($notPromotedResults['items']),
+				'pageSize' => 10,
+				'items' => $allItems,
+			],
+			'page' => $page,
+		));
+	}
 
     /**
      * @param Request          $request
@@ -263,17 +293,10 @@ class ProgramController extends Controller
      */
     public function sessionInscriptionAction(Request $request, AbstractTraining $training, AbstractSession $session, $token = null)
     {
-        // in case shibboleth authentication done but user has not registered his account
-        if (!is_object($this->getUser())) {
-            return $this->redirectToRoute('front.account.register');
-        }
-
-        if (!$this->getUser()->getIsActive()) {
-            $this->get('session')->getFlashBag()->add('warning', "Vous ne pouvez pas vous inscrire à une session tant
-                que votre compte n'a pas été validé par un administrateur.");
-
-            return $this->redirectToRoute('front.program.training', array('id' => $training->getId(), 'sessionId' => $session->getId(), 'token' => $token));
-        }
+	    $ret = $this->noneActiveUser($training, $session, $token, true, $request);
+	    if ($ret !== false) {
+		    return $ret;
+	    }
 
         $training = $this->get('sygefor_api.training')->trainingAction($training);
         $latestInscriptions = Inscription::getTraineeThemeInscription(
@@ -326,6 +349,31 @@ class ProgramController extends Controller
             'token' => $token,
         ));
     }
+
+	protected function noneActiveUser($training, $session, $token, $forceRegister, $request = null)
+	{
+		if ($request->get('shibboleth') == 1) {
+			if ($request->get('error') == 'activation') {
+				$this->get('session')->getFlashBag()->add('warning', 'Votre compte n\'est pas activé.');
+			}
+		}
+
+		// in case shibboleth authentication done but user has not registered his account
+		if (!is_object($this->getUser()) && $forceRegister) {
+			return $this->redirectToRoute('front.account.register');
+		}
+
+		if ($this->getUser() && !$this->getUser()->getIsActive()) {
+			$this->get('session')->getFlashBag()->add('warning', "Vous ne pouvez pas vous inscrire à une session tant
+                que votre compte n'a pas été validé par un administrateur.");
+
+			if ($training && $session) {
+				return $this->redirectToRoute('front.program.training', array('id' => $training->getId(), 'sessionId' => $session->getId(), 'token' => $token));
+			}
+		}
+
+		return false;
+	}
 
     /**
      * @param SearchService $search
@@ -409,7 +457,11 @@ class ProgramController extends Controller
 
 	protected function getFormPaginationValue($paginationParams)
 	{
-		unset($paginationParams['page']);
+		foreach (['page', 'shibboleth', 'error'] as $field) {
+			if (isset($paginationParams[$field])) {
+				unset($paginationParams[$field]);
+			}
+		}
 
 		return $paginationParams;
 	}

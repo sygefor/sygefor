@@ -36,10 +36,17 @@
                                 {% endif %}
 
                                 {% if form is not defined %}
-                                    <a class="btn btn-primary btn-block"
-                                       href="{{ path('front.program.organization', {code: 'sygefor'}) }}">
-                                        Voir toutes les formations
-                                    </a>
+                                    {% if app.user.id is defined %}
+                                        <a class="btn btn-primary btn-block"
+                                           href="{{ path('front.program.organization', {code: app.user.organization.code}) }}">
+                                            Voir mes formations disponibles
+                                        </a>
+                                    {% else %}
+                                        <a class="btn btn-primary btn-block"
+                                           href="{{ path('front.program.index') }}">
+                                            Voir toutes les formations
+                                        </a>
+                                    {% endif %}
                                 {% endif %}
 
                                 {% include('@Front/pagination.html.twig') %}
