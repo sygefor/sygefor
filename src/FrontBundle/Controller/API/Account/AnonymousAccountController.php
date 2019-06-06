@@ -210,35 +210,32 @@ class AnonymousAccountController extends AbstractAnonymousAccountController
      */
     public function choosePasswordAction(Request $request, Trainee $trainee, $token)
     {
-	    $form = $this->createForm(new UpdatePasswordType(), $trainee);
+	    list($timestamp, $hash) = explode('.', $token);
+	    $error = null;
+	    $timestampHash = $this->getTimestampedHash($trainee, $timestamp);
+	    // check request validity
+	    if ($hash !== $timestampHash) {
+		    $error = "Il semble y avoir un problème avec le lien.";
+	    }
+	    // check timestamp validity (24h)
+	    if ((time() - $timestamp) > 24 * 60 * 60) {
+		    $error = "Le lien n'est plus valide.";
+	    }
+	    $form = $this->createForm(new UpdatePasswordType(), $trainee, ['disabled' => $error !== null]);
+	    if ($error) {
+		    $form->addError(new FormError($error));
+	    }
+
         if ($request->getMethod() === 'POST') {
             $form->handleRequest($request);
             if ($form->isValid()) {
-                list($timestamp, $hash) = explode('.', $token);
-                $password = $this->get('security.password_encoder')->encodePassword($trainee, $form->get('plainPassword')->getData());
+                // password encoding is handle by PasswordEncoderSubscriber
+                $trainee->setPassword(null);
+                $this->getDoctrine()->getManager()->flush();
 
-                // check request validity
-                if (!$hash || !$timestamp || !$password) {
-                    $form->addError(new FormError("Il semble y avoir un problème avec le lien."));
-                }
-                // check timestamp validity (24h)
-                else if ((time() - $timestamp) > 24 * 60 * 60) {
-                    $form->get('plainPassword')->addError(new FormError("Le lien n'est plus valide."));
-                }
-                // check hash validity
-                else if ($hash !== hash('sha256', $timestamp.'.'.$password)) {
-                    $form->get('plainPassword')->addError(new FormError("Le mot de passe est invalide"));
-                }
-                else {
-                    // password encoding is handle by PasswordEncoderSubscriber
-                    $trainee->setPassword(null);
-                    $trainee->setPlainPassword($form->get('newPassword')->getData());
-                    $this->getDoctrine()->getManager()->flush();
+                $this->get('session')->getFlashBag()->add('success', 'Votre mot de passe a été mis à jour.');
 
-                    $this->get('session')->getFlashBag()->add('success', 'Votre mot de passe a été mis à jour.');
-
-                    return $this->redirectToRoute('front.page.login');
-                }
+                return $this->redirectToRoute('front.page.login');
             }
         }
 
