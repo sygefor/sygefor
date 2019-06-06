@@ -70,7 +70,7 @@ class AnonymizePeopleCommand extends ContainerAwareCommand
 		$this->removeElasticaListeners();
 
 		// do the job
-//		$this->alertTrainees();
+		$this->alertTrainees();
 		$this->anonymizePeople();
 	}
 
@@ -243,8 +243,10 @@ class AnonymizePeopleCommand extends ContainerAwareCommand
 			if ($oldInscription->getEvaluation()) {
 				$inscriptionsCorrespondence[$oldInscription->getId()] = $newInscription;
 			}
+			$this->anonymizeProfessionalInfos($newInscription, $oldInscription);
 			$newInscription->setCreatedAt($oldInscription->getCreatedAt());
 			$newInscription->setUpdatedAt($oldInscription->getUpdatedAt());
+
 			$this->em->persist($newInscription);
 			$collection->add($newInscription);
 		}
@@ -252,22 +254,18 @@ class AnonymizePeopleCommand extends ContainerAwareCommand
 
 		// create new evaluation
 		if (count($inscriptionsCorrespondence) > 0) {
-			$this->em->flush();
 			/** @var Inscription $oldInscription */
 			foreach ($inscriptions as $oldInscription) {
 				if ($evaluation = $oldInscription->getEvaluation()) {
 					$newInscription = $inscriptionsCorrespondence[$oldInscription->getId()];
 					$newEvaluation = new Evaluation($newInscription);
-					$this->em->persist($newEvaluation);
 					/** @var EvaluatedTheme $theme */
 					foreach ($evaluation->getThemes() as $theme) {
 						$newTheme = new EvaluatedTheme($newEvaluation, $theme->getTheme(), null, $theme->getComments());
-						$this->em->persist($newTheme);
 						/** @var NotedCriterion $criterion */
 						foreach ($theme->getCriteria() as $criterion) {
-							$criteria = (new NotedCriterion($criterion->getTheme(), $criterion->getCriterion(), $criterion->getNote()));
+							$criteria = (new NotedCriterion($newTheme, $criterion->getCriterion(), $criterion->getNote()));
 							$newTheme->addCriterion($criteria);
-							$this->em->persist($criteria);
 						}
 						$newEvaluation->addTheme($newTheme);
 					}
@@ -275,6 +273,7 @@ class AnonymizePeopleCommand extends ContainerAwareCommand
 					$newEvaluation->setGoodPoints($evaluation->getGoodPoints());
 					$newEvaluation->setSuggestions($evaluation->getSuggestions());
 					$newInscription->setEvaluation($newEvaluation);
+					$this->em->persist($newEvaluation);
 				}
 			}
 		}
@@ -406,7 +405,7 @@ class AnonymizePeopleCommand extends ContainerAwareCommand
 				break;
 			case 'trainer':
 				$maxDate = new \DateTime();
-				$dateDiff = "-0 years";
+				$dateDiff = "-5 years";
 				$maxDate->modify($dateDiff);
 				$maxDate = $maxDate->format('Y-m-d H:i:s');
 				$from = "FROM (
