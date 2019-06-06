@@ -110,6 +110,7 @@ class TrainingController extends AbstractTrainingController
                 // if meeting assign cloned training to the session
                 if ($cloned->getType() === 'meeting') {
                     $cloned->getSession()->setTraining($cloned);
+	                $cloned->getSession()->setName(null);
                 }
                 $this->mergeArrayCollectionsAndFlush($cloned, $training);
 
