@@ -18,9 +18,9 @@ gulp.task('styles', ['styles:clean'], function () {
         .pipe($.sass({
             precision: 10
         }).on('error', $.util.log))
+        .pipe($.size())
         .pipe(gulp.dest('web/assets/styles'))
-        .pipe($.livereload())
-        .pipe($.size());
+        .pipe($.livereload());
 
     // styles.scss
     return gulp.src(['app/Resources/scss/**/*.scss', '!app/Resources/scss/pdf.scss'])
@@ -28,15 +28,15 @@ gulp.task('styles', ['styles:clean'], function () {
         .pipe($.sass({
             precision: 10
         }).on('error', $.util.log))
+        .pipe($.size())
         .pipe(gulp.dest('web/assets/styles'))
-        .pipe($.livereload())
-        .pipe($.size());
+        .pipe($.livereload());
 });
 
 // build dist styles
 gulp.task('styles:dist', ['styles'], function() {
     return gulp.src('web/assets/styles/*.css')
         .pipe($.cssmin().on('error', $.util.log))
-        .pipe(gulp.dest('web/assets/styles'))
-        .pipe($.size());
+        .pipe($.size())
+        .pipe(gulp.dest('web/assets/styles'));
 });

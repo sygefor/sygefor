@@ -23,9 +23,9 @@ gulp.task('front', ['front:clean'], function () {
         }).on('error', $.util.log))
         .pipe($.include().on('error', $.util.log))
         .pipe($.concat('styles.css'))
+        .pipe($.size())
         .pipe(gulp.dest('web/assets/front'))
-        .pipe($.livereload())
-        .pipe($.size());
+        .pipe($.livereload());
 
     // scripts
     gulp.src(
@@ -45,13 +45,13 @@ gulp.task('front:dist', ['front'], function() {
     // scss
     gulp.src('web/assets/front/*.css')
         .pipe($.cssmin().on('error', $.util.log))
-        .pipe(gulp.dest('web/assets/front'))
-        .pipe($.size());
+        .pipe($.size())
+        .pipe(gulp.dest('web/assets/front'));
 
     // scripts
     return gulp.src(['web/assets/front/*.js'])
         .pipe($.ngAnnotate())
         .pipe($.uglify().on('error', $.util.log))
-        .pipe(gulp.dest('web/assets/front'))
-        .pipe($.size());
+        .pipe($.size())
+        .pipe(gulp.dest('web/assets/front'));
 });

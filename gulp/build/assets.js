@@ -14,6 +14,6 @@ gulp.task('assets:clean', function () {
 // build copy assets
 gulp.task('assets', ['assets:clean'], function () {
   return gulp.src('app/Resources/assets/**/*')
-    .pipe(gulp.dest('web/assets'))
-    .pipe($.size());
+    .pipe($.size())
+    .pipe(gulp.dest('web/assets'));
 });
