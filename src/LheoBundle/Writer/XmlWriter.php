@@ -241,7 +241,7 @@ class XmlWriter
         $coordonnates = $node->addChild('coordonnees');
         if ($civility) $this->addChildLimitedString($coordonnates, 'civilite', $civility, 1, 50);
         if ($name) $this->addChildLimitedString($coordonnates, 'nom', $name, 1, 50);
-	    if ($firstName) $this->addChildLimitedString($coordonnates, 'firstName', $firstName, 1, 50);
+	    if ($firstName) $this->addChildLimitedString($coordonnates, 'prenom', $firstName, 1, 50);
         if ($street) $this->addStreet($coordonnates, $street);
         if ($organizationCoordinates) {
             $this->fillAddress($coordonnates, $organizationCoordinates['address'], $organizationCoordinates['zip'], $organizationCoordinates['region'], $organizationCoordinates['city']);
