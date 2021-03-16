@@ -47,5 +47,5 @@ services:
     container_name: "sygefor_mailcatcher"
     image: schickling/mailcatcher
     ports:
-        - "1025:1025"
+        - "1035:1025"
         - "1080:1080"

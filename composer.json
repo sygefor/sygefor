@@ -54,7 +54,7 @@
         "knplabs/knp-snappy-bundle": "^1.4",
         "h4cc/wkhtmltopdf-amd64": "^0.12.3",
         "nelmio/cors-bundle": "^1.4.1",
-        "liuggio/ExcelBundle": "^2.0",
+        "liuggio/excelbundle": "^2.0",
         "kuleuven/shibboleth-bundle": "dev-master",
         "easyrdf/easyrdf": "^0.9.1",
         "twig/twig": "1.24.0",
