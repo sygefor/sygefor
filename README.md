@@ -99,6 +99,26 @@ Attention à renseigner les bons paramètres dans app/config/parameters.yml. Vou
 
 [Installer docker-compose](https://docs.docker.com/compose/install/#prerequisites)
 
+Afin 
+
+docker exec -it sygefor_shibboleth composer install
+
+Attention à renseigner les bons paramètres, peut être refais plus tard dans app/config/parameters.yml. Vous pouvez remplacer :
+- database_host par mysql
+- elasticsearch_host par elasticsearch
+- mailer_host par mailcatcher 
+
+yarn install
+bower install --allow-root
+
+php app/console doctrine:database:create : already created
+php app/console doctrine:schema:create
+php app/console doctrine:fixtures:load
+php app/console fos:js-routing:dump
+gulp build:dist
+php app/console fos:elastica:populate
+
+
 
 Installation de Sygefor3
 ------------
