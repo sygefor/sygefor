@@ -89,7 +89,7 @@ et associer les droits d'écriture à l'utilisateur www-data pour les répertoir
  - var/Publipost
  - /tmp/sygefor dans le container
  
-Vous pouvez ensuite exécuter la commande docker-compose up pour lancer les containers.
+Vous pouvez ensuite exécuter la commande docker-compose up -d pour lancer les containers.
 Attention à renseigner les bons paramètres dans app/config/parameters.yml. Vous pouvez remplacer :
  - database_host par mysql
  - elasticsearch_host par elasticsearch
@@ -99,26 +99,18 @@ Attention à renseigner les bons paramètres dans app/config/parameters.yml. Vou
 
 [Installer docker-compose](https://docs.docker.com/compose/install/#prerequisites)
 
-Afin 
+Une  fois les containers lancés, exécutez les commandes suivantes :
 
-docker exec -it sygefor_shibboleth composer install
+ - docker exec -it sygefor_shibboleth composer install
+ - docker exec -it sygefor_shibboleth yarn install
+ - docker exec -it sygefor_shibboleth bower install --allow-root
+ - docker exec -it sygefor_shibboleth php app/console doctrine:schema:create
+ - docker exec -it sygefor_shibboleth php app/console doctrine:fixtures:load
+ - docker exec -it sygefor_shibboleth php app/console fos:js-routing:dump
+ - docker exec -it sygefor_shibboleth gulp build:dist
+ - docker exec -it sygefor_shibboleth php app/console fos:elastica:populate
 
-Attention à renseigner les bons paramètres, peut être refais plus tard dans app/config/parameters.yml. Vous pouvez remplacer :
-- database_host par mysql
-- elasticsearch_host par elasticsearch
-- mailer_host par mailcatcher 
-
-yarn install
-bower install --allow-root
-
-php app/console doctrine:database:create : already created
-php app/console doctrine:schema:create
-php app/console doctrine:fixtures:load
-php app/console fos:js-routing:dump
-gulp build:dist
-php app/console fos:elastica:populate
-
-
+Il suffit alors de se rendre sur localhost avec votre navigateur pour accéder au BO
 
 Installation de Sygefor3
 ------------
