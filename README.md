@@ -78,27 +78,44 @@ du protocole Shibboleth. Il faut donc installer un Service Provider sur le serve
 
 ### Docker
 ------------
+ Une fois le dépôt cloné, rendez-vous dans le dossier sygefor et mettez à jour les sous-modules avec la commande : 
+ git submodule update --init
 
-Vous pouvez utiliser docker pour lancer les services nécessaires à Sygefor3. 
+Vous pouvez ensuite utiliser docker pour lancer les services nécessaires à Sygefor3. 
 Le docker-compose.yml contient les containers déjà configurés.
-Avant de lancer docker vous devrez construire votre image [Shibboleth](https://github.com/sygefor/docker-shibboleth)
-et associer les droits d'écriture à l'utilisateur www-data pour les répertoires suivants :
- - app/cache
- - app/logs
- - var/Material
- - var/Publipost
- - /tmp/sygefor dans le container
- 
-Vous pouvez ensuite exécuter la commande docker-compose up pour lancer les containers.
+
+Associer les droits à l'utilisateur www-data pour pour les dossiers : app/cache et app/logs :
+ - sudo chown -R www-data. app/cache/
+ - sudo chown -R www-data. app/logs/
+
 Attention à renseigner les bons paramètres dans app/config/parameters.yml. Vous pouvez remplacer :
  - database_host par mysql
  - elasticsearch_host par elasticsearch
  - mailer_host par mailcatcher 
 
+Vous pouvez associer les droits d'écriture à l'utilisateur www-data pour les répertoires suivants :
+ - var/Material
+ - var/Publipost
+ - /tmp/sygefor dans le container
+ 
+Vous pouvez ensuite exécuter la commande docker-compose up -d pour lancer les containers.
+
 [Installer docker](https://docs.docker.com/install/)
 
 [Installer docker-compose](https://docs.docker.com/compose/install/#prerequisites)
 
+Une  fois les containers lancés, exécutez les commandes suivantes pour finaliser l'installation :
+
+ - docker exec -it sygefor_shibboleth composer install
+ - docker exec -it sygefor_shibboleth yarn install
+ - docker exec -it sygefor_shibboleth bower install --allow-root
+ - docker exec -it sygefor_shibboleth php app/console doctrine:schema:create
+ - docker exec -it sygefor_shibboleth php app/console doctrine:fixtures:load
+ - docker exec -it sygefor_shibboleth php app/console fos:js-routing:dump
+ - docker exec -it sygefor_shibboleth gulp build:dist
+ - docker exec -it sygefor_shibboleth php app/console fos:elastica:populate
+
+Il suffit alors de se rendre sur localhost avec votre navigateur pour accéder au BO
 
 Installation de Sygefor3
 ------------
